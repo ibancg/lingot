@@ -1,0 +1,60 @@
+#  Copyright (C) 2004   Ibán Cereijo Graña, Jairo Chapela Martínez.
+#
+#  This file is part of lingot.
+#
+#  lingot is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  lingot is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with lingot; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+PROYECTO  = lingot
+FUENTES   = src/*.cc src/analizador/*.cc src/gui/*.cc
+
+DEFINES   = -DGTK12 #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
+INCDIR    = `gtk-config --cflags` -Isrc/analizador -Isrc/gui -Isrc
+C_FLAGS   = -g -Wall $(DEFINES) $(INCDIR)
+LIBRERIAS = `gtk-config --libs` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
+EJECUTAR  = ls -l $(PROYECTO)
+
+SRCS = $(wildcard $(FUENTES))
+OBJS = $(SRCS:.cc=.o)
+
+CXX       = @CXX@
+CXXLINKER = @CXX@
+CFLAGS  = @CFLAGS@ @DEFS@ $(INCLUDE_DIR) $(C_FLAGS)
+LDFLAGS = @LDFLAGS@ @LIBS@
+
+
+all: $(PROYECTO)
+
+$(PROYECTO): .depend $(OBJS)
+	$(CXX) -o $(PROYECTO) $(OBJS) $(LIBRERIAS)
+
+%.o: %.cc .depend
+	$(CXX) $(C_FLAGS) -c $< -o $@
+
+install: $(PROYECTO)
+	install -d @prefix@
+	install -d @prefix@/bin
+	install $(PROYECTO) @prefix@/bin
+
+clean:
+	find -type f -path '*.o' | xargs rm -f
+	/bin/rm -f *~ .depend $(EXECS)
+
+.PHONY: all run clean
+
+.DEFAULT:
+	@echo "Calculando requisitos"
+	g++ $(INCDIR) -M $(FUENTES) > .depend
+
+sinclude .depend
