@@ -2,7 +2,7 @@ LINGOT - A musical instrument tuner.
 
 Written by:
   Ibán Cereijo Graña <comominimo@hotpop.com>
-  Jairo Chapela Martínez <jairochapela@terra.es>
+  Jairo Chapela Martínez <jairocm@wanadoo.es>
 
 Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez,
 		   Graciano Carrillo Pousa.
@@ -227,7 +227,7 @@ PEAK_ORDER
 	variable frecuency interval that depends in those parameteres.
 	
 
-DFT_NUMBER (Number of DTFs)
+DFT_NUMBER (Number of DFTs)
 
 	After the max. peak in the FFT is founded, a certain amount of 
         localized DFTs in the frecuency domain was done to get close to the
