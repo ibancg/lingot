@@ -1,0 +1,72 @@
+LINGOT - A musical instrument tuner.
+
+Written by:
+  Ibán Cereijo Graña <comominimo@hotpop.com>
+  Jairo Chapela Martínez <jairochapela@terra.es>
+
+Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+
+
+
+Description
+===========
+
+lingot is a musical instrument tuner. It's accurate, easy to use, and
+highly configurable. Originally conceived to tune electric guitars,
+its configurability gives it a more general character. (Tuning another
+instruments has not been tested).
+
+It simulates the appearance of an analogic tuner, with a gauge
+indicating the deviation relative to a certain note --found
+automatically as the closest note to the estimated frequency--,
+indicating that note and its frequency.
+
+The note will be found automatically, since the program hasn't any
+manual function mode (indicating the note to tune manually), for
+mantaining generality.
+
+We recommend using the tuner in conjunction with a mixer for selecting
+the desired recording source and the signal recording levels.
+
+
+Requisites
+==========
+
+	* Sound card.
+	* Kernel linux with audio support (OSS).
+	* GTK+ library, version 2.0.
+	
+Installation
+============
+
+	Please, see the INSTALL file.
+
+Synopsis
+========
+
+	lingot [-c config]
+
+The -c option causes the search of a file named {config}.conf in the
+~/.lingot folder. For example:
+
+	lingot -c bass.conf
+
+will take the configuration in the ~/.lingot/bass.conf file. This is
+useful for maintaining different configurations for different
+instruments.
+

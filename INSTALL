@@ -1,0 +1,50 @@
+LINGOT - A musical instrument tuner
+
+Written by:
+  Ibán Cereijo Graña <comominimo@hotpop.com>
+  Jairo Chapela Martínez <jairochapela@terra.es>
+
+Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+
+
+
+REQUISITES
+
+* A soundcard.
+* Linux Kernel with audio (OSS) support.
+* GTK+ 2.0 library.
+
+INSTALLATION PROCEDURE
+
+1. Extract the sources from the tar-gz file:
+
+  tar xvzf lingot-1.0.0.tar.gz
+
+2. Enter in the sources directory and run the configure script:
+
+  cd lingot-1.0.0
+  ./configure
+
+3. If the step 2 doesn't report any error, you can compile and install
+the program. Enter the following commands as root:
+
+  make
+  make install
+
+4. That's all folks! The program is successfully installed. Simply
+enter the 'tuner' command to run it.
