@@ -2,7 +2,7 @@ LINGOT - Afinador de instrumentos musicales
 
 Escrito por:
   Ibán Cereijo Graña <comominimo@hotpop.com>
-  Jairo Chapela Martínez <jairochapela@terra.es>
+  Jairo Chapela Martínez <jairocm@wanadoo.es>
 
 Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez,
 		   Graciano Carrillo Pousa.
@@ -227,7 +227,7 @@ PEAK_ORDER (orden de pico)
 	 considerar N muestras en la FFT implica un intervalo frecuencial 
 	 variable dependiendo de aquellos parámetros.
 
-DFT_NUMBER (número de DTFs)
+DFT_NUMBER (número de DFTs)
 
 	 Tras encontrar el pico máximo en la FFT se hacen un cierto número de
 	 DFTs localizadas en frecuencia para cercar más la frecuencia 
