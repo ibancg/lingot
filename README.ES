@@ -1,4 +1,4 @@
-TUNER - Afinador de instrumentos musicales
+LINGOT - Afinador de instrumentos musicales
 
 Escrito por:
   Ibán Cereijo Graña <comominimo@hotpop.com>
