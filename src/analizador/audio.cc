@@ -42,7 +42,7 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
   if (dsp < 0)
     {
       char buff[80];
-      sprintf(buff, "No puedo abrir el dispositivo de audio %s", fdsp);
+      sprintf(buff, "Unable to open audio device %s", fdsp);
       perror(buff);
       exit(-1);
     }
@@ -51,13 +51,13 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
   //if (ioctl(dsp, SOUND_PCM_READ_CHANNELS, &canales) < 0)
   if (ioctl(dsp, SNDCTL_DSP_CHANNELS, &canales) < 0)
       {
-	perror("error al poner el número de canales");
+	perror("Error setting number of channels");
 	exit(-1);
       }
   
   /*  if (ioctl(dsp, SOUND_PCM_WRITE_CHANNELS, &canales) < 0)
       {
-      perror("error al poner el número de canales");
+      perror("Error setting number of channels");
       exit(-1);
       }*/
   
@@ -65,7 +65,7 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
   //if (ioctl(dsp, SOUND_PCM_SETFMT, &formato) < 0)
   if (ioctl(dsp, SNDCTL_DSP_SETFMT, &formato) < 0)
     {
-      perror("error al poner los bits por muestra");
+      perror("Error setting bits per sample");
       exit(-1);
     }
 
@@ -80,28 +80,28 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
 
   if (ioctl(dsp, SNDCTL_DSP_SETFRAGMENT, &parametro) < 0)
     {
-      perror("error al poner el tamaño de buffer de dma");
+      perror("Error setting DMA buffer size");
       exit(-1);
     }
 
   // Divisor de DMA
   /*  if (ioctl(dsp, SNDCTL_DSP_SUBDIVIDE, &dma) < 0)
     {
-      perror("error al poner el divisor de dma");
+      perror("Error setting DMA divisor");
       exit(-1);
       }*/
 
   /*  // Frecuencia de muestreo / reproduccion
   if (ioctl(dsp, SOUND_PCM_WRITE_RATE, &freq) < 0)
     {
-      perror("error al poner la frecuencia de reproducción");
+      perror("Error setting write rate");
       exit(-1);
       }*/
 
   //  if (ioctl(dsp, SOUND_PCM_READ_RATE, &freq) < 0)
   if (ioctl(dsp, SNDCTL_DSP_SPEED, &freq) < 0)
     {
-      perror("error al poner la frecuencia de muestreo");
+      perror("Error setting sample rate");
       exit(-1);
     }
 
@@ -109,7 +109,7 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
   // vamos a hacer las lecturas de manera NO BLOQUEANTE.
   if (fcntl(dsp, F_SETFL, O_NONBLOCK) < 0)
   {
-  perror("error al poner lectura no bloqueante");
+  perror("Error setting non-blocking reads");
   exit(-1);
   }
   */
