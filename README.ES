@@ -1,33 +1,16 @@
-LINGOT - Afinador de instrumentos musicales
+TUNER - Afinador de instrumentos musicales
 
 Escrito por:
   Ibán Cereijo Graña <comominimo@hotpop.com>
   Jairo Chapela Martínez <jairochapela@terra.es>
 
-Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez.
-
-Este programa es software libre. Puede redistribuirlo y/o modificarlo
-bajo los términos de la Licencia Pública General de GNU según es
-publicada por la Free Software Foundation, bien de la versión 2 de
-dicha Licencia o bien (según su elección) de cualquier versión
-posterior.
-
-Este programa se distribuye con la esperanza de que sea útil, pero SIN
-NINGUNA GARANTÍA, incluso sin la garantía MERCANTIL implícita o sin
-garantizar la CONVENIENCIA PARA UN PROPÓSITO PARTICULAR. Véase la
-Licencia Pública General de GNU para más detalles.
-
-Debería haber recibido una copia de la Licencia Pública General junto
-con este programa. Si no ha sido así, escriba a la Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-
-
+Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez,
+		   Graciano Carrillo Pousa.
 
 Descripción
 ===========
 
-	lingot es un afinador de instrumentos musicales, preciso, fácil de usar
+	Lingot es un afinador de instrumentos musicales, preciso, fácil de usar
 y altamente configurable. Originalmente concebido para afinar guitarras eléc-
 tricas, su configurabilidad le da un carácter más general (la afinación de otro
 tipo de instrumentos todavía no ha sido testada).
@@ -64,10 +47,10 @@ busca en el directorio ~/.lingot/ un archivo llamado {configuracion}.conf
 
 por ejemplo:
 
-	lingot -c bass.conf
+	lingot -c bass
 
-Tomará la configuración del archivo ~/.lingot/bass.conf, esto es útil para mante-
-ner varias configuraciones correspondientes a varios instrumentos.
+Tomará la configuración del archivo ~/.lingot/bass.conf, esto es útil para
+mantener varias configuraciones correspondientes a varios instrumentos.
 
 Archivo de configuración
 ========================
@@ -77,16 +60,17 @@ Archivo de configuración
 
 Las opciones se pueden cambiar también en el GUI, y recomendamos cambiarlas
 desde esta interfaz. Sus valores por defecto están optimizados para afinar
-guitarra eléctrica (al menos con la mía funciona), para otros instrumentos
-debe ser retocado (es buena idea guardar un archivo de configuración por cada
-instrumento, y utilizar la opción -c para cargar una configuración u otra).
+guitarra eléctrica, para otros instrumentos debe ser retocado (es buena idea
+guardar un archivo de configuración por cada instrumento, y utilizar la 
+opción -c para cargar una configuración u otra).
 
 Con la finalidad de mantener la máxima configurabilidad, el usuario dispone de
-multitud de opciones, la comprensión total del efecto de las mismas requiere 
+multitud de opciones, y la comprensión total del efecto de las mismas requiere 
 conocimientos de procesado de señal, a continuación se intentará explicar el
 efecto de cada una, pero si no se comprende el resultado lo mejor es no 
 cambiarlas. No se descarta en futuras versiones reducir el número de opciones
 para hacer el afinador más manejable.
+
 
 Describimos las opciones que encontraremos en este archivo, y recomendamos su
 manipulación en función de la precisión de afinado obtenida y la potencia de
@@ -116,34 +100,33 @@ SAMPLE_RATE (frecuencia de muestreo)
 	 la frecuencia efectiva de muestreo (ya dividida por el factor de 
 	 sobremuestreo) al menos al doble de esa frecuencia (criterio de 
 	 Nyquist). Todas las componentes frecuenciales por encima de la mitad
-	 de la frecuencia de muestreo serán filtradas y no aparecerán en el 
-	 espectro.
+	 de la frecuencia de muestreo efectiva serán filtradas y no aparecerán
+	 en el espectro.
 
 	 Se expresa como un numero entero, en herzios.
 
 OVERSAMPLING (factor de sobremuestreo)
 
  	 Indica el factor por el que se va a diezmar la señal muestreada, 
-	 consiguiendo un efecto de tener una frecuencia de muestreo efectiva
-	 equivalente a la de muestreo real de la tarjeta de sonido dividido por
-	 este factor.
+	 consiguiendo una frecuencia de muestreo efectiva equivalente a la de
+	 muestreo real de la tarjeta de sonido dividido por este factor.
 
 	 Por ejemplo, para conseguir una frecuencia de muestreo efectiva de 
-         4 KHz (podemos afinar tonos de hasta 2 KHz) podemos poner una 
-	 frecuencia de muestreo de 8 KHz y un factor de sobremuestreo de 2.
+         4 KHz (podemos afinar tonos de hasta 2 KHz) pondremos una frecuencia 
+	 de muestreo de 8 KHz y un factor de sobremuestreo de 2.
 
 	 Debe ser un numero entero. Adimensional.
 
 ROOT_FREQUENCY_ERROR (error de la nota de referencia LA)
 
 	 Cuando queremos afinar con un cierto error de desplazamiento en
-	 frecuencia, se expresa en porcentaje de semitonos.
-	
-	 Esto es útil cuando queremos adaptar la afinación del instrumento a la
-	 de una grabación que tiene una afinación desplazada. Por ejemplo, si 
-	 escuchamos que un LA en una grabación se encuentra un cuarto de tono 
-	 por encima del que debería ser (440 Hz), pondremos un error del 50%
-	 (recordemos que el error se expresa en porcentaje de semitonos). 
+	 frecuencia. Esto es útil cuando queremos adaptar la afinación del
+	 instrumento a la de una grabación que tiene una afinación desplazada.
+
+	 Por ejemplo, si escuchamos que un LA en una grabación se encuentra
+	 un cuarto de tono por encima del que debería ser (440 Hz), pondremos
+	 un error del 50% (el error se expresa en porcentaje 
+	 de semitonos). 
 
 	 Se expresa como un número real en tanto por uno (0.5 expresa un error
 	 del 50%). 
@@ -159,18 +142,19 @@ FFT_SIZE (tamaño FFT)
 	 muestras para la FFT con una frecuencia de muestreo efectiva de 8 KHz
 	 implica que cada transformada necesita valores temporales de los 
 	 últimos 512 ms, así pues no tiene sentido poner una ventana temporal
-	 menor. Debe considerarse para comprender la respuesta temporal del 
-	 afinador. Veamos un ejemplo más extremo:
+	 menor. Este parámetro influye en la respuesta temporal del afinador.
+
+	 Veamos un ejemplo más extremo:
 
 	 Supongamos que tenemos un instrumento capaz de generar frecuencias 
 	 bajas (< 200 Hz), y por tanto ponemos una frecuencia de muestreo de
 	 400 Hz (frecuencia de 8 KHz y factor de sobremuestreo de 20). Con el
-	 fin de obtener máxima precisión inicial establecemos 4096 muestras 
-	 para el buffer de FFT. Debemos tener en cuenta que la ventana temporal
-	 mínima debe ser 10.24 segundos, es decir, en cada afinación tenemos 
-	 sonidos de hasta hace 10.24 segundos contaminando la afinación, dicho
-	 en otras palabras, tendremos que esperar 10.24 segundos entre nota y 
-	 nota para no interferir.
+	 fin de obtener la máxima precisión inicial establecemos 4096 muestras 
+	 para el buffer de FFT, esto implicará que la ventana temporal mínima 
+	 debe ser 10.24 segundos, es decir, en cada afinación tenemos sonidos 
+  	 de hasta hace 10.24 segundos contaminando la afinación, dicho en otras
+	 palabras, tendremos que esperar 10.24 segundos entre nota y nota para
+	 no interferir.
 
 	 Nótese que el espectro sólo muestra 256 muestras, y para valores altos
 	 de este parámetro puede cuadrar la frecuencia fundamental encontrada
@@ -191,13 +175,17 @@ TEMPORAL_WINDOW (ventana temporal)
 	 afinación. Así pues, este parámetro repercute directamente en la 
 	 respuesta dinámica del afinador.
 
+	 La ventana temporal en muestras (obtenida como la multilpicación de su
+	 duración en segundos y la frecuencia efectiva de muestreo) debe ser
+	 mayor que el buffer de FFT.
+
 	 Se expresa como un número real, en segundos.
 
 NOISE_THRESHOLD (umbral de ruido)
 
  	 Para no afinar ruido establecemos un umbral distinguiendo lo que es 
 	 ruido y lo que es señal. Establézcase empíricamente y ayúdese de un
-	 mixer para los niveles de potencia.
+	 mezclador para los niveles de potencia.
 
 	 Es un número real expresado en dB.
 
@@ -219,8 +207,8 @@ PEAK_NUMBER (número de picos)
 	 Para la identificación del pico fundamental debemos tener en cuenta,
 	 en función de las características del timbre generado por el 
 	 instrumento, el número de picos armónicos (en frecuencias múltiplos de
-	 la fundamental), pueden superar en magnitud al pico fundamental (hasta
-	 la relación señalada en la siguiente opción).
+	 la fundamental) que pueden superar en magnitud al pico fundamental 
+	 (hasta la relación señalada en la siguiente opción).
 
 PEAK_REJECTION_RELATION (relación de rechazo de picos)
 
