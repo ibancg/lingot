@@ -53,9 +53,9 @@ void callbackDestroy(GtkWidget *w, void *data)
 void callbackAbout(GtkWidget *w, void *data)
 {
   quick_message(gettext("about lingot"), 
-		gettext("\nlingot " VERSION ", (c) 2004\n"
+		gettext("\nlingot " VERSION ", (c) 2005\n"
 			"\n"
-			"Ibán Cereijo Graña <comominimo@hotpop.com>\n"
+			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
 			"Jairo Chapela Martínez <jairochapela@terra.es>\n\n"));
 }
 
@@ -489,8 +489,6 @@ void Interfaz::mainLoop()
 
     proximo_tout = GE.proximo(); // consulto el próximo evento.
     gettimeofday(&t_actual, NULL);
-    //    printf("hora actual: %6.6f\n", 1.0*t_actual.tv_sec + 1e-6*t_actual.tv_usec);
-    //    printf("proximo evento: %6.6f\n", 1.0*proximo_tout->tv_sec + 1e-6*proximo_tout->tv_usec);
 
     if (timercmp(proximo_tout, &t_actual, >)) {
       timersub(proximo_tout, &t_actual, &t_diff);
@@ -502,7 +500,6 @@ void Interfaz::mainLoop()
 
     if (proximo_tout == &e_vis) {
       e_vis   = siguiente_evento(t_actual, conf.VISUALIZATION_RATE);
-      //      printf("Despierta para representar aguja\n");
       GE.anhadir(&e_vis);
       dibujarAguja();
     }
@@ -510,21 +507,18 @@ void Interfaz::mainLoop()
     if (proximo_tout == &e_aguja) {
       e_aguja   = siguiente_evento(t_actual, NEEDLE_RATE);
       GE.anhadir(&e_aguja);	
-      //printf("Despierta para calcular posición aguja\n");
       ponerFrecuencia();
     } 
 
     if (proximo_tout == &e_gtk) {
       e_gtk = siguiente_evento(t_actual, GTK_EVENTS_RATE);
       GE.anhadir(&e_gtk);	
-      //      printf("Despierta para atender eventos GTK\n");
       while(gtk_events_pending()) gtk_main_iteration_do(FALSE);
     }
 
     if (proximo_tout == &e_calculo) {
       e_calculo = siguiente_evento(t_actual, conf.CALCULATION_RATE);
       GE.anhadir(&e_calculo);	
-      //      printf("Despierta para representar espectro\n");
       dibujarEspectro();
     }
   }
