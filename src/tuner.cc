@@ -55,14 +55,14 @@ int main(int argc, char *argv[])
     sprintf(CONFIG_FILE, "%s/.lingot/%s.conf", getenv("HOME"), argv[2]);
   } else {
 
-    // Obtengo el directorio home a partir de una variable de entorno.
+    // obtain the home dir from an env var.
     CONFIG_FILE = new char[100];
     memset(CONFIG_FILE, 0, sizeof(CONFIG_FILE));
     sprintf(CONFIG_FILE, "%s/%s", getenv("HOME"), CONFIG_FILE_HOME);
 
   }
 
-  // veo si existe el archivo de configuración, si no existe lo creo.
+  // if config file doesn't exists, i will create it.
   FILE* fp;
   if ((fp = fopen(CONFIG_FILE, "r")) == NULL) {
     
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     mkdir(config_dir, 0777); // creo el directorio.
     printf("creating file %s ...\n", CONFIG_FILE);
     
-    Config nueva_conf; // creo una nueva configuracion con valores por defecto.
-    nueva_conf.guardaArchivoConf(CONFIG_FILE); // y la guardo.
+    Config new_conf; // new configuration with default values.
+    new_conf.saveConfigFile(CONFIG_FILE);
     
     printf("ok\n");
     

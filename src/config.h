@@ -26,87 +26,89 @@
 
 #include "defs.h"
 
-// Clase de configuración. Determina el funcionamiento del afinador.
-// No todos los parámetros son configurables externamente.
+/*
+  Configuration class. Determines the tuner's behaviour.
+  Some parameters are internal only.
+ */
 class Config {
 
 private:
 
-  char**       tokens;    // tabla de tokens.
-  void**       atributos; // tabla de punteros a los atributos.
-  char*        formatos;  // formatos para parsear/guardar los tokens de/en el archivo de configuración.
+  static char* token[];   // config file tokens array.
+  void*        param[14]; // parameter pointer array.
+
+  // formats to scan/print tokens from/to the config file.
+  char*        format;
 
 public:
   
-  char         AUDIO_DEV[80];
-  unsigned int SAMPLE_RATE;
-  unsigned int OVERSAMPLING;
+  char         AUDIO_DEV[80]; // default "/dev/dsp"
+  unsigned int SAMPLE_RATE;   // soundcard sample rate.
+  unsigned int OVERSAMPLING;  // oversampling factor.
 
-  // error de frecuencia del "La" de referencia (en semitonos).
-  FLT          ROOT_FREQUENCY_ERROR;
-
-  // frecuencia del "La" de referencia (parámetro derivado).
+  // frequency of the root A note (internal parameter).
   FLT          ROOT_FREQUENCY;
 
-  unsigned int FFT_SIZE; // muestras usadas para hacer la FFT del mismo número de muestras.
+  FLT          ROOT_FREQUENCY_ERROR; // deviation of the above root frequency.
 
-  FLT          CALCULATION_RATE;   // frecuencia de cálculo.
-  FLT          VISUALIZATION_RATE; // frecuencia de visualización.
+  unsigned int FFT_SIZE; // number of samples of the FFT.
 
-  // duración en segundos de la ventana temporal.
-  FLT          TEMPORAL_WINDOW;  // seg.
+  FLT          CALCULATION_RATE;
+  FLT          VISUALIZATION_RATE;
 
-  // muestras almacenadas en la ventana temporal (parámetro derivado).
+  FLT          TEMPORAL_WINDOW; // duration in seconds of the temporal window.
+
+  // samples stored in the temporal window (internal parameter).
   unsigned int TEMPORAL_BUFFER_SIZE;
-  // muestras leidas de la tarjeta de cada vez. (muestras/cálculo, parámetro derivado)
+
+  // samples read from soundcard. (internal parameter)
   unsigned int READ_BUFFER_SIZE;
 
   FLT          NOISE_THRESHOLD;    // dB
-  FLT          NOISE_THRESHOLD_UN; // unidades naturales (parámetro derivado)
+  FLT          NOISE_THRESHOLD_UN; // natural units (internal parameter)
 
-  // configuración del algoritmo de determinación de la frecuencia fundamental.
-  //----------------------------------------------------------------------------
+  // frequency guessing algorithm configuration
+  //-------------------------------------------
 
-  // número de picos máximos considerados.
-  unsigned int PEAK_NUMBER;
+  unsigned int PEAK_NUMBER; // number of maximum peaks considered.
 
-  // número de muestras adyacentes para considerar una muestra como pico.
+  // number of adyacent samples needed to consider a peak.
   unsigned int PEAK_ORDER ;
 
-  // si el pico máximo es tantas o más veces mayor que el pico considerado,
-  // dicho pico no se tendrá en cuenta como portador de la frecuencia
-  // fundamental.
+  /* maximum amplitude relation between principal and secondary peaks.
+     The max peak doesn't has to be the fundamental frequency carrier if it
+     has an amplitude relation with the fundamental considered peak lower than
+     this parameter. */
   FLT          PEAK_REJECTION_RELATION;    // dBs
-  FLT          PEAK_REJECTION_RELATION_UN; // unidades naturales (parámetro derivado)
+  FLT          PEAK_REJECTION_RELATION_UN; // natural units (internal)
 
-  // aproximación por DFT's
-  unsigned int DFT_NUMBER;  // numero de DFT's.
-  unsigned int DFT_SIZE;  // tamaño en muestras de las DFT's de aproximación.
+  // DFT aproximation
+  unsigned int DFT_NUMBER;  // number of DFTs.
+  unsigned int DFT_SIZE;    // samples of each DFT.
 
-  // máximo número de iterantes por el algoritmo de Newton-Raphson
+  // max iterations for Newton-Raphson algorithm.
   unsigned int MAX_NR_ITER;
 
   //----------------------------------------------------------------------------
 
-  // valor de reposo de la aguja. (la aguja abarca [-0.5, 0.5])
+  // gauge stand value. (gauge contemplates [-0.5, 0.5])
   FLT          VRP;
 
   //----------------------------------------------------------------------------
 
 public:
   
-  // constructor.
   Config();
 
-  // configuración por defecto.
+  // back to default configuration.
   void reset();
 
-  // resuelve parámetros internos a partir de parámetros externos.
-  void actualizaParametrosInternos();
+  // derivate internal parameters from external ones.
+  void updateInternalParameters();
 
   void asociaAtributos();
-  void guardaArchivoConf(char* archivo);
-  void parseaArchivoConf(char* archivo);
+  void saveConfigFile(char* archivo);
+  void parseConfigFile(char* archivo);
 };
 
 

@@ -53,7 +53,7 @@ void clicked_cb(GtkButton *b, DialogConfig *d)
   if((GtkWidget*)b == d->bot_ok) {
     d->aplicar();
     d->cerrar();
-    d->conf.guardaArchivoConf(CONFIG_FILE);
+    d->conf.saveConfigFile(CONFIG_FILE);
   }else if((GtkWidget*)b == d->bot_cancel) {
     d->cerrar();
     d->I->cambiaConfig(d->conf_old);
@@ -432,7 +432,7 @@ void DialogConfig::aplicar()
   conf.FFT_SIZE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry)));
   conf.SAMPLE_RATE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry)));
 
-  conf.actualizaParametrosInternos();
+  conf.updateInternalParameters();
 
   I->cambiaConfig(conf);
 }
