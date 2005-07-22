@@ -26,7 +26,7 @@
 
 #include <sys/types.h>
 
-// precisión en coma flotante con la que trabaja el programa.
+// floating point precission.
 #define FLT                   double
 
 #define TIPO_MUESTRA          int16_t
@@ -41,11 +41,11 @@ extern char* CONFIG_FILE;
 #define GTK_EVENTS_RATE       20.0
 #define NEEDLE_RATE           60.0
 
-// si queremos usar la FFT implementada en esta librería:
+// optionally we can use the following libraries
 //#define LIB_FFTW
 //#define LIBSNDOBJ
 
-/* Includes necesarios para la internacionalización */
+/* needed includes for internacionalization */
 #include <libintl.h>
 #include <locale.h>
 #include <langinfo.h>
