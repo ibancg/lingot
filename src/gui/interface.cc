@@ -30,11 +30,11 @@
 #include "defs.h"
 
 /* Nuestros includes */
-#include "filtro.h"
-#include "interfaz.h"
+#include "filter.h"
+#include "interface.h"
 #include "dialog_config.h"
-#include "analizador.h"
-#include "eventos.h"
+#include "core.h"
+#include "events.h"
 
 /* así de fácil es incluir un pixmap */
 #include "../background.xpm"

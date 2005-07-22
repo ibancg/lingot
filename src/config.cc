@@ -27,7 +27,7 @@
 #include <math.h>
 
 #include "config.h"
-#include "interfaz.h"
+#include "interface.h"
 
 // the following tokens will appear in the config file.
 char* Config::token[] = {
