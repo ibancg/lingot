@@ -30,8 +30,8 @@
 /* Includes necesarios para la internacionalización */
 #include "defs.h"
 
-#include "analizador.h"
-#include "interfaz.h"
+#include "core.h"
+#include "interface.h"
 #include "dialog_config.h"
 
 #define _(x) gettext(x)

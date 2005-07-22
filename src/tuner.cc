@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include "defs.h"
-#include "interfaz.h"
+#include "interface.h"
 
 char* CONFIG_FILE;
 

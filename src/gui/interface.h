@@ -25,8 +25,8 @@
 #define __INTERFAZ_H__
 
 #include "defs.h"
-#include "analizador/analizador.h"
-#include "eventos.h"
+#include "core.h"
+#include "events.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>

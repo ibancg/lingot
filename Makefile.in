@@ -16,16 +16,15 @@
 #  along with lingot; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-PROYECTO  = lingot
-FUENTES   = src/*.cc src/analizador/*.cc src/gui/*.cc
+PROJECT = lingot
+SRC     = src/*.cc src/core/*.cc src/gui/*.cc
 
 DEFINES   = -DGTK12 #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
-INCDIR    = `gtk-config --cflags` -Isrc/analizador -Isrc/gui -Isrc
+INCDIR    = `gtk-config --cflags` -Isrc/core -Isrc/gui -Isrc
 C_FLAGS   = -g -Wall $(DEFINES) $(INCDIR)
-LIBRERIAS = `gtk-config --libs` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
-EJECUTAR  = ls -l $(PROYECTO)
+LIBS      = `gtk-config --libs` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
 
-SRCS = $(wildcard $(FUENTES))
+SRCS = $(wildcard $(SRC))
 OBJS = $(SRCS:.cc=.o)
 
 CXX       = @CXX@
@@ -34,18 +33,18 @@ CFLAGS  = @CFLAGS@ @DEFS@ $(INCLUDE_DIR) $(C_FLAGS)
 LDFLAGS = @LDFLAGS@ @LIBS@
 
 
-all: $(PROYECTO)
+all: $(PROJECT)
 
-$(PROYECTO): .depend $(OBJS)
-	$(CXX) -o $(PROYECTO) $(OBJS) $(LIBRERIAS)
+$(PROJECT): .depend $(OBJS)
+	$(CXX) -o $(PROJECT) $(OBJS) $(LIBS)
 
 %.o: %.cc .depend
 	$(CXX) $(C_FLAGS) -c $< -o $@
 
-install: $(PROYECTO)
+install: $(PROJECT)
 	install -d @prefix@
 	install -d @prefix@/bin
-	install $(PROYECTO) @prefix@/bin
+	install $(PROJECT) @prefix@/bin
 
 clean:
 	find -type f -path '*.o' | xargs rm -f
@@ -55,6 +54,6 @@ clean:
 
 .DEFAULT:
 	@echo "Calculando requisitos"
-	g++ $(INCDIR) -M $(FUENTES) > .depend
+	g++ $(INCDIR) -M $(SRCS) > .depend
 
 sinclude .depend
