@@ -21,8 +21,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __ANALIZADOR_H__
-#define __ANALIZADOR_H__
+#ifndef __CORE_H__
+#define __CORE_H__
 
 #include <pthread.h>
 #include "defs.h"
@@ -39,16 +39,16 @@
 #endif
 
 class CPX;
-class Filtro;
+class Filter;
 
-class Analizador {
+class Core {
 
 public:
 
-  Config        conf;       // estructura de configuración
+  Config        conf;       // configuration structure
   bool          status;
-  Config        nueva_conf; // configuracion pendiente.
-  bool          hay_nueva_conf;
+  Config        new_conf;   // pending configuration
+  bool          new_conf_pending;
 
   // pthread-related  member variables
   pthread_attr_t  attrib;
@@ -56,69 +56,66 @@ public:
 
 protected:
 
-  FLT           frecuencia; // frecuencia fundamental analógica calculada.
-  FLT           X[256];     // tamaño de visualización fijo, indep del tamaño de la FFT.
+  FLT           freq;   // analog frequency calculated.
+  FLT           X[256]; // visual portion of FFT.
 
 private:  
 
 # ifdef LIBSNDOBJ
-  SndRTIO*      A;                       // manejador audio.
+  SndRTIO*      A;                       // audio handler.
 # else
-  audio*        A;                       // manejador audio.
+  audio*        A;                       // audio handler.
 # endif
 
-  TIPO_MUESTRA* buffer_muestras_leidas;  // buffer leído de la tarjeta.
-  FLT*          buffer_leido;            // buffer leído de la tarjeta.
-  FLT*          buffer_ventana_temporal; // memoria de muestras en tiempo.
+  SAMPLE_TYPE*  read_buffer;
+  FLT*          flt_read_buffer;
+  FLT*          temporal_window_buffer; // sample memory.
 
-  // estimación de la función de densidad espectral de potencia.
-  FLT*          dep_fft;
-  FLT*          dep_dft;
-  FLT*          diff2_dep_fft;
+  // spectral power distribution esteem.
+  FLT*          spd_fft;
+  FLT*          spd_dft;
+  FLT*          diff2_spd_fft;
 
 # ifdef LIB_FFTW
-  fftw_complex  *fftw_in, *fftw_out; // señal compleja en dominio temporal y frecuencial.
+  fftw_complex  *fftw_in, *fftw_out; // complex signals in time and freq.
   fftw_plan     fftwplan;
 # else
-  CPX*          fft_out; // señal compleja en dominio frecuencial.
+  CPX*          fft_out; // complex signal in freq.
 # endif
 
-  Filtro*       filtro_diezmado; // filtro antialiasing.
+  Filter*       antialiasing_filter; // antialiasing filter for decimation.
+
+  void          decimate(FLT* in, FLT* out);
 
   //----------------------------------------------------------------
 
-  // los siguientes métodos están implementados en maximo.cc
+  // the following methods are implemented in peaks.cc
 
-  /* devuelve el nivel considerado ruido a la frecuencia dada.
-     La cota va a depender de la frecuencia, debemos ser más permisivos
-     para frecuencias altas, ya que su salida no es tan potente. */
-  FLT           ruido(FLT w);
+  /* returns noise threshold at a given frequency w. */
+  FLT           noise_threshold(FLT w);
   
-  void          diezmar(FLT* in, FLT* out);
-  bool          esPico(FLT* x, int index_muestra);
+  bool          peak(FLT* buffer, int index);
   
-  // devuelve el máximo (su índice) de un buffer de N muestras.
-  void          maximo(FLT *x, int N, int &Mi);
+  // returns the maximum index.
+  void          max(FLT *buffer, int N, int* Mi);
   
-  // devuelve el pico fundamental (indice) de un buffer de N muestras.
-  int           picoFundamental(FLT *x, FLT* y, int N);
+  // returns the index of the peak that carries the fundamental freq.
+  int           fundamentalPeak(FLT *x, FLT* y, int N);
 
 public:
 
-  // constructor.
-  Analizador();
-  // destructor.
-  ~Analizador();
+  Core();
+  ~Core();
   
-  // procesa los datos leídos para calcular la frecuencia.
-  void procesar();
+  // read and process data to guess the frequency.
+  void process();
 
-  void cambiaConfig(Config conf);
+  void changeConfig(Config conf);
 
-  void iniciar();
-  void finalizar();
+  void start();
+  void stop();
 };
 
-void ProcessThread(Analizador*);
+void ProcessThread(Core*);
 
-#endif //__ANALIZADOR_H__
+#endif //__CORE_H__

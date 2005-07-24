@@ -21,45 +21,34 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __FILTROTECA_H__
-#define __FILTROTECA_H__
+#ifndef __FILTERS_H__
+#define __FILTERS_H__
 
 /*
-  Filtros chebyshev de orden 8, con wc = 0.9/i (normalizado con
-  respecto a Pi). Tomamos 0.9 y no 1 para dejar ese 10% de margen
-  de seguridad y evitar que se nos cuelen frecuencias aliasadas
-  cercanas a w=Pi debido a la no idealidad del filtro.
+  8 order Chebyshev filters, with wc=0.9/i (normalized respect to
+  Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
+  in order to avoid aliased frequencies near to w=Pi, due to non
+  ideality of the filter.
 
-  Estas frecuencias de corte wc=Pi/i, con i=1..20, se corresponden
-  al factor de sobremuestreo, ya que al diezmar la señal evitaremos
-  el aliasing mediante el uso de estos filtros.
+  The cut frequencies wc=Pi/i, with i=1..20, correspond with the
+  oversampling factor, avoiding aliasing at decimation.
 
-  ¿Por qué filtros de chebyshev?, puestos a escoger entre los tipos
-  más clásicos de filtros, vemos que para un orden dado, estos fil-
-  tros consiguen una caída más abrupta que los butterworth por 
-  ejemplo (en este sentido aprovechamos mejor el orden del filto),
-  si bien la fase se ve más afectada, pero este último inconveniente
-  no lo es en la presente aplicación pues el análisis se hace total-
-  mente con el módulo de la transformada de Fourier. No hay que 
-  decir los filtros FIR quedan descartados, al necesitar órdenes de
-  filtro exagerados para conseguir resultados similares.
-
-  ¿Por qué orden 8?, consigue caídas lo suficientemente abruptas sin
-  consumir excesivos recursos
+  ¿Why Chebyshev filters?, for a given order, those filters yield
+  abrupt falls than other ones as Butterworth, making the most of
+  the order. Although Chebyshev filters affects more to the phase,
+  it doesn't matter due to the analysis is made on the signal
+  power distribution (only module).
 */
 
 /*
-  Para que nadie se pierda:
-  - Primer límite del array indefinido, habrá tantos filtros como
-  queramos poner.
-  - Segundo límite = 2, dos polinomios por filtro: a y b.
-  - Tercer límite = 9, orden 8, 9 coeficientes.
+  Undefined number of filters, each of one consisting of 2 vectors of 9
+  coefs (order 8).
  */
 FLT filtros[][2][9] = {
 
   {
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, },
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }
+    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }, // a
+    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }  // b
   },  
   {
     { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, },

@@ -31,13 +31,12 @@
 #include "defs.h"
 #include "audio.h"
 
-audio::audio(int canales, int frecuencia, int formato, char* fdsp)
+audio::audio(int channels, int rate, int format, char* fdsp)
 {
   //  int dma  = 4;
 
-  audio::freq = frecuencia;
+  audio::rate = rate;
 
-  // Abre el dsp
   dsp = open(fdsp, O_RDONLY);
   if (dsp < 0)
     {
@@ -46,67 +45,66 @@ audio::audio(int canales, int frecuencia, int formato, char* fdsp)
       perror(buff);
       exit(-1);
     }
-
-  // Los canales...
-  //if (ioctl(dsp, SOUND_PCM_READ_CHANNELS, &canales) < 0)
-  if (ioctl(dsp, SNDCTL_DSP_CHANNELS, &canales) < 0)
-      {
-	perror("Error setting number of channels");
-	exit(-1);
-      }
   
-  /*  if (ioctl(dsp, SOUND_PCM_WRITE_CHANNELS, &canales) < 0)
+  //if (ioctl(dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
+  if (ioctl(dsp, SNDCTL_DSP_CHANNELS, &channels) < 0)
+    {
+      perror("Error setting number of channels");
+      exit(-1);
+    }
+  
+  /*  if (ioctl(dsp, SOUND_PCM_WRITE_CHANNELS, &channels) < 0)
       {
       perror("Error setting number of channels");
       exit(-1);
       }*/
   
-  // Tamaño de las muestras
-  //if (ioctl(dsp, SOUND_PCM_SETFMT, &formato) < 0)
-  if (ioctl(dsp, SNDCTL_DSP_SETFMT, &formato) < 0)
+  // sample size
+  //if (ioctl(dsp, SOUND_PCM_SETFMT, &format) < 0)
+  if (ioctl(dsp, SNDCTL_DSP_SETFMT, &format) < 0)
     {
       perror("Error setting bits per sample");
       exit(-1);
     }
 
-  int tam_fragmento = 1;
-  int tam_buffer_DMA = 512;
-  int parametro = 0;
+  int fragment_size = 1;
+  int DMA_buffer_size = 512;
+  int param = 0;
 
-  for (parametro = 0; tam_fragmento < tam_buffer_DMA; parametro++)
-    tam_fragmento <<= 1;
+  for (param = 0; fragment_size < DMA_buffer_size; param++)
+    fragment_size <<= 1;
 
-  parametro |= 0x00ff0000;
+  param |= 0x00ff0000;
 
-  if (ioctl(dsp, SNDCTL_DSP_SETFRAGMENT, &parametro) < 0)
+  if (ioctl(dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0)
     {
       perror("Error setting DMA buffer size");
       exit(-1);
     }
 
-  // Divisor de DMA
+  // DMA divisor
   /*  if (ioctl(dsp, SNDCTL_DSP_SUBDIVIDE, &dma) < 0)
-    {
+      {
       perror("Error setting DMA divisor");
       exit(-1);
-      }*/
-
-  /*  // Frecuencia de muestreo / reproduccion
-  if (ioctl(dsp, SOUND_PCM_WRITE_RATE, &freq) < 0)
-    {
+      }
+  
+      // Rate de muestreo / reproduccion
+      if (ioctl(dsp, SOUND_PCM_WRITE_RATE, &rate) < 0)
+      {
       perror("Error setting write rate");
       exit(-1);
       }*/
 
-  //  if (ioctl(dsp, SOUND_PCM_READ_RATE, &freq) < 0)
-  if (ioctl(dsp, SNDCTL_DSP_SPEED, &freq) < 0)
+  //  if (ioctl(dsp, SOUND_PCM_READ_RATE, &rate) < 0)
+  if (ioctl(dsp, SNDCTL_DSP_SPEED, &rate) < 0)
     {
       perror("Error setting sample rate");
       exit(-1);
     }
 
   /*
-  // vamos a hacer las lecturas de manera NO BLOQUEANTE.
+  // non-blocking reads.
   if (fcntl(dsp, F_SETFL, O_NONBLOCK) < 0)
   {
   perror("Error setting non-blocking reads");
@@ -120,12 +118,7 @@ audio::~audio()
   close(dsp);
 }
 
-int audio::lee(void *buffer, int tamanho)
+int audio::read(void *buffer, int size)
 {
-  return read(dsp, buffer, tamanho);
-}
-
-void audio::escribe(void *buffer, int tamanho)
-{
-  write(dsp, buffer, tamanho);
+  return ::read(dsp, buffer, size);
 }

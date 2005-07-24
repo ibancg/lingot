@@ -29,17 +29,17 @@
 // floating point precission.
 #define FLT                   double
 
-#define TIPO_MUESTRA          int16_t
-#define FORMATO_MUESTRA       AFMT_S16_LE
+#define SAMPLE_TYPE          int16_t
+#define SAMPLE_FORMAT        AFMT_S16_LE
 
 
 #define CONFIG_FILE_HOME      ".lingot/lingot.conf"
-extern char* CONFIG_FILE;
+extern char CONFIG_FILE[];
 
 #define QUICK_MESSAGES
 
 #define GTK_EVENTS_RATE       20.0
-#define NEEDLE_RATE           60.0
+#define GAUGE_RATE            60.0
 
 // optionally we can use the following libraries
 //#define LIB_FFTW

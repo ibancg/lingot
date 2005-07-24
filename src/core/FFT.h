@@ -25,7 +25,7 @@
 #define _FFT_H_
 
 /*
- Transformadas de Fourier.
+  Fourier transforms.
 */
 
 #include "defs.h"
@@ -37,19 +37,20 @@
 class CPX;
 class Config;
 
-typedef unsigned long int ULI;
+void createWN(Config* conf);
+void destroyWN();
 
-void CreaWN(Config* conf);
-void DestruyeWN();
-
-// transformada rápida de Fourier.
-void FFT(FLT* x, CPX* X, ULI N, ULI i = 0, ULI d1 = 0, ULI d2 = 1);
+// Fast Fourier Transform implementation.
+void FFT(FLT* in, CPX* out, unsigned long int N, // principal parameters.
+	 unsigned long int offset = 0,     // hidden parameters.
+	 unsigned long int d1 = 0,
+	 unsigned long int step = 1);
 #endif
 
-// DEP selectiva en frecuencia.
-void DEP(FLT* buffer, int N1, FLT wi, FLT dw, FLT* X, int N2);
+// Spectral Power Distribution (SPD) esteem, selectively in frequency.
+void SPD(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
 
-/* Evalúa la derivada y la derivada segunda de la DEP de buffer en la frecuencia w. */
-void diffs_DEP(FLT* buffer, int N, FLT w, FLT &d1, FLT &d2);
+// first and second SPD derivatives at frequency w.
+void SPD_diffs(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2);
 
 #endif

@@ -24,19 +24,20 @@
 #ifndef __AUDIO_H__
 #define __AUDIO_H__
 
-// clase para manejar la entrada/salida de audio.
+// class for audio input handling.
 class audio
 {
- public:
+private:
 
- int  dsp;
- int  freq;
+  int  dsp;  // file handler.
+  int  rate;
 
- audio(int canales, int frecuencia, int formato, char* fdsp);
- ~audio();
-
- int  lee(void* buffer, int tamanho);
- void escribe(void* buffer, int tamanho);
+public:
+  
+  audio(int channels, int rate, int format, char* fdsp);
+  ~audio();
+  
+  int read(void* buffer, int size);
 };
 
 #endif

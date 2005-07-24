@@ -28,11 +28,11 @@
 #include <gdk/gdk.h>
 #include "config.h"
 
-class Interfaz;
+class GUI;
 
-/*--------- Cuadro de diálogo con todas las opciones --------------------*/
+/*--------- Dialog box with multiple options --------------------*/
 
-void dialog_config_cb(GtkWidget *, Interfaz *);
+void dialog_config_cb(GtkWidget *, GUI *);
 
 class DialogConfig {
 
@@ -48,23 +48,23 @@ private:
   GtkWidget *spin_peak_order, *spin_peak_rejection_relation;
   GtkWidget *combo_fft_size, *combo_sample_rate;
 
-  GtkWidget *bot_ok, *bot_cancel, *bot_apply, *bot_default;
+  GtkWidget *button_ok, *button_cancel, *button_apply, *button_default;
   GtkWidget *label_sample_rate, *label_root_frequency;
 
-  Config    conf;     // configuración provisional
-  Config    conf_old; // configuración anterior, por si pulsamos cancel.
+  Config    conf;     // provisional configuration.
+  Config    conf_old; // restoration point for cancel.
 
-  Interfaz* I;
+  GUI*      G;
 
 public:
 
-  DialogConfig(Interfaz*);
-  void reescribir();
-  void aplicar();
-  void cerrar();
+  DialogConfig(GUI*);
+  void rewrite();
+  void apply();
+  void close();
   
   friend void clicked_cb(GtkButton *b, DialogConfig *d);
-//   friend void dialog_config_cb(GtkWidget *, Interfaz *);
+//   friend void dialog_config_cb(GtkWidget *, GUI *);
   friend void change_label_sample_rate( GtkWidget *widget, DialogConfig *d);
   friend void change_label_a_frequence( GtkWidget *widget, DialogConfig *d);
 

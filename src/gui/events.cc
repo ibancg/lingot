@@ -23,18 +23,18 @@
 
 #include "events.h"
 
-// constructor, lista inicialmente vacía.
-GestorEventos::GestorEventos() {
-  lista = NULL;
+// constructor, empty list.
+EventScheduler::EventScheduler() {
+  list = NULL;
 }
 
 
-// destructor, borra la lista.
-GestorEventos::~GestorEventos() {
-  t_nodo_lista_eventos* aux = lista;
-  t_nodo_lista_eventos* aux2;
-# ifdef DEBUG_EVENTOS
-  if (aux != NULL) printf(WARNING " Borrando lista de eventos no vacía\n");
+// destructor, deletes the list.
+EventScheduler::~EventScheduler() {
+  t_event_list_node* aux = list;
+  t_event_list_node* aux2;
+# ifdef DEBUG_EVENTS
+  if (aux != NULL) printf(WARNING " Removing not empty event list\n");
 # endif
   while (aux != NULL) {
     aux2 = aux->sig;
@@ -43,102 +43,67 @@ GestorEventos::~GestorEventos() {
   }
 }
 
-// hay que insertar el nuevo evento ordenado cronológicamente.
-int GestorEventos::anhadir(t_evento* X) {
+// sorted insertion.
+int EventScheduler::add(t_event* X) {
   
-  t_nodo_lista_eventos* anterior = NULL;
-  t_nodo_lista_eventos* actual = lista;
+  t_event_list_node* prev = NULL;
+  t_event_list_node* current = list;
 
-  // recorro la lista para ver dónde inserto el nuevo evento.
-  while (actual != NULL) {
-    if (X == actual->X) return -1; // el evento ya estaba en la lista.
-    if (timercmp(X, actual->X, <)) break;
-    anterior = actual;
-    actual = actual->sig;
+  // search insertion position.
+  while (current != NULL) {
+    if (X == current->X) return -1; // the event already was in the list.
+    if (timercmp(X, current->X, <)) break;
+    prev = current;
+    current = current->sig;
   }
   
-  t_nodo_lista_eventos* nuevo;
+  t_event_list_node* new_event;
   
-  // creo el nuevo elemento.
-  nuevo= new t_nodo_lista_eventos;
-  nuevo->X = X;
-  nuevo->sig = actual;
+  // creates new element.
+  new_event = new t_event_list_node;
+  new_event->X = X;
+  new_event->sig = current;
 
-  // y lo inserto.
-  if (anterior == NULL) lista = nuevo; // al principio.
-  else anterior->sig = nuevo;          // o en general.
+  // inserts it.
+  if (prev == NULL) list = new_event; // at the beginning
+  else prev->sig = new_event;         // or at any position.
 
   return 0;
 }
 
-// elimina un elemento.
-int GestorEventos::eliminar(t_evento* X) {
+// removes an event from the list.
+int EventScheduler::remove(t_event* X) {
 
-  t_nodo_lista_eventos* anterior = NULL;
-  t_nodo_lista_eventos* actual = lista;
+  t_event_list_node* prev = NULL;
+  t_event_list_node* current = list;
 
-  // recorro la lista para ver dónde está el elemento víctima.
-  while (actual != NULL) {
-    if (X == actual->X) break;
-    anterior = actual;
-    actual = actual->sig;
+  // where is the event to remove.
+  while (current != NULL) {
+    if (X == current->X) break;
+    prev = current;
+    current = current->sig;
   }
 
-  if (actual == NULL) return -1; // elemento no encontrado.
+  if (current == NULL) return -1; // not found.
 
-  // debo eliminar el nodo actual, referenciado por el anterior.
-  if (anterior == NULL) lista = actual->sig; // borro el primer nodo.
-  else anterior->sig = actual->sig; // u otro cualquiera
+  if (prev == NULL) list = current->sig; // removes first node.
+  else prev->sig = current->sig;         // or any else.
   
-  delete actual;
+  delete current;
 
   return 0;
 }
 
-/*
-// retoca eventos de timeout (resta un determinado valor a todos, no modifica orden).
-void GestorEventos::touch(struct timeval diff) {
-
-  t_nodo_lista_eventos* actual = lista;
-
-  // recorro la lista.
-  while (actual != NULL) {
-
-    if (timercmp(actual->X, &diff, >))
-      timersub(actual->X, &diff, actual->X);
-    else actual->X->tv_usec = actual->X->tv_sec = 0;
-    
-    actual = actual->sig;
-  }
-  
-}
-*/
 //-----------------------------------------------------------------
 
-/*double periodo_tasa(t_evento periodo)
+struct timeval next_event(struct timeval current_time, FLT rate)
 {
-  unsigned long int usec = periodo.tv_usec + 1000000*periodo.tv_sec;
-  return 1e6/usec;
-}
+  struct timeval period, result;
 
-struct timeval tasa_periodo(double tasa)
-{
-  struct timeval periodo;
+  double period_d = 1.0/rate;
+  period.tv_sec  = (long int) period_d;
+  period.tv_usec = (long int) (1e6*(period_d - period.tv_sec));
 
-  double periodo_d = 1.0/tasa;
-  periodo.tv_sec  = (long int) periodo_d;
-  periodo.tv_usec = (long int) (1e6*(periodo_d - periodo.tv_sec));
-  return periodo;
-}*/
-
-struct timeval siguiente_evento(struct timeval tactual, FLT tasa)
-{
-  struct timeval periodo, resul;
-
-  double periodo_d = 1.0/tasa;
-  periodo.tv_sec  = (long int) periodo_d;
-  periodo.tv_usec = (long int) (1e6*(periodo_d - periodo.tv_sec));
-
-  timeradd(&tactual, &periodo, &resul); 
-  return resul;
+  timeradd(&current_time, &period, &result); 
+  return result;
 }

@@ -21,40 +21,40 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __EVENTOS_H__
-#define __EVENTOS_H__
+#ifndef __EVENTS_H__
+#define __EVENTS_H__
 
 #include <sys/time.h>
 #include <time.h>
 
 #include "defs.h"
-// gestión de eventos de temporización.
 
-typedef struct timeval t_evento;
+// temporization events scheduling.
 
-struct t_nodo_lista_eventos {
-  t_evento*                    X;
-  struct t_nodo_lista_eventos* sig;
+typedef struct timeval t_event;
+
+
+// event scheduling by single list.
+struct t_event_list_node {
+  t_event*                 X;
+  struct t_event_list_node* sig;
 };
 
 
-// gestión de eventos mediante una lista simplemente enlazada.
-class GestorEventos {
+// event scheduler class.
+class EventScheduler {
 private:
-  struct t_nodo_lista_eventos* lista; // lista de eventos.
+  struct t_event_list_node* list; // event list.
 public:
-  GestorEventos();
-  ~GestorEventos();
-  int  anhadir(t_evento*);
-  int  eliminar(t_evento*);
-  //  void touch(struct timeval);
-  struct timeval* proximo() { return lista->X; }
+  EventScheduler();
+  ~EventScheduler();
+  int  add(t_event*);
+  int  remove(t_event*);
+  struct timeval* next() { return list->X; }
 };
 
-//double         periodo_tasa(t_evento periodo);
-//struct timeval tasa_periodo(FLT tasa);
-
-// devuelve cuándo ocurrirá el siguiente evento a partir de una hora actual y una tasa.
-struct timeval siguiente_evento(struct timeval tactual, FLT tasa);
+// returns the expiration time for the next event, given a current time and
+// an ocurrence rate.
+struct timeval next_event(struct timeval current_time, FLT time);
 
 #endif

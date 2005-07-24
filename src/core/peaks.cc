@@ -27,78 +27,73 @@
 #include "core.h"
 
 /*
-  Funciones varias para identificar picos.
+  peak identification functions.
  */
 
-/* devuelve el nivel considerado ruido a la frecuencia dada.
-   La cota puede depender de la frecuencia, debemos ser más permisivos
-   para frecuencias altas, ya que su salida no es tan potente. */
-FLT Analizador::ruido(FLT w)
+FLT Core::noise_threshold(FLT w)
 {
-  return conf.NOISE_THRESHOLD_UN; // en este caso constante.
+  //  return 0.5*(1.0 - index/conf.FFT_SIZE);
+  return conf.NOISE_THRESHOLD_UN;
 }
 
 //---------------------------------------------------------------------------
 
-// devuelve el máximo (su índice) de un buffer de N muestras.
-void Analizador::maximo(FLT *x, int N, int &Mi)
+void Core::max(FLT *x, int N, int* Mi)
 {
   register int i;
   FLT          M;
   
   M  = -1.0;
-  Mi = -1;
+  *Mi = -1;
 
   for (i = 0; i < N; i++) {
     
     if (x[i] > M) {
       M  = x[i];
-      Mi = i;
+      *Mi = i;
     }
   }
 }
 
 //---------------------------------------------------------------------------
 
-inline bool Analizador::esPico(FLT* x, int index_muestra)
+inline bool Core::peak(FLT* x, int index)
 {
-  //static   FLT  delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // resolución en radianes.  
+  //static   FLT  delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // resolution in rads
 
-  // un pico debe estar por encima del nivel de ruido.
-  if (x[index_muestra] < conf.NOISE_THRESHOLD_UN) return false;
+  // a peak must be greater than noise threshold.
+  if (x[index] < conf.NOISE_THRESHOLD_UN) return false;
 
-  //if (x[index_muestra] < 0.5*(1.0 - index_muestra/conf.FFT_SIZE)) return false;
   for (register unsigned int j = 0; j < conf.PEAK_ORDER; j++) {
-    if (x[index_muestra + j] < x[index_muestra + j + 1]) return false;
-    if (x[index_muestra - j] < x[index_muestra - j - 1]) return false;
+    if (x[index + j] < x[index + j + 1]) return false;
+    if (x[index - j] < x[index - j - 1]) return false;
   }
   return true;
 }
 
 //---------------------------------------------------------------------------
 
-/* devuelve el pico fundamental (indice) de un buffer de N muestras. */
-int Analizador::picoFundamental(FLT *x, FLT* y, int N)
+int Core::fundamentalPeak(FLT *x, FLT* y, int N)
 {
   register unsigned int i, j, m;
   int                   p_index[conf.PEAK_NUMBER];
   
-  // de momento todos están en el índice -1, no hay picos (convenio).
+  // at this moment there is no peaks.
   for (i = 0; i < conf.PEAK_NUMBER; i++) p_index[i] = -1;
 
-  for (i = conf.PEAK_ORDER; i < N - conf.PEAK_ORDER; i++)  // recorro el buffer.
-    if (esPico(y, i)) {
+  for (i = conf.PEAK_ORDER; i < N - conf.PEAK_ORDER; i++)
+    if (peak(y, i)) {
 
-      // busco un hueco en el buffer de máximos, si no lo hay me quedo con el menor
-      // como candidato a ser sustituido.
-      m = 0; // primer candidato.
+      // search a place in the maximums buffer, if it doesn't exists, the
+      // lower maximum is candidate to be replaced.
+      m = 0; // first candidate.
       for (j = 0; j < conf.PEAK_NUMBER; j++) {
 	if (p_index[j] == -1) {
-	  m = j; // hueco.
-	  break; // ya no compruebo mas.
+	  m = j; // place.
+	  break;
 	}
 
-	if (x[p_index[j]] < x[p_index[m]]) m = j; // busca el menor.
+	if (x[p_index[j]] < x[p_index[m]]) m = j; // search the lowest.
       }
 
       if (p_index[m] == -1) p_index[m] = i;
@@ -106,11 +101,15 @@ int Analizador::picoFundamental(FLT *x, FLT* y, int N)
   }
 
   FLT M = 0.0;
-  for (i = 0; i < conf.PEAK_NUMBER; i++) if ((p_index[i] != -1) && (y[p_index[i]] > M)) M = y[p_index[i]];
-  for (i = 0; i < conf.PEAK_NUMBER; i++) if ((p_index[i] == -1) || (conf.PEAK_REJECTION_RELATION_UN*y[p_index[i]] < M)) p_index[i] = N; // quedan huecos.
+  for (i = 0; i < conf.PEAK_NUMBER; i++) 
+    if ((p_index[i] != -1) && (y[p_index[i]] > M)) M = y[p_index[i]];
+  for (i = 0; i < conf.PEAK_NUMBER; i++) 
+    if ((p_index[i] == -1) || 
+	(conf.PEAK_REJECTION_RELATION_UN*y[p_index[i]] < M)) 
+      p_index[i] = N; // there are available places in the buffer.
 
   for (m = 0, j = 0; j < conf.PEAK_NUMBER; j++)
-    if (p_index[j] < p_index[m]) m = j; // busca el menor índice.
+    if (p_index[j] < p_index[m]) m = j; // search the lowest index.
 
   return p_index[m];
 }

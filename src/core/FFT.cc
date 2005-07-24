@@ -28,19 +28,18 @@
 #include "config.h"
 
 /*
-  Funciones para cálculo de FFT y otros parámetros relacionados
-  con la DFT.
- */
+  DFT functions.
+*/
 
 #ifndef LIB_FFTW
 
 #include "complex.h"
 
-// tabla con factores de fase. Para acelerar un poco la FFT.
+// phase factor table, for FFT optimization.
 CPX* WN;
 
-// Crea la tabla de los factores de fase.
-void CreaWN(Config* conf)
+// creates the phase factor table.
+void createWN(Config* conf)
 {
   FLT alpha;
   WN = new CPX[conf->FFT_SIZE >> 1];
@@ -52,46 +51,51 @@ void CreaWN(Config* conf)
   }
 }
 
-void DestruyeWN() {
+void destroyWN() {
   delete [] WN;
 }
 
-// transformada rápida de Fourier.
-void FFT(FLT* x, CPX* X, ULI N, ULI offset, ULI d1, ULI step)
-{
-  CPX           X1, X2;
-  ULI           Np2 = (N >> 1); // N/2
-  register ULI  a, b, c, q;
+//------------------------------------------------------------------------
 
-  if (N == 2) { // Mariposa para N = 2;
+// Fast Fourier Transform.
+void FFT(FLT* in, CPX* out, unsigned long int N,
+	 unsigned long int offset,
+	 unsigned long int d1,
+	 unsigned long int step)
+{
+  CPX                        X1, X2;
+  unsigned long int          Np2 = (N >> 1); // N/2
+  register unsigned long int a, b, c, q;
+
+  if (N == 2) { // butterfly for N = 2;
     
-    X1.r = x[offset];
+    X1.r = in[offset];
     X1.i = 0.0;
-    X2.r = x[offset + step];
+    X2.r = in[offset + step];
     X2.i = 0.0;
-    X[d1].r       = X1.r + X2.r;
-    X[d1].i       = X1.i + X2.i;
-    X[d1 + Np2].r = X1.r - X2.r;
-    X[d1 + Np2].i = X1.i - X2.i;
+
+    addCPX(X1, X2, &out[d1]);
+    subCPX(X1, X2, &out[d1 + Np2]);
+    /*    out[d1].r       = X1.r + X2.r;
+	  out[d1].i       = X1.i + X2.i;
+	  out[d1 + Np2].r = X1.r - X2.r;
+	  out[d1 + Np2].i = X1.i - X2.i;*/
 
     return;
   }
 
-  FFT(x, X, Np2, offset, d1, step << 1);
-  FFT(x, X, Np2, offset + step, d1 + Np2, step << 1);
+  FFT(in, out, Np2, offset, d1, step << 1);
+  FFT(in, out, Np2, offset + step, d1 + Np2, step << 1);
     
   for (q = 0, c = 0; q < (N >> 1); q++, c += step) {
-
+    
     a = q + d1;
     b = a + Np2;
-
-    X1 = X[a];
-    MulCPX(X[b], WN[c], X2);
-
-    X[a].r = X1.r + X2.r;
-    X[a].i = X1.i + X2.i;
-    X[b].r = X1.r - X2.r;
-    X[b].i = X1.i - X2.i;
+    
+    X1 = out[a];
+    mulCPX(out[b], WN[c], &X2);
+    addCPX(X1, X2, &out[a]);
+    subCPX(X1, X2, &out[b]);
   }
 }
 
@@ -100,11 +104,10 @@ void FFT(FLT* x, CPX* X, ULI N, ULI offset, ULI d1, ULI step)
 //------------------------------------------------------------------------
 
 
-/* DFT. DEP SELECTIVA EN FRECUENCIA. (densidad espectral de potencia)
-   transforma el buffer de longitud N1, desde la frecuencia wi, con una se
-   paración entre muestras de dw rad, dejándolo en el buffer de reales
-   X de longitud N2. */
-void DEP(FLT* buffer, int N1, FLT wi, FLT dw, FLT* X, int N2)
+/* Spectral Power Distribution esteem, selectively in frequency, by DFT.
+   transforms signal in of N1 samples from frequency wi, with sample
+   separation of dw rads, storing the result on buffer out with N2 samples. */
+void SPD(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2)
 {
   FLT           Xr, Xi;
   FLT           wn;
@@ -113,27 +116,26 @@ void DEP(FLT* buffer, int N1, FLT wi, FLT dw, FLT* X, int N2)
 
   for (i = 0; i < N2; i++) {
     
-    Xr = 0.0; // parte real.
-    Xi = 0.0; // parte imaginaria.
+    Xr = 0.0;
+    Xi = 0.0;
     
-    for (n = 0; n < N1; n++) {
+    for (n = 0; n < N1; n++) { // O(n1*n2)  :(
       
       wn = (wi + dw*i)*n;
-      Xr = Xr + cos(wn)*buffer[n];
-      Xi = Xi - sin(wn)*buffer[n];
+      Xr = Xr + cos(wn)*in[n];
+      Xi = Xi - sin(wn)*in[n];
     }
 
-    X[i] = (Xr*Xr + Xi*Xi)/N1_2; // móulo al cuadrado.
+    out[i] = (Xr*Xr + Xi*Xi)/N1_2; // normalized squared module.
   }
 }
 
 //------------------------------------------------------------------------
 
 /*
-  Evalúa la derivada y la derivada segunda de la DEP de buffer en la frecuencia w.
-  Se evalúan las 2 derivadas conjuntamente ya que hay mucho cálculo común.
+  Evaluates 1st and 2nd derivatives from SPD at frequency w.
 */
-void diffs_DEP(FLT* buffer, int N, FLT w, FLT &d1, FLT &d2)
+void SPD_diffs(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2)
 {
   FLT   x_cos_wn, x_sin_wn;
   FLT   SUM_x_sin_wn    = 0.0;
@@ -145,8 +147,8 @@ void diffs_DEP(FLT* buffer, int N, FLT w, FLT &d1, FLT &d2)
   
   for (register int n = 0; n < N; n++) {
     
-    x_cos_wn = buffer[n]*cos(w*n);
-    x_sin_wn = buffer[n]*sin(w*n);
+    x_cos_wn = in[n]*cos(w*n);
+    x_sin_wn = in[n]*sin(w*n);
 
     SUM_x_sin_wn    += x_sin_wn;
     SUM_x_cos_wn    += x_cos_wn;
@@ -157,7 +159,7 @@ void diffs_DEP(FLT* buffer, int N, FLT w, FLT &d1, FLT &d2)
   }
 
   FLT N_2 = N*N;
-  d1 = 2.0*(SUM_x_sin_wn*SUM_x_n_cos_wn - SUM_x_cos_wn*SUM_x_n_sin_wn)/N_2;
-  d2 = 2.0*(SUM_x_n_cos_wn*SUM_x_n_cos_wn - SUM_x_sin_wn*SUM_x_n2_sin_wn +
-	    SUM_x_n_sin_wn*SUM_x_n_sin_wn - SUM_x_cos_wn*SUM_x_n2_cos_wn)/N_2;
+  *out_d1 = 2.0*(SUM_x_sin_wn*SUM_x_n_cos_wn - SUM_x_cos_wn*SUM_x_n_sin_wn)/N_2;
+  *out_d2 = 2.0*(SUM_x_n_cos_wn*SUM_x_n_cos_wn - SUM_x_sin_wn*SUM_x_n2_sin_wn +
+		 SUM_x_n_sin_wn*SUM_x_n_sin_wn - SUM_x_cos_wn*SUM_x_n2_cos_wn)/N_2;
 }
