@@ -53,7 +53,6 @@ clean:
 .PHONY: all run clean
 
 .DEFAULT:
-	@echo "Calculando requisitos"
 	g++ $(INCDIR) -M $(SRCS) > .depend
 
 sinclude .depend

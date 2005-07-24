@@ -2,7 +2,7 @@
 /*
   lingot, a musical instrument tuner.
 
-  Copyright (C) 2004   Ibán Cereijo Graña, Jairo Chapela Martínez.
+  Copyright (C) 2004, 2005  Ibán Cereijo Graña, Jairo Chapela Martínez.
 
   This file is part of lingot.
 
@@ -54,6 +54,6 @@ extern char CONFIG_FILE[];
 #define LOCALEDIR "."
 #define _(x) gettext(x)
 
-#define VERSION "0.6.0"
+#define VERSION "0.6.1"
 
 #endif

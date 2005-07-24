@@ -19,7 +19,7 @@
 
 
 # Process this file with autoconf to produce a configure script.
-AC_INIT(lingot, 0.6.0, BUG-REPORT-ADDRESS)
+AC_INIT(lingot, 0.6.1, BUG-REPORT-ADDRESS)
 AC_CONFIG_SRCDIR([src/config.cc])
 #AC_CONFIG_HEADER([config.h])
 

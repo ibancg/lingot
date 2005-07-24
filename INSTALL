@@ -4,7 +4,7 @@ Written by:
   Ibán Cereijo Graña <comominimo@hotpop.com>
   Jairo Chapela Martínez <jairochapela@terra.es>
 
-Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez.
+Copyright (C) 2004, 2005 Ibán Cereijo Graña, Jairo Chapela martínez.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -35,11 +35,11 @@ INSTALLATION PROCEDURE
 
  1. Extract the sources from the tar-gz file:
 
-   tar xvzf lingot-0.6.0.tar.gz
+   tar xvzf lingot-0.6.1.tar.gz
 
  2. Enter in the sources directory and run the configure script:
 
-   cd lingot-0.6.0
+   cd lingot-0.6.1
    ./configure
 
  3. If the step 2 doesn't report any error, you can compile and install

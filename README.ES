@@ -4,7 +4,7 @@ Escrito por:
   Ibán Cereijo Graña <comominimo@hotpop.com>
   Jairo Chapela Martínez <jairocm@wanadoo.es>
 
-Copyright (C) 2004 Ibán Cereijo Graña, Jairo Chapela martínez,
+Copyright (C) 2004, 2005 Ibán Cereijo Graña, Jairo Chapela martínez,
 		   Graciano Carrillo Pousa.
 
 Descripción
