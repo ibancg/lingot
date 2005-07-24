@@ -21,8 +21,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef __FILTRO_H__
-#define __FILTRO_H__
+#ifndef __FILTER_H__
+#define __FILTER_H__
 
 #include <fcntl.h>
 #include <stdlib.h>
@@ -30,28 +30,28 @@
 #include "defs.h"
 
 /*
-  Implementación del filtrado digital.
+  digital filtering implementation.
  */
 
-class Filtro {
+class Filter {
 
  private:
 
  public:
 
   FLT*  a;
-  FLT*  b;  // coeficientes
-  FLT*  s;  // estado
+  FLT*  b;  // coefs
+  FLT*  s;  // status
 
   unsigned int N;
 
-  void filtrarII(unsigned int n, FLT* in, FLT* out); // filtrar un vector
-  FLT  filtrarII(FLT in);                            // filtrar una muestra
+  void filter(unsigned int n, FLT* in, FLT* out); // vector filtering
+  FLT  filter(FLT in);                            // sample filtering
 
-  Filtro();
-  Filtro(unsigned int Na, unsigned int Nb, FLT* a, FLT* b, FLT* s = NULL);
-  void Actualizar(unsigned int Na, unsigned int Nb, FLT* a, FLT* b);
-  ~Filtro();
+  Filter();
+  Filter(unsigned int Na, unsigned int Nb, FLT* a, FLT* b, FLT* s = NULL);
+  void update(unsigned int Na, unsigned int Nb, FLT* a, FLT* b);
+  ~Filter();
 };
 
 #endif

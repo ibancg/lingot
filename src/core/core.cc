@@ -36,46 +36,46 @@
 #include "filter.h"
 #include "filters.h"
 
-Analizador::Analizador()
+Core::Core()
 {
   conf.parseConfigFile(CONFIG_FILE);
-  iniciar();
+  start();
 
   status = true;
   pthread_attr_init(&attrib);
   pthread_create(&thread, &attrib, (void * (*)(void *))ProcessThread, (void *)this); 
 }
 
-void Analizador::iniciar()
+void Core::start()
 {
 # ifdef LIBSNDOBJ
   A = new SndRTIO(1, SND_INPUT, 512, 512, SHORTSAM_LE, NULL, 
 		  conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, conf.SAMPLE_RATE, conf.AUDIO_DEV);
-    //    A = new SndRTIO();
+  //    A = new SndRTIO();
 # else
-  // creamos un manejador de audio.
-  A = new audio(1, conf.SAMPLE_RATE, FORMATO_MUESTRA, conf.AUDIO_DEV);
+  // creates an audio handler.
+  A = new audio(1, conf.SAMPLE_RATE, SAMPLE_FORMAT, conf.AUDIO_DEV);
 # endif
 
-  // la DEP es simétrica, con almacenar la mitad llega.
+  // since the SPD is simmetrical, we only store the 1st half.
   if (conf.FFT_SIZE > 256) {
-    dep_fft = new FLT[conf.FFT_SIZE >> 1];
-    memset(dep_fft, 0, (conf.FFT_SIZE >> 1)*sizeof(FLT));
+    spd_fft = new FLT[conf.FFT_SIZE >> 1];
+    memset(spd_fft, 0, (conf.FFT_SIZE >> 1)*sizeof(FLT));
   }
-  else {
-    dep_fft = new FLT[conf.FFT_SIZE];
-    memset(dep_fft, 0, conf.FFT_SIZE*sizeof(FLT));
+  else { // if the fft size is 256, we store the whole signal for representation.
+    spd_fft = new FLT[conf.FFT_SIZE];
+    memset(spd_fft, 0, conf.FFT_SIZE*sizeof(FLT));
   }
 
-  dep_dft       = new FLT[conf.DFT_SIZE];
-  memset(dep_dft, 0, conf.DFT_SIZE*sizeof(FLT));
+  spd_dft       = new FLT[conf.DFT_SIZE];
+  memset(spd_dft, 0, conf.DFT_SIZE*sizeof(FLT));
 
-  diff2_dep_fft = new FLT[conf.FFT_SIZE]; // derivada 2ª de la DEP.
-  memset(diff2_dep_fft, 0, conf.FFT_SIZE*sizeof(FLT));
+  diff2_spd_fft = new FLT[conf.FFT_SIZE]; // 2nd derivative from SPD.
+  memset(diff2_spd_fft, 0, conf.FFT_SIZE*sizeof(FLT));
 
 #ifndef LIB_FFTW  
-  CreaWN(&conf); // crea los factores de fase de la FFT.
-  fft_out    = new CPX[conf.FFT_SIZE]; // señal compleja en dominio frecuencial.
+  createWN(&conf); // creates the phase factors for FFT.
+  fft_out    = new CPX[conf.FFT_SIZE]; // complex signal in freq domain.
   memset(fft_out, 0, conf.FFT_SIZE*sizeof(CPX));
 #else
   fftw_in   = new fftw_complex[conf.FFT_SIZE];
@@ -85,127 +85,126 @@ void Analizador::iniciar()
   fftwplan  = fftw_create_plan(conf.FFT_SIZE, FFTW_FORWARD, FFTW_ESTIMATE);
 #endif
 
-  // buffer leído de la tarjeta.
-  buffer_muestras_leidas = new TIPO_MUESTRA[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
-  memset(buffer_muestras_leidas, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(TIPO_MUESTRA));
+  // read buffer from soundcard.
+  read_buffer = new SAMPLE_TYPE[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
+  memset(read_buffer, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(SAMPLE_TYPE));
 
-  // buffer leído de la tarjeta.
-  buffer_leido = new FLT[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
-  memset(buffer_leido, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(FLT));
+  // read buffer from soundcard in floating point format.
+  flt_read_buffer = new FLT[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
+  memset(flt_read_buffer, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(FLT));
 
-  // memoria de muestras en tiempo.
-  buffer_ventana_temporal = new FLT[conf.TEMPORAL_BUFFER_SIZE]; 
-  memset(buffer_ventana_temporal, 0, conf.TEMPORAL_BUFFER_SIZE*sizeof(FLT));
+  // stored samples.
+  temporal_window_buffer = new FLT[conf.TEMPORAL_BUFFER_SIZE]; 
+  memset(temporal_window_buffer, 0, conf.TEMPORAL_BUFFER_SIZE*sizeof(FLT));
 
-  // filtro Chebyshev de orden 8, wc = pi/sobremuestreo
-  filtro_diezmado = new Filtro( 8, 8, filtros[conf.OVERSAMPLING][0], filtros[conf.OVERSAMPLING][1] );
+  // order 8 Chebyshev antialiasing filter, wc = pi/oversampling
+  antialiasing_filter = new Filter( 8, 8, filtros[conf.OVERSAMPLING][0], filtros[conf.OVERSAMPLING][1] );
 
   // ------------------------------------------------------------
 
-  frecuencia = 0.0;
-  hay_nueva_conf = false;
+  freq = 0.0;
+  new_conf_pending = false;
 }
 
 // -----------------------------------------------------------------------
 
-void Analizador::finalizar()
+void Core::stop()
 {
 #ifdef LIB_FFTW  
   fftw_destroy_plan(fftwplan);
   delete [] fftw_in;
   delete [] fftw_out;
 #else
-  DestruyeWN(); // destruye los factores de fase.
+  destroyWN(); // destroy phase factors.
   delete [] fft_out;
 #endif
 
   delete    A;
 
-  delete [] dep_fft;
-  delete [] dep_dft;  
-  delete [] diff2_dep_fft;
-  delete [] buffer_muestras_leidas;
-  delete [] buffer_leido;
-  delete [] buffer_ventana_temporal;
+  delete [] spd_fft;
+  delete [] spd_dft;  
+  delete [] diff2_spd_fft;
+  delete [] read_buffer;
+  delete [] flt_read_buffer;
+  delete [] temporal_window_buffer;
 
-  delete    filtro_diezmado;
+  delete    antialiasing_filter;
 
-  // esperamos por el hilo.
+  // wait for thread.
   //  pthread_join(thread, &attrib);
 }
 
 // -----------------------------------------------------------------------
 
-Analizador::~Analizador()
+Core::~Core()
 {
-  finalizar();  
+  stop();  
   pthread_attr_destroy(&attrib);
 }
 
 // -----------------------------------------------------------------------
 
-void Analizador::cambiaConfig(Config conf)
+void Core::changeConfig(Config conf)
 {
-  Analizador::nueva_conf = conf;
-  hay_nueva_conf = true;
+  Core::new_conf = conf;
+  new_conf_pending = true;
 }
 
 // -----------------------------------------------------------------------
 
-// in y out solapables.
-void Analizador::diezmar(FLT* in, FLT* out)
+// signal decimation with antialiasing, in & out overlapables.
+void Core::decimate(FLT* in, FLT* out)
 {
   register unsigned int i,j;
 
-  // filtro paso bajo para evitar aliasing.
-  filtro_diezmado->filtrarII(conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, in, in);
+  // low pass filter to avoid aliasing.
+  antialiasing_filter->filter(conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, in, in);
   
-  // compresión.
+  // compression.
   for(i = j = 0; i < conf.READ_BUFFER_SIZE; i++, j += conf.OVERSAMPLING)
     out[i] = in[j];
 }
 
 // -----------------------------------------------------------------------
 
-// procesa la información leída para calcular la frecuencia fundamental.
-void Analizador::procesar()
+void Core::process()
 {
-  register unsigned int  i, k;              // para bucles.
-  FLT delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // resolución en radianes en la FFT.  
+  register unsigned int  i, k;              // loop variables.
+  FLT delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // FFT resolution in rads.  
 
 # ifdef LIBSNDOBJ
   A->Read();
   for (i = 0; i < conf.OVERSAMPLING*conf.READ_BUFFER_SIZE; i++)
-    buffer_leido[i] = A->Output(i);
+    flt_read_buffer[i] = A->Output(i);
 # else
-  if ((A->lee(buffer_muestras_leidas, conf.OVERSAMPLING*conf.READ_BUFFER_SIZE*sizeof(TIPO_MUESTRA))) < 0) {
-    //perror("Error al leer muestras");
+  if ((A->read(read_buffer, 
+	       conf.OVERSAMPLING*conf.READ_BUFFER_SIZE*sizeof(SAMPLE_TYPE))) 
+      < 0) {
+    //perror("Error reading samples");
     return;
   }
 
   for (i = 0; i < conf.OVERSAMPLING*conf.READ_BUFFER_SIZE; i++)
-    buffer_leido[i] = buffer_muestras_leidas[i];
+    flt_read_buffer[i] = read_buffer[i];
 # endif
 
 
-  /*   dibujos por cortesía de barrio sésamo:
+  /* just readed:   ----------------------------
+                   |bxxxbxxxbxxxbxxxbxxxbxxxbxxx|
+		    ----------------------------
 
-     recién leído:   ----------------------------
-                    |bxxxbxxxbxxxbxxxbxxxbxxxbxxx|
-		     ----------------------------
-
-		     <----------------------------> READ_BUFFER_SIZE*OVERSAMPLING
+		   <----------------------------> READ_BUFFER_SIZE*OVERSAMPLING
   */
 
-  /* desplazo lo que había en el buffer temporal para dejar espacio al
-     nuevo trozo de señal leída. El buffer es en realidad una cola. */
+  /* we shift the temporal window to leave a hollow where place the new piece
+     of data read. The buffer is actually a queue. */
   if (conf.TEMPORAL_BUFFER_SIZE > conf.READ_BUFFER_SIZE)
-    memcpy(buffer_ventana_temporal, 
-	   &buffer_ventana_temporal[conf.READ_BUFFER_SIZE],
+    memcpy(temporal_window_buffer, 
+	   &temporal_window_buffer[conf.READ_BUFFER_SIZE],
 	   (conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE)*sizeof(FLT));
 
   /*
-    situación anterior del buffer:
+    previous buffer situation:
      ------------------------------------------
     | xxxxxxxxxxxxxxxxxxxxxx | yyyyy | aaaaaaa |
      ------------------------------------------
@@ -213,121 +212,124 @@ void Analizador::procesar()
 			      <---------------> FFT_SIZE
      <----------------------------------------> TEMPORAL_BUFFER_SIZE
 
-     nueva situación:
+     new situation:
 
      ------------------------------------------
     | xxxxxxxxxxxxxxxxyyyyaa | aaaaa |         |
      ------------------------------------------   */
     
-  /* meto la señal leída de la tarjeta y diezmada al final del buffer. */
+  /* we decimate the read signal and put it at the end of the buffer. */
   if (conf.OVERSAMPLING > 1)
-      diezmar(buffer_leido,
-	      &buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE]);
-  else memcpy(&buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE],
-	      buffer_leido, conf.READ_BUFFER_SIZE*sizeof(FLT));
+      decimate(flt_read_buffer,
+	      &temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE]);
+  else memcpy(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE],
+	      flt_read_buffer, conf.READ_BUFFER_SIZE*sizeof(FLT));
   /* ------------------------------------------
     | xxxxxxxxxxxxxxxxyyyyaa | aaaaa | bbbbbbb |
      ------------------------------------------   */
 
-  // ------------------------- PASO A DOMINIO DE FRECUENCIA --------------------------
+  // ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
 
-  FLT _1_N2 = 1.0/(conf.FFT_SIZE*conf.FFT_SIZE); // constante de normalización de la DEP
+  FLT _1_N2 = 1.0/(conf.FFT_SIZE*conf.FFT_SIZE); // SPD normalization constant
 
 # ifdef LIB_FFTW
   for (i = 0; i < conf.FFT_SIZE; i++)
-    fftw_in[i].re = buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE + i];
+    fftw_in[i].re = 
+      temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE + i];
   
-  /* Pasamos a frecuencia. */
+  // transformation.
   fftw_one(fftwplan, fftw_in, fftw_out);
   
-  /* pasamos la transformada (compleja) a su función de módulo al cuadrado normalizada (DEP). */
+  // esteem of SPD from FFT. (normalized squared module)
   for (i = 0; i < ((conf.FFT_SIZE > 256) ? (conf.FFT_SIZE >> 1) : 256); i++)
-    dep_fft[i] = (fftw_out[i].re*fftw_out[i].re + fftw_out[i].im*fftw_out[i].im)*_1_N2;
+    spd_fft[i] = (fftw_out[i].re*fftw_out[i].re +
+		  fftw_out[i].im*fftw_out[i].im)*_1_N2;
 # else
   
-  /* Pasamos a frecuencia. */
-  FFT(&buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE], fft_out, conf.FFT_SIZE);
+  // transformation.
+  FFT(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
+      fft_out, conf.FFT_SIZE);
   
-  /* pasamos la transformada (compleja) a su función de módulo al cuadrado normalizada (DEP). */
+  // esteem of SPD from FFT. (normalized squared module)
   for (i = 0; i < ((conf.FFT_SIZE > 256) ? (conf.FFT_SIZE >> 1) : 256); i++)
-    dep_fft[i] = (fft_out[i].r*fft_out[i].r + fft_out[i].i*fft_out[i].i)*_1_N2;
+    spd_fft[i] = (fft_out[i].r*fft_out[i].r + fft_out[i].i*fft_out[i].i)*_1_N2;
 # endif
 
-  // trozo representable
-  memcpy(X, dep_fft, 256*sizeof(FLT));
+  // representable piece
+  memcpy(X, spd_fft, 256*sizeof(FLT));
       
-  // estimación de derivada segunda truncada, para resaltar los picos
-  diff2_dep_fft[0] = 0.0;
+  // 2nd derivative truncated esteem, to enhance peaks
+  diff2_spd_fft[0] = 0.0;
   for (i = 1; i < conf.FFT_SIZE - 1; i++) {
-    diff2_dep_fft[i] = 2.0*dep_fft[i] - dep_fft[i - 1] - dep_fft[i + 1]; // derivada de 2º orden centrada, para evitar retardo de grupo.
-    if (diff2_dep_fft[i] < 0.0) diff2_dep_fft[i] = 0.0; // truncamos
+    diff2_spd_fft[i] = 2.0*spd_fft[i] - spd_fft[i - 1] - spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
+    if (diff2_spd_fft[i] < 0.0) diff2_spd_fft[i] = 0.0; // truncation
   }
 
-  // busco los picos en dicha función.
-  int Mi = picoFundamental(diff2_dep_fft, dep_fft, (conf.FFT_SIZE >> 1)); // cojemos el pico fundamental de la señal.
+  // peaks search in that signal.
+  int Mi = fundamentalPeak(diff2_spd_fft, spd_fft, (conf.FFT_SIZE >> 1)); // take the fundamental peak.
 
   if (Mi == (signed) (conf.FFT_SIZE >> 1)) {
-    frecuencia = 0.0;
+    freq = 0.0;
     return;
   }
       
   FLT w = (Mi - 1)*delta_w_FFT; // frecuencia de la muestra anterior al pico.
 
-  //  Aproximaremos la frecuencia fundamental haciendo DFT's
-  // --------------------------------------------------------
+  //  Approximation to fundamental frequency by selective DFTs
+  // ---------------------------------------------------------
   
   FLT d_w = delta_w_FFT;
   for (k = 0; k < conf.DFT_NUMBER; k++) {
 	
-    d_w = 2.0*d_w/(conf.DFT_SIZE - 1); // delta de w.
+    d_w = 2.0*d_w/(conf.DFT_SIZE - 1); // resolution in rads.
 	
     if (k == 0) {
-      DEP(&buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
-	  conf.FFT_SIZE, w + d_w, d_w, &dep_dft[1], conf.DFT_SIZE - 2);
-      dep_dft[0] = dep_fft[Mi - 1];
-      dep_dft[conf.DFT_SIZE - 1] = dep_fft[Mi + 1]; // ya conozco 2 muestras.
+      SPD(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
+	  conf.FFT_SIZE, w + d_w, d_w, &spd_dft[1], conf.DFT_SIZE - 2);
+      spd_dft[0] = spd_fft[Mi - 1];
+      spd_dft[conf.DFT_SIZE - 1] = spd_fft[Mi + 1]; // 2 samples known.
     } else
-      DEP(&buffer_ventana_temporal[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
-	  conf.FFT_SIZE, w, d_w, dep_dft, conf.DFT_SIZE);
+      SPD(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
+	  conf.FFT_SIZE, w, d_w, spd_dft, conf.DFT_SIZE);
 	
-    maximo(dep_dft, conf.DFT_SIZE, Mi); // buscamos el máximo.
+    max(spd_dft, conf.DFT_SIZE, &Mi); // search the maximum.
 	
-    w += (Mi - 1)*d_w; // muestra anterior al pico.
+    w += (Mi - 1)*d_w; // previous sample to the peak.
   }
       
-  w += d_w; // frecuencia aproximada por DFT's.
+  w += d_w; // approximation by DFTs.
     
-  //  Seguimos aproximando usando el método de Newton-Raphson
-  // ---------------------------------------------------------
+  //  Maximum finding by Newton-Raphson
+  // -----------------------------------
 
-  FLT wk = -1.0e5; // esto es para que no salte el test de parada al principio.
-  FLT wkm1 = w;    // primer iterante.
-  FLT d1_DEP, d2_DEP;
+  FLT wk = -1.0e5;
+  FLT wkm1 = w;    // first iterator set to the current approximation.
+  FLT d1_SPD, d2_SPD;
     
   for (k = 0; (k < conf.MAX_NR_ITER) && (fabs(wk - wkm1) > 1.0e-8); k++) {
     wk = wkm1;
 
-    // ! ahora uso TODA la ventana temporal para mayor precisión.
-    diffs_DEP(buffer_ventana_temporal, conf.TEMPORAL_BUFFER_SIZE, wk, d1_DEP, d2_DEP);
-    wkm1 = wk - d1_DEP/d2_DEP;
+    // ! we use the WHOLE temporal window for greater precission.
+    SPD_diffs(temporal_window_buffer, conf.TEMPORAL_BUFFER_SIZE, wk, &d1_SPD, &d2_SPD);
+    wkm1 = wk - d1_SPD/d2_SPD;
   }
     
-  w = wkm1; // esta es la frecuencia en radianes.
-  frecuencia = (w*conf.SAMPLE_RATE)/(2.0*M_PI*conf.OVERSAMPLING); // ésta es la frecuencia analógica encontrada.
+  w = wkm1; // frequency in rads.
+  freq = (w*conf.SAMPLE_RATE)/(2.0*M_PI*conf.OVERSAMPLING); // analog frequency.
 }				
 
-void ProcessThread(Analizador* A) {
+void ProcessThread(Core* C) {
 
-  while (A->status) {
+  while (C->status) {
 
-    // Si se ha requerido una reconfiguración es el momento de atenderla.
-    if (A->hay_nueva_conf) {
-      A->finalizar();
-      A->conf = A->nueva_conf;
-      A->iniciar();
+    // look for a pending configuration.
+    if (C->new_conf_pending) {
+      C->stop();
+      C->conf = C->new_conf;
+      C->start();
     }
 
-    A->procesar(); // proceso los datos leídos. 
+    C->process(); // process new data block.
   }  
 
   pthread_exit(NULL);

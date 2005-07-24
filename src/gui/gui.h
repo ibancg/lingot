@@ -33,31 +33,26 @@
 
 class DialogConfig;
 
-//  La clase Interfaz es una Ventana que contiene todos los controles,
-//  gráficos, etc, del afinador.
-class Interfaz : public Analizador {
+// Window that contains all controls, graphics, etc. of the tuner.
+class GUI : public Core {
 
 private:
 
-  GestorEventos  GE;
+  EventScheduler ES;
 
   // widgets gtk
   GtkWidget      *win, *vb, *frame1, *frame3, *frame4, *hb, *vbinfo;
-  GtkWidget      *aguja, *espectro, *info_nota, *info_freq, *info_err, *menu;
-  GdkPixmap      *pixagj, *pixesp;
-  GdkPixmap      *pegata;
-  int            tout_handle;
+  GtkWidget      *gauge, *spectrum, *note_info, *freq_info, *error_info, *menu;
+  GdkPixmap      *pix_spectrum, *pix_stick;
   bool           quit;
-  Filtro*        filtro_frecuencia;
-  char           cad_error[30], cad_freq[30];
-  char           *notaactual;
+  Filter*        freq_filter;
 
-  Filtro*        filtro_aguja;
-  FLT            valor_aguja; // valor de la aguja [-0.5, 0.5]
+  Filter*        gauge_filter;
+  FLT            gauge_value; // valor de la aguja [-0.5, 0.5]
 
-  void configuraFiltroAguja();
-  void dibujarAguja();
-  void dibujarEspectro();
+  void setupGaugeFilter();
+  void drawGauge();
+  void drawSpectrum();
   void allocColor(GdkColor *col, int r, int g, int b);
   void fgColor(GdkGC *gc, int r, int g, int b);
   void bgColor(GdkGC *gc, int r, int g, int b);
@@ -66,16 +61,16 @@ public:
 
   DialogConfig  *dc;
 
-  Interfaz();
-  ~Interfaz();
+  GUI();
+  ~GUI();
 
-  void redibujar();
+  void redraw();
   void mainLoop();
-  void ponerFrecuencia();
-  void redimensionar(Config);
+  void putFrequency();
+  void resize(Config);
 
   friend void callbackDestroy(GtkWidget *w, void *data);
-  friend void callbackRedibujar(GtkWidget *w, GdkEventExpose *e, void *data);
+  friend void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data);
 };
 
 

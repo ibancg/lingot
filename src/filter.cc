@@ -26,50 +26,49 @@
 
 #define max(a,b) (((a)<(b))?(b):(a))
 
-Filtro::Filtro()
+Filter::Filter()
 {
   N = 0;
   a = b = s = NULL;
 }
 
-// se pasan el ORDEN de cada polinomio y los coeficientes, con estado opcional.
-Filtro::Filtro(unsigned int Na, unsigned int Nb, FLT* a, FLT* b, FLT* s)
+// given each polynomial order and coefs, with optional initial status.
+Filter::Filter(unsigned int Na, unsigned int Nb, FLT* a, FLT* b, FLT* s)
 {
-  Filtro::N = max(Na, Nb);
+  Filter::N = max(Na, Nb);
 
-  Filtro::a = new FLT[N + 1];
-  Filtro::b = new FLT[N + 1];
-  Filtro::s = new FLT[N + 1];
+  Filter::a = new FLT[N + 1];
+  Filter::b = new FLT[N + 1];
+  Filter::s = new FLT[N + 1];
 
-  // inicialización.
   for (unsigned int i = 0; i < N + 1; i++)
-    Filtro::a[i] = Filtro::b[i] = Filtro::s[i] = 0.0;
+    Filter::a[i] = Filter::b[i] = Filter::s[i] = 0.0;
 
-  memcpy(Filtro::a, a, (Na + 1)*sizeof(FLT));
-  memcpy(Filtro::b, b, (Nb + 1)*sizeof(FLT));
-  if (s) memcpy(Filtro::s, s, (N + 1)*sizeof(FLT));
+  memcpy(Filter::a, a, (Na + 1)*sizeof(FLT));
+  memcpy(Filter::b, b, (Nb + 1)*sizeof(FLT));
+  if (s) memcpy(Filter::s, s, (N + 1)*sizeof(FLT));
 
   for (unsigned int i = 0; i < N + 1; i++) {
-    Filtro::a[i] /= a[0]; // hacemos el polinomio mónico.
-    Filtro::b[i] /= a[0];
+    Filter::a[i] /= a[0]; // polynomial normalization.
+    Filter::b[i] /= a[0];
   }
 
 }
 
-// permite cambiar coeficientes del filtro. No permite cambiar orden polinomios.
-void Filtro::Actualizar(unsigned int Na, unsigned int Nb, FLT* a, FLT* b)
+// allows to change coefs of filter, maintaining the polynomial order.
+void Filter::update(unsigned int Na, unsigned int Nb, FLT* a, FLT* b)
 {
-  memcpy(Filtro::a, a, (Na + 1)*sizeof(FLT));
-  memcpy(Filtro::b, b, (Nb + 1)*sizeof(FLT));
+  memcpy(Filter::a, a, (Na + 1)*sizeof(FLT));
+  memcpy(Filter::b, b, (Nb + 1)*sizeof(FLT));
 
   for (unsigned int i = 0; i < N + 1; i++) {
-    Filtro::a[i] /= a[0]; // hacemos el polinomio mónico.
-    Filtro::b[i] /= a[0];
+    Filter::a[i] /= a[0]; // normalization.
+    Filter::b[i] /= a[0];
   }
 }
 
-// filtro implementado en forma directa II, in y out solapables.
-void Filtro::filtrarII(unsigned int n, FLT* in, FLT* out) // filtrar un vector
+// Digital Filter Implementation II, in & out overlapables.
+void Filter::filter(unsigned int n, FLT* in, FLT* out)
 {
   FLT                    w, y;
   register unsigned int  i;
@@ -93,15 +92,15 @@ void Filtro::filtrarII(unsigned int n, FLT* in, FLT* out) // filtrar un vector
   }
 }
 
-FLT Filtro::filtrarII(FLT in) // filtrar una muestra
+FLT Filter::filter(FLT in) // single sample filtering
 {
   FLT result;
 
-  filtrarII(1, &in, &result);
+  filter(1, &in, &result);
   return result;
 }
 
-Filtro::~Filtro()
+Filter::~Filter()
 {
   delete [] a;
   delete [] b;

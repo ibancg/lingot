@@ -28,37 +28,31 @@
 #include <math.h>
 #include "defs.h"
 
-// Aritmética compleja sencilla.
+// single complex arithmetic  :)
 
 class CPX {
-
- public:
-
-   FLT r, i;
-
-
-   inline friend void SumaCPX(CPX A, CPX B, CPX &R)
-   {
-      R.r = A.r + B.r;
-      R.i = A.i + B.i;
-   }
-
-   inline friend void RestaCPX(CPX A, CPX B, CPX &R)
-   {
-      R.r = A.r - B.r;
-      R.i = A.i - B.i;
-   }
-
-   inline friend void MulCPX(CPX A, CPX B, CPX &R)
-   {
-      R.r = A.r*B.r - A.i*B.i;
-      R.i = A.i*B.r + A.r*B.i;
-   }
-
-   inline FLT modulo()
-   {
-      return sqrt(r*r + i*i);
-   }
+  
+public:
+  
+  FLT r, i;
+  
+  inline friend void addCPX(CPX A, CPX B, CPX* R)
+  {
+    R->r = A.r + B.r;
+    R->i = A.i + B.i;
+  }
+  
+  inline friend void subCPX(CPX A, CPX B, CPX* R)
+  {
+    R->r = A.r - B.r;
+    R->i = A.i - B.i;
+  }
+  
+  inline friend void mulCPX(CPX A, CPX B, CPX* R)
+  {
+    R->r = A.r*B.r - A.i*B.i;
+    R->i = A.i*B.r + A.r*B.i;
+  }
 };
 
 

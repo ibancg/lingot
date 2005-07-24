@@ -82,7 +82,7 @@ public:
   FLT          PEAK_REJECTION_RELATION;    // dBs
   FLT          PEAK_REJECTION_RELATION_UN; // natural units (internal)
 
-  // DFT aproximation
+  // DFT approximation
   unsigned int DFT_NUMBER;  // number of DFTs.
   unsigned int DFT_SIZE;    // samples of each DFT.
 
@@ -91,7 +91,7 @@ public:
 
   //----------------------------------------------------------------------------
 
-  // gauge stand value. (gauge contemplates [-0.5, 0.5])
+  // gauge rest value. (gauge contemplates [-0.5, 0.5])
   FLT          VRP;
 
   //----------------------------------------------------------------------------

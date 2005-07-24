@@ -30,9 +30,9 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include "defs.h"
-#include "interface.h"
+#include "gui.h"
 
-char* CONFIG_FILE;
+char CONFIG_FILE[100];
 
 int main(int argc, char *argv[])
 {
@@ -50,16 +50,11 @@ int main(int argc, char *argv[])
       return -1;
     }
     
-    CONFIG_FILE = new char[100];
-    memset(CONFIG_FILE, 0, sizeof(CONFIG_FILE));
     sprintf(CONFIG_FILE, "%s/.lingot/%s.conf", getenv("HOME"), argv[2]);
   } else {
 
     // obtain the home dir from an env var.
-    CONFIG_FILE = new char[100];
-    memset(CONFIG_FILE, 0, sizeof(CONFIG_FILE));
     sprintf(CONFIG_FILE, "%s/%s", getenv("HOME"), CONFIG_FILE_HOME);
-
   }
 
   // if config file doesn't exists, i will create it.
@@ -79,11 +74,9 @@ int main(int argc, char *argv[])
     
   } else fclose(fp);
 
-  Interfaz* V = new Interfaz();
-  V->mainLoop();
+  GUI G;
 
-  delete V;
-  delete [] CONFIG_FILE;
-  
+  G.mainLoop();
+
   return 0;
 }
