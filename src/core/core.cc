@@ -258,14 +258,14 @@ void Core::process()
   // representable piece
   memcpy(X, spd_fft, 256*sizeof(FLT));
       
-  // 2nd derivative truncated esteem, to enhance peaks
+  // truncated 2nd derivative esteem, to enhance peaks
   diff2_spd_fft[0] = 0.0;
   for (i = 1; i < conf.FFT_SIZE - 1; i++) {
     diff2_spd_fft[i] = 2.0*spd_fft[i] - spd_fft[i - 1] - spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
     if (diff2_spd_fft[i] < 0.0) diff2_spd_fft[i] = 0.0; // truncation
   }
 
-  // peaks search in that signal.
+  // peaks searching in that signal.
   int Mi = fundamentalPeak(spd_fft, diff2_spd_fft, (conf.FFT_SIZE >> 1)); // take the fundamental peak.
 
   if (Mi == (signed) (conf.FFT_SIZE >> 1)) {

@@ -131,15 +131,6 @@ int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
     if (p_index[j] < p_index[m]) m = j;
   }
 
-  /*
-  for (unsigned int k = 0; k < conf.PEAK_NUMBER; k++) 
-    if ((m != k) && (p_index[k] != N))
-    for (j = 2; j <= conf.PEAK_NUMBER; j++)
-      if (fabs(1.0*p_index[m]*j - p_index[k]) <= 1.0 + 1e-5) {
-	// 	printf("%i ~= %i*%i\n", p_index[k], p_index[m], j);
-	return p_index[m];
-	}*/
-
   return p_index[m];
 }
 
