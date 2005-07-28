@@ -30,7 +30,6 @@ class audio
 private:
 
   int  dsp;  // file handler.
-  int  rate;
 
 public:
   

@@ -35,8 +35,6 @@ audio::audio(int channels, int rate, int format, char* fdsp)
 {
   //  int dma  = 4;
 
-  audio::rate = rate;
-
   dsp = open(fdsp, O_RDONLY);
   if (dsp < 0)
     {
