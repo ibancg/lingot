@@ -266,7 +266,7 @@ void Core::process()
   }
 
   // peaks search in that signal.
-  int Mi = fundamentalPeak(diff2_spd_fft, spd_fft, (conf.FFT_SIZE >> 1)); // take the fundamental peak.
+  int Mi = fundamentalPeak(spd_fft, diff2_spd_fft, (conf.FFT_SIZE >> 1)); // take the fundamental peak.
 
   if (Mi == (signed) (conf.FFT_SIZE >> 1)) {
     freq = 0.0;

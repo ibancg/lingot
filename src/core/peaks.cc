@@ -22,6 +22,7 @@
 */
 
 #include <math.h>
+#include <stdio.h>
 
 #include "config.h"
 #include "core.h"
@@ -73,7 +74,8 @@ inline bool Core::peak(FLT* x, int index)
 
 //---------------------------------------------------------------------------
 
-int Core::fundamentalPeak(FLT *x, FLT* y, int N)
+// search the fundamental peak given the spd and its 2nd derivative
+int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
 {
   register unsigned int i, j, m;
   int                   p_index[conf.PEAK_NUMBER];
@@ -81,35 +83,62 @@ int Core::fundamentalPeak(FLT *x, FLT* y, int N)
   // at this moment there is no peaks.
   for (i = 0; i < conf.PEAK_NUMBER; i++) p_index[i] = -1;
 
-  for (i = conf.PEAK_ORDER; i < N - conf.PEAK_ORDER; i++)
-    if (peak(y, i)) {
+  unsigned int lowest_index = (unsigned int)
+    ceil(15.0*(1.0*conf.OVERSAMPLING/conf.SAMPLE_RATE)*conf.FFT_SIZE); // 15 Hz minimum.
+  
+  if (lowest_index < conf.PEAK_ORDER) lowest_index = conf.PEAK_ORDER;
+
+  // I'll get the PEAK_NUMBER maximum peaks.
+  for (i = lowest_index; i < N - conf.PEAK_ORDER; i++)
+    if (peak(x, i)) {
 
       // search a place in the maximums buffer, if it doesn't exists, the
       // lower maximum is candidate to be replaced.
       m = 0; // first candidate.
       for (j = 0; j < conf.PEAK_NUMBER; j++) {
 	if (p_index[j] == -1) {
-	  m = j; // place.
+	  m = j; // there is a place.
 	  break;
 	}
 
-	if (x[p_index[j]] < x[p_index[m]]) m = j; // search the lowest.
+	if (d2x[p_index[j]] < d2x[p_index[m]]) m = j; // search the lowest.
       }
 
-      if (p_index[m] == -1) p_index[m] = i;
-      else if (x[i] > x[p_index[m]]) p_index[m] = i; 
+      if (p_index[m] == -1) p_index[m] = i; // there is a place
+      else if (d2x[i] > d2x[p_index[m]]) p_index[m] = i; // if greater
   }
 
-  FLT M = 0.0;
-  for (i = 0; i < conf.PEAK_NUMBER; i++) 
-    if ((p_index[i] != -1) && (y[p_index[i]] > M)) M = y[p_index[i]];
+  FLT maximum = 0.0;
+  int maximum_index = -1;
+
+  // search the maximum peak
+  for (i = 0; i < conf.PEAK_NUMBER; i++)
+    if ((p_index[i] != -1) && (x[p_index[i]] > maximum)) {
+      maximum = x[p_index[i]];
+      maximum_index = p_index[i];
+    }
+
+  if (maximum_index == -1) return N;
+
+  // all peaks much lower than maximum are deleted.
   for (i = 0; i < conf.PEAK_NUMBER; i++) 
     if ((p_index[i] == -1) || 
-	(conf.PEAK_REJECTION_RELATION_UN*y[p_index[i]] < M)) 
+	(conf.PEAK_REJECTION_RELATION_UN*x[p_index[i]] < maximum)) 
       p_index[i] = N; // there are available places in the buffer.
 
-  for (m = 0, j = 0; j < conf.PEAK_NUMBER; j++)
-    if (p_index[j] < p_index[m]) m = j; // search the lowest index.
+  // search the lowest maximum index.
+  for (m = 0, j = 0; j < conf.PEAK_NUMBER; j++) {
+    if (p_index[j] < p_index[m]) m = j;
+  }
+
+  /*
+  for (unsigned int k = 0; k < conf.PEAK_NUMBER; k++) 
+    if ((m != k) && (p_index[k] != N))
+    for (j = 2; j <= conf.PEAK_NUMBER; j++)
+      if (fabs(1.0*p_index[m]*j - p_index[k]) <= 1.0 + 1e-5) {
+	// 	printf("%i ~= %i*%i\n", p_index[k], p_index[m], j);
+	return p_index[m];
+	}*/
 
   return p_index[m];
 }
