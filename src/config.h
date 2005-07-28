@@ -106,7 +106,6 @@ public:
   // derivate internal parameters from external ones.
   void updateInternalParameters();
 
-  void asociaAtributos();
   void saveConfigFile(char* archivo);
   void parseConfigFile(char* archivo);
 };
