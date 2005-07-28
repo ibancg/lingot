@@ -76,10 +76,6 @@ void FFT(FLT* in, CPX* out, unsigned long int N,
 
     addCPX(X1, X2, &out[d1]);
     subCPX(X1, X2, &out[d1 + Np2]);
-    /*    out[d1].r       = X1.r + X2.r;
-	  out[d1].i       = X1.i + X2.i;
-	  out[d1 + Np2].r = X1.r - X2.r;
-	  out[d1 + Np2].i = X1.i - X2.i;*/
 
     return;
   }
