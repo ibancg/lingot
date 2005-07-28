@@ -43,7 +43,10 @@ int main(int argc, char *argv[])
   gtk_init(&argc, &argv);
   gtk_set_locale();
 
-  if (argc > 1) {
+  if ((argc > 3) || (argc == 2)) {
+    printf("\nussage: lingot [-c config]\n\n");
+    return -1;
+  } else if (argc > 1) {
 
     if (strcmp(argv[1], "-c") || (argc < 3)) {
       printf("invalid argument\n");
