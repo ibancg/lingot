@@ -48,6 +48,9 @@ char* Config::token[] = {
   NULL // NULL terminated array
 };
 
+// print/scan param formats.
+const char* Config::format = "sddfdffffddfdd";
+
 
 //----------------------------------------------------------------------------
 
@@ -73,7 +76,6 @@ Config::Config() {
   };
   
   memcpy(param, c_param, 14*sizeof(void*));
-  format = "sddfdffffddfdd"; // print/scan param formats.
 }
 
 //----------------------------------------------------------------------------

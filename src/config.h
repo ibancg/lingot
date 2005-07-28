@@ -38,7 +38,7 @@ private:
   void*        param[14]; // parameter pointer array.
 
   // formats to scan/print tokens from/to the config file.
-  char*        format;
+  static const char* format;
 
 public:
   
