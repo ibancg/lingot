@@ -21,7 +21,7 @@ SRC     = src/*.cc src/core/*.cc src/gui/*.cc
 
 DEFINES   = -DGTK12 #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
 INCDIR    = `gtk-config --cflags` -Isrc/core -Isrc/gui -Isrc
-C_FLAGS   = -g -Wall $(DEFINES) $(INCDIR)
+C_FLAGS   = -Wall $(DEFINES) $(INCDIR)
 LIBS      = `gtk-config --libs` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
 
 SRCS = $(wildcard $(SRC))
