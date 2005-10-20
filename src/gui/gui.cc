@@ -43,7 +43,7 @@ void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data)
 
 void callbackDestroy(GtkWidget *w, void *data)
 {
-  int tout_handle;
+  int tout_handle = 0;
 
   gtk_timeout_remove(tout_handle);
   ((GUI*)data)->quit = true;
