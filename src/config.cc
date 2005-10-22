@@ -35,6 +35,7 @@ char* Config::token[] = {
   "SAMPLE_RATE",
   "OVERSAMPLING",
   "ROOT_FREQUENCY_ERROR",
+  "MIN_FREQUENCY",
   "FFT_SIZE",
   "TEMPORAL_WINDOW",
   "NOISE_THRESHOLD",
@@ -49,7 +50,7 @@ char* Config::token[] = {
 };
 
 // print/scan param formats.
-const char* Config::format = "sddfdffffddfdd";
+const char* Config::format = "sddffdffffddfdd";
 
 
 //----------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Config::Config() {
     &SAMPLE_RATE,
     &OVERSAMPLING,
     &ROOT_FREQUENCY_ERROR,
+    &MIN_FREQUENCY,
     &FFT_SIZE,
     &TEMPORAL_WINDOW,
     &NOISE_THRESHOLD,
@@ -75,7 +77,7 @@ Config::Config() {
     &DFT_SIZE
   };
   
-  memcpy(param, c_param, 14*sizeof(void*));
+  memcpy(param, c_param, 15*sizeof(void*));
 }
 
 //----------------------------------------------------------------------------
@@ -88,6 +90,7 @@ void Config::reset()
   SAMPLE_RATE   = 8000; // Hz
   OVERSAMPLING  = 5;
   ROOT_FREQUENCY_ERROR = 0;  // Hz
+  MIN_FREQUENCY = 15;  // Hz
   FFT_SIZE = 256; // samples
   TEMPORAL_WINDOW = 0.1875;  // seconds
   CALCULATION_RATE   = 20; // Hz
@@ -176,12 +179,12 @@ void Config::parseConfigFile( char* file )
 
 # define MAX_LINE_SIZE 100
   
-  char s1[MAX_LINE_SIZE];
+  char char_buffer[MAX_LINE_SIZE];
   
   if ((fp = fopen(file, "r")) == NULL) {
-    sprintf(s1, 
+    sprintf(char_buffer, 
 	    "error opening config file %s, assuming default values ", file);
-    perror(s1);
+    perror(char_buffer);
     return;
   }
 
@@ -191,59 +194,57 @@ void Config::parseConfigFile( char* file )
     
     line++;
 
-    if (!fgets(s1, MAX_LINE_SIZE, fp)) break;;
+    if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) break;;
 
     //    printf("line %d: %s\n", line, s1);
     
-    if (s1[0] == '#') continue;
+    if (char_buffer[0] == '#') continue;
 
     //    char* p2 = s1; // puntero sobre la línea leída.
-    char* s2;      // contendrá los tokens dentro de la línea.
+    char* char_buffer_pointer;      // contendrá los tokens dentro de la línea.
 
     // cojo la cadena del atributo.
     /*do {
       s2 = strsep(&p2, " \t=\n");
       } while ((s2) && (strlen(s2) == 0));*/
-    s2 = strtok(s1, " \t=\n");
+    char_buffer_pointer = strtok(char_buffer, " \t=\n");
 
-    if (!s2) continue; // blank line.
+    if (!char_buffer_pointer) continue; // blank line.
 
-    int i;
-    for (i = 0; Config::token[i]; i++) if (!strcmp(s2, Config::token[i])) {
-      break; // found token.
-    }
+    int token_index;
+    for (token_index = 0; Config::token[token_index]; token_index++)
+      if (!strcmp(char_buffer_pointer, Config::token[token_index]))
+        break; // found token.
 
-    if (!Config::token[i]) {
+    if (!Config::token[token_index]) {
       fprintf(stderr, 
 	      "warning: parse error at line %i: unknown keyword %s\n", 
-	      line, s2);
+	      line, char_buffer_pointer);
       continue;
     }
 
-    // cojo el valor del atributo.
-    /*do {
-      s2 = strsep(&p2, " \t=\n");
-      } while ((s2) && (strlen(s2) == 0));*/
-    s2 = strtok(NULL, " \t=\n");
+    // take the attribute value.
+    char_buffer_pointer = strtok(NULL, " \t=\n");
     
-    if (!s2) {
+    if (!char_buffer_pointer) {
       fprintf(stderr, "warning: parse error at line %i: value expected\n", 
 	      line);
       continue;
     }
 
     // asign the value to the parameter.
-    switch (Config::format[i]) {
+    switch (Config::format[token_index]) {
     case 's' : 
-      /*      char buff[MAX_LINE_SIZE];
-	      sscanf(s2, "%s", buff); */
-      sprintf(((char*) param[i]), "%s", s2);
+      sprintf(((char*) param[token_index]), "%s", char_buffer_pointer);
       break;
-    case 'd' : sscanf(s2, "%d", (unsigned int*) Config::param[i]); break;
+    case 'd' :
+      sscanf(char_buffer_pointer, "%d", 
+             (unsigned int*) Config::param[token_index]);
+      break;
     case 'f' : 
       float aux;
-      sscanf(s2, "%f", &aux);
-      *((FLT*) Config::param[i]) = aux;
+      sscanf(char_buffer_pointer, "%f", &aux);
+      *((FLT*) Config::param[token_index]) = aux;
       break;
     }
     

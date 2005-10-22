@@ -35,7 +35,7 @@ class Config {
 private:
 
   static char* token[];   // config file tokens array.
-  void*        param[14]; // parameter pointer array.
+  void*        param[15]; // parameter pointer array.
 
   // formats to scan/print tokens from/to the config file.
   static const char* format;
@@ -50,6 +50,8 @@ public:
   FLT          ROOT_FREQUENCY;
 
   FLT          ROOT_FREQUENCY_ERROR; // deviation of the above root frequency.
+
+  FLT          MIN_FREQUENCY; // minimum valid frequency.
 
   unsigned int FFT_SIZE; // number of samples of the FFT.
 
@@ -67,7 +69,7 @@ public:
   FLT          NOISE_THRESHOLD;    // dB
   FLT          NOISE_THRESHOLD_UN; // natural units (internal parameter)
 
-  // frequency guessing algorithm configuration
+  // frequency finding algorithm configuration
   //-------------------------------------------
 
   unsigned int PEAK_NUMBER; // number of maximum peaks considered.
