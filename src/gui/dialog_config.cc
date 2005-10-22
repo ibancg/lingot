@@ -51,7 +51,7 @@ void clicked_cb(GtkButton *b, DialogConfig *d)
   if((GtkWidget*)b == d->button_ok) {
     d->apply();
     d->close();
-    d->conf.saveConfigFile(CONFIG_FILE);
+    d->conf.saveConfigFile(CONFIG_FILE_NAME);
   }else if((GtkWidget*)b == d->button_cancel) {
     d->close();
     d->G->changeConfig(d->conf_old); // restore old configuration.
