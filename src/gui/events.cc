@@ -34,7 +34,7 @@ EventScheduler::~EventScheduler() {
   t_event_list_node* aux = list;
   t_event_list_node* aux2;
 # ifdef DEBUG_EVENTS
-  if (aux != NULL) printf(WARNING " Removing not empty event list\n");
+  if (aux != NULL) printf(WARNING " Removing non empty event list\n");
 # endif
   while (aux != NULL) {
     aux2 = aux->sig;

@@ -38,7 +38,7 @@
 
 Core::Core()
 {
-  conf.parseConfigFile(CONFIG_FILE);
+  conf.parseConfigFile(CONFIG_FILE_NAME);
   start();
 
   status = true;

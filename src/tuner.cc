@@ -32,7 +32,7 @@
 #include "defs.h"
 #include "gui.h"
 
-char CONFIG_FILE[100];
+char CONFIG_FILE_NAME[100];
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +43,11 @@ int main(int argc, char *argv[])
   gtk_init(&argc, &argv);
   gtk_set_locale();
 
+  // default config file.
+  sprintf(CONFIG_FILE_NAME, "%s/" CONFIG_DIR_NAME DEFAULT_CONFIG_FILE_NAME,
+          getenv("HOME"));
+
+  // TODO: indicar path completo del fichero de configuración.
   if ((argc > 3) || (argc == 2)) {
     printf("\nussage: lingot [-c config]\n\n");
     return -1;
@@ -53,25 +58,23 @@ int main(int argc, char *argv[])
       return -1;
     }
     
-    sprintf(CONFIG_FILE, "%s/.lingot/%s.conf", getenv("HOME"), argv[2]);
-  } else {
-
-    // obtain the home dir from an env var.
-    sprintf(CONFIG_FILE, "%s/%s", getenv("HOME"), CONFIG_FILE_HOME);
+    sprintf(CONFIG_FILE_NAME, "%s/%s%s.conf",
+          getenv("HOME"), CONFIG_DIR_NAME, argv[2]);
+	printf("using config file %s\n", CONFIG_FILE_NAME);	
   }
 
   // if config file doesn't exists, i will create it.
   FILE* fp;
-  if ((fp = fopen(CONFIG_FILE, "r")) == NULL) {
+  if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {
     
     char config_dir[100];
     sprintf(config_dir, "%s/.lingot/", getenv("HOME"));
     printf("creating directory %s ...\n", config_dir);
     mkdir(config_dir, 0777); // creo el directorio.
-    printf("creating file %s ...\n", CONFIG_FILE);
+    printf("creating file %s ...\n", CONFIG_FILE_NAME);
     
     Config new_conf; // new configuration with default values.
-    new_conf.saveConfigFile(CONFIG_FILE);
+    new_conf.saveConfigFile(CONFIG_FILE_NAME);
     
     printf("ok\n");
     

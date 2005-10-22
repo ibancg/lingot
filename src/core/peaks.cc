@@ -84,7 +84,8 @@ int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
   for (i = 0; i < conf.PEAK_NUMBER; i++) p_index[i] = -1;
 
   unsigned int lowest_index = (unsigned int)
-    ceil(15.0*(1.0*conf.OVERSAMPLING/conf.SAMPLE_RATE)*conf.FFT_SIZE); // 15 Hz minimum.
+    ceil(conf.MIN_FREQUENCY*(1.0*conf.OVERSAMPLING/conf.SAMPLE_RATE)
+        *conf.FFT_SIZE);
   
   if (lowest_index < conf.PEAK_ORDER) lowest_index = conf.PEAK_ORDER;
 
@@ -96,7 +97,7 @@ int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
       // lower maximum is candidate to be replaced.
       m = 0; // first candidate.
       for (j = 0; j < conf.PEAK_NUMBER; j++) {
-	if (p_index[j] == -1) {
+      if (p_index[j] == -1) {
 	  m = j; // there is a place.
 	  break;
 	}

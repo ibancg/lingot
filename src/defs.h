@@ -33,8 +33,9 @@
 #define SAMPLE_FORMAT        AFMT_S16_LE
 
 
-#define CONFIG_FILE_HOME      ".lingot/lingot.conf"
-extern char CONFIG_FILE[];
+#define CONFIG_DIR_NAME           ".lingot/"
+#define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
+extern char CONFIG_FILE_NAME[];
 
 #define QUICK_MESSAGES
 

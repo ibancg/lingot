@@ -82,8 +82,9 @@ GUI::GUI() : Core()
   //
   // acceleration of gauge position 's(t)' linealy depends on the difference
   // respect to the input stimulus 'e(t)' (destination position). Inserting
-  // a friction coefficient ('q', typical in mechanics), acceleration
-  // proportionaly diminish with velocity. 'k' is the adaptation constant.
+  // a friction coefficient 'q', acceleration proportionaly diminish with
+  // velocity (typical friction in mechanics). 'k' is the adaptation constant,
+  // and depends on the gauge mass.
   //
   // with the following derivatives approximation (valid for high sample rate):
   //
