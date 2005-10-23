@@ -130,6 +130,17 @@ ROOT_FREQUENCY_ERROR (error de la nota de referencia LA)
 
 	 Se expresa como un número real en tanto por uno (0.5 expresa un error
 	 del 50%). 
+
+MIN_FREQUENCY (frecuencia mínima válida)
+
+	 Para evitar detectar como pico fundamental las frecuencias de contínua
+	 cuando tienen suficiente potencia, se establece una frecuencia mínima
+	 por debajo de la cual no se tendrá en cuenta la señal (el análisis
+	 totalmente en frecuencua permite emplear estos filtros "ideales").
+	 Cualquier valor infrasónico ( < 20Hz ) o por debajo del timbre capaz de
+	 generar el instrumento es razonable.
+	 
+	 Se expresa como un numero real, en herzios.
 	 
 FFT_SIZE (tamaño FFT)
 
@@ -152,7 +163,7 @@ FFT_SIZE (tamaño FFT)
 	 fin de obtener la máxima precisión inicial establecemos 4096 muestras 
 	 para el buffer de FFT, esto implicará que la ventana temporal mínima 
 	 debe ser 10.24 segundos, es decir, en cada afinación tenemos sonidos 
-  	 de hasta hace 10.24 segundos contaminando la afinación, dicho en otras
+  	 de hasta hace 10.24 segundos contaminando la afinación, o dicho en otras
 	 palabras, tendremos que esperar 10.24 segundos entre nota y nota para
 	 no interferir.
 
