@@ -129,6 +129,13 @@ ROOT_FREQUENCY_ERROR ("A" reference note error)
 	It must be a real number in as much by one (0.5 is equal to
 	a 50% error, expressed in percentage of	halftones)
 
+MIN_FREQUENCY (minimum valid frequency)
+
+	To avoid detecting the continuous component as the fundamental peak when
+	it has enough power, we consider a minimum valid frequency.
+	 
+	It must be a real number, in hertzs.
+
 FFT_SIZE (Size of the FTT)
 
 	A high value gets more accuracy, especially more precision locking
