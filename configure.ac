@@ -28,19 +28,9 @@ AC_PROG_CXX
 AC_PROG_CC
 
 
-AC_PATH_PROG(GTK_CONFIG, gtk-config, no)
-no_gtk=""
-if test "$GTK_CONFIG" != "no" ; then
-    GTK_CFLAGS=`$GTK_CONFIG $gtk_config_args --cflags`
-    GTK_LIBS=`$GTK_CONFIG $gtk_config_args --libs`
-    ac_save_CFLAGS="$CFLAGS"
-    ac_save_LIBS="$LIBS"
-    CFLAGS="$CFLAGS $GTK_CFLAGS"
-    LIBS="$LIBS $GTK_LIBS"
-fi
-
-# Checks for libraries.
-AC_CHECK_LIB(gtk, gtk_main, [], [AC_MSG_ERROR(GTK 1.2 or above not found!)])
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= $GTK_REQUIRED)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
 
 # Checks for header files.
 AC_HEADER_STDC
