@@ -19,10 +19,10 @@
 PROJECT = lingot
 SRC     = src/*.cc src/core/*.cc src/gui/*.cc
 
-DEFINES   = -DGTK12 #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
-INCDIR    = `gtk-config --cflags` -Isrc/core -Isrc/gui -Isrc
-C_FLAGS   = -Wall $(DEFINES) $(INCDIR)
-LIBS      = `gtk-config --libs` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
+DEFINES   = #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
+INCDIR    = `pkg-config --cflags gtk+-2.0` -Isrc/core -Isrc/gui -Isrc
+C_FLAGS   = -g -Wall $(DEFINES) $(INCDIR)
+LIBS      = `pkg-config --libs gtk+-2.0` -lstdc++ -lpthread -lm #-lsndobj #-lfftw
 
 SRCS = $(wildcard $(SRC))
 OBJS = $(SRCS:.cc=.o)
