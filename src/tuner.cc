@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
   // TODO: indicar path completo del fichero de configuración.
   if ((argc > 3) || (argc == 2)) {
-    printf("\nussage: lingot [-c config]\n\n");
+    printf("\nusage: lingot [-c config]\n\n");
     return -1;
   } else if (argc > 1) {
 

@@ -488,7 +488,6 @@ void DialogConfig::apply()
   conf.SAMPLE_RATE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry)));
 
   conf.updateInternalParameters();
-
   G->changeConfig(conf);
 }
 

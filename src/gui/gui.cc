@@ -2,7 +2,7 @@
 /*
   lingot, a musical instrument tuner.
 
-  Copyright (C) 2004, 2005  Ibán Cereijo Graña, Jairo Chapela Martínez.
+  Copyright (C) 2004, 2005  IbÃƒÂ¡n Cereijo GraÃƒÂ±a, Jairo Chapela MartÃƒÂ­nez.
 
   This file is part of lingot.
 
@@ -54,8 +54,8 @@ void callbackAbout(GtkWidget *w, void *data)
   quick_message(gettext("about lingot"), 
 		gettext("\nlingot " VERSION ", (c) 2005\n"
 			"\n"
-			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
-			"Jairo Chapela Martínez <jairochapela@terra.es>\n\n"));
+			"IbÃ¡n Cereijo GraÃ±a <ibancg@gmail.com>\n"
+			"Jairo Chapela MartÃ­nez <jairochapela@terra.es>\n\n"));
 }
 
 GUI::GUI() : Core()
@@ -157,7 +157,7 @@ GUI::GUI() : Core()
       gtk_window_add_accel_group(GTK_WINDOW(win), accel_group);
       menu = gtk_item_factory_get_widget(item_factory, "<main>");
       gtk_menu_bar_set_shadow_type(GTK_MENU_BAR(menu), GTK_SHADOW_NONE);
-      // lo primero que metemos en la caja vertical, es la barra de menú
+      // lo primero que metemos en la caja vertical, es la barra de menÃƒÂº
       gtk_box_pack_start_defaults(GTK_BOX(vb), menu);*/
 
   /* menu */
@@ -457,7 +457,9 @@ void GUI::putFrequency()
 
   gtk_label_set_text(GTK_LABEL(freq_info), freq_string);
   gtk_label_set_text(GTK_LABEL(error_info), error_string);
-  gtk_label_set_text(GTK_LABEL(note_info), current_note);
+  char labeltext_current_note[100];
+  sprintf(labeltext_current_note, "<big><b>%s</b></big>", current_note);
+  gtk_label_set_markup(GTK_LABEL(note_info), labeltext_current_note);
 }
 
 
