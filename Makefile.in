@@ -17,6 +17,7 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 PROJECT = lingot
+EXECS	= $(PROJECT)
 SRC     = src/*.cc src/core/*.cc src/gui/*.cc
 
 DEFINES   = #-DOSS -DLIBSNDOBJ #-DLIB_FFTW
@@ -45,6 +46,8 @@ install: $(PROJECT)
 	install -d @prefix@
 	install -d @prefix@/bin
 	install $(PROJECT) @prefix@/bin
+
+distclean: clean
 
 clean:
 	find -type f -path '*.o' | xargs rm -f
