@@ -24,8 +24,8 @@
 #ifndef __DIALOG_CONFIG_H__
 #define __DIALOG_CONFIG_H__
 
-#include <gtk/gtk.h>
-#include <gdk/gdk.h>
+//#include <gtk/gtk.h>
+//#include <gdk/gdk.h>
 #include "config.h"
 
 class GUI;

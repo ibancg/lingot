@@ -106,7 +106,7 @@ public:
   void reset();
 
   // derivate internal parameters from external ones.
-  void updateInternalParameters();
+  bool updateInternalParameters();
 
   void saveConfigFile(char* archivo);
   void parseConfigFile(char* archivo);
