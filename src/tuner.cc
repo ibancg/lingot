@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <gtk/gtk.h>
+//#include <gtk/gtk.h>
 #include "defs.h"
 #include "gui.h"
 

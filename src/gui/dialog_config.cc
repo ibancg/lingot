@@ -487,8 +487,18 @@ void DialogConfig::apply()
   conf.FFT_SIZE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry)));
   conf.SAMPLE_RATE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry)));
 
-  conf.updateInternalParameters();
+  bool result = conf.updateInternalParameters();
+  
   G->changeConfig(conf);
+  
+# ifdef QUICK_MESSAGES
+	if (!result) {
+    char buff[80];
+    sprintf(buff, gettext("Temporal buffer is smaller than FFT size.\
+ It has been increased to %0.3f seconds\n"), (float)conf.TEMPORAL_WINDOW);
+    quick_message(gettext("tuner warning"), buff);
+	}
+# endif
 }
 
 void DialogConfig::close()

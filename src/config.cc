@@ -115,8 +115,10 @@ void Config::reset()
 
 //----------------------------------------------------------------------------
 
-void Config::updateInternalParameters()
+bool Config::updateInternalParameters()
 {
+	bool result = true;
+	
   // derived parameters.
   ROOT_FREQUENCY             = 440.0*pow(2.0, ROOT_FREQUENCY_ERROR/1200.0);
   TEMPORAL_BUFFER_SIZE       = (unsigned int) 
@@ -127,17 +129,12 @@ void Config::updateInternalParameters()
   NOISE_THRESHOLD_UN         = pow(10.0, NOISE_THRESHOLD/10.0);
 
   if (TEMPORAL_BUFFER_SIZE < FFT_SIZE) {
-
-#   ifdef QUICK_MESSAGES
-    char buff[80];
-    TEMPORAL_WINDOW = ((double) FFT_SIZE*OVERSAMPLING)/SAMPLE_RATE;
-    sprintf(buff, gettext("Temporal buffer is smaller than FFT size.\
- It has been increased to %0.3f seconds\n"), (float)TEMPORAL_WINDOW);
-    quick_message(gettext("tuner warning"), buff);
-#   endif
+  	TEMPORAL_WINDOW = ((double) FFT_SIZE*OVERSAMPLING)/SAMPLE_RATE;
     TEMPORAL_BUFFER_SIZE = FFT_SIZE;
+		result = false;
   }
   
+  return result;
 }
 
 //----------------------------------------------------------------------------
