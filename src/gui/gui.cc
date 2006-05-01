@@ -52,7 +52,7 @@ void callbackDestroy(GtkWidget *w, void *data)
 void callbackAbout(GtkWidget *w, void *data)
 {
   quick_message(gettext("about lingot"), 
-		gettext("\nlingot " VERSION ", (c) 2005\n"
+		gettext("\nlingot " VERSION ", (c) 2006\n"
 			"\n"
 			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
 			"Jairo Chapela Martínez <jairochapela@terra.es>\n\n"));
