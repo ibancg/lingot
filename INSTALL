@@ -35,11 +35,11 @@ INSTALLATION PROCEDURE
 
  1. Extract the sources from the tar-gz file:
 
-   tar xvzf lingot-0.6.1.tar.gz
+   tar xvzf lingot-0.6.2.tar.gz
 
  2. Enter in the sources directory and run the configure script:
 
-   cd lingot-0.6.1
+   cd lingot-0.6.2
    ./configure
 
  3. If the step 2 doesn't report any error, you can compile and install
