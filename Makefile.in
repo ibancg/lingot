@@ -43,9 +43,9 @@ $(PROJECT): .depend $(OBJS)
 	$(CXX) $(C_FLAGS) -c $< -o $@
 
 install: $(PROJECT)
-	install -d @prefix@
-	install -d @prefix@/bin
-	install $(PROJECT) @prefix@/bin
+	install -d $(DESTDIR)@prefix@
+	install -d $(DESTDIR)@prefix@/bin
+	install $(PROJECT) $(DESTDIR)@prefix@/bin
 
 distclean: clean
 
