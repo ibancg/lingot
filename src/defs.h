@@ -55,6 +55,6 @@ extern char CONFIG_FILE_NAME[];
 #define LOCALEDIR "."
 #define _(x) gettext(x)
 
-#define VERSION "0.6.1"
+#define VERSION "0.6.2"
 
 #endif
