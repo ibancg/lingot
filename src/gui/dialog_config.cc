@@ -132,7 +132,7 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_box_pack_start_defaults(GTK_BOX(vb), frame1);
 
   tab1 = gtk_table_new(5, 3, FALSE);
-  int file = 0;
+  int row = 0;
 
   gtk_table_set_col_spacings(GTK_TABLE(tab1), 20);
   gtk_table_set_row_spacings(GTK_TABLE(tab1), 3);
@@ -150,12 +150,12 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_calculation_rate), TRUE);
   gtk_table_attach_defaults(GTK_TABLE(tab1), 
 			    gtk_label_new(gettext("Calculation rate")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), spin_calculation_rate, 
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("Hz")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -168,12 +168,12 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_visualization_rate), TRUE);
   gtk_table_attach_defaults(GTK_TABLE(tab1), 
 			    gtk_label_new(gettext("Visualization rate")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), spin_visualization_rate,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("Hz")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -196,12 +196,12 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_combo_set_use_arrows_always( GTK_COMBO(combo_fft_size), TRUE );
 
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("FFT size")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), combo_fft_size,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("samples")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -216,12 +216,12 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_table_attach_defaults(GTK_TABLE(tab1),
 			    gtk_label_new(gettext("Noise threshold")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("dB")),
-			    2, 3, file, file + 1);
+			    2, 3, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), spin_noise_threshold,
-			    1, 2, file, file + 1);
-  file++;
+			    1, 2, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -267,11 +267,11 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_table_attach_defaults(GTK_TABLE(tab1), 
 			    gtk_label_new(gettext("Sample rate")),
-			    0, 1, file, file + 1);
-  gtk_table_attach_defaults(GTK_TABLE(tab1), box, 1, 2, file, file + 1);
+			    0, 1, row, row + 1);
+  gtk_table_attach_defaults(GTK_TABLE(tab1), box, 1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab1), gtk_label_new(gettext("Hz")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -279,7 +279,7 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_box_pack_start_defaults(GTK_BOX(vb), frame2);
 
   tab2 = gtk_table_new(7, 3, FALSE);
-  file = 0;
+  row = 0;
 
   gtk_table_set_col_spacings(GTK_TABLE(tab2), 20);
   gtk_table_set_row_spacings(GTK_TABLE(tab2), 3);
@@ -314,11 +314,11 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_table_attach_defaults(GTK_TABLE(tab2), 
 			    gtk_label_new(gettext("Root frequency")),
-			    0, 1, file, file + 1);
-  gtk_table_attach_defaults(GTK_TABLE(tab2), box, 1, 2, file, file + 1);
+			    0, 1, row, row + 1);
+  gtk_table_attach_defaults(GTK_TABLE(tab2), box, 1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("Hz")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -333,12 +333,12 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("Temporal window")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("seconds")),
-			    2, 3, file, file + 1);
+			    2, 3, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_temporal_window,
-			    1, 2, file, file + 1);
-  file++;
+			    1, 2, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -353,12 +353,12 @@ DialogConfig::DialogConfig(GUI* G)
   
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("DFT number")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_dft_number,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("DFTs")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -372,12 +372,12 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_spin_button_set_digits(GTK_SPIN_BUTTON(spin_dft_size), 0) ;
 
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("DFT size")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("samples")),
-			    2, 3, file, file + 1);
+			    2, 3, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_dft_size,
-			    1, 2, file, file + 1);
-  file++;
+			    1, 2, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -392,12 +392,12 @@ DialogConfig::DialogConfig(GUI* G)
   
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("Peak number")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_peak_number,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("peaks")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -412,13 +412,13 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("Peak order")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_peak_order,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("samples")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
@@ -434,12 +434,12 @@ DialogConfig::DialogConfig(GUI* G)
   
   gtk_table_attach_defaults(GTK_TABLE(tab2),
 			    gtk_label_new(gettext("Rejection peak relation")),
-			    0, 1, file, file + 1);
+			    0, 1, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), spin_peak_rejection_relation,
-			    1, 2, file, file + 1);
+			    1, 2, row, row + 1);
   gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(gettext("dB")),
-			    2, 3, file, file + 1);
-  file++;
+			    2, 3, row, row + 1);
+  row++;
 
   // --------------------------------------------------------------------------
 
