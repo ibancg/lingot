@@ -43,10 +43,11 @@ void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data)
 
 void callbackDestroy(GtkWidget *w, void *data)
 {
-  int tout_handle = 0;
+/*  int tout_handle = 0;
 
   gtk_timeout_remove(tout_handle);
-  ((GUI*)data)->quit = true;
+  ((GUI*)data)->quit = true;*/
+  gtk_main_quit();
 }
 
 void callbackAbout(GtkWidget *w, void *data)
@@ -462,10 +463,51 @@ void GUI::putFrequency()
   gtk_label_set_markup(GTK_LABEL(note_info), labeltext_current_note);
 }
 
+/* Callback for visualization */
+gboolean visualization_callback(gpointer data) {
+	//printf("visualization callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->drawGauge();
+
+	unsigned int period = int(1.0e3/gui->conf.VISUALIZATION_RATE);
+	gtk_timeout_add(period, visualization_callback, gui);
+	
+	return 0; 
+}
+
+/* Callback for calculation */
+gboolean calculation_callback(gpointer data) {
+	//printf("calculation callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->drawSpectrum();
+
+	unsigned int period = int(1.0e3/gui->conf.CALCULATION_RATE);
+	gtk_timeout_add(period, calculation_callback, gui);
+	
+	return 0; 
+}
+
+/* Callback for frequency calculation */
+gboolean frequency_callback(gpointer data) {
+	//printf("error calculation callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->putFrequency();
+
+	unsigned int period = int(1.0e3/GAUGE_RATE);
+	gtk_timeout_add(period, frequency_callback, gui);
+	
+	return 0; 
+}
 
 void GUI::mainLoop()
 {
-  struct timeval  t_current, t_diff;
+/*  struct timeval  t_current, t_diff;
 
   t_event        e_gauge, e_gtk, e_vis, e_calculus;
   t_event*       next_tout;
@@ -475,14 +517,25 @@ void GUI::mainLoop()
   e_vis      = next_event(t_current, conf.VISUALIZATION_RATE);
   e_gauge    = next_event(t_current, GAUGE_RATE);
   e_gtk      = next_event(t_current, GTK_EVENTS_RATE);
-  e_calculus = next_event(t_current, conf.CALCULATION_RATE);
+  e_calculus = next_event(t_current, conf.CALCULATION_RATE);*/
 
-  ES.add(&e_gauge);
-  ES.add(&e_gtk);
-  ES.add(&e_vis);
-  ES.add(&e_calculus);
+//  ES.add(&e_gauge);
+//  ES.add(&e_gtk);
+//  ES.add(&e_vis);
+//  ES.add(&e_calculus);
 
-  while(!quit) {
+	unsigned int period = int(1.0e3/conf.VISUALIZATION_RATE);
+	gtk_timeout_add(period, visualization_callback, this);
+
+	period = int(1.0e3/conf.CALCULATION_RATE);
+	gtk_timeout_add(period, calculation_callback, this);
+
+	period = int(1.0e3/GAUGE_RATE);
+	gtk_timeout_add(period, frequency_callback, this);
+
+	return;
+		
+/*  while(!quit) {
 
     next_tout = ES.next(); // consult the next event.
     gettimeofday(&t_current, NULL);
@@ -518,7 +571,7 @@ void GUI::mainLoop()
       ES.add(&e_calculus);	
       drawSpectrum();
     }
-  }
+  }*/
 }
 
 
