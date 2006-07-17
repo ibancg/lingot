@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
   GUI G;
 
   G.mainLoop();
+	gtk_main();
 
   return 0;
 }

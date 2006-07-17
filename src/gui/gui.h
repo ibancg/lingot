@@ -51,8 +51,6 @@ private:
   FLT            gauge_value; // valor de la aguja [-0.5, 0.5]
 
   void setupGaugeFilter();
-  void drawGauge();
-  void drawSpectrum();
   void allocColor(GdkColor *col, int r, int g, int b);
   void fgColor(GdkGC *gc, int r, int g, int b);
   void bgColor(GdkGC *gc, int r, int g, int b);
@@ -68,6 +66,8 @@ public:
   void mainLoop();
   void putFrequency();
   void resize(Config);
+  void drawGauge();
+  void drawSpectrum();
 
   friend void callbackDestroy(GtkWidget *w, void *data);
   friend void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data);
