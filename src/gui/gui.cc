@@ -56,7 +56,7 @@ void callbackAbout(GtkWidget *w, void *data)
 		gettext("\nlingot " VERSION ", (c) 2006\n"
 			"\n"
 			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
-			"Jairo Chapela Martínez <jairochapela@terra.es>\n\n"));
+			"Jairo Chapela Martínez <jairochapela@gmail.com>\n\n"));
 }
 
 GUI::GUI() : Core()

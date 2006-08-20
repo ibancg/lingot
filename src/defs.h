@@ -37,7 +37,7 @@
 #define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
 extern char CONFIG_FILE_NAME[];
 
-#define QUICK_MESSAGES
+//#define QUICK_MESSAGES
 
 #define GTK_EVENTS_RATE       20.0
 #define GAUGE_RATE            60.0
