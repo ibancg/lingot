@@ -39,7 +39,7 @@
 #endif
 
 class CPX;
-class Filter;
+class IIR;
 
 class Core {
 
@@ -83,7 +83,7 @@ private:
   CPX*          fft_out; // complex signal in freq.
 # endif
 
-  Filter*       antialiasing_filter; // antialiasing filter for decimation.
+  IIR*          antialiasing_filter; // antialiasing filter for decimation.
 
   void          decimate(FLT* in, FLT* out);
 

@@ -29,10 +29,9 @@
 
 #include "defs.h"
 
-#include "filter.h"
+#include "iir.h"
 #include "gui.h"
 #include "dialog_config.h"
-#include "events.h"
 
 #include "../background.xpm"
 
@@ -112,7 +111,7 @@ GUI::GUI() : Core()
       GAUGE_RATE*GAUGE_RATE };
   FLT gauge_filter_b[] = { k };
 
-  gauge_filter = new Filter( 2, 0, gauge_filter_a, gauge_filter_b );
+  gauge_filter = new IIR( 2, 0, gauge_filter_a, gauge_filter_b );
 
   // ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -120,7 +119,7 @@ GUI::GUI() : Core()
   FLT freq_filter_a[] = { 1.0, -0.5 };
   FLT freq_filter_b[] = { 0.5 };
   
-  freq_filter = new Filter( 1, 0, freq_filter_a, freq_filter_b );
+  freq_filter = new IIR( 1, 0, freq_filter_a, freq_filter_b );
     
   // ---------------------------------------------------
 

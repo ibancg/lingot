@@ -33,7 +33,7 @@
 
 #include "FFT.h"
 #include "core.h"
-#include "filter.h"
+#include "iir.h"
 #include "filters.h"
 
 Core::Core()
@@ -49,9 +49,14 @@ Core::Core()
 void Core::start()
 {
 # ifdef LIBSNDOBJ
+#  ifdef OSS
   A = new SndRTIO(1, SND_INPUT, 512, 512, SHORTSAM_LE, NULL, 
 		  conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, conf.SAMPLE_RATE, conf.AUDIO_DEV);
-  //    A = new SndRTIO();
+#  endif		  
+#  ifdef ALSA
+  A = new SndRTIO(1, SND_INPUT, 512, 4, SHORTSAM_LE, NULL, 
+		  conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, conf.SAMPLE_RATE, "plughw:0,0");
+#  endif		  
 # else
   // creates an audio handler.
   A = new audio(1, conf.SAMPLE_RATE, SAMPLE_FORMAT, conf.AUDIO_DEV);
@@ -98,7 +103,7 @@ void Core::start()
   memset(temporal_window_buffer, 0, conf.TEMPORAL_BUFFER_SIZE*sizeof(FLT));
 
   // order 8 Chebyshev antialiasing filter, wc = pi/oversampling
-  antialiasing_filter = new Filter( 8, 8, filtros[conf.OVERSAMPLING][0], filtros[conf.OVERSAMPLING][1] );
+  antialiasing_filter = new IIR( 8, 8, filtros[conf.OVERSAMPLING][0], filtros[conf.OVERSAMPLING][1] );
 
   // ------------------------------------------------------------
 

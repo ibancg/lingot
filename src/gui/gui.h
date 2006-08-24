@@ -26,7 +26,6 @@
 
 #include "defs.h"
 #include "core.h"
-#include "events.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -38,16 +37,14 @@ class GUI : public Core {
 
 private:
 
-  EventScheduler ES;
-
   // widgets gtk
   GtkWidget      *win, *vb, *frame1, *frame3, *frame4, *hb, *vbinfo;
   GtkWidget      *gauge, *spectrum, *note_info, *freq_info, *error_info, *menu;
   GdkPixmap      *pix_spectrum, *pix_stick;
   bool           quit;
-  Filter*        freq_filter;
+  IIR*           freq_filter;
 
-  Filter*        gauge_filter;
+  IIR*           gauge_filter;
   FLT            gauge_value; // valor de la aguja [-0.5, 0.5]
 
   void setupGaugeFilter();
