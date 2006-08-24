@@ -1,44 +1,44 @@
 LINGOT - Afinador de instrumentos musicales
 
 Escrito por:
-  Ib·n Cereijo GraÒa <ibancg@gmail.com>
-  Jairo Chapela MartÌnez <jairocm@wanadoo.es>
+  Ib√°n Cereijo Gra√±a <ibancg@gmail.com>
+  Jairo Chapela Mart√≠nez <jairocm@wanadoo.es>
 
-Copyright (C) 2004, 2005 Ib·n Cereijo GraÒa, Jairo Chapela martÌnez,
+Copyright (C) 2004, 2005 Ib√°n Cereijo Gra√±a, Jairo Chapela mart√≠nez,
 		   Graciano Carrillo Pousa.
 
-DescripciÛn
+Descripci√≥n
 ===========
 
-	Lingot es un afinador de instrumentos musicales, preciso, f·cil de usar
-y altamente configurable. Originalmente concebido para afinar guitarras elÈc-
-tricas, su configurabilidad le da un car·cter m·s general (la afinaciÛn de otro
-tipo de instrumentos todavÌa no ha sido testada).
+	Lingot es un afinador de instrumentos musicales, preciso, f√°cil de usar
+y altamente configurable. Originalmente concebido para afinar guitarras el√©c-
+tricas, su configurabilidad le da un car√°cter m√°s general (la afinaci√≥n de otro
+tipo de instrumentos todav√≠a no ha sido testada).
 
-	Simula el aspecto de un afinador analÛgico con una aguja que indica la
-desviaciÛn respecto a una nota dada, encontrada autom·ticamente como la nota 
-m·s cercana a la frecuencia estimada, indicando dicha nota y frecuencia.
+	Simula el aspecto de un afinador anal√≥gico con una aguja que indica la
+desviaci√≥n respecto a una nota dada, encontrada autom√°ticamente como la nota 
+m√°s cercana a la frecuencia estimada, indicando dicha nota y frecuencia.
 
-	La nota ser· encontrada de forma autom·tica, no teniendo un modo de
+	La nota ser√° encontrada de forma autom√°tica, no teniendo un modo de
 funcionamiento manual (indicar manualmente la nota que queremos afinar), para
 mantener la generalidad.
 
 	Recomendamos usar el afinador conjuntamente con un mezclador para 
-seleccionar la fuente de grabaciÛn y los niveles de seÒal.
+seleccionar la fuente de grabaci√≥n y los niveles de se√±al.
 
 Requisitos
 ==========
 
 	* Tarjeta de sonido.
 	* Kernel linux con soporte para audio (OSS).
-	* librerÌa GTK+ 2.0.
+	* librer√≠a GTK+ 2.0.
 	
-InstalaciÛn
+Instalaci√≥n
 ===========
 
 	Consulta el archivo INSTALL
 
-Par·metros de entrada
+Par√°metros de entrada
 =====================
 
 	lingot [-c configuracion]
@@ -49,32 +49,32 @@ por ejemplo:
 
 	lingot -c bass
 
-Tomar· la configuraciÛn del archivo ~/.lingot/bass.conf, esto es ˙til para
+Tomar√° la configuraci√≥n del archivo ~/.lingot/bass.conf, esto es √∫til para
 mantener varias configuraciones correspondientes a varios instrumentos.
 
-Archivo de configuraciÛn
+Archivo de configuraci√≥n
 ========================
 
-	Al lanzarse por primera vez se crear· el archivo de configuraciÛn:
+	Al lanzarse por primera vez se crear√° el archivo de configuraci√≥n:
 ~/.lingot/lingot.conf
 
-Las opciones se pueden cambiar tambiÈn en el GUI, y recomendamos cambiarlas
-desde esta interfaz. Sus valores por defecto est·n optimizados para afinar
-guitarra elÈctrica, para otros instrumentos debe ser retocado (es buena idea
-guardar un archivo de configuraciÛn por cada instrumento, y utilizar la 
-opciÛn -c para cargar una configuraciÛn u otra).
+Las opciones se pueden cambiar tambi√©n en el GUI, y recomendamos cambiarlas
+desde esta interfaz. Sus valores por defecto est√°n optimizados para afinar
+guitarra el√©ctrica, para otros instrumentos debe ser retocado (es buena idea
+guardar un archivo de configuraci√≥n por cada instrumento, y utilizar la 
+opci√≥n -c para cargar una configuraci√≥n u otra).
 
-Con la finalidad de mantener la m·xima configurabilidad, el usuario dispone de
-multitud de opciones, y la comprensiÛn total del efecto de las mismas requiere 
-conocimientos de procesado de seÒal, a continuaciÛn se intentar· explicar el
+Con la finalidad de mantener la m√°xima configurabilidad, el usuario dispone de
+multitud de opciones, y la comprensi√≥n total del efecto de las mismas requiere 
+conocimientos de procesado de se√±al, a continuaci√≥n se intentar√° explicar el
 efecto de cada una, pero si no se comprende el resultado lo mejor es no 
-cambiarlas. No se descarta en futuras versiones reducir el n˙mero de opciones
-para hacer el afinador m·s manejable.
+cambiarlas. No se descarta en futuras versiones reducir el n√∫mero de opciones
+para hacer el afinador m√°s manejable.
 
 
 Describimos las opciones que encontraremos en este archivo, y recomendamos su
-manipulaciÛn en funciÛn de la precisiÛn de afinado obtenida y la potencia de
-c·lculo requerida.
+manipulaci√≥n en funci√≥n de la precisi√≥n de afinado obtenida y la potencia de
+c√°lculo requerida.
 
 AUDIO_DEV (dispositivo de sonido)
 
@@ -82,9 +82,9 @@ AUDIO_DEV (dispositivo de sonido)
 
 SAMPLE_RATE (frecuencia de muestreo)
 
-	 Frecuencia a la que ser· muestreada la seÒal de entrada por la tarjeta
+	 Frecuencia a la que ser√° muestreada la se√±al de entrada por la tarjeta
 	 de sonido. No todas las tarjetas soportan cualquier valor para esta 
-	 opciÛn, y recomendamos escoger una de las opciones que proporciona
+	 opci√≥n, y recomendamos escoger una de las opciones que proporciona
 	 el GUI:
 
 	  8000 Hz
@@ -92,22 +92,22 @@ SAMPLE_RATE (frecuencia de muestreo)
 	 22050 Hz
 	 44100 Hz
 
-	 Podremos encontrar una frecuencia efectiva de muestreo subm˙ltiplo de 
-	 la que pongamos aquÌ mediante el factor de sobremuestreo.
+	 Podremos encontrar una frecuencia efectiva de muestreo subm√∫ltiplo de 
+	 la que pongamos aqu√≠ mediante el factor de sobremuestreo.
 
 	 Para seleccionar una frecuencia de muestreo debemos tener en cuenta la
-	 frecuencia m·xima que queramos afinar en nuestro instrumento, y poner
+	 frecuencia m√°xima que queramos afinar en nuestro instrumento, y poner
 	 la frecuencia efectiva de muestreo (ya dividida por el factor de 
 	 sobremuestreo) al menos al doble de esa frecuencia (criterio de 
 	 Nyquist). Todas las componentes frecuenciales por encima de la mitad
-	 de la frecuencia de muestreo efectiva ser·n filtradas y no aparecer·n
+	 de la frecuencia de muestreo efectiva ser√°n filtradas y no aparecer√°n
 	 en el espectro.
 
 	 Se expresa como un numero entero, en herzios.
 
 OVERSAMPLING (factor de sobremuestreo)
 
- 	 Indica el factor por el que se va a diezmar la seÒal muestreada, 
+ 	 Indica el factor por el que se va a diezmar la se√±al muestreada, 
 	 consiguiendo una frecuencia de muestreo efectiva equivalente a la de
 	 muestreo real de la tarjeta de sonido dividido por este factor.
 
@@ -120,142 +120,142 @@ OVERSAMPLING (factor de sobremuestreo)
 ROOT_FREQUENCY_ERROR (error de la nota de referencia LA)
 
 	 Cuando queremos afinar con un cierto error de desplazamiento en
-	 frecuencia. Esto es ˙til cuando queremos adaptar la afinaciÛn del
-	 instrumento a la de una grabaciÛn que tiene una afinaciÛn desplazada.
+	 frecuencia. Esto es √∫til cuando queremos adaptar la afinaci√≥n del
+	 instrumento a la de una grabaci√≥n que tiene una afinaci√≥n desplazada.
 
-	 Por ejemplo, si escuchamos que un LA en una grabaciÛn se encuentra
-	 un cuarto de tono por encima del que deberÌa ser (440 Hz), pondremos
+	 Por ejemplo, si escuchamos que un LA en una grabaci√≥n se encuentra
+	 un cuarto de tono por encima del que deber√≠a ser (440 Hz), pondremos
 	 un error del 50% (el error se expresa en porcentaje 
 	 de semitonos). 
 
-	 Se expresa como un n˙mero real en tanto por uno (0.5 expresa un error
+	 Se expresa como un n√∫mero real en tanto por uno (0.5 expresa un error
 	 del 50%). 
 
-MIN_FREQUENCY (frecuencia mÌnima v·lida)
+MIN_FREQUENCY (frecuencia m√≠nima v√°lida)
 
-	 Para evitar detectar como pico fundamental las frecuencias de contÌnua
-	 cuando tienen suficiente potencia, se establece una frecuencia mÌnima
-	 por debajo de la cual no se tendr· en cuenta la seÒal (el an·lisis
+	 Para evitar detectar como pico fundamental las frecuencias de cont√≠nua
+	 cuando tienen suficiente potencia, se establece una frecuencia m√≠nima
+	 por debajo de la cual no se tendr√° en cuenta la se√±al (el an√°lisis
 	 totalmente en frecuencua permite emplear estos filtros "ideales").
-	 Cualquier valor infrasÛnico ( < 20Hz ) o por debajo del timbre capaz de
+	 Cualquier valor infras√≥nico ( < 20Hz ) o por debajo del timbre capaz de
 	 generar el instrumento es razonable.
 	 
 	 Se expresa como un numero real, en herzios.
 	 
-FFT_SIZE (tamaÒo FFT)
+FFT_SIZE (tama√±o FFT)
 
-	 Un valor elevado proporciona mayor precisiÛn, sobre todo mayor 
-	 precisiÛn de enganche con la frecuencia deseada, pero supone mayor
-	 potencia de c·lculo.
+	 Un valor elevado proporciona mayor precisi√≥n, sobre todo mayor 
+	 precisi√≥n de enganche con la frecuencia deseada, pero supone mayor
+	 potencia de c√°lculo.
 
 	 Debe tenerse en cuenta antes de subir este valor innecesariamente 
-	 el intervalo temporal de c·lculo que implica: tener un buffer de 4096
+	 el intervalo temporal de c√°lculo que implica: tener un buffer de 4096
 	 muestras para la FFT con una frecuencia de muestreo efectiva de 8 KHz
 	 implica que cada transformada necesita valores temporales de los 
-	 ˙ltimos 512 ms, asÌ pues no tiene sentido poner una ventana temporal
-	 menor. Este par·metro influye en la respuesta temporal del afinador.
+	 √∫ltimos 512 ms, as√≠ pues no tiene sentido poner una ventana temporal
+	 menor. Este par√°metro influye en la respuesta temporal del afinador.
 
-	 Veamos un ejemplo m·s extremo:
+	 Veamos un ejemplo m√°s extremo:
 
 	 Supongamos que tenemos un instrumento capaz de generar frecuencias 
 	 bajas (< 200 Hz), y por tanto ponemos una frecuencia de muestreo de
 	 400 Hz (frecuencia de 8 KHz y factor de sobremuestreo de 20). Con el
-	 fin de obtener la m·xima precisiÛn inicial establecemos 4096 muestras 
-	 para el buffer de FFT, esto implicar· que la ventana temporal mÌnima 
-	 debe ser 10.24 segundos, es decir, en cada afinaciÛn tenemos sonidos 
-  	 de hasta hace 10.24 segundos contaminando la afinaciÛn, o dicho en otras
+	 fin de obtener la m√°xima precisi√≥n inicial establecemos 4096 muestras 
+	 para el buffer de FFT, esto implicar√° que la ventana temporal m√≠nima 
+	 debe ser 10.24 segundos, es decir, en cada afinaci√≥n tenemos sonidos 
+  	 de hasta hace 10.24 segundos contaminando la afinaci√≥n, o dicho en otras
 	 palabras, tendremos que esperar 10.24 segundos entre nota y nota para
 	 no interferir.
 
-	 NÛtese que el espectro sÛlo muestra 256 muestras, y para valores altos
-	 de este par·metro puede cuadrar la frecuencia fundamental encontrada
-	 fuera del campo de visiÛn (de momento no est· implementado un visor
+	 N√≥tese que el espectro s√≥lo muestra 256 muestras, y para valores altos
+	 de este par√°metro puede cuadrar la frecuencia fundamental encontrada
+	 fuera del campo de visi√≥n (de momento no est√° implementado un visor
 	 que se desplace en frecuencia)
 
 	 Debe ser un numero entero potencia de 2.
 	 
 TEMPORAL_WINDOW (ventana temporal)
 
-	 Indica la cantidad de seÒal en tiempo que se usa para aproximar la
-	 frecuencia final. Cuanto mayor sea este valor, m·s preciso ser· el
-	 resultado, pero de respuesta m·s lenta y m·s contaminada por notas
+	 Indica la cantidad de se√±al en tiempo que se usa para aproximar la
+	 frecuencia final. Cuanto mayor sea este valor, m√°s preciso ser√° el
+	 resultado, pero de respuesta m√°s lenta y m√°s contaminada por notas
 	 anteriores.
 
-	 Como regla pr·ctica diremos que si tenemos una ventana temporal de 1 
+	 Como regla pr√°ctica diremos que si tenemos una ventana temporal de 1 
 	 segundo, debemos esperar 1 segundo entre nota y nota para obtener la 
-	 afinaciÛn. AsÌ pues, este par·metro repercute directamente en la 
-	 respuesta din·mica del afinador.
+	 afinaci√≥n. As√≠ pues, este par√°metro repercute directamente en la 
+	 respuesta din√°mica del afinador.
 
-	 La ventana temporal en muestras (obtenida como la multilpicaciÛn de su
-	 duraciÛn en segundos y la frecuencia efectiva de muestreo) debe ser
+	 La ventana temporal en muestras (obtenida como la multilpicaci√≥n de su
+	 duraci√≥n en segundos y la frecuencia efectiva de muestreo) debe ser
 	 mayor que el buffer de FFT.
 
-	 Se expresa como un n˙mero real, en segundos.
+	 Se expresa como un n√∫mero real, en segundos.
 
 NOISE_THRESHOLD (umbral de ruido)
 
  	 Para no afinar ruido establecemos un umbral distinguiendo lo que es 
-	 ruido y lo que es seÒal. EstablÈzcase empÌricamente y ay˙dese de un
+	 ruido y lo que es se√±al. Establ√©zcase emp√≠ricamente y ay√∫dese de un
 	 mezclador para los niveles de potencia.
 
-	 Es un n˙mero real expresado en dB.
+	 Es un n√∫mero real expresado en dB.
 
-CALCULATION_RATE (frecuencia de c·lculo)
+CALCULATION_RATE (frecuencia de c√°lculo)
 
-	 Cuantos m·s c·lculos por segundo mayor sensaciÛn din·mica nos dar· el
-	 afinador, pero necesitar· mayor potencia de c·lculo.
+	 Cuantos m√°s c√°lculos por segundo mayor sensaci√≥n din√°mica nos dar√° el
+	 afinador, pero necesitar√° mayor potencia de c√°lculo.
 
-VISUALIZATION_RATE (frecuencia de visualizaciÛn)
+VISUALIZATION_RATE (frecuencia de visualizaci√≥n)
 
-	 Tiene impacto en la sensaciÛn de dinamismo conseguida, pero menos en
-	 la potencia de c·lculo necesaria.
+	 Tiene impacto en la sensaci√≥n de dinamismo conseguida, pero menos en
+	 la potencia de c√°lculo necesaria.
 
-	 No tiene sentido que la frecuencia de c·lculo sea mayor que la de 
-	 visualizaciÛn.
+	 No tiene sentido que la frecuencia de c√°lculo sea mayor que la de 
+	 visualizaci√≥n.
 
-PEAK_NUMBER (n˙mero de picos)
+PEAK_NUMBER (n√∫mero de picos)
 
-	 Para la identificaciÛn del pico fundamental debemos tener en cuenta,
-	 en funciÛn de las caracterÌsticas del timbre generado por el 
-	 instrumento, el n˙mero de picos armÛnicos (en frecuencias m˙ltiplos de
+	 Para la identificaci√≥n del pico fundamental debemos tener en cuenta,
+	 en funci√≥n de las caracter√≠sticas del timbre generado por el 
+	 instrumento, el n√∫mero de picos arm√≥nicos (en frecuencias m√∫ltiplos de
 	 la fundamental) que pueden superar en magnitud al pico fundamental 
-	 (hasta la relaciÛn seÒalada en la siguiente opciÛn).
+	 (hasta la relaci√≥n se√±alada en la siguiente opci√≥n).
 
-PEAK_REJECTION_RELATION (relaciÛn de rechazo de picos)
+PEAK_REJECTION_RELATION (relaci√≥n de rechazo de picos)
 
-	 Cualquier pico cuya magnitud tenga con la magnitud del pico m·ximo una
-	 relaciÛn mayor que la seÒalada ser· descartado (caracterÌsticas del
+	 Cualquier pico cuya magnitud tenga con la magnitud del pico m√°ximo una
+	 relaci√≥n mayor que la se√±alada ser√° descartado (caracter√≠sticas del
 	 timbre del instrumento).
 
-	 Es un n˙mero real expresado en dB.
+	 Es un n√∫mero real expresado en dB.
 
 PEAK_ORDER (orden de pico)
 
-	 N˙mero de muestras necesarias para considerar un pico como tal. La 
-	 correcta afinaciÛn de este par·metro depender· del tipo de timbre del
-	 instrumento, y m·s de la resoluciÛn espectral obtenida mediante la
-	 frecuencia efectiva de muestreo y el tamaÒo de FFT, nÛtese que 
+	 N√∫mero de muestras necesarias para considerar un pico como tal. La 
+	 correcta afinaci√≥n de este par√°metro depender√° del tipo de timbre del
+	 instrumento, y m√°s de la resoluci√≥n espectral obtenida mediante la
+	 frecuencia efectiva de muestreo y el tama√±o de FFT, n√≥tese que 
 	 considerar N muestras en la FFT implica un intervalo frecuencial 
-	 variable dependiendo de aquellos par·metros.
+	 variable dependiendo de aquellos par√°metros.
 
-DFT_NUMBER (n˙mero de DFTs)
+DFT_NUMBER (n√∫mero de DFTs)
 
-	 Tras encontrar el pico m·ximo en la FFT se hacen un cierto n˙mero de
-	 DFTs localizadas en frecuencia para cercar m·s la frecuencia 
-	 aproximada antes de lanzar la aproximaciÛn final por mÈtodo iterativo
+	 Tras encontrar el pico m√°ximo en la FFT se hacen un cierto n√∫mero de
+	 DFTs localizadas en frecuencia para cercar m√°s la frecuencia 
+	 aproximada antes de lanzar la aproximaci√≥n final por m√©todo iterativo
 	 (Newton-Raphson).
 
-	 Cuantas m·s DFTs m·s precisiÛn de enganche tenemos, pero m·s potencia
-	 de c·lculo necesitamos.
+	 Cuantas m√°s DFTs m√°s precisi√≥n de enganche tenemos, pero m√°s potencia
+	 de c√°lculo necesitamos.
 
-DFT_SIZE (tamaÒo de las DFTs)
+DFT_SIZE (tama√±o de las DFTs)
 
-	 TamaÒo en muestras de las DFTs, cuanto mayor sea, m·s precisiÛn de
-	 enganche, pero mayor potencia de c·lculo necesaria.
+	 Tama√±o en muestras de las DFTs, cuanto mayor sea, m√°s precisi√≥n de
+	 enganche, pero mayor potencia de c√°lculo necesaria.
 
 
 Funcionamiento
 ==============
 
-	Consulta la documentaciÛn tÈcnica.
+	Consulta la documentaci√≥n t√©cnica.
 
