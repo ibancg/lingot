@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <linux/soundcard.h>
+#include <sys/soundcard.h>
 #include <string.h>
 #include <errno.h>
 
