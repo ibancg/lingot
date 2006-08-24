@@ -48,7 +48,7 @@ install: $(PROJECT)
 	install $(PROJECT) $(DESTDIR)@prefix@/bin
 
 distclean: clean
-	rm -f config.status config.log
+	rm -f config.status config.log Makefile
 
 clean:
 	find -type f -path '*.o' | xargs rm -f
