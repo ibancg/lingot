@@ -125,14 +125,14 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_window_set_policy(GTK_WINDOW(win), FALSE, TRUE, FALSE);  
 
-  // items vertically displayed
-  vb = gtk_vbox_new(FALSE, 6);
+  // items vertically displayed  
+  GtkWidget* vb = gtk_vbox_new(FALSE, 6);
   gtk_container_add(GTK_CONTAINER(win), vb);
 
-  frame1 = gtk_frame_new(gettext("General parameters"));
+  GtkWidget* frame1 = gtk_frame_new(gettext("General parameters"));
   gtk_box_pack_start_defaults(GTK_BOX(vb), frame1);
 
-  tab1 = gtk_table_new(5, 3, FALSE);
+  GtkWidget* tab1 = gtk_table_new(5, 3, FALSE);
   int row = 0;
 
   gtk_table_set_col_spacings(GTK_TABLE(tab1), 20);
@@ -276,10 +276,10 @@ DialogConfig::DialogConfig(GUI* G)
 
   // --------------------------------------------------------------------------
 
-  frame2 = gtk_frame_new(gettext("Advanced parameters"));
+  GtkWidget* frame2 = gtk_frame_new(gettext("Advanced parameters"));
   gtk_box_pack_start_defaults(GTK_BOX(vb), frame2);
 
-  tab2 = gtk_table_new(7, 3, FALSE);
+  GtkWidget* tab2 = gtk_table_new(7, 3, FALSE);
   row = 0;
 
   gtk_table_set_col_spacings(GTK_TABLE(tab2), 20);
@@ -445,7 +445,7 @@ DialogConfig::DialogConfig(GUI* G)
   // --------------------------------------------------------------------------
 
   /* four horizontally aligned buttons at bottom. */
-  hb = gtk_hbox_new(FALSE, 5);
+  GtkWidget* hb = gtk_hbox_new(FALSE, 5);
   gtk_box_pack_start_defaults(GTK_BOX(vb), hb);  
 
   button_ok = gtk_button_new_with_label(gettext("Ok"));

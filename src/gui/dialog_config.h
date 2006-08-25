@@ -32,29 +32,41 @@ class GUI;
 
 /*--------- Dialog box with multiple options --------------------*/
 
-void dialog_config_cb(GtkWidget *, GUI *);
+void dialog_config_cb(GtkWidget*, GUI*);
 
 class DialogConfig {
 
 private:
 
-  GtkWidget *win, *vb, *hb, *frame1, *frame2, *frame3, *frame4, *tab1, *tab2, *vbinfo;
+  GtkWidget*	win; // window
 
-  GtkWidget *spin_calculation_rate, *spin_visualization_rate;
-  GtkWidget *spin_oversampling, *spin_root_frequency_error;
+	// widgets that contains configuration information.
+  GtkWidget*	spin_calculation_rate;
+  GtkWidget*	spin_visualization_rate;
+  GtkWidget*	spin_oversampling;
+  GtkWidget*	spin_root_frequency_error;  
+  GtkWidget*	spin_temporal_window;
+  GtkWidget*	spin_noise_threshold;
+  GtkWidget*	spin_dft_number;
+  GtkWidget*	spin_dft_size;
+  GtkWidget*	spin_peak_number;
+  GtkWidget*	spin_peak_order;
+  GtkWidget*	spin_peak_rejection_relation;
+  GtkWidget*	combo_fft_size;
+  GtkWidget*	combo_sample_rate;
+
+  GtkWidget*	button_ok;
+  GtkWidget*	button_cancel;
+  GtkWidget*	button_apply;
+  GtkWidget*	button_default;
   
-  GtkWidget *spin_temporal_window, *spin_noise_threshold;
-  GtkWidget *spin_dft_number, *spin_dft_size, *spin_peak_number;
-  GtkWidget *spin_peak_order, *spin_peak_rejection_relation;
-  GtkWidget *combo_fft_size, *combo_sample_rate;
+  GtkWidget*	label_sample_rate;
+  GtkWidget*	label_root_frequency;
 
-  GtkWidget *button_ok, *button_cancel, *button_apply, *button_default;
-  GtkWidget *label_sample_rate, *label_root_frequency;
+  Config			conf;     // provisional configuration.
+  Config			conf_old; // restoration point for cancel.
 
-  Config    conf;     // provisional configuration.
-  Config    conf_old; // restoration point for cancel.
-
-  GUI*      G;
+  GUI*				G;
 
 public:
 
@@ -64,10 +76,9 @@ public:
   void close();
   
   friend void clicked_cb(GtkButton *b, DialogConfig *d);
-//   friend void dialog_config_cb(GtkWidget *, GUI *);
+  
   friend void change_label_sample_rate( GtkWidget *widget, DialogConfig *d);
   friend void change_label_a_frequence( GtkWidget *widget, DialogConfig *d);
-
 };
 
 
