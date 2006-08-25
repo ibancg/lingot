@@ -80,10 +80,8 @@ int main(int argc, char *argv[])
     
   } else fclose(fp);
 
-  GUI G;
-
-  G.mainLoop();
-	gtk_main();
+  GUI gui(argc, argv);
+  gui.run();
 
   return 0;
 }

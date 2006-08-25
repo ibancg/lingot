@@ -32,6 +32,7 @@
 #include "core.h"
 #include "gui.h"
 #include "dialog_config.h"
+#include "quick_message.h"
 
 #define _(x) gettext(x)
 
