@@ -39,17 +39,24 @@ class GUI : public Core {
 private:
 
   // widgets gtk
-  GtkWidget      *win, *vb, *frame1, *frame3, *frame4, *hb, *vbinfo;
-  GtkWidget      *gauge_area, *spectrum, *note_info, *freq_info, *error_info, *menu;
-  GdkPixmap      *pix_spectrum, *pix_stick;
-  bool           quit;
-  IIR*           freq_filter;
+  GtkWidget*	gauge_area;
+  GtkWidget*	spectrum_area;
+  GtkWidget*	note_label;
+  
+  GtkWidget*	freq_label;
+  GtkWidget*	error_label;
+  
+  GdkPixmap*	pix_spectrum;
+  GdkPixmap*	pix_stick;
+  
+  bool				quit;
+  IIR*				freq_filter;
 
 	Gauge*			gauge;
 
 public:
 
-  DialogConfig  *dc;
+  DialogConfig*	dc;
 
   GUI(int argc, char *argv[]);
   ~GUI();

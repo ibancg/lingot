@@ -40,9 +40,6 @@ int main(int argc, char *argv[])
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  gtk_init(&argc, &argv);
-  gtk_set_locale();
-
   // default config file.
   sprintf(CONFIG_FILE_NAME, "%s/" CONFIG_DIR_NAME DEFAULT_CONFIG_FILE_NAME,
           getenv("HOME"));

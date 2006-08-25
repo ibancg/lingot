@@ -134,7 +134,7 @@ GUI::GUI(int argc, char *argv[]) : Core()
 
 
   // creates the window
-  win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
   gtk_window_set_title (GTK_WINDOW (win), gettext("lingot"));
 
@@ -144,7 +144,7 @@ GUI::GUI(int argc, char *argv[]) : Core()
   gtk_window_set_policy(GTK_WINDOW(win), FALSE, TRUE, FALSE);  
 
   // tab organization by following container
-  vb = gtk_vbox_new(FALSE, 0);
+  GtkWidget* vb = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(win), vb);
 
 
@@ -224,22 +224,22 @@ GUI::GUI(int argc, char *argv[]) : Core()
   ////////////////////////////////////////////////////
   
   // a fixed container to put the two upper frames in fixed positions
-  hb = gtk_hbox_new(FALSE, 0);
+  GtkWidget* hb = gtk_hbox_new(FALSE, 0);
   gtk_box_pack_start_defaults(GTK_BOX(vb), hb);
   
   // gauge frame
-  frame1 = gtk_frame_new(gettext("Deviation"));
+  GtkWidget* frame1 = gtk_frame_new(gettext("Deviation"));
   //  gtk_fixed_put(GTK_FIXED(fix), frame1, 0, 0);
   gtk_box_pack_start_defaults(GTK_BOX(hb), frame1);
 
   
   // note frame
-  frame3 = gtk_frame_new(gettext("Note"));
+  GtkWidget* frame3 = gtk_frame_new(gettext("Note"));
   //   gtk_fixed_put(GTK_FIXED(fix), frame3, 164, 0);
   gtk_box_pack_start_defaults(GTK_BOX(hb), frame3);
 
   // spectrum frame at bottom
-  frame4 = gtk_frame_new(gettext("Spectrum"));
+  GtkWidget* frame4 = gtk_frame_new(gettext("Spectrum"));
   gtk_box_pack_end_defaults(GTK_BOX(vb), frame4);
   
   // for gauge drawing
@@ -248,24 +248,24 @@ GUI::GUI(int argc, char *argv[]) : Core()
   gtk_container_add(GTK_CONTAINER(frame1), gauge_area);
   
   // for spectrum drawing
-  spectrum = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(spectrum), 256, 64);
-  gtk_container_add(GTK_CONTAINER(frame4), spectrum);
+  spectrum_area = gtk_drawing_area_new();
+  gtk_drawing_area_size(GTK_DRAWING_AREA(spectrum_area), 256, 64);
+  gtk_container_add(GTK_CONTAINER(frame4), spectrum_area);
   
   // for note and frequency displaying
-  vbinfo = gtk_vbox_new(FALSE, 0);
+  GtkWidget* vbinfo = gtk_vbox_new(FALSE, 0);
   //   gtk_widget_set_usize(GTK_WIDEST(vbinfo), 80, 100);
   gtk_container_add(GTK_CONTAINER(frame3), vbinfo);
 
-  freq_info = gtk_label_new(gettext("freq"));
-  gtk_box_pack_start_defaults(GTK_BOX(vbinfo), freq_info);
+  freq_label = gtk_label_new(gettext("freq"));
+  gtk_box_pack_start_defaults(GTK_BOX(vbinfo), freq_label);
 
-  error_info = gtk_label_new(gettext("err"));
-  gtk_box_pack_end_defaults(GTK_BOX(vbinfo), error_info);
+  error_label = gtk_label_new(gettext("err"));
+  gtk_box_pack_end_defaults(GTK_BOX(vbinfo), error_label);
 
-  note_info = gtk_label_new(gettext("nota"));
-  gtk_widget_set_name(note_info, "label_nota");
-  gtk_box_pack_end_defaults(GTK_BOX(vbinfo), note_info);
+  note_label = gtk_label_new(gettext("nota"));
+  gtk_widget_set_name(note_label, "label_nota");
+  gtk_box_pack_end_defaults(GTK_BOX(vbinfo), note_label);
 
   // show all
   gtk_widget_show_all(win);
@@ -278,14 +278,11 @@ GUI::GUI(int argc, char *argv[]) : Core()
   // GTK signals
   gtk_signal_connect(GTK_OBJECT(gauge_area), "expose_event",
  		     (GtkSignalFunc)callbackRedraw, this);
-  gtk_signal_connect(GTK_OBJECT(spectrum), "expose_event",
+  gtk_signal_connect(GTK_OBJECT(spectrum_area), "expose_event",
 		     (GtkSignalFunc)callbackRedraw, this);
   gtk_signal_connect(GTK_OBJECT(win), "destroy",
  		     (GtkSignalFunc)callbackDestroy, this);
 
-  // periodical representation temporization
-  //  tout_handle = gtk_timeout_add(50, (GtkFunction)callbackTout, this);
-  
   unsigned int period;
   period = int(1.0e3/conf.VISUALIZATION_RATE);
 	gtk_timeout_add(period, visualization_callback, this);
@@ -377,7 +374,7 @@ void GUI::drawGauge()
 
 void GUI::drawSpectrum()
 {
-  GdkGC* gc = spectrum->style->fg_gc[spectrum->state];
+  GdkGC* gc = spectrum_area->style->fg_gc[spectrum_area->state];
   GdkWindow* w = pix_spectrum; //spectrum->window;
   GdkGCValues gv;
   gdk_gc_get_values(gc, &gv);
@@ -426,7 +423,7 @@ void GUI::drawSpectrum()
 
   //   Flush();
   //   Flip();
-  gdk_draw_pixmap(spectrum->window, gc, w, 0, 0, 0, 0, 256, 64);
+  gdk_draw_pixmap(spectrum_area->window, gc, w, 0, 0, 0, 0, 256, 64);
   gdk_flush();
 }
 
@@ -467,9 +464,9 @@ void GUI::putFrequency()
     sprintf(freq_string, "f = %6.2f Hz", freq_filter->filter(freq));
   }
 
-  gtk_label_set_text(GTK_LABEL(freq_info), freq_string);
-  gtk_label_set_text(GTK_LABEL(error_info), error_string);
+  gtk_label_set_text(GTK_LABEL(freq_label), freq_string);
+  gtk_label_set_text(GTK_LABEL(error_label), error_string);
   char labeltext_current_note[100];
   sprintf(labeltext_current_note, "<big><b>%s</b></big>", current_note);
-  gtk_label_set_markup(GTK_LABEL(note_info), labeltext_current_note);
+  gtk_label_set_markup(GTK_LABEL(note_label), labeltext_current_note);
 }
