@@ -32,8 +32,10 @@
 #include "iir.h"
 #include "gui.h"
 #include "dialog_config.h"
+#include "quick_message.h"
+#include "gauge.h"
 
-#include "../background.xpm"
+#include "background.xpm"
 
 void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data)
 {
@@ -51,67 +53,63 @@ void callbackDestroy(GtkWidget *w, void *data)
 
 void callbackAbout(GtkWidget *w, void *data)
 {
-  quick_message(gettext("about lingot"), 
+	quick_message(gettext("about lingot"), 
 		gettext("\nlingot " VERSION ", (c) 2006\n"
 			"\n"
 			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
 			"Jairo Chapela Martínez <jairochapela@gmail.com>\n\n"));
 }
 
-GUI::GUI() : Core()
+/* Callback for visualization */
+gboolean visualization_callback(gpointer data) {
+	//printf("visualization callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->drawGauge();
+
+	unsigned int period = int(1.0e3/gui->conf.VISUALIZATION_RATE);
+	gtk_timeout_add(period, visualization_callback, gui);
+	
+	return 0; 
+}
+
+/* Callback for calculation */
+gboolean calculation_callback(gpointer data) {
+	//printf("calculation callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->drawSpectrum();
+
+	unsigned int period = int(1.0e3/gui->conf.CALCULATION_RATE);
+	gtk_timeout_add(period, calculation_callback, gui);
+	
+	return 0; 
+}
+
+/* Callback for frequency calculation */
+gboolean frequency_callback(gpointer data) {
+	//printf("error calculation callback!\n");
+	
+	GUI* gui = (GUI*) data;
+
+	gui->putFrequency();
+
+	unsigned int period = int(1.0e3/GAUGE_RATE);
+	gtk_timeout_add(period, frequency_callback, gui);
+	
+	return 0; 
+}
+
+GUI::GUI(int argc, char *argv[]) : Core()
 {
 
   dc = NULL;
   quit = false;
   pix_stick = NULL;
 
-//   cogerConfig(&conf);
-
-  gauge_value = conf.VRP; // gauge in rest situation
-
-  //
-  // ----- ERROR GAUGE FILTER CONFIGURATION -----
-  //
-  // dynamic model of the gauge:
-  //
-  //               2
-  //              d                              d      
-  //              --- s(t) = k (e(t) - s(t)) - q -- s(t)
-  //                2                            dt     
-  //              dt
-  //
-  // acceleration of gauge position 's(t)' linealy depends on the difference
-  // respect to the input stimulus 'e(t)' (destination position). Inserting
-  // a friction coefficient 'q', acceleration proportionaly diminish with
-  // velocity (typical friction in mechanics). 'k' is the adaptation constant,
-  // and depends on the gauge mass.
-  //
-  // with the following derivatives approximation (valid for high sample rate):
-  //
-  //                 d
-  //                 -- s(t) ~= (s[n] - s[n - 1])*fs
-  //                 dt
-  //
-  //            2
-  //           d                                            2
-  //           --- s(t) ~= (s[n] - 2*s[n - 1] + s[n - 2])*fs
-  //             2
-  //           dt
-  //
-  // we can obtain a difference equation, and implement it with an IIR digital
-  // filter.
-  //
-
-  FLT k = 60; // adaptation constant.
-  FLT q = 6;  // friction coefficient.
-
-  FLT gauge_filter_a[] = {
-    k + GAUGE_RATE*(q + GAUGE_RATE),
-    -GAUGE_RATE*(q + 2.0*GAUGE_RATE),  
-      GAUGE_RATE*GAUGE_RATE };
-  FLT gauge_filter_b[] = { k };
-
-  gauge_filter = new IIR( 2, 0, gauge_filter_a, gauge_filter_b );
+  gauge = new Gauge(conf.VRP); // gauge in rest situation
 
   // ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -122,6 +120,9 @@ GUI::GUI() : Core()
   freq_filter = new IIR( 1, 0, freq_filter_a, freq_filter_b );
     
   // ---------------------------------------------------
+
+	gtk_init(&argc, &argv);
+	gtk_set_locale();
 
   gtk_rc_parse_string(
  		      "style \"title\""
@@ -242,9 +243,9 @@ GUI::GUI() : Core()
   gtk_box_pack_end_defaults(GTK_BOX(vb), frame4);
   
   // for gauge drawing
-  gauge = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(gauge), 160, 100);
-  gtk_container_add(GTK_CONTAINER(frame1), gauge);
+  gauge_area = gtk_drawing_area_new();
+  gtk_drawing_area_size(GTK_DRAWING_AREA(gauge_area), 160, 100);
+  gtk_container_add(GTK_CONTAINER(frame1), gauge_area);
   
   // for spectrum drawing
   spectrum = gtk_drawing_area_new();
@@ -271,11 +272,11 @@ GUI::GUI() : Core()
 
   // two pixmaps for double buffer un gauge and spectrum drawing 
   // (virtual screen)
-  gdk_pixmap_new(gauge->window, 160, 100, -1);
-  pix_spectrum = gdk_pixmap_new(gauge->window, 256, 64, -1);
+  gdk_pixmap_new(gauge_area->window, 160, 100, -1);
+  pix_spectrum = gdk_pixmap_new(gauge_area->window, 256, 64, -1);
 
   // GTK signals
-  gtk_signal_connect(GTK_OBJECT(gauge), "expose_event",
+  gtk_signal_connect(GTK_OBJECT(gauge_area), "expose_event",
  		     (GtkSignalFunc)callbackRedraw, this);
   gtk_signal_connect(GTK_OBJECT(spectrum), "expose_event",
 		     (GtkSignalFunc)callbackRedraw, this);
@@ -284,19 +285,32 @@ GUI::GUI() : Core()
 
   // periodical representation temporization
   //  tout_handle = gtk_timeout_add(50, (GtkFunction)callbackTout, this);
+  
+  unsigned int period;
+  period = int(1.0e3/conf.VISUALIZATION_RATE);
+	gtk_timeout_add(period, visualization_callback, this);
+
+	period = int(1.0e3/conf.CALCULATION_RATE);
+	gtk_timeout_add(period, calculation_callback, this);
+
+	period = int(1.0e3/GAUGE_RATE);
+	gtk_timeout_add(period, frequency_callback, this);
 }
 
 
 GUI::~GUI()
 {
-  delete gauge_filter;
+  delete gauge;
   delete freq_filter;
   if (dc) delete dc;
 }
 
+void GUI::run() {
+	gtk_main();
+}
 // ---------------------------------------------------------------------------
 
-void GUI::allocColor(GdkColor *col, int r, int g, int b)
+void allocColor(GdkColor *col, int r, int g, int b)
 {
   static GdkColormap* cmap = gdk_colormap_get_system();
   col->red   = r;
@@ -305,14 +319,14 @@ void GUI::allocColor(GdkColor *col, int r, int g, int b)
   gdk_color_alloc(cmap, col);    
 }
 
-void GUI::fgColor(GdkGC *gc, int r, int g, int b)
+void fgColor(GdkGC *gc, int r, int g, int b)
 {
   GdkColor col;
   allocColor(&col, r, g, b);
   gdk_gc_set_foreground(gc, &col);
 }
 
-void GUI::bgColor(GdkGC *gc, int r, int g, int b)
+void bgColor(GdkGC *gc, int r, int g, int b)
 {
   GdkColor col;
   allocColor(&col, r, g, b);
@@ -329,8 +343,8 @@ void GUI::redraw()
 
 void GUI::drawGauge()
 { 
-  GdkGC* gc = gauge->style->fg_gc[gauge->state];
-  GdkWindow* w = gauge->window;
+  GdkGC* gc = gauge_area->style->fg_gc[gauge_area->state];
+  GdkWindow* w = gauge_area->window;
   GdkGCValues gv;
 
   gdk_gc_get_values(gc, &gv);
@@ -339,23 +353,23 @@ void GUI::drawGauge()
 
   // draws background
   if(!pix_stick) {
-    pix_stick = gdk_pixmap_create_from_xpm_d(gauge->window, NULL, NULL,
+    pix_stick = gdk_pixmap_create_from_xpm_d(gauge_area->window, NULL, NULL,
 					  background2_xpm);
   }
-  gdk_draw_pixmap(gauge->window, gc, pix_stick, 0, 0, 0, 0, 160, 100);
+  gdk_draw_pixmap(gauge_area->window, gc, pix_stick, 0, 0, 0, 0, 160, 100);
   
   // and draws gauge
   fgColor(gc, 0xC000, 0x0000, 0x2000);
 
   gdk_draw_line(w, gc, 80, 99,
- 		80 + (int)rint(90.0*sin(gauge_value*M_PI/(1.5*max))),
- 		99 - (int)rint(90.0*cos(gauge_value*M_PI/(1.5*max))));
+ 		80 + (int)rint(90.0*sin(gauge->getPosition()*M_PI/(1.5*max))),
+ 		99 - (int)rint(90.0*cos(gauge->getPosition()*M_PI/(1.5*max))));
 
   // black edge.  
   fgColor(gc, 0x0000, 0x0000, 0x0000);
   gdk_draw_rectangle(w, gc, FALSE, 0, 0, 159, 99);
 
-  gdk_draw_pixmap(gauge->window, gc, w, 0, 0, 0, 0, 160, 100);
+  gdk_draw_pixmap(gauge_area->window, gc, w, 0, 0, 0, 0, 160, 100);
   gdk_flush();
   //   Flush();
 }
@@ -424,7 +438,7 @@ void GUI::putFrequency()
     { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
   const FLT Log2 = log(2.0);
 
-  FLT   fret_f, error;
+  FLT   fret_f;
   int   fret;
   char* current_note;
  
@@ -435,7 +449,7 @@ void GUI::putFrequency()
     current_note = "---";
     strcpy(error_string, "e = ---");
     strcpy(freq_string, "f = ---");
-    error = gauge_filter->filter(conf.VRP);
+    gauge->compute(conf.VRP);
     //error = conf.VRP;
 
   } else {
@@ -443,160 +457,19 @@ void GUI::putFrequency()
     // bring up some octaves to avoid negative frets.
     fret_f = log(freq/conf.ROOT_FREQUENCY)/Log2*12.0 + 12e2;
 
-    error = gauge_filter->filter(fret_f - rint(fret_f));
+    gauge->compute(fret_f - rint(fret_f));
     //error = fret_f - rint(fret_f);
   
     fret = ((int) rint(fret_f)) % 12;
   
     current_note = note_string[fret];
-    sprintf(error_string, "e = %+4.2f%%", error*100.0);
+    sprintf(error_string, "e = %+4.2f%%", gauge->getPosition()*100.0);
     sprintf(freq_string, "f = %6.2f Hz", freq_filter->filter(freq));
   }
-
-  gauge_value = error;  
 
   gtk_label_set_text(GTK_LABEL(freq_info), freq_string);
   gtk_label_set_text(GTK_LABEL(error_info), error_string);
   char labeltext_current_note[100];
   sprintf(labeltext_current_note, "<big><b>%s</b></big>", current_note);
   gtk_label_set_markup(GTK_LABEL(note_info), labeltext_current_note);
-}
-
-/* Callback for visualization */
-gboolean visualization_callback(gpointer data) {
-	//printf("visualization callback!\n");
-	
-	GUI* gui = (GUI*) data;
-
-	gui->drawGauge();
-
-	unsigned int period = int(1.0e3/gui->conf.VISUALIZATION_RATE);
-	gtk_timeout_add(period, visualization_callback, gui);
-	
-	return 0; 
-}
-
-/* Callback for calculation */
-gboolean calculation_callback(gpointer data) {
-	//printf("calculation callback!\n");
-	
-	GUI* gui = (GUI*) data;
-
-	gui->drawSpectrum();
-
-	unsigned int period = int(1.0e3/gui->conf.CALCULATION_RATE);
-	gtk_timeout_add(period, calculation_callback, gui);
-	
-	return 0; 
-}
-
-/* Callback for frequency calculation */
-gboolean frequency_callback(gpointer data) {
-	//printf("error calculation callback!\n");
-	
-	GUI* gui = (GUI*) data;
-
-	gui->putFrequency();
-
-	unsigned int period = int(1.0e3/GAUGE_RATE);
-	gtk_timeout_add(period, frequency_callback, gui);
-	
-	return 0; 
-}
-
-void GUI::mainLoop()
-{
-/*  struct timeval  t_current, t_diff;
-
-  t_event        e_gauge, e_gtk, e_vis, e_calculus;
-  t_event*       next_tout;
-
-  gettimeofday(&t_current, NULL);
-
-  e_vis      = next_event(t_current, conf.VISUALIZATION_RATE);
-  e_gauge    = next_event(t_current, GAUGE_RATE);
-  e_gtk      = next_event(t_current, GTK_EVENTS_RATE);
-  e_calculus = next_event(t_current, conf.CALCULATION_RATE);*/
-
-//  ES.add(&e_gauge);
-//  ES.add(&e_gtk);
-//  ES.add(&e_vis);
-//  ES.add(&e_calculus);
-
-	unsigned int period = int(1.0e3/conf.VISUALIZATION_RATE);
-	gtk_timeout_add(period, visualization_callback, this);
-
-	period = int(1.0e3/conf.CALCULATION_RATE);
-	gtk_timeout_add(period, calculation_callback, this);
-
-	period = int(1.0e3/GAUGE_RATE);
-	gtk_timeout_add(period, frequency_callback, this);
-
-	return;
-		
-/*  while(!quit) {
-
-    next_tout = ES.next(); // consult the next event.
-    gettimeofday(&t_current, NULL);
-
-    if (timercmp(next_tout, &t_current, >)) {
-      timersub(next_tout, &t_current, &t_diff);
-      select(0, NULL, NULL, NULL, &t_diff);
-      gettimeofday(&t_current, NULL);
-    }
-
-    ES.remove(next_tout);
-
-    if (next_tout == &e_vis) {
-      e_vis   = next_event(t_current, conf.VISUALIZATION_RATE);
-      ES.add(&e_vis);
-      drawGauge();
-    }
-
-    if (next_tout == &e_gauge) {
-      e_gauge   = next_event(t_current, GAUGE_RATE);
-      ES.add(&e_gauge);	
-      putFrequency();
-    } 
-
-    if (next_tout == &e_gtk) {
-      e_gtk = next_event(t_current, GTK_EVENTS_RATE);
-      ES.add(&e_gtk);	
-      while(gtk_events_pending()) gtk_main_iteration_do(FALSE);
-    }
-
-    if (next_tout == &e_calculus) {
-      e_calculus = next_event(t_current, conf.CALCULATION_RATE);
-      ES.add(&e_calculus);	
-      drawSpectrum();
-    }
-  }*/
-}
-
-
-void quick_message(gchar *title, gchar *message) {
-
-  GtkWidget *dialog, *label, *okay_button;
-  
-  /* Create the widgets */
-  dialog = gtk_dialog_new();
-  label = gtk_label_new (message);
-
-  gtk_window_set_title (GTK_WINDOW (dialog), title);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog), 6);
-
-  okay_button = gtk_button_new_with_label(gettext("Ok"));
-  
-  /* Ensure that the dialog box is destroyed when the user clicks ok. */
-  
-  gtk_signal_connect_object (GTK_OBJECT (okay_button), "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			     GTK_OBJECT(dialog));
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),
-		     okay_button);
-
-  /* Add the label, and show everything we've added to the dialog. */
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),
-		     label);
-  gtk_widget_show_all (dialog);
 }

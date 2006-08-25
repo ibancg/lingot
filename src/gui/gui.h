@@ -31,6 +31,7 @@
 #include <gdk/gdk.h>
 
 class DialogConfig;
+class Gauge;
 
 // Window that contains all controls, graphics, etc. of the tuner.
 class GUI : public Core {
@@ -39,38 +40,29 @@ private:
 
   // widgets gtk
   GtkWidget      *win, *vb, *frame1, *frame3, *frame4, *hb, *vbinfo;
-  GtkWidget      *gauge, *spectrum, *note_info, *freq_info, *error_info, *menu;
+  GtkWidget      *gauge_area, *spectrum, *note_info, *freq_info, *error_info, *menu;
   GdkPixmap      *pix_spectrum, *pix_stick;
   bool           quit;
   IIR*           freq_filter;
 
-  IIR*           gauge_filter;
-  FLT            gauge_value; // valor de la aguja [-0.5, 0.5]
-
-  void setupGaugeFilter();
-  void allocColor(GdkColor *col, int r, int g, int b);
-  void fgColor(GdkGC *gc, int r, int g, int b);
-  void bgColor(GdkGC *gc, int r, int g, int b);
+	Gauge*			gauge;
 
 public:
 
   DialogConfig  *dc;
 
-  GUI();
+  GUI(int argc, char *argv[]);
   ~GUI();
 
+	void run();
+	
   void redraw();
   void mainLoop();
   void putFrequency();
   void resize(Config);
   void drawGauge();
   void drawSpectrum();
-
-  friend void callbackDestroy(GtkWidget *w, void *data);
-  friend void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data);
 };
 
-
-void quick_message(gchar *title, gchar *message);
 
 #endif //__INTERFAZ_H__
