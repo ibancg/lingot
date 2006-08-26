@@ -31,27 +31,25 @@
 
 #include "iir.h"
 #include "gui.h"
+#include "config.h"
 #include "dialog_config.h"
 #include "quick_message.h"
 #include "gauge.h"
 
 #include "background.xpm"
 
-void callbackRedraw(GtkWidget *w, GdkEventExpose *e, void *data)
+void callbackRedraw(GtkWidget* w, GdkEventExpose *e, void *data)
 {
   ((GUI*)data)->redraw();
 }
 
-void callbackDestroy(GtkWidget *w, void *data)
+void callbackDestroy(GtkWidget* w, GUI* gui)
 {
-/*  int tout_handle = 0;
-
-  gtk_timeout_remove(tout_handle);
-  ((GUI*)data)->quit = true;*/
+	gui->core->stop();
   gtk_main_quit();
 }
 
-void callbackAbout(GtkWidget *w, void *data)
+void callbackAbout(GtkWidget* w, void *data)
 {
 	quick_message(gettext("about lingot"), 
 		gettext("\nlingot " VERSION ", (c) 2006\n"
@@ -59,6 +57,17 @@ void callbackAbout(GtkWidget *w, void *data)
 			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
 			"Jairo Chapela Martínez <jairochapela@gmail.com>\n\n"));
 }
+
+void dialog_config_cb(GtkWidget* w, GUI *gui)
+{
+  if (gui->dialog_config) {
+    gui->dialog_config->close();
+    delete gui->dialog_config;
+  }
+  
+  gui->dialog_config = new DialogConfig(gui);
+}
+
 
 /* Callback for visualization */
 gboolean visualization_callback(gpointer data) {
@@ -68,7 +77,7 @@ gboolean visualization_callback(gpointer data) {
 
 	gui->drawGauge();
 
-	unsigned int period = int(1.0e3/gui->conf.VISUALIZATION_RATE);
+	unsigned int period = int(1.0e3/gui->conf->VISUALIZATION_RATE);
 	gtk_timeout_add(period, visualization_callback, gui);
 	
 	return 0; 
@@ -82,7 +91,7 @@ gboolean calculation_callback(gpointer data) {
 
 	gui->drawSpectrum();
 
-	unsigned int period = int(1.0e3/gui->conf.CALCULATION_RATE);
+	unsigned int period = int(1.0e3/gui->conf->CALCULATION_RATE);
 	gtk_timeout_add(period, calculation_callback, gui);
 	
 	return 0; 
@@ -102,14 +111,27 @@ gboolean frequency_callback(gpointer data) {
 	return 0; 
 }
 
-GUI::GUI(int argc, char *argv[]) : Core()
+/* runs the core object. */
+void run_core(Core* core) {
+	core->start();	
+  pthread_exit(NULL);
+}
+
+
+GUI::GUI(int argc, char *argv[])
 {
 
-  dc = NULL;
+  dialog_config = NULL;
   quit = false;
   pix_stick = NULL;
 
-  gauge = new Gauge(conf.VRP); // gauge in rest situation
+  gauge = new Gauge(conf->VRP); // gauge in rest situation
+
+	conf = new Config();
+	conf->parseConfigFile(CONFIG_FILE_NAME);
+	
+	core = new Core(conf);
+	core->start();
 
   // ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -277,17 +299,17 @@ GUI::GUI(int argc, char *argv[]) : Core()
 
   // GTK signals
   gtk_signal_connect(GTK_OBJECT(gauge_area), "expose_event",
- 		     (GtkSignalFunc)callbackRedraw, this);
+ 		     (GtkSignalFunc) callbackRedraw, this);
   gtk_signal_connect(GTK_OBJECT(spectrum_area), "expose_event",
-		     (GtkSignalFunc)callbackRedraw, this);
+		     (GtkSignalFunc) callbackRedraw, this);
   gtk_signal_connect(GTK_OBJECT(win), "destroy",
- 		     (GtkSignalFunc)callbackDestroy, this);
+ 		     (GtkSignalFunc) callbackDestroy, this);
 
   unsigned int period;
-  period = int(1.0e3/conf.VISUALIZATION_RATE);
+  period = int(1.0e3/conf->VISUALIZATION_RATE);
 	gtk_timeout_add(period, visualization_callback, this);
 
-	period = int(1.0e3/conf.CALCULATION_RATE);
+	period = int(1.0e3/conf->CALCULATION_RATE);
 	gtk_timeout_add(period, calculation_callback, this);
 
 	period = int(1.0e3/GAUGE_RATE);
@@ -298,11 +320,15 @@ GUI::GUI(int argc, char *argv[]) : Core()
 GUI::~GUI()
 {
   delete gauge;
+  delete core;
   delete freq_filter;
-  if (dc) delete dc;
+  delete conf;
+  if (dialog_config) delete dialog_config;
 }
 
 void GUI::run() {
+
+	core->start();	
 	gtk_main();
 }
 // ---------------------------------------------------------------------------
@@ -402,18 +428,18 @@ void GUI::drawSpectrum()
 # define PLOT_GAIN  8
    
   // spectrum drawing.
-  for (register unsigned int i = 0; (i < conf.FFT_SIZE) && (i < 256); i++) {    
-    int j = (X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(X[i])) : 64;   // dB.
+  for (register unsigned int i = 0; (i < conf->FFT_SIZE) && (i < 256); i++) {    
+    int j = (core->X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(core->X[i])) : 64;   // dB.
     gdk_draw_line(w, gc, i, 63, i, j);
   }
 
-  if (freq != 0.0) {
+  if (core->freq != 0.0) {
 
     // fundamental frequency marking with a red point. 
     fgColor(gc, 0xFFFF, 0x2222, 0x2222);
     // index of closest sample to fundamental frequency.
-    int i = (int) rint(freq*conf.FFT_SIZE*conf.OVERSAMPLING/conf.SAMPLE_RATE);
-    int j = (X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(X[i])) : 64;   // dB.
+    int i = (int) rint(core->freq*conf->FFT_SIZE*conf->OVERSAMPLING/conf->SAMPLE_RATE);
+    int j = (core->X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(core->X[i])) : 64;   // dB.
     gdk_draw_rectangle(w, gc, TRUE, i-1, j-1, 3, 3);
   }
 
@@ -441,18 +467,18 @@ void GUI::putFrequency()
  
   static char error_string[30], freq_string[30];
 
-  if (freq < 10.0) {
+  if (core->freq < 10.0) {
   
     current_note = "---";
     strcpy(error_string, "e = ---");
     strcpy(freq_string, "f = ---");
-    gauge->compute(conf.VRP);
-    //error = conf.VRP;
+    gauge->compute(conf->VRP);
+    //error = conf->VRP;
 
   } else {
   
     // bring up some octaves to avoid negative frets.
-    fret_f = log(freq/conf.ROOT_FREQUENCY)/Log2*12.0 + 12e2;
+    fret_f = log(core->freq/conf->ROOT_FREQUENCY)/Log2*12.0 + 12e2;
 
     gauge->compute(fret_f - rint(fret_f));
     //error = fret_f - rint(fret_f);
@@ -461,7 +487,7 @@ void GUI::putFrequency()
   
     current_note = note_string[fret];
     sprintf(error_string, "e = %+4.2f%%", gauge->getPosition()*100.0);
-    sprintf(freq_string, "f = %6.2f Hz", freq_filter->filter(freq));
+    sprintf(freq_string, "f = %6.2f Hz", freq_filter->filter(core->freq));
   }
 
   gtk_label_set_text(GTK_LABEL(freq_label), freq_string);
@@ -469,4 +495,17 @@ void GUI::putFrequency()
   char labeltext_current_note[100];
   sprintf(labeltext_current_note, "<big><b>%s</b></big>", current_note);
   gtk_label_set_markup(GTK_LABEL(note_label), labeltext_current_note);
+}
+
+
+void GUI::changeConfig(Config* conf) {
+	
+	core->stop();
+	delete core;
+	
+	// dup.
+	*GUI::conf = *conf;
+	
+	core = new Core(GUI::conf);
+	core->start();
 }

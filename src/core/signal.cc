@@ -33,12 +33,13 @@
 
 FLT Core::noise_threshold(FLT w)
 {
-  //  return 0.5*(1.0 - index/conf.FFT_SIZE);
-  return conf.NOISE_THRESHOLD_UN;
+  //  return 0.5*(1.0 - index/conf->FFT_SIZE);
+  return conf->NOISE_THRESHOLD_UN;
 }
 
 //---------------------------------------------------------------------------
 
+/* returns the index of the maximun of the buffer x of size N */
 void Core::max(FLT *x, int N, int* Mi)
 {
   register int i;
@@ -60,12 +61,12 @@ void Core::max(FLT *x, int N, int* Mi)
 
 inline bool Core::peak(FLT* x, int index)
 {
-  //static   FLT  delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // resolution in rads
+  //static   FLT  delta_w_FFT = 2.0*M_PI/conf->FFT_SIZE; // resolution in rads
 
   // a peak must be greater than noise threshold.
-  if (x[index] < conf.NOISE_THRESHOLD_UN) return false;
+  if (x[index] < conf->NOISE_THRESHOLD_UN) return false;
 
-  for (register unsigned int j = 0; j < conf.PEAK_ORDER; j++) {
+  for (register unsigned int j = 0; j < conf->PEAK_ORDER; j++) {
     if (x[index + j] < x[index + j + 1]) return false;
     if (x[index - j] < x[index - j - 1]) return false;
   }
@@ -78,25 +79,25 @@ inline bool Core::peak(FLT* x, int index)
 int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
 {
   register unsigned int i, j, m;
-  int                   p_index[conf.PEAK_NUMBER];
+  int                   p_index[conf->PEAK_NUMBER];
   
   // at this moment there is no peaks.
-  for (i = 0; i < conf.PEAK_NUMBER; i++) p_index[i] = -1;
+  for (i = 0; i < conf->PEAK_NUMBER; i++) p_index[i] = -1;
 
   unsigned int lowest_index = (unsigned int)
-    ceil(conf.MIN_FREQUENCY*(1.0*conf.OVERSAMPLING/conf.SAMPLE_RATE)
-        *conf.FFT_SIZE);
+    ceil(conf->MIN_FREQUENCY*(1.0*conf->OVERSAMPLING/conf->SAMPLE_RATE)
+        *conf->FFT_SIZE);
   
-  if (lowest_index < conf.PEAK_ORDER) lowest_index = conf.PEAK_ORDER;
+  if (lowest_index < conf->PEAK_ORDER) lowest_index = conf->PEAK_ORDER;
 
   // I'll get the PEAK_NUMBER maximum peaks.
-  for (i = lowest_index; i < N - conf.PEAK_ORDER; i++)
+  for (i = lowest_index; i < N - conf->PEAK_ORDER; i++)
     if (peak(x, i)) {
 
       // search a place in the maximums buffer, if it doesn't exists, the
       // lower maximum is candidate to be replaced.
       m = 0; // first candidate.
-      for (j = 0; j < conf.PEAK_NUMBER; j++) {
+      for (j = 0; j < conf->PEAK_NUMBER; j++) {
       if (p_index[j] == -1) {
 	  m = j; // there is a place.
 	  break;
@@ -113,7 +114,7 @@ int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
   int maximum_index = -1;
 
   // search the maximum peak
-  for (i = 0; i < conf.PEAK_NUMBER; i++)
+  for (i = 0; i < conf->PEAK_NUMBER; i++)
     if ((p_index[i] != -1) && (x[p_index[i]] > maximum)) {
       maximum = x[p_index[i]];
       maximum_index = p_index[i];
@@ -122,13 +123,13 @@ int Core::fundamentalPeak(FLT *x, FLT* d2x, int N)
   if (maximum_index == -1) return N;
 
   // all peaks much lower than maximum are deleted.
-  for (i = 0; i < conf.PEAK_NUMBER; i++) 
+  for (i = 0; i < conf->PEAK_NUMBER; i++) 
     if ((p_index[i] == -1) || 
-	(conf.PEAK_REJECTION_RELATION_UN*x[p_index[i]] < maximum)) 
+	(conf->PEAK_REJECTION_RELATION_UN*x[p_index[i]] < maximum)) 
       p_index[i] = N; // there are available places in the buffer.
 
   // search the lowest maximum index.
-  for (m = 0, j = 0; j < conf.PEAK_NUMBER; j++) {
+  for (m = 0, j = 0; j < conf->PEAK_NUMBER; j++) {
     if (p_index[j] < p_index[m]) m = j;
   }
 

@@ -26,7 +26,6 @@
 
 #include <pthread.h>
 #include "defs.h"
-#include "config.h"
 
 #ifdef LIB_FFTW
 # include <fftw.h>
@@ -40,24 +39,16 @@
 
 class CPX;
 class IIR;
+class Config;
 
 class Core {
 
 public:
 
-  Config        conf;       // configuration structure
-  bool          status;
-  Config        new_conf;   // pending configuration
-  bool          new_conf_pending;
-
-  // pthread-related  member variables
-  pthread_attr_t  attrib;
-  pthread_t       thread;
-
-protected:
-
+	//  -- shared data --
   FLT           freq;   // analog frequency calculated.
   FLT           X[256]; // visual portion of FFT.
+	//  -- shared data --
 
 private:  
 
@@ -77,45 +68,59 @@ private:
   FLT*          diff2_spd_fft;
 
 # ifdef LIB_FFTW
-  fftw_complex  *fftw_in, *fftw_out; // complex signals in time and freq.
-  fftw_plan     fftwplan;
+	fftw_complex* fftw_in;
+	fftw_complex*	fftw_out; // complex signals in time and freq.
+	fftw_plan     fftwplan;
 # else
   CPX*          fft_out; // complex signal in freq.
 # endif
 
   IIR*          antialiasing_filter; // antialiasing filter for decimation.
 
-  void          decimate(FLT* in, FLT* out);
+  bool          running;
 
+  Config*				conf;       // configuration structure
+
+	// pthread-related  member variables
+  pthread_t       thread;
+	pthread_attr_t  attr;
+	
+  //----------------------------------------------------------------
+
+  void	decimate(FLT* in, FLT* out);
+
+  // read and process data to obtain the frequency.
+  void	process();
+  
   //----------------------------------------------------------------
 
   // the following methods are implemented in peaks.cc
 
   /* returns noise threshold at a given frequency w. */
-  FLT           noise_threshold(FLT w);
+  FLT		noise_threshold(FLT w);
   
-  bool          peak(FLT* buffer, int index);
+  bool	peak(FLT* buffer, int index);
   
   // returns the maximum index.
-  void          max(FLT *buffer, int N, int* Mi);
+  void	max(FLT *buffer, int N, int* Mi);
   
   // returns the index of the peak that carries the fundamental freq.
-  int           fundamentalPeak(FLT *x, FLT* y, int N);
+  int		fundamentalPeak(FLT *x, FLT* y, int N);
+
 
 public:
 
-  Core();
+  Core(Config*);
   ~Core();
-  
-  // read and process data to guess the frequency.
-  void process();
 
-  void changeConfig(Config conf);
-
-  void start();
-  void stop();
+	// start process
+	void start();
+	
+	// stop process
+	void stop();
+	
+	// process thread
+	void run();
 };
-
-void ProcessThread(Core*);
 
 #endif //__CORE_H__

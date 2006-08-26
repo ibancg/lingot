@@ -28,8 +28,9 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
-//#include <gtk/gtk.h>
+
 #include "defs.h"
+#include "config.h"
 #include "gui.h"
 
 char CONFIG_FILE_NAME[100];
