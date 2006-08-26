@@ -30,20 +30,12 @@
 #include "defs.h"
 
 #include "core.h"
+#include "config.h"
 #include "gui.h"
 #include "dialog_config.h"
 #include "quick_message.h"
 
 #define _(x) gettext(x)
-
-void dialog_config_cb(GtkWidget *w, GUI *G)
-{
-  if (G->dc) {
-    G->dc->close();
-    delete G->dc;
-  }
-  G->dc = new DialogConfig(G);
-}
 
 /* button press event attention routine. */
 void clicked_cb(GtkButton *b, DialogConfig *d)
@@ -52,15 +44,16 @@ void clicked_cb(GtkButton *b, DialogConfig *d)
   if((GtkWidget*)b == d->button_ok) {
     d->apply();
     d->close();
-    d->conf.saveConfigFile(CONFIG_FILE_NAME);
+    d->conf->saveConfigFile(CONFIG_FILE_NAME);
   }else if((GtkWidget*)b == d->button_cancel) {
+  	
     d->close();
-    d->G->changeConfig(d->conf_old); // restore old configuration.
+    d->gui->changeConfig(d->conf_old); // restore old configuration.
   }else if((GtkWidget*)b == d->button_apply) {
     d->apply();
     d->rewrite();
   }else if((GtkWidget*)b == d->button_default) {
-    d->conf.reset();
+    d->conf->reset();
     d->rewrite();
   }
 }
@@ -89,33 +82,37 @@ void DialogConfig::rewrite()
 {
   char   buff[80];
 
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_calculation_rate), conf.CALCULATION_RATE);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_oversampling), conf.OVERSAMPLING);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_root_frequency_error), conf.ROOT_FREQUENCY_ERROR);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_temporal_window), conf.TEMPORAL_WINDOW);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_noise_threshold), conf.NOISE_THRESHOLD);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_dft_number), conf.DFT_NUMBER);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_dft_size), conf.DFT_SIZE);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_number), conf.PEAK_NUMBER);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_order), conf.PEAK_ORDER);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_rejection_relation), conf.PEAK_REJECTION_RELATION);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_calculation_rate), conf->CALCULATION_RATE);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_oversampling), conf->OVERSAMPLING);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_root_frequency_error), conf->ROOT_FREQUENCY_ERROR);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_temporal_window), conf->TEMPORAL_WINDOW);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_noise_threshold), conf->NOISE_THRESHOLD);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_dft_number), conf->DFT_NUMBER);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_dft_size), conf->DFT_SIZE);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_number), conf->PEAK_NUMBER);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_order), conf->PEAK_ORDER);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_peak_rejection_relation), conf->PEAK_REJECTION_RELATION);
 
-  sprintf(buff, "%d", conf.FFT_SIZE);
+  sprintf(buff, "%d", conf->FFT_SIZE);
   gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry), (gchar *) buff);
 
-  sprintf(buff, "%d", conf.SAMPLE_RATE);
+  sprintf(buff, "%d", conf->SAMPLE_RATE);
   gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry), (gchar *) buff);
 
   change_label_sample_rate(NULL, this);
   change_label_a_frequence(NULL, this);
 }
 
-DialogConfig::DialogConfig(GUI* G)
+DialogConfig::DialogConfig(GUI* gui)
 {  
-  DialogConfig::G = G;
+  DialogConfig::gui = gui;
   
-  conf = G->conf;
-  conf_old = G->conf;
+  conf = new Config();
+  conf_old = new Config();
+  
+  // config copy
+  *conf = *gui->conf;
+  *conf_old = *gui->conf;
   
   // cretes the window
   win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -145,7 +142,7 @@ DialogConfig::DialogConfig(GUI* G)
 
   spin_calculation_rate = gtk_spin_button_new(
 				 (GtkAdjustment*)
-				 gtk_adjustment_new(conf.CALCULATION_RATE, 1.0, 60.0,
+				 gtk_adjustment_new(conf->CALCULATION_RATE, 1.0, 60.0,
 						    0.5, 10.0, 15.0), 
 				 0.5, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_calculation_rate), TRUE);
@@ -163,7 +160,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_visualization_rate = 
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.VISUALIZATION_RATE, 1.0, 60.0,
+			gtk_adjustment_new(conf->VISUALIZATION_RATE, 1.0, 60.0,
 					   0.5, 10.0, 15.0), 
 			0.5, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_visualization_rate), TRUE);
@@ -191,7 +188,7 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_combo_set_popdown_strings( GTK_COMBO(combo_fft_size), glist);
   
-  sprintf(buff, "%d", conf.FFT_SIZE);
+  sprintf(buff, "%d", conf->FFT_SIZE);
   //gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry), (gchar *) buff);
 
   gtk_combo_set_use_arrows_always( GTK_COMBO(combo_fft_size), TRUE );
@@ -209,7 +206,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_noise_threshold = 
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.NOISE_THRESHOLD,
+			gtk_adjustment_new(conf->NOISE_THRESHOLD,
 					   -30.0, 40.0, 0.1, 0.1, 0.1), 
 			0.1, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_noise_threshold), TRUE);
@@ -238,13 +235,13 @@ DialogConfig::DialogConfig(GUI* G)
 
   gtk_combo_set_popdown_strings( GTK_COMBO(combo_sample_rate), glist);
 
-  sprintf(buff, "%d", conf.SAMPLE_RATE);
+  sprintf(buff, "%d", conf->SAMPLE_RATE);
   //gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry), (gchar *) buff);
   
   gtk_combo_set_use_arrows_always( GTK_COMBO(combo_sample_rate), TRUE );
 
   GtkAdjustment* adj = 
-    (GtkAdjustment*) gtk_adjustment_new(conf.OVERSAMPLING, 1.0, 20.0,
+    (GtkAdjustment*) gtk_adjustment_new(conf->OVERSAMPLING, 1.0, 20.0,
 					  1.0, 10.0, 15.0);
   spin_oversampling = gtk_spin_button_new(adj, 1.0, 1);
 
@@ -293,7 +290,7 @@ DialogConfig::DialogConfig(GUI* G)
   box = gtk_hbox_new (TRUE, FALSE);
 
   GtkAdjustment* adj2 = 
-    (GtkAdjustment*) gtk_adjustment_new(conf.ROOT_FREQUENCY_ERROR,
+    (GtkAdjustment*) gtk_adjustment_new(conf->ROOT_FREQUENCY_ERROR,
 					-500.0, +500.0, 1.0, 10.0, 15.0);
   spin_root_frequency_error = gtk_spin_button_new(adj2, 1.0, 1);
 
@@ -305,7 +302,7 @@ DialogConfig::DialogConfig(GUI* G)
   gtk_box_pack_start (GTK_BOX(box), spin_root_frequency_error,
 		      FALSE, TRUE, FALSE);
 
-  sprintf(buff, "%%    = %0.2f", conf.ROOT_FREQUENCY);
+  sprintf(buff, "%%    = %0.2f", conf->ROOT_FREQUENCY);
   label_root_frequency = gtk_label_new(_(buff));
 
   gtk_box_pack_start (GTK_BOX(box), label_root_frequency, FALSE, FALSE, FALSE);
@@ -326,7 +323,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_temporal_window = 
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.TEMPORAL_WINDOW, 0.0, 2.0,
+			gtk_adjustment_new(conf->TEMPORAL_WINDOW, 0.0, 2.0,
 					   0.005, 0.1, 0.1), 
 			0.005, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_temporal_window), TRUE);
@@ -346,7 +343,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_dft_number =
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.DFT_NUMBER, 0.0, 10.0,
+			gtk_adjustment_new(conf->DFT_NUMBER, 0.0, 10.0,
 					   1.0, 1.0, 1.0), 
 			1.0, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_dft_number), TRUE);
@@ -366,7 +363,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_dft_size =
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.DFT_SIZE, 4.0, 100.0,
+			gtk_adjustment_new(conf->DFT_SIZE, 4.0, 100.0,
 					   1.0, 1.0, 1.0), 
 			1.0, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_dft_size), TRUE);
@@ -385,7 +382,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_peak_number =
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.PEAK_NUMBER, 1.0, 10.0,
+			gtk_adjustment_new(conf->PEAK_NUMBER, 1.0, 10.0,
 					   1.0, 1.0, 1.0), 
 			1.0, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_peak_number), TRUE);
@@ -405,7 +402,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_peak_order =
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.PEAK_ORDER, 1.0, 5.0,
+			gtk_adjustment_new(conf->PEAK_ORDER, 1.0, 5.0,
 					   1.0, 1.0, 1.0), 
 			1.0, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_peak_order), TRUE);
@@ -426,7 +423,7 @@ DialogConfig::DialogConfig(GUI* G)
   spin_peak_rejection_relation =
     gtk_spin_button_new(
 			(GtkAdjustment*)
-			gtk_adjustment_new(conf.PEAK_REJECTION_RELATION,
+			gtk_adjustment_new(conf->PEAK_REJECTION_RELATION,
 					   2.0, 40.0, 0.1, 1.0, 1.0), 
 			0.1, 1);
   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(spin_peak_rejection_relation),
@@ -472,31 +469,37 @@ DialogConfig::DialogConfig(GUI* G)
   //printf("(%p) %p %p %p\n", this, button_ok, button_cancel, button_apply);
 }
 
+DialogConfig::~DialogConfig() {
+	delete conf;
+	delete conf_old;
+}
+
+
 void DialogConfig::apply()
 {
-  conf.ROOT_FREQUENCY_ERROR = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_root_frequency_error));
-  conf.CALCULATION_RATE = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_calculation_rate));
-  conf.VISUALIZATION_RATE = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_visualization_rate));
-  conf.TEMPORAL_WINDOW = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_temporal_window));
-  conf.NOISE_THRESHOLD = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_noise_threshold));
-  conf.OVERSAMPLING = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_oversampling));
-  conf.DFT_NUMBER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_dft_number));
-  conf.DFT_SIZE = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_dft_size));
-  conf.PEAK_NUMBER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_number));
-  conf.PEAK_ORDER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_order));
-  conf.PEAK_REJECTION_RELATION = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_rejection_relation));
-  conf.FFT_SIZE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry)));
-  conf.SAMPLE_RATE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry)));
+  conf->ROOT_FREQUENCY_ERROR = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_root_frequency_error));
+  conf->CALCULATION_RATE = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_calculation_rate));
+  conf->VISUALIZATION_RATE = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_visualization_rate));
+  conf->TEMPORAL_WINDOW = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_temporal_window));
+  conf->NOISE_THRESHOLD = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spin_noise_threshold));
+  conf->OVERSAMPLING = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_oversampling));
+  conf->DFT_NUMBER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_dft_number));
+  conf->DFT_SIZE = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_dft_size));
+  conf->PEAK_NUMBER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_number));
+  conf->PEAK_ORDER = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_order));
+  conf->PEAK_REJECTION_RELATION = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin_peak_rejection_relation));
+  conf->FFT_SIZE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_fft_size)->entry)));
+  conf->SAMPLE_RATE = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_sample_rate)->entry)));
 
-  bool result = conf.updateInternalParameters();
+  bool result = conf->updateInternalParameters();
   
-  G->changeConfig(conf);
+  gui->changeConfig(conf);
   
 # ifdef QUICK_MESSAGES
 	if (!result) {
     char buff[80];
     sprintf(buff, gettext("Temporal buffer is smaller than FFT size.\
- It has been increased to %0.3f seconds\n"), (float)conf.TEMPORAL_WINDOW);
+ It has been increased to %0.3f seconds\n"), (float)conf->TEMPORAL_WINDOW);
     quick_message(gettext("tuner warning"), buff);
 	}
 # endif

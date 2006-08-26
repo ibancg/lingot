@@ -35,86 +35,83 @@
 #include "core.h"
 #include "iir.h"
 #include "filters.h"
+#include "config.h"
 
-Core::Core()
+
+Core::Core(Config* conf)
 {
-  conf.parseConfigFile(CONFIG_FILE_NAME);
-  start();
-
-  status = true;
-  pthread_attr_init(&attrib);
-  pthread_create(&thread, &attrib, (void * (*)(void *))ProcessThread, (void *)this); 
-}
-
-void Core::start()
-{
+	Core::conf = conf;
+  running = true;
+  
 # ifdef LIBSNDOBJ
 #  ifdef OSS
   A = new SndRTIO(1, SND_INPUT, 512, 512, SHORTSAM_LE, NULL, 
-		  conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, conf.SAMPLE_RATE, conf.AUDIO_DEV);
+		  conf->READ_BUFFER_SIZE*conf->OVERSAMPLING, conf->SAMPLE_RATE, conf->AUDIO_DEV);
 #  endif		  
 #  ifdef ALSA
   A = new SndRTIO(1, SND_INPUT, 512, 4, SHORTSAM_LE, NULL, 
-		  conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, conf.SAMPLE_RATE, "plughw:0,0");
+		  conf->READ_BUFFER_SIZE*conf->OVERSAMPLING, conf->SAMPLE_RATE, "plughw:0,0");
 #  endif		  
 # else
   // creates an audio handler.
-  A = new audio(1, conf.SAMPLE_RATE, SAMPLE_FORMAT, conf.AUDIO_DEV);
+  A = new audio(1, conf->SAMPLE_RATE, SAMPLE_FORMAT, conf->AUDIO_DEV);
 # endif
 
   // since the SPD is simmetrical, we only store the 1st half.
-  if (conf.FFT_SIZE > 256) {
-    spd_fft = new FLT[conf.FFT_SIZE >> 1];
-    memset(spd_fft, 0, (conf.FFT_SIZE >> 1)*sizeof(FLT));
+  if (conf->FFT_SIZE > 256) {
+    spd_fft = new FLT[conf->FFT_SIZE >> 1];
+    memset(spd_fft, 0, (conf->FFT_SIZE >> 1)*sizeof(FLT));
   }
   else { // if the fft size is 256, we store the whole signal for representation.
-    spd_fft = new FLT[conf.FFT_SIZE];
-    memset(spd_fft, 0, conf.FFT_SIZE*sizeof(FLT));
+    spd_fft = new FLT[conf->FFT_SIZE];
+    memset(spd_fft, 0, conf->FFT_SIZE*sizeof(FLT));
   }
 
-  spd_dft       = new FLT[conf.DFT_SIZE];
-  memset(spd_dft, 0, conf.DFT_SIZE*sizeof(FLT));
+  spd_dft       = new FLT[conf->DFT_SIZE];
+  memset(spd_dft, 0, conf->DFT_SIZE*sizeof(FLT));
 
-  diff2_spd_fft = new FLT[conf.FFT_SIZE]; // 2nd derivative from SPD.
-  memset(diff2_spd_fft, 0, conf.FFT_SIZE*sizeof(FLT));
+  diff2_spd_fft = new FLT[conf->FFT_SIZE]; // 2nd derivative from SPD.
+  memset(diff2_spd_fft, 0, conf->FFT_SIZE*sizeof(FLT));
 
 #ifndef LIB_FFTW  
-  createWN(&conf); // creates the phase factors for FFT.
-  fft_out    = new CPX[conf.FFT_SIZE]; // complex signal in freq domain.
-  memset(fft_out, 0, conf.FFT_SIZE*sizeof(CPX));
+  createWN(conf); // creates the phase factors for FFT.
+  fft_out    = new CPX[conf->FFT_SIZE]; // complex signal in freq domain.
+  memset(fft_out, 0, conf->FFT_SIZE*sizeof(CPX));
 #else
-  fftw_in   = new fftw_complex[conf.FFT_SIZE];
-  memset(fftw_in, 0, conf.FFT_SIZE*sizeof(fftw_complex));
-  fftw_out  = new fftw_complex[conf.FFT_SIZE];
-  memset(fftw_out, 0, conf.FFT_SIZE*sizeof(fftw_complex));
-  fftwplan  = fftw_create_plan(conf.FFT_SIZE, FFTW_FORWARD, FFTW_ESTIMATE);
+  fftw_in   = new fftw_complex[conf->FFT_SIZE];
+  memset(fftw_in, 0, conf->FFT_SIZE*sizeof(fftw_complex));
+  fftw_out  = new fftw_complex[conf->FFT_SIZE];
+  memset(fftw_out, 0, conf->FFT_SIZE*sizeof(fftw_complex));
+  fftwplan  = fftw_create_plan(conf->FFT_SIZE, FFTW_FORWARD, FFTW_ESTIMATE);
 #endif
 
   // read buffer from soundcard.
-  read_buffer = new SAMPLE_TYPE[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
-  memset(read_buffer, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(SAMPLE_TYPE));
+  read_buffer = new SAMPLE_TYPE[conf->READ_BUFFER_SIZE*conf->OVERSAMPLING];
+  memset(read_buffer, 0, (conf->READ_BUFFER_SIZE*conf->OVERSAMPLING)*sizeof(SAMPLE_TYPE));
 
   // read buffer from soundcard in floating point format.
-  flt_read_buffer = new FLT[conf.READ_BUFFER_SIZE*conf.OVERSAMPLING];
-  memset(flt_read_buffer, 0, (conf.READ_BUFFER_SIZE*conf.OVERSAMPLING)*sizeof(FLT));
+  flt_read_buffer = new FLT[conf->READ_BUFFER_SIZE*conf->OVERSAMPLING];
+  memset(flt_read_buffer, 0, (conf->READ_BUFFER_SIZE*conf->OVERSAMPLING)*sizeof(FLT));
 
   // stored samples.
-  temporal_window_buffer = new FLT[conf.TEMPORAL_BUFFER_SIZE]; 
-  memset(temporal_window_buffer, 0, conf.TEMPORAL_BUFFER_SIZE*sizeof(FLT));
+  temporal_window_buffer = new FLT[conf->TEMPORAL_BUFFER_SIZE]; 
+  memset(temporal_window_buffer, 0, conf->TEMPORAL_BUFFER_SIZE*sizeof(FLT));
 
   // order 8 Chebyshev antialiasing filter, wc = pi/oversampling
-  antialiasing_filter = new IIR( 8, 8, filtros[conf.OVERSAMPLING][0], filtros[conf.OVERSAMPLING][1] );
+  antialiasing_filter = new IIR( 8, 8, filtros[conf->OVERSAMPLING][0], filtros[conf->OVERSAMPLING][1] );
 
   // ------------------------------------------------------------
 
   freq = 0.0;
-  new_conf_pending = false;
 }
 
 // -----------------------------------------------------------------------
 
-void Core::stop()
+/* Deallocate resources */
+Core::~Core()
 {
+	pthread_attr_destroy(&attr);
+	
 #ifdef LIB_FFTW  
   fftw_destroy_plan(fftwplan);
   delete [] fftw_in;
@@ -134,25 +131,6 @@ void Core::stop()
   delete [] temporal_window_buffer;
 
   delete    antialiasing_filter;
-
-  // wait for thread.
-  //  pthread_join(thread, &attrib);
-}
-
-// -----------------------------------------------------------------------
-
-Core::~Core()
-{
-  stop();  
-  pthread_attr_destroy(&attrib);
-}
-
-// -----------------------------------------------------------------------
-
-void Core::changeConfig(Config conf)
-{
-  Core::new_conf = conf;
-  new_conf_pending = true;
 }
 
 // -----------------------------------------------------------------------
@@ -163,10 +141,10 @@ void Core::decimate(FLT* in, FLT* out)
   register unsigned int i,j;
 
   // low pass filter to avoid aliasing.
-  antialiasing_filter->filter(conf.READ_BUFFER_SIZE*conf.OVERSAMPLING, in, in);
+  antialiasing_filter->filter(conf->READ_BUFFER_SIZE*conf->OVERSAMPLING, in, in);
   
   // compression.
-  for(i = j = 0; i < conf.READ_BUFFER_SIZE; i++, j += conf.OVERSAMPLING)
+  for(i = j = 0; i < conf->READ_BUFFER_SIZE; i++, j += conf->OVERSAMPLING)
     out[i] = in[j];
 }
 
@@ -175,38 +153,38 @@ void Core::decimate(FLT* in, FLT* out)
 void Core::process()
 {
   register unsigned int  i, k;              // loop variables.
-  FLT delta_w_FFT = 2.0*M_PI/conf.FFT_SIZE; // FFT resolution in rads.  
+  FLT delta_w_FFT = 2.0*M_PI/conf->FFT_SIZE; // FFT resolution in rads.  
 
 # ifdef LIBSNDOBJ
   A->Read();
-  for (i = 0; i < conf.OVERSAMPLING*conf.READ_BUFFER_SIZE; i++)
+  for (i = 0; i < conf->OVERSAMPLING*conf->READ_BUFFER_SIZE; i++)
     flt_read_buffer[i] = A->Output(i);
 # else
   if ((A->read(read_buffer, 
-	       conf.OVERSAMPLING*conf.READ_BUFFER_SIZE*sizeof(SAMPLE_TYPE))) 
+	       conf->OVERSAMPLING*conf->READ_BUFFER_SIZE*sizeof(SAMPLE_TYPE))) 
       < 0) {
     //perror("Error reading samples");
     return;
   }
 
-  for (i = 0; i < conf.OVERSAMPLING*conf.READ_BUFFER_SIZE; i++)
+  for (i = 0; i < conf->OVERSAMPLING*conf->READ_BUFFER_SIZE; i++)
     flt_read_buffer[i] = read_buffer[i];
 # endif
 
 
   /* just readed:   ----------------------------
                    |bxxxbxxxbxxxbxxxbxxxbxxxbxxx|
-		    ----------------------------
+								    ----------------------------
 
-		   <----------------------------> READ_BUFFER_SIZE*OVERSAMPLING
+								   <----------------------------> READ_BUFFER_SIZE*OVERSAMPLING
   */
 
   /* we shift the temporal window to leave a hollow where place the new piece
      of data read. The buffer is actually a queue. */
-  if (conf.TEMPORAL_BUFFER_SIZE > conf.READ_BUFFER_SIZE)
+  if (conf->TEMPORAL_BUFFER_SIZE > conf->READ_BUFFER_SIZE)
     memcpy(temporal_window_buffer, 
-	   &temporal_window_buffer[conf.READ_BUFFER_SIZE],
-	   (conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE)*sizeof(FLT));
+	   &temporal_window_buffer[conf->READ_BUFFER_SIZE],
+	   (conf->TEMPORAL_BUFFER_SIZE - conf->READ_BUFFER_SIZE)*sizeof(FLT));
 
   /*
     previous buffer situation:
@@ -224,39 +202,39 @@ void Core::process()
      ------------------------------------------   */
     
   /* we decimate the read signal and put it at the end of the buffer. */
-  if (conf.OVERSAMPLING > 1)
+  if (conf->OVERSAMPLING > 1)
       decimate(flt_read_buffer,
-	      &temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE]);
-  else memcpy(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.READ_BUFFER_SIZE],
-	      flt_read_buffer, conf.READ_BUFFER_SIZE*sizeof(FLT));
+	      &temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->READ_BUFFER_SIZE]);
+  else memcpy(&temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->READ_BUFFER_SIZE],
+	      flt_read_buffer, conf->READ_BUFFER_SIZE*sizeof(FLT));
   /* ------------------------------------------
     | xxxxxxxxxxxxxxxxyyyyaa | aaaaa | bbbbbbb |
      ------------------------------------------   */
 
   // ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
 
-  FLT _1_N2 = 1.0/(conf.FFT_SIZE*conf.FFT_SIZE); // SPD normalization constant
+  FLT _1_N2 = 1.0/(conf->FFT_SIZE*conf->FFT_SIZE); // SPD normalization constant
 
 # ifdef LIB_FFTW
-  for (i = 0; i < conf.FFT_SIZE; i++)
+  for (i = 0; i < conf->FFT_SIZE; i++)
     fftw_in[i].re = 
-      temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE + i];
+      temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->FFT_SIZE + i];
   
   // transformation.
   fftw_one(fftwplan, fftw_in, fftw_out);
   
   // esteem of SPD from FFT. (normalized squared module)
-  for (i = 0; i < ((conf.FFT_SIZE > 256) ? (conf.FFT_SIZE >> 1) : 256); i++)
+  for (i = 0; i < ((conf->FFT_SIZE > 256) ? (conf->FFT_SIZE >> 1) : 256); i++)
     spd_fft[i] = (fftw_out[i].re*fftw_out[i].re +
 		  fftw_out[i].im*fftw_out[i].im)*_1_N2;
 # else
   
   // transformation.
-  FFT(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
-      fft_out, conf.FFT_SIZE);
+  FFT(&temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->FFT_SIZE],
+      fft_out, conf->FFT_SIZE);
   
   // esteem of SPD from FFT. (normalized squared module)
-  for (i = 0; i < ((conf.FFT_SIZE > 256) ? (conf.FFT_SIZE >> 1) : 256); i++)
+  for (i = 0; i < ((conf->FFT_SIZE > 256) ? (conf->FFT_SIZE >> 1) : 256); i++)
     spd_fft[i] = (fft_out[i].r*fft_out[i].r + fft_out[i].i*fft_out[i].i)*_1_N2;
 # endif
 
@@ -265,15 +243,15 @@ void Core::process()
       
   // truncated 2nd derivative esteem, to enhance peaks
   diff2_spd_fft[0] = 0.0;
-  for (i = 1; i < conf.FFT_SIZE - 1; i++) {
+  for (i = 1; i < conf->FFT_SIZE - 1; i++) {
     diff2_spd_fft[i] = 2.0*spd_fft[i] - spd_fft[i - 1] - spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
     if (diff2_spd_fft[i] < 0.0) diff2_spd_fft[i] = 0.0; // truncation
   }
 
   // peaks searching in that signal.
-  int Mi = fundamentalPeak(spd_fft, diff2_spd_fft, (conf.FFT_SIZE >> 1)); // take the fundamental peak.
+  int Mi = fundamentalPeak(spd_fft, diff2_spd_fft, (conf->FFT_SIZE >> 1)); // take the fundamental peak.
 
-  if (Mi == (signed) (conf.FFT_SIZE >> 1)) {
+  if (Mi == (signed) (conf->FFT_SIZE >> 1)) {
     freq = 0.0;
     return;
   }
@@ -284,20 +262,20 @@ void Core::process()
   // ---------------------------------------------------------
   
   FLT d_w = delta_w_FFT;
-  for (k = 0; k < conf.DFT_NUMBER; k++) {
+  for (k = 0; k < conf->DFT_NUMBER; k++) {
 	
-    d_w = 2.0*d_w/(conf.DFT_SIZE - 1); // resolution in rads.
+    d_w = 2.0*d_w/(conf->DFT_SIZE - 1); // resolution in rads.
 	
     if (k == 0) {
-      SPD(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
-	  conf.FFT_SIZE, w + d_w, d_w, &spd_dft[1], conf.DFT_SIZE - 2);
+      SPD(&temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->FFT_SIZE],
+	  conf->FFT_SIZE, w + d_w, d_w, &spd_dft[1], conf->DFT_SIZE - 2);
       spd_dft[0] = spd_fft[Mi - 1];
-      spd_dft[conf.DFT_SIZE - 1] = spd_fft[Mi + 1]; // 2 samples known.
+      spd_dft[conf->DFT_SIZE - 1] = spd_fft[Mi + 1]; // 2 samples known.
     } else
-      SPD(&temporal_window_buffer[conf.TEMPORAL_BUFFER_SIZE - conf.FFT_SIZE],
-	  conf.FFT_SIZE, w, d_w, spd_dft, conf.DFT_SIZE);
+      SPD(&temporal_window_buffer[conf->TEMPORAL_BUFFER_SIZE - conf->FFT_SIZE],
+	  conf->FFT_SIZE, w, d_w, spd_dft, conf->DFT_SIZE);
 	
-    max(spd_dft, conf.DFT_SIZE, &Mi); // search the maximum.
+    max(spd_dft, conf->DFT_SIZE, &Mi); // search the maximum.
 	
     w += (Mi - 1)*d_w; // previous sample to the peak.
   }
@@ -311,31 +289,57 @@ void Core::process()
   FLT wkm1 = w;    // first iterator set to the current approximation.
   FLT d1_SPD, d2_SPD;
     
-  for (k = 0; (k < conf.MAX_NR_ITER) && (fabs(wk - wkm1) > 1.0e-8); k++) {
+  for (k = 0; (k < conf->MAX_NR_ITER) && (fabs(wk - wkm1) > 1.0e-8); k++) {
     wk = wkm1;
 
     // ! we use the WHOLE temporal window for greater precission.
-    SPD_diffs(temporal_window_buffer, conf.TEMPORAL_BUFFER_SIZE, wk, &d1_SPD, &d2_SPD);
+    SPD_diffs(temporal_window_buffer, conf->TEMPORAL_BUFFER_SIZE, wk, &d1_SPD, &d2_SPD);
     wkm1 = wk - d1_SPD/d2_SPD;
   }
     
   w = wkm1; // frequency in rads.
-  freq = (w*conf.SAMPLE_RATE)/(2.0*M_PI*conf.OVERSAMPLING); // analog frequency.
-}				
+  freq = (w*conf->SAMPLE_RATE)/(2.0*M_PI*conf->OVERSAMPLING); // analog frequency.
+}
 
-void ProcessThread(Core* C) {
+/* external function to launch the core. */
+void run_core(void* data) {
+	Core* core = (Core*) data;
+	core->run();
+}
 
-  while (C->status) {
+/* start running the core in another thread */ 
+void Core::start() {
+	
+	pthread_attr_init(&attr);
+  
+  // detached thread.
+	//  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+  pthread_create(&thread, &attr, (void* (*)(void*)) run_core, (void*) this); 
+}
+
+/* stop running the core */ 
+void Core::stop() {
+	
+	running = false;
+	
+	void* thread_result;
+	// wait for the thread exit
+	pthread_join(thread, &thread_result);
+}
+
+
+/* run the core */ 
+void Core::run() {
+
+  while (running) {
 
     // look for a pending configuration.
-    if (C->new_conf_pending) {
-      C->stop();
-      C->conf = C->new_conf;
-      C->start();
-    }
+/*    if (new_conf_pending) {
+      destroy();
+      conf = new_conf;
+      create();
+    }*/
 
-    C->process(); // process new data block.
-  }  
-
-  pthread_exit(NULL);
+	  process(); // process new data block.
+  }
 }

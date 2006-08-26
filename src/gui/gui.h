@@ -28,13 +28,13 @@
 #include "core.h"
 
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
 
 class DialogConfig;
 class Gauge;
+class Config;
 
 // Window that contains all controls, graphics, etc. of the tuner.
-class GUI : public Core {
+class GUI {
 
 private:
 
@@ -54,9 +54,12 @@ private:
 
 	Gauge*			gauge;
 
+	Core*				core;
+	
 public:
 
-  DialogConfig*	dc;
+  DialogConfig*	dialog_config;
+	Config*				conf;
 
   GUI(int argc, char *argv[]);
   ~GUI();
@@ -64,11 +67,12 @@ public:
 	void run();
 	
   void redraw();
-  void mainLoop();
   void putFrequency();
-  void resize(Config);
+  void changeConfig(Config*);
   void drawGauge();
   void drawSpectrum();
+  
+  friend void callbackDestroy(GtkWidget* w, GUI* gui);  
 };
 
 

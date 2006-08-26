@@ -24,15 +24,9 @@
 #ifndef __DIALOG_CONFIG_H__
 #define __DIALOG_CONFIG_H__
 
-//#include <gtk/gtk.h>
-//#include <gdk/gdk.h>
-#include "config.h"
-
 class GUI;
 
 /*--------- Dialog box with multiple options --------------------*/
-
-void dialog_config_cb(GtkWidget*, GUI*);
 
 class DialogConfig {
 
@@ -63,14 +57,16 @@ private:
   GtkWidget*	label_sample_rate;
   GtkWidget*	label_root_frequency;
 
-  Config			conf;     // provisional configuration.
-  Config			conf_old; // restoration point for cancel.
+  Config*			conf;     // provisional configuration.
+  Config*			conf_old; // restoration point for cancel.
 
-  GUI*				G;
+  GUI*				gui;
 
 public:
 
-  DialogConfig(GUI*);
+	DialogConfig(GUI*);
+	virtual ~DialogConfig();
+	
   void rewrite();
   void apply();
   void close();
