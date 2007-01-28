@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
+<!DOCTYPE glade-project SYSTEM "http://glade.gnome.org/glade-project-2.0.dtd">
+<glade-project>
+  <name>lingot</name>
+  <program_name>lingot</program_name>
+  <source_directory>src</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <gettext_support>TRUE</gettext_support>
+  <gnome_support>FALSE</gnome_support>
+</glade-project>
