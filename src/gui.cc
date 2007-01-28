@@ -125,11 +125,11 @@ GUI::GUI(int argc, char *argv[])
   quit = false;
   pix_stick = NULL;
 
-  gauge = new Gauge(conf->VRP); // gauge in rest situation
-
 	conf = new Config();
 	conf->parseConfigFile(CONFIG_FILE_NAME);
-	
+		
+	gauge = new Gauge(conf->VRP); // gauge in rest situation	
+
 	core = new Core(conf);
 	core->start();
 

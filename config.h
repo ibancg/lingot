@@ -12,7 +12,7 @@
 #define PACKAGE_PIXMAPS_DIR "/usr/local/share/pixmaps/lingot"
 #define PACKAGE_HELP_DIR "/usr/local/share/gnome/help/lingot"
 #define PACKAGE_MENU_DIR "/usr/local/share/gnome/apps"
-#define PACKAGE_SOURCE_DIR "/home/jairo/Projects/lingot"
+#define PACKAGE_SOURCE_DIR "/home/iban/workspace/lingot"
 #define GETTEXT_PACKAGE "lingot"
 
 /* always defined to indicate that i18n is enabled */
