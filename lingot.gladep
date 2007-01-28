@@ -6,5 +6,4 @@
   <source_directory>src</source_directory>
   <pixmaps_directory>pixmaps</pixmaps_directory>
   <gettext_support>TRUE</gettext_support>
-  <gnome_support>FALSE</gnome_support>
 </glade-project>

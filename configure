@@ -2712,81 +2712,94 @@ echo "${ECHO_T}no" >&6
 fi
 
 pkg_failed=no
-echo "$as_me:$LINENO: checking for GTK_CFLAGS" >&5
-echo $ECHO_N "checking for GTK_CFLAGS... $ECHO_C" >&6
-if test "${pkg_cv_GTK_CFLAGS+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test "x$ac_cv_env_GTK_CFLAGS_set" = "xset"; then
-	pkg_cv_GTK_CFLAGS=$ac_cv_env_GTK_CFLAGS_value
-elif test -n "$PKG_CONFIG"; then
-	if { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists \"gtk+-2.0\" >/dev/null 2>&1") >&5
-  ($PKG_CONFIG --exists "gtk+-2.0" >/dev/null 2>&1) 2>&5
+echo "$as_me:$LINENO: checking for GTK" >&5
+echo $ECHO_N "checking for GTK... $ECHO_C" >&6
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_CFLAGS"; then
+        pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-		pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
-	else
-		pkg_failed=yes
-	fi
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
 else
 	pkg_failed=untried
 fi
-fi
-echo "$as_me:$LINENO: result: $pkg_cv_GTK_CFLAGS" >&5
-echo "${ECHO_T}$pkg_cv_GTK_CFLAGS" >&6
-echo "$as_me:$LINENO: checking for GTK_LIBS" >&5
-echo $ECHO_N "checking for GTK_LIBS... $ECHO_C" >&6
-if test "${pkg_cv_GTK_LIBS+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test "x$ac_cv_env_GTK_LIBS_set" = "xset"; then
-	pkg_cv_GTK_LIBS=$ac_cv_env_GTK_LIBS_value
-elif test -n "$PKG_CONFIG"; then
-	if { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists \"gtk+-2.0\" >/dev/null 2>&1") >&5
-  ($PKG_CONFIG --exists "gtk+-2.0" >/dev/null 2>&1) 2>&5
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTK_LIBS"; then
+        pkg_cv_GTK_LIBS="$GTK_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-		pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
-	else
-		pkg_failed=yes
-	fi
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
 else
 	pkg_failed=untried
 fi
-fi
-echo "$as_me:$LINENO: result: $pkg_cv_GTK_LIBS" >&5
-echo "${ECHO_T}$pkg_cv_GTK_LIBS" >&6
+
+
 
 if test $pkg_failed = yes; then
-	GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0"`
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtk+-2.0"`
+        else
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtk+-2.0"`
+        fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_PKG_ERRORS" 1>&5
+	echo "$GTK_PKG_ERRORS" >&5
 
-	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0) were not met.
+	{ { echo "$as_me:$LINENO: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-Alternatively you may set the GTK_CFLAGS and GTK_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details." >&5
-echo "$as_me: error: Package requirements (gtk+-2.0) were not met.
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (gtk+-2.0) were not met:
+
+$GTK_PKG_ERRORS
+
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-Alternatively you may set the GTK_CFLAGS and GTK_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details." >&2;}
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
    { (exit 1); exit 1; }; }
 elif test $pkg_failed = untried; then
 	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
 path to pkg-config.
 
-Alternatively you may set the GTK_CFLAGS and GTK_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details.
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
 
 To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&5
@@ -2794,9 +2807,9 @@ echo "$as_me: error: The pkg-config script could not be found or is too old.  Ma
 is in your PATH or set the PKG_CONFIG environment variable to the full
 path to pkg-config.
 
-Alternatively you may set the GTK_CFLAGS and GTK_LIBS environment variables
-to avoid the need to call pkg-config.  See the pkg-config man page for
-more details.
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
 
 To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
@@ -2804,6 +2817,8 @@ See \`config.log' for more details." >&2;}
 else
 	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
 	GTK_LIBS=$pkg_cv_GTK_LIBS
+        echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 	:
 fi
 

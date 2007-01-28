@@ -2,13 +2,7 @@
 Compatibility Level: 1 
 
 <PROJECT_DESCRIPTION_START>
-LINGOT Is Not A Guitar-Only Tuner
-
-Lingot is a musical instrument tuner. It's accurate, easy to use, and
-highly configurable. Originally conceived to tune electric guitars,
-its configurability gives it a more general character. (Tuning another
-instruments has not been tested).
-<PROJECT_DESCRIPTION_END>
+LINGOT Is Not a Guitar-Only Tuner<PROJECT_DESCRIPTION_END>
 <CONFIG_PROGS_START>
 <CONFIG_PROGS_END>
 <CONFIG_LIBS_START>
@@ -32,10 +26,10 @@ anjuta.version=1.2.4a
 anjuta.compatibility.level=1
 
 project.name=lingot
-project.type=GTK 2.0
+project.type=GNOME 2.0
 project.target.type=EXECUTABLE
 project.version=0.7
-project.author=Unknown author
+project.author=Ibán Cereijo Graña & Jairo Chapela Martínez
 project.source.target=lingot
 project.has.gettext=1
 project.gui.command=
@@ -47,10 +41,10 @@ project.config.extra.modules.after=
 project.config.blocked=0
 project.config.disable.overwriting=0 0 0 0 0 0 0 0 0 
 
-project.menu.entry=lingot Version 0.1
-project.menu.group=Applications
-project.menu.comment=lingot Version 0.1
-project.menu.icon=
+project.menu.entry=lingot Version 0.7
+project.menu.group=Multimedia
+project.menu.comment=lingot Version 0.7
+project.menu.icon=lingot-icon.svg
 project.menu.need.terminal=0
 
 project.configure.options=
@@ -76,34 +70,12 @@ module.include.files=
 
 module.source.name=src
 module.source.type=
-module.source.files=\
-	FFT.cc\
-	FFT.h\
-	audio.cc\
-	audio.h\
-	complex.h\
-	config.cc\
-	config.h\
-	core.cc\
-	core.h\
-	defs.h\
-	dialog_config.cc\
-	dialog_config.h\
-	filters.h\
-	gauge.cc\
-	gauge.h\
-	gui.cc\
-	gui.h\
-	iir.cc\
-	iir.h\
-	quick_message.cc\
-	quick_message.h\
-	signal.cc\
-	tuner.cc
+module.source.files=
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
-module.pixmap.files=
+module.pixmap.files=\
+	lingot-icon.svg
 
 module.data.name=data
 module.data.type=
