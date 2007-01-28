@@ -1,0 +1,10 @@
+
+[Desktop Entry]
+Name=lingot Version 0.7
+Comment=lingot Version 0.7
+Exec=lingot
+Icon=@PACKAGE_PIXMAPS_DIR@/lingot-icon.svg
+Terminal=false
+MultipleArgs=false
+Type=Application
+
