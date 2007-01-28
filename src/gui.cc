@@ -54,8 +54,8 @@ void callbackAbout(GtkWidget* w, void *data)
 	quick_message(gettext("about lingot"), 
 		gettext("\nlingot " VERSION ", (c) 2006\n"
 			"\n"
-			"Ibán Cereijo Graña <ibancg@gmail.com>\n"
-			"Jairo Chapela Martínez <jairochapela@gmail.com>\n\n"));
+			"Ibán Cereijo Graña <ibancg AT gmail.com>\n"
+			"Jairo Chapela Martínez <jairochapela AT gmail.com>\n\n"));
 }
 
 void dialog_config_cb(GtkWidget* w, GUI *gui)
