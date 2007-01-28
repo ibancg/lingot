@@ -26,7 +26,7 @@ AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 gdk-2.0])
+PKG_CHECK_MODULES(PACKAGE, [libgnomeui-2.0 gtk+-2.0])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
@@ -52,10 +52,10 @@ dnl Set PACKAGE DATA & DOC DIR
 packagedatadir=share
 packagedocdir=doc/${PACKAGE}
 
-dnl Set PACKAGE DIRS in config.h.
-packagepixmapsdir=${packagedatadir}/pixmaps
-packagehelpdir=${packagedatadir}/help
-packagemenudir=${packagedatadir}
+dnl Set PACKAGE DIRs in config.h.
+packagepixmapsdir=share/pixmaps/${PACKAGE}
+packagehelpdir=share/gnome/help/${PACKAGE}
+packagemenudir=share/gnome/apps
 
 dnl Subst PACKAGE_DATA_DIR.
 NO_PREFIX_PACKAGE_DATA_DIR="${packagedatadir}"
@@ -97,6 +97,7 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 AC_OUTPUT([
 Makefile
 po/Makefile.in
-src/Makefile
+pixmaps/Makefile
+lingot.desktop
 ])
 
