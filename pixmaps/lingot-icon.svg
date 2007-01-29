@@ -15,8 +15,8 @@
    sodipodi:version="0.32"
    inkscape:version="0.44.1"
    version="1.0"
-   sodipodi:docbase="/home/home/Matthew"
-   sodipodi:docname="lingo_logo_01.svg"
+   sodipodi:docbase="/home/home/Matthew/mycustomicons"
+   sodipodi:docname="lingot_logo_01.svg"
    inkscape:export-filename="/usr/share/icons/mycustom/lingot_logo_03.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -313,7 +313,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="3.671875"
      inkscape:cx="106.13907"
-     inkscape:cy="68.113739"
+     inkscape:cy="57.220122"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      width="128px"
@@ -354,7 +354,7 @@
        height="120"
        width="120"
        sodipodi:absref="/home/home/Matthew/lingotshot.png"
-       xlink:href="lingotshot.png" />
+       xlink:href="/home/home/Matthew/lingotshot.png" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -362,7 +362,7 @@
      inkscape:label="work"
      style="display:inline">
     <rect
-       style="opacity:1;fill:url(#linearGradient1943);fill-opacity:1.0;fill-rule:nonzero;stroke:#89725b;stroke-width:1.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:url(#linearGradient1943);fill-opacity:1;fill-rule:nonzero;stroke:#89725b;stroke-width:1.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3752"
        width="126.44514"
        height="126.44513"
@@ -377,21 +377,8 @@
        inkscape:label="Layer 1"
        id="g7584"
        transform="matrix(0.481228,-0.139974,0.139974,0.481228,11.97751,80.80982)" />
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot11399"
-       style="font-size:24px;text-align:center;text-anchor:middle;fill:#202912;fill-opacity:1;stroke:#89725b;stroke-width:1.0001018;stroke-miterlimit:3.30000019;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       transform="matrix(1.404156,0,0,1.002164,-28.62251,-9.05971)"><flowRegion
-         id="flowRegion11401"><rect
-           id="rect11403"
-           width="110.02554"
-           height="36.493618"
-           x="11.710638"
-           y="90.9617"
-           style="font-size:24px;text-align:center;text-anchor:middle;fill:#202912;fill-opacity:1;stroke:#89725b;stroke-width:1.0001018;stroke-miterlimit:3.30000019;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" /></flowRegion><flowPara
-         id="flowPara11405"
-         style="font-size:32px;fill:#202912;fill-opacity:1;stroke:#89725b;stroke-width:1.0001018;stroke-miterlimit:3.30000019;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;font-family:handfont">Lingo</flowPara></flowRoot>    <path
-       style="opacity:1;fill:url(#linearGradient2834);fill-opacity:1.0;fill-rule:nonzero;stroke:#89725b;stroke-width:2.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+    <path
+       style="opacity:1;fill:url(#linearGradient2834);fill-opacity:1;fill-rule:nonzero;stroke:#89725b;stroke-width:2.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 62.567397,18.002202 C 39.685968,18.478076 17.592826,29.62951 5.3205899,49.228111 L 45.662685,70.67941 C 51.519968,61.374457 64.490685,58.164436 74.60126,63.546589 C 77.961977,65.335598 80.392967,67.588069 82.337315,70.67941 L 122.67941,49.228111 C 116.44589,39.273266 108.6635,32.097676 97.86673,26.350245 C 86.732561,20.423205 74.552907,17.752934 62.567397,18.002202 z "
        id="path3722"
        inkscape:export-filename="/usr/share/icons/mycustom/lingot_logo_01.png"
@@ -409,7 +396,7 @@
            id="path9681"
            d="M 69,2.3125 C 64.818046,9.0354121 63.837632,17.88811 60.846437,25.398373 C 56.866375,37.984332 52.886312,50.570291 48.90625,63.15625 C 37.906654,50.659421 14.276585,58.407662 12.906446,75.114782 C 9.9696307,90.804562 28.317212,105.00207 42.8125,97.8125 C 56.486903,90.62452 56.8611,73.186414 61.794879,60.315804 C 65.363253,48.491786 68.931626,36.667768 72.5,24.84375 C 76.159103,34.410661 81.361443,47.872458 71.683314,55.640247 C 65.645234,58.489746 67.397967,69.674371 74.90625,67.375 C 88.046615,61.916344 92.919197,43.969073 86.961304,31.514799 C 82.542379,22.221655 76.949778,13.347625 71.740915,4.4320634 C 70.978304,3.7491674 70.475192,1.4019212 69,2.3125 z " />
         <path
-           style="fill:url(#linearGradient10460);fill-opacity:1.0;stroke:#89725b;stroke-width:3.2985688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:url(#linearGradient10460);fill-opacity:1;stroke:#89725b;stroke-width:3.29856873;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            sodipodi:nodetypes="cccccccccccccccccc"
            id="path1291"
            d="M 69.65817,4.1010011 L 67.340851,11.441835 L 49.794969,67.017994 C 45.860887,61.473174 39.22111,58.092783 31.98132,58.843919 C 21.290982,59.953052 13.516429,69.526816 14.625634,80.217842 C 15.734838,90.908865 25.309219,98.682662 35.999557,97.573528 C 44.42823,96.699045 50.9595,90.523322 52.838415,82.725282 L 72.209318,18.670635 C 73.9001,21.632201 75.888741,28.515219 77.254417,32.499965 C 78.883694,37.253837 79.783359,42.295942 79.107648,46.728433 C 78.431938,51.160925 76.440635,55.062209 71.560942,58.476204 C 70.258639,59.236545 69.497554,60.662981 69.58767,62.168302 C 69.677782,63.673625 70.601677,64.995867 71.985389,65.595412 C 73.3691,66.194956 74.974497,65.971559 76.134407,65.007858 C 82.654666,60.446071 86.038829,54.223268 86.994807,47.952286 C 87.950784,41.681304 87.369037,35.385905 84.781691,30.887206 C 79.721848,22.996745 76.581231,16.662142 73.875164,12.147822 C 72.627633,9.449142 71.063835,6.7832748 69.65817,4.1010011 z " />
@@ -430,5 +417,28 @@
            d="M 71.542131,16.852147 C 71.542131,16.852147 93.958665,50.715421 78.060414,52.782194 C 81.717011,48.489666 81.875994,36.248013 71.542131,16.852147 z " />
       </g>
     </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="text"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:26.82160568px;text-align:center;text-anchor:middle;fill:#202912;fill-opacity:1;stroke:#89725b;stroke-width:1.11768055;stroke-miterlimit:3.30000019;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;display:inline"
+       x="58.604691"
+       y="124.63859"
+       id="text2053"
+       transform="scale(1.112561,0.898827)"><tspan
+         sodipodi:role="line"
+         id="tspan2055"
+         style="stroke-width:1.11768055"
+         x="58.604689"
+         y="124.63859"><tspan
+           x="58.604691"
+           y="124.63859"
+           style="font-size:35.76213837px;stroke-width:1.11768055;stroke-dashoffset:0;font-family:handfont"
+           id="tspan2057">Lingot</tspan></tspan></text>
   </g>
 </svg>
