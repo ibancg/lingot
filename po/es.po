@@ -1,0 +1,133 @@
+# translation of lingot.
+# Copyright (C) 2007 THE lingot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the lingot package.
+# <>, 2007.
+# , fuzzy
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: lingot 0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-02-26 02:00+0100\n"
+"PO-Revision-Date: 2007-02-26 02:29+0100\n"
+"Last-Translator: Jairo Chapela Martínez <jairochapela@gmail.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/dialog_config.cc:119
+msgid "lingot configuration"
+msgstr "configuración de lingot"
+
+#: ../src/dialog_config.cc:129
+msgid "General parameters"
+msgstr "Parámetros básicos"
+
+#: ../src/dialog_config.cc:150
+msgid "Calculation rate"
+msgstr "Tasa de cálculo"
+
+#: ../src/dialog_config.cc:154 ../src/dialog_config.cc:172
+#: ../src/dialog_config.cc:270 ../src/dialog_config.cc:317
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/dialog_config.cc:168
+msgid "Visualization rate"
+msgstr "Tasa de visualización"
+
+#: ../src/dialog_config.cc:196
+msgid "FFT size"
+msgstr "Tamaño de FFT"
+
+#: ../src/dialog_config.cc:200 ../src/dialog_config.cc:374
+#: ../src/dialog_config.cc:417
+msgid "samples"
+msgstr "muestras"
+
+#: ../src/dialog_config.cc:216
+msgid "Noise threshold"
+msgstr "Umbral de ruido"
+
+#: ../src/dialog_config.cc:218 ../src/dialog_config.cc:438
+msgid "dB"
+msgstr "dB"
+
+#: ../src/dialog_config.cc:267
+msgid "Sample rate"
+msgstr "Tasa de muestreo"
+
+#: ../src/dialog_config.cc:276
+msgid "Advanced parameters"
+msgstr "Parámetros avanzados"
+
+#: ../src/dialog_config.cc:300
+msgid " A (440 Hz) + "
+msgstr "·A·(440·Hz)·+·"
+
+#: ../src/dialog_config.cc:314
+msgid "Root frequency"
+msgstr "Frecuencia de base"
+
+#: ../src/dialog_config.cc:333
+msgid "Temporal window"
+msgstr "Ventana temporal"
+
+#: ../src/dialog_config.cc:335
+msgid "seconds"
+msgstr "segundos"
+
+#: ../src/dialog_config.cc:353
+#, fuzzy
+msgid "DFT number"
+msgstr "Número de DFT"
+
+#: ../src/dialog_config.cc:357
+msgid "DFTs"
+msgstr "DFT"
+
+#: ../src/dialog_config.cc:372
+msgid "DFT size"
+msgstr "Tamaño de DFT"
+
+#: ../src/dialog_config.cc:392
+msgid "Peak number"
+msgstr "Número de picos"
+
+#: ../src/dialog_config.cc:396
+msgid "peaks"
+msgstr "picos"
+
+#: ../src/dialog_config.cc:412
+#, fuzzy
+msgid "Peak order"
+msgstr "Orden de los picos"
+
+#: ../src/dialog_config.cc:434
+msgid "Rejection peak relation"
+msgstr "Relación de rechazo de picos"
+
+#: ../src/dialog_config.cc:448 ../src/quick_message.cc:42
+msgid "Ok"
+msgstr "Aceptar"
+
+#: ../src/dialog_config.cc:449
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../src/dialog_config.cc:450
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ../src/dialog_config.cc:451
+msgid "Default config"
+msgstr "Config. por defecto"
+
+#: ../src/dialog_config.cc:501
+#, c-format
+msgid "Temporal buffer is smaller than FFT size. It has been increased to 0.3f "
+"seconds\n"
+msgstr ""

@@ -1,6 +1,5 @@
+
 [Desktop Entry]
-Version=1.0
-Encoding=UTF-8
 Name=lingot Version 0.7
 Comment=lingot Version 0.7
 Exec=lingot
@@ -8,4 +7,4 @@ Icon=/usr/local/share/pixmaps/lingot/lingot-icon.svg
 Terminal=false
 MultipleArgs=false
 Type=Application
-GenericName[es_ES]=
+
