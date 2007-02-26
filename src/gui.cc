@@ -36,6 +36,8 @@
 #include "quick_message.h"
 #include "gauge.h"
 
+#include "../config.h"
+
 #include "background.xpm"
 
 void callbackRedraw(GtkWidget* w, GdkEventExpose *e, void *data)
@@ -52,10 +54,10 @@ void callbackDestroy(GtkWidget* w, GUI* gui)
 void callbackAbout(GtkWidget* w, void *data)
 {
 	quick_message(gettext("about lingot"), 
-		gettext("\nlingot " VERSION ", (c) 2006\n"
+			"\nlingot " VERSION ", (c) 2007\n"
 			"\n"
 			"Ibán Cereijo Graña <ibancg AT gmail.com>\n"
-			"Jairo Chapela Martínez <jairochapela AT gmail.com>\n\n"));
+			"Jairo Chapela Martínez <jairochapela AT gmail.com>\n\n");
 }
 
 void dialog_config_cb(GtkWidget* w, GUI *gui)

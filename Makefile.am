@@ -20,6 +20,8 @@ EXTRA_DIST = $(lingotdoc_DATA)
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
 gnomemenu_DATA = lingot.desktop
 
+
+
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:
 	for specfile in *.spec; do \

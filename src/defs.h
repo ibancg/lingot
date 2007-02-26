@@ -50,11 +50,12 @@ extern char CONFIG_FILE_NAME[];
 #include <libintl.h>
 #include <locale.h>
 #include <langinfo.h>
+#include "../config.h"
 
 #define PACKAGE "lingot"
-#define LOCALEDIR "."
+#define LOCALEDIR PACKAGE_LOCALE_DIR
 #define _(x) gettext(x)
 
-#define VERSION "0.6.3"
+//#define VERSION "0.6.3"
 
 #endif
