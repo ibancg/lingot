@@ -30,13 +30,15 @@
 #include "defs.h"
 
 #include "iir.h"
-#include "gui.h"
 #include "config.h"
+#include "gui.h"
 #include "dialog_config.h"
 #include "quick_message.h"
 #include "gauge.h"
 
-#include "../config.h"
+//#include "../config.h"
+
+#define _(x) gettext(x)
 
 #include "background.xpm"
 
@@ -53,7 +55,7 @@ void callbackDestroy(GtkWidget* w, GUI* gui)
 
 void callbackAbout(GtkWidget* w, void *data)
 {
-	quick_message(gettext("about lingot"), 
+	quick_message(_("about lingot"), 
 			"\nlingot " VERSION ", (c) 2007\n"
 			"\n"
 			"Ibán Cereijo Graña <ibancg AT gmail.com>\n"
@@ -231,8 +233,8 @@ GUI::GUI(int argc, char *argv[])
   gtk_widget_show( menu_bar );
   gtk_box_pack_start_defaults(GTK_BOX(vb), menu_bar);
 
-  GtkWidget* tuner_item = gtk_menu_item_new_with_label(gettext("Tuner"));
-  GtkWidget* help_item  = gtk_menu_item_new_with_label(gettext("Help"));
+  GtkWidget* tuner_item = gtk_menu_item_new_with_label(_("Tuner"));
+  GtkWidget* help_item  = gtk_menu_item_new_with_label(_("Help"));
   gtk_menu_item_right_justify( GTK_MENU_ITEM(help_item));
   
   gtk_menu_item_set_submenu( GTK_MENU_ITEM(tuner_item), tuner_menu );
