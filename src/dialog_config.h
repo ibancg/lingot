@@ -2,7 +2,7 @@
 /*
   lingot, a musical instrument tuner.
 
-  Copyright (C) 2004, 2005  Ibán Cereijo Graña, Jairo Chapela Martínez.
+  Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
 
   This file is part of lingot.
 
@@ -32,7 +32,6 @@ class DialogConfig {
 
 private:
 
-  GtkWidget*	win; // window
 
 	// widgets that contains configuration information.
   GtkWidget*	spin_calculation_rate;
@@ -59,6 +58,8 @@ private:
 
   Config*			conf;     // provisional configuration.
   Config*			conf_old; // restoration point for cancel.
+
+  GtkWidget*	win; // window
 
   GUI*				gui;
 

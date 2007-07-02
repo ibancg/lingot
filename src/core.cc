@@ -2,7 +2,7 @@
 /*
   lingot, a musical instrument tuner.
 
-  Copyright (C) 2004, 2005  Ibán Cereijo Graña, Jairo Chapela Martínez.
+  Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
 
   This file is part of lingot.
 
@@ -243,7 +243,7 @@ void Core::process()
       
   // truncated 2nd derivative esteem, to enhance peaks
   diff2_spd_fft[0] = 0.0;
-  for (i = 1; i < conf->FFT_SIZE - 1; i++) {
+  for (i = 1; i < (conf->FFT_SIZE >> 1) - 1; i++) {
     diff2_spd_fft[i] = 2.0*spd_fft[i] - spd_fft[i - 1] - spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
     if (diff2_spd_fft[i] < 0.0) diff2_spd_fft[i] = 0.0; // truncation
   }
@@ -332,14 +332,6 @@ void Core::stop() {
 void Core::run() {
 
   while (running) {
-
-    // look for a pending configuration.
-/*    if (new_conf_pending) {
-      destroy();
-      conf = new_conf;
-      create();
-    }*/
-
 	  process(); // process new data block.
   }
 }

@@ -3,3 +3,24 @@
 	* Makefile.am (ACLOCAL_AMFLAGS): New variable.
 	(EXTRA_DIST): Add config.rpath, m4/ChangeLog.
 
+0.7.3
+-----
+
+* Fixed two SIGSEGV bugs
+* Using GtkAboutDialog to show about info
+* Fixed size of the 'Note' frame on main window
+* Removed some gtk deprecated callings
+* Config dialog made more "GTK-compliant"
+
+0.7.1
+-----
+
+* Files reorganized to a more "GNU-like" structure.
+* Added multilingual support
+
+
+
+0.6.x
+-----
+
+* Start point.

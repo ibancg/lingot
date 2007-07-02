@@ -2,7 +2,7 @@
 /*
   lingot, a musical instrument tuner.
 
-  Copyright (C) 2004, 2005  IbÃ¡n Cereijo GraÃ±a, Jairo Chapela MartÃ­nez.
+  Copyright (C) 2004-2007  IbÃ¡n Cereijo GraÃ±a, Jairo Chapela MartÃ­nez.
 
   This file is part of lingot.
 
@@ -33,7 +33,6 @@
 #include "config.h"
 #include "gui.h"
 #include "dialog_config.h"
-#include "quick_message.h"
 #include "gauge.h"
 
 //#include "../config.h"
@@ -41,6 +40,7 @@
 #define _(x) gettext(x)
 
 #include "background.xpm"
+#include "lingot-icon.xpm"
 
 void callbackRedraw(GtkWidget* w, GdkEventExpose *e, void *data)
 {
@@ -55,21 +55,35 @@ void callbackDestroy(GtkWidget* w, GUI* gui)
 
 void callbackAbout(GtkWidget* w, void *data)
 {
-	quick_message(_("about lingot"), 
-			"\nlingot " VERSION ", (c) 2007\n"
-			"\n"
-			"Ibán Cereijo Graña <ibancg AT gmail.com>\n"
-			"Jairo Chapela Martínez <jairochapela AT gmail.com>\n\n");
+	GtkWidget* about = gtk_about_dialog_new();
+	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(about), "Lingot");
+	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about), VERSION);
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(about), "http://lingot.nongnu.org/");
+	
+	const gchar** authors = new const gchar*[3];
+	authors[0] = "Ibán Cereijo Graña <ibancg@gmail.com>";
+	authors[1] = "Jairo Chapela Martínez <jairochapela@gmail.com>";
+	authors[2] = NULL;
+	const gchar** artists = new const gchar*[2];
+	artists[0] = "Matthew Blissett (Logo design)";
+	artists[1] = NULL;
+	gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about), authors);
+	gtk_about_dialog_set_artists(GTK_ABOUT_DIALOG(about), artists);
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(about), "(c) Copyright 2004-2007\nIbán Cereijo Graña <ibancg AT gmail.com>\nJairo Chapela Martínez <jairochapela AT gmail.com>");
+	GdkPixbuf* icon = gdk_pixbuf_new_from_xpm_data(lingotlogo);
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about), icon);
+	//gtk_show_about_dialog(GTK_WINDOW(w), "Lingot", NULL);
+  gtk_dialog_run (GTK_DIALOG (about));
+	gtk_widget_destroy (about);
 }
 
 void dialog_config_cb(GtkWidget* w, GUI *gui)
 {
-  if (gui->dialog_config) {
-    gui->dialog_config->close();
-    delete gui->dialog_config;
+  if (!gui->dialog_config) {
+	  gui->dialog_config = new DialogConfig(gui);	  
   }
   
-  gui->dialog_config = new DialogConfig(gui);
+  //gtk_widget_activate(gui->dialog_config->win);
 }
 
 
@@ -160,44 +174,27 @@ GUI::GUI(int argc, char *argv[])
 
 
   // creates the window
-  GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-  gtk_window_set_title (GTK_WINDOW (win), gettext("lingot"));
+  gtk_window_set_title(GTK_WINDOW (win), _("lingot"));
 
   gtk_container_set_border_width(GTK_CONTAINER(win), 6);
 
   // fixed size
-  gtk_window_set_policy(GTK_WINDOW(win), FALSE, TRUE, FALSE);  
+	gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
 
   // tab organization by following container
   GtkWidget* vb = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(win), vb);
 
-
-  ////////////////////////////////////////////////////
-  /*  GtkItemFactory *item_factory;
-      GtkAccelGroup *accel_group;
-      gint nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);
-      accel_group = gtk_accel_group_new();
-      item_factory = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<main>", accel_group);
-      gtk_item_factory_create_items(item_factory, nmenu_items, menu_items, NULL);
-      gtk_window_add_accel_group(GTK_WINDOW(win), accel_group);
-      menu = gtk_item_factory_get_widget(item_factory, "<main>");
-      gtk_menu_bar_set_shadow_type(GTK_MENU_BAR(menu), GTK_SHADOW_NONE);
-      // lo primero que metemos en la caja vertical, es la barra de menÃº
-      gtk_box_pack_start_defaults(GTK_BOX(vb), menu);*/
-
-  /* menu */
-
   GtkWidget* tuner_menu = gtk_menu_new();
   GtkWidget* help_menu = gtk_menu_new();
-
   
   /* menu elements */
-  GtkWidget* options_item = gtk_menu_item_new_with_label(gettext("Options"));
-  GtkWidget* quit_item = gtk_menu_item_new_with_label(gettext("Quit"));
+  GtkWidget* options_item = gtk_menu_item_new_with_label(_("Options"));
+  GtkWidget* quit_item = gtk_menu_item_new_with_label(_("Quit"));
 
-  GtkWidget* about_item = gtk_menu_item_new_with_label(gettext("About"));
+  GtkWidget* about_item = gtk_menu_item_new_with_label(_("About"));
 
 
   /* addition */
@@ -254,18 +251,18 @@ GUI::GUI(int argc, char *argv[])
   gtk_box_pack_start_defaults(GTK_BOX(vb), hb);
   
   // gauge frame
-  GtkWidget* frame1 = gtk_frame_new(gettext("Deviation"));
+  GtkWidget* frame1 = gtk_frame_new(_("Deviation"));
   //  gtk_fixed_put(GTK_FIXED(fix), frame1, 0, 0);
   gtk_box_pack_start_defaults(GTK_BOX(hb), frame1);
 
   
   // note frame
-  GtkWidget* frame3 = gtk_frame_new(gettext("Note"));
-  //   gtk_fixed_put(GTK_FIXED(fix), frame3, 164, 0);
-  gtk_box_pack_start_defaults(GTK_BOX(hb), frame3);
+  GtkWidget* frame3 = gtk_frame_new(_("Note"));
+  //gtk_fixed_put(GTK_BOX(hb), frame3, 164, 0);
+  gtk_box_pack_start(GTK_BOX(hb), frame3, TRUE, TRUE, 1);
 
   // spectrum frame at bottom
-  GtkWidget* frame4 = gtk_frame_new(gettext("Spectrum"));
+  GtkWidget* frame4 = gtk_frame_new(_("Spectrum"));
   gtk_box_pack_end_defaults(GTK_BOX(vb), frame4);
   
   // for gauge drawing
@@ -280,23 +277,23 @@ GUI::GUI(int argc, char *argv[])
   
   // for note and frequency displaying
   GtkWidget* vbinfo = gtk_vbox_new(FALSE, 0);
-  //   gtk_widget_set_usize(GTK_WIDEST(vbinfo), 80, 100);
+  gtk_widget_set_size_request(vbinfo, 90, 100);
   gtk_container_add(GTK_CONTAINER(frame3), vbinfo);
 
-  freq_label = gtk_label_new(gettext("freq"));
+  freq_label = gtk_label_new(_("freq"));
   gtk_box_pack_start_defaults(GTK_BOX(vbinfo), freq_label);
 
-  error_label = gtk_label_new(gettext("err"));
+  error_label = gtk_label_new(_("err"));
   gtk_box_pack_end_defaults(GTK_BOX(vbinfo), error_label);
 
-  note_label = gtk_label_new(gettext("nota"));
+  note_label = gtk_label_new(_("nota"));
   gtk_widget_set_name(note_label, "label_nota");
   gtk_box_pack_end_defaults(GTK_BOX(vbinfo), note_label);
 
   // show all
   gtk_widget_show_all(win);
 
-  // two pixmaps for double buffer un gauge and spectrum drawing 
+  // two pixmaps for double buffer in gauge and spectrum drawing 
   // (virtual screen)
   gdk_pixmap_new(gauge_area->window, 160, 100, -1);
   pix_spectrum = gdk_pixmap_new(gauge_area->window, 256, 64, -1);

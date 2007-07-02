@@ -24,8 +24,6 @@ src/gui.cc
 src/gui.h
 src/iir.cc
 src/iir.h
-src/quick_message.cc
-src/quick_message.h
 src/signal.cc
 src/tuner.cc
 

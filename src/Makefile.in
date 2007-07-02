@@ -52,7 +52,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_lingot_OBJECTS = FFT.$(OBJEXT) audio.$(OBJEXT) config.$(OBJEXT) \
 	core.$(OBJEXT) dialog_config.$(OBJEXT) gauge.$(OBJEXT) \
-	gui.$(OBJEXT) iir.$(OBJEXT) quick_message.$(OBJEXT) \
+	gui.$(OBJEXT) iir.$(OBJEXT)  \
 	signal.$(OBJEXT) tuner.$(OBJEXT)
 lingot_OBJECTS = $(am_lingot_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -237,8 +237,6 @@ lingot_SOURCES = \
 	gui.h\
 	iir.cc\
 	iir.h\
-	quick_message.cc\
-	quick_message.h\
 	signal.cc\
 	tuner.cc
 
@@ -326,7 +324,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gauge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iir.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quick_message.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tuner.Po@am__quote@
 
