@@ -33,8 +33,6 @@ lingot_SOURCES = \
 	gui.h\
 	iir.cc\
 	iir.h\
-	quick_message.cc\
-	quick_message.h\
 	signal.cc\
 	tuner.cc
 
