@@ -1,198 +1,177 @@
-# translation of lingot.
-# Copyright (C) 2007 THE lingot'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the lingot package.
-# <>, 2007.
-# , fuzzy
-# 
-# 
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lingot 0.7\n"
+"Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-26 02:31+0100\n"
-"PO-Revision-Date: 2007-02-26 02:29+0100\n"
-"Last-Translator: Jairo Chapela Martínez <jairochapela@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"POT-Creation-Date: 2007-08-23 19:12+0200\n"
+"PO-Revision-Date: 2007-08-23 17:46+0200\n"
+"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
+"Language-Team: Spanish <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/dialog_config.cc:255
-msgid " / "
-msgstr " / "
-
-#: src/dialog_config.cc:300
-msgid " A (440 Hz) + "
-msgstr " A (440·Hz) + "
-
-#: src/gui.cc:198
-msgid "About"
-msgstr "Acerca de"
-
-#. --------------------------------------------------------------------------
-#: src/dialog_config.cc:276
-msgid "Advanced parameters"
-msgstr "Parámetros avanzados"
-
-#: src/dialog_config.cc:450
-msgid "Apply"
-msgstr "Aplicar"
-
-#: src/dialog_config.cc:150
-msgid "Calculation rate"
-msgstr "Tasa de cálculo"
-
-#: src/dialog_config.cc:449
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/dialog_config.cc:353
-#, fuzzy
-msgid "DFT number"
-msgstr "Número de DFT"
-
-#: src/dialog_config.cc:372
-msgid "DFT size"
-msgstr "Tamaño de DFT"
-
-#: src/dialog_config.cc:357
-msgid "DFTs"
-msgstr "DFT"
-
-#: src/dialog_config.cc:451
-msgid "Default config"
-msgstr "Config. por defecto"
-
-#. gauge frame
-#: src/gui.cc:255
-msgid "Deviation"
-msgstr ""
-
-#: src/dialog_config.cc:196
-msgid "FFT size"
-msgstr "Tamaño de FFT"
-
-#: src/dialog_config.cc:129
-msgid "General parameters"
-msgstr "Parámetros básicos"
-
-#: src/gui.cc:235
-msgid "Help"
-msgstr "Ayuda"
-
-#: src/dialog_config.cc:154 src/dialog_config.cc:172 src/dialog_config.cc:270
-#: src/dialog_config.cc:317
-msgid "Hz"
-msgstr "Hz"
-
-#: src/dialog_config.cc:216
-msgid "Noise threshold"
-msgstr "Umbral de ruido"
-
-#. note frame
-#: src/gui.cc:261
-msgid "Note"
-msgstr "Nota"
-
-#: src/dialog_config.cc:448 src/quick_message.cc:42
-msgid "Ok"
-msgstr "Aceptar"
-
-#. menu elements
-#: src/gui.cc:195
-msgid "Options"
-msgstr "Opciones"
-
-#: src/dialog_config.cc:392
-msgid "Peak number"
-msgstr "Número de picos"
-
-#: src/dialog_config.cc:412
-#, fuzzy
-msgid "Peak order"
-msgstr "Orden de los picos"
-
-#: src/gui.cc:196
-msgid "Quit"
-msgstr "Salir"
-
-#: src/dialog_config.cc:434
-msgid "Rejection peak relation"
-msgstr "Relación de rechazo de picos"
-
-#: src/dialog_config.cc:314
-msgid "Root frequency"
-msgstr "Frecuencia de base"
-
-#: src/dialog_config.cc:267
-msgid "Sample rate"
-msgstr "Tasa de muestreo"
-
-#. spectrum frame at bottom
-#: src/gui.cc:266
-msgid "Spectrum"
-msgstr "Espectro"
-
-#: src/dialog_config.cc:501
-#, c-format
-msgid ""
-"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
-"seconds\n"
-msgstr "Buffer temporal más pequeño que tamaño de FFT. Incrementado a %0.3f segundos\n"
-
-#: src/dialog_config.cc:333
-msgid "Temporal window"
-msgstr "Ventana temporal"
-
-#: src/gui.cc:234
-msgid "Tuner"
-msgstr "Afinador"
-
-#: src/dialog_config.cc:168
-msgid "Visualization rate"
-msgstr "Tasa de visualización"
-
-#: src/gui.cc:56
-msgid "about lingot"
-msgstr "acerca de lingot"
-
-#: src/dialog_config.cc:218 src/dialog_config.cc:438
-msgid "dB"
-msgstr "dB"
-
-#: src/gui.cc:287
-msgid "err"
-msgstr "err"
-
-#: src/gui.cc:284
-msgid "freq"
-msgstr "frec"
-
-#: src/gui.cc:163
-msgid "lingot"
-msgstr "lingot"
-
-#: src/dialog_config.cc:119
+#: ../src/dialog_config.cc:123
 msgid "lingot configuration"
 msgstr "configuración de lingot"
 
-#: src/gui.cc:290
-msgid "nota"
-msgstr "nota"
+#: ../src/dialog_config.cc:134
+msgid "General parameters"
+msgstr "Parámetros generales"
 
-#: src/dialog_config.cc:396
-msgid "peaks"
-msgstr "picos"
+#: ../src/dialog_config.cc:153
+msgid "Calculation rate"
+msgstr "Tasa de cálculo"
 
-#: src/dialog_config.cc:200 src/dialog_config.cc:374 src/dialog_config.cc:417
+#: ../src/dialog_config.cc:157 ../src/dialog_config.cc:172
+#: ../src/dialog_config.cc:251 ../src/dialog_config.cc:297
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/dialog_config.cc:168
+msgid "Visualization rate"
+msgstr "Tasa de visualización"
+
+#: ../src/dialog_config.cc:188
+msgid "FFT size"
+msgstr "Tamaño de FFT"
+
+#: ../src/dialog_config.cc:192 ../src/dialog_config.cc:343
+#: ../src/dialog_config.cc:378
 msgid "samples"
 msgstr "muestras"
 
-#: src/dialog_config.cc:335
+#: ../src/dialog_config.cc:205
+msgid "Noise threshold"
+msgstr "Umbral de ruido"
+
+#: ../src/dialog_config.cc:207 ../src/dialog_config.cc:396
+msgid "dB"
+msgstr "dB"
+
+#: ../src/dialog_config.cc:248
+msgid "Sample rate"
+msgstr "Tasa de muestreo"
+
+#. --------------------------------------------------------------------------
+#: ../src/dialog_config.cc:257
+msgid "Advanced parameters"
+msgstr "Parámetros avanzados"
+
+#: ../src/dialog_config.cc:280
+msgid " A (440 Hz) + "
+msgstr " A (440 Hz) + "
+
+#: ../src/dialog_config.cc:294
+msgid "Root frequency"
+msgstr "Frecuencia base"
+
+#: ../src/dialog_config.cc:310
+msgid "Temporal window"
+msgstr "Ventana temporal"
+
+#: ../src/dialog_config.cc:312
 msgid "seconds"
 msgstr "segundos"
 
-#: src/dialog_config.cc:503
-msgid "tuner warning"
-msgstr "advertencia"
+#: ../src/dialog_config.cc:326
+msgid "DFT number"
+msgstr "Nº de DFTs"
+
+#: ../src/dialog_config.cc:330
+msgid "DFTs"
+msgstr "DFTs"
+
+#: ../src/dialog_config.cc:341
+msgid "DFT size"
+msgstr "Tamaño de DFT"
+
+#: ../src/dialog_config.cc:357
+msgid "Peak number"
+msgstr "Nº de picos"
+
+#: ../src/dialog_config.cc:361
+msgid "peaks"
+msgstr "picos"
+
+#: ../src/dialog_config.cc:373
+msgid "Peak order"
+msgstr "Orden de pico"
+
+#: ../src/dialog_config.cc:392
+msgid "Rejection peak relation"
+msgstr "Relación rechazo picos"
+
+#: ../src/dialog_config.cc:405
+msgid "Default config"
+msgstr "Config. defecto"
+
+#: ../src/dialog_config.cc:468
+#, c-format
+msgid ""
+"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
+"%0.3f segundos"
+
+#: ../src/gui.cc:59
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Afinador de instrumentos preciso y fácil de usar"
+
+#: ../src/gui.cc:169
+msgid "lingot"
+msgstr "lingot"
+
+#. menu elements
+#: ../src/gui.cc:184
+msgid "Options"
+msgstr "Opciones"
+
+#: ../src/gui.cc:185
+msgid "Quit"
+msgstr "Salir"
+
+#: ../src/gui.cc:187
+msgid "About"
+msgstr "Acerca de"
+
+#: ../src/gui.cc:219
+msgid "Tuner"
+msgstr "Afinador"
+
+#: ../src/gui.cc:220
+msgid "Help"
+msgstr "Ayuda"
+
+#. gauge frame
+#: ../src/gui.cc:240
+msgid "Deviation"
+msgstr "Desviación"
+
+#. note frame
+#: ../src/gui.cc:245
+msgid "Note"
+msgstr "Nota"
+
+#. spectrum frame at bottom
+#: ../src/gui.cc:250
+msgid "Spectrum"
+msgstr "Espectro"
+
+#: ../src/gui.cc:268
+msgid "freq"
+msgstr "frec"
+
+#: ../src/gui.cc:271
+msgid "err"
+msgstr "err"
+
+#: ../src/gui.cc:274
+msgid "note"
+msgstr "nota"

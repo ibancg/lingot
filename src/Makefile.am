@@ -5,7 +5,8 @@
 ## 	Please disable it in the Anjuta project configuration
 
 INCLUDES = \
-	$(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS)\
+	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
 AM_CXXFLAGS =\
 	 -Wall\
@@ -34,7 +35,8 @@ lingot_SOURCES = \
 	iir.cc\
 	iir.h\
 	signal.cc\
-	tuner.cc
+	lingot.cc\
+	lingot-i18n.h
 
 lingot_LDFLAGS = 
 

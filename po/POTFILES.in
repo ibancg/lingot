@@ -25,6 +25,7 @@ src/gui.h
 src/iir.cc
 src/iir.h
 src/signal.cc
-src/tuner.cc
+src/lingot.cc
+src/lingot-i18n.h
 
 

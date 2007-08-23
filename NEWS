@@ -1,0 +1,26 @@
+
+Lingot 0.7.4 (2007-08-23)
+-------------------------
+
+* Fixed UTF-8 charset problems
+
+Lingot 0.7.3
+------------
+
+* Fixed two SIGSEGV bugs
+* Using GtkAboutDialog to show about info
+* Fixed size of the 'Note' frame on main window
+* Removed some gtk deprecated callings
+* Config dialog made more "GTK-compliant"
+
+Lingot 0.7.1
+------------
+
+* Files reorganized to a more "GNU-like" structure.
+* Added multilingual support
+
+Lingot 0.6.x
+------------
+
+* Start point.
+

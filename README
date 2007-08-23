@@ -4,16 +4,14 @@ Written by:
   Ibán Cereijo Graña <ibancg@gmail.com>
   Jairo Chapela Martínez <jairocm@wanadoo.es>
 
-Copyright (C) 2004-2007 Ibán Cereijo Graña, Jairo Chapela martínez,
-		   Graciano Carrillo Pousa.
+Copyright (C) 2004-2007 Ibán Cereijo Graña, Jairo Chapela martínez
 
 Description
 ===========
 
 Lingot is a musical instrument tuner. It's accurate, easy to use, and
 highly configurable. Originally conceived to tune electric guitars,
-its configurability gives it a more general character. (Tuning another
-instruments has not been tested).
+its configurability gives it a more general character.
 
 It looks like an analogic tuner, with a gauge indicating the 
 relative shift to a certain note --found automatically as the closest 
@@ -236,8 +234,8 @@ PEAK_ORDER
 
 DFT_NUMBER (Number of DFTs)
 
-	After the max. peak in the FFT is founded, a certain amount of 
-        localized DFTs in the frecuency domain was done to get close to the
+	After the max. peak in the FFT is found, a certain amount of 
+  localized DFTs in the frecuency domain was done to get close to the
 	note frecuency before to launch a final aproximation that uses
 	a iterative method (Newton-Raphson).
 

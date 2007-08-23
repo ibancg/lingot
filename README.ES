@@ -12,8 +12,7 @@ Descripción
 
 	Lingot es un afinador de instrumentos musicales, preciso, fácil de usar
 y altamente configurable. Originalmente concebido para afinar guitarras eléc-
-tricas, su configurabilidad le da un carácter más general (la afinación de otro
-tipo de instrumentos todavía no ha sido testada).
+tricas, su configurabilidad le da un carácter más general.
 
 	Simula el aspecto de un afinador analógico con una aguja que indica la
 desviación respecto a una nota dada, encontrada automáticamente como la nota 
