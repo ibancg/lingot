@@ -21,28 +21,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef GAUGE_H_
-#define GAUGE_H_
+#ifndef LINGOTI18N_H_
+#define LINGOTI18N_H_
 
-#include "defs.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-class IIR;
+#ifdef ENABLE_NLS
+#undef _
+#    define _(String) (const char*) gettext (String)
+#else
+#    define _(String) (String)
+#endif
 
-/*
- * Implements the dynamic behaviour of the gauge with a digital filter.
- */
-class Gauge {
-
-private:
-	IIR* filter;
-	FLT position;
-
-public:
-	Gauge(FLT initial_position);
-	virtual ~Gauge();
-
-	void compute(FLT sample);
-	FLT getPosition();
-};
-
-#endif /*GAUGE_H_*/
+#endif /*LINGOTI18N_H_*/

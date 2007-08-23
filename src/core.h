@@ -1,25 +1,25 @@
 //-*- C++ -*-
 /*
-  lingot, a musical instrument tuner.
-
-  Copyright (C) 2004-2007  Ib·n Cereijo GraÒa, Jairo Chapela MartÌnez.
-
-  This file is part of lingot.
-
-  lingot is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  lingot is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with lingot; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * lingot, a musical instrument tuner.
+ *
+ * Copyright (C) 2004-2007  Ib√°n Cereijo Gra√±a, Jairo Chapela Mart√≠nez.
+ *
+ * This file is part of lingot.
+ *
+ * lingot is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * lingot is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with lingot; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #ifndef __CORE_H__
 #define __CORE_H__
@@ -46,79 +46,78 @@ class Core {
 public:
 
 	//  -- shared data --
-  FLT           freq;   // analog frequency calculated.
-  FLT           X[256]; // visual portion of FFT.
+	FLT freq; // analog frequency calculated.
+	FLT X[256]; // visual portion of FFT.
 	//  -- shared data --
 
-private:  
+private:
 
 # ifdef LIBSNDOBJ
-  SndRTIO*      A;                       // audio handler.
+	SndRTIO* A; // audio handler.
 # else
-  audio*        A;                       // audio handler.
+	audio* A; // audio handler.
 # endif
 
-  SAMPLE_TYPE*  read_buffer;
-  FLT*          flt_read_buffer;
-  FLT*          temporal_window_buffer; // sample memory.
+	SAMPLE_TYPE* read_buffer;
+	FLT* flt_read_buffer;
+	FLT* temporal_window_buffer; // sample memory.
 
-  // spectral power distribution esteem.
-  FLT*          spd_fft;
-  FLT*          spd_dft;
-  FLT*          diff2_spd_fft;
+	// spectral power distribution esteem.
+	FLT* spd_fft;
+	FLT* spd_dft;
+	FLT* diff2_spd_fft;
 
 # ifdef LIB_FFTW
 	fftw_complex* fftw_in;
-	fftw_complex*	fftw_out; // complex signals in time and freq.
-	fftw_plan     fftwplan;
+	fftw_complex* fftw_out; // complex signals in time and freq.
+	fftw_plan fftwplan;
 # else
-  CPX*          fft_out; // complex signal in freq.
+	CPX* fft_out; // complex signal in freq.
 # endif
 
-  IIR*          antialiasing_filter; // antialiasing filter for decimation.
+	IIR* antialiasing_filter; // antialiasing filter for decimation.
 
-  bool          running;
+	bool running;
 
-  Config*				conf;       // configuration structure
+	Config* conf; // configuration structure
 
 	// pthread-related  member variables
-  pthread_t       thread;
-	pthread_attr_t  attr;
-	
-  //----------------------------------------------------------------
+	pthread_t thread;
+	pthread_attr_t attr;
 
-  void	decimate(FLT* in, FLT* out);
+	//----------------------------------------------------------------
 
-  // read and process data to obtain the frequency.
-  void	process();
-  
-  //----------------------------------------------------------------
+	void decimate(FLT* in, FLT* out);
 
-  // the following methods are implemented in peaks.cc
+	// read and process data to obtain the frequency.
+	void process();
 
-  /* returns noise threshold at a given frequency w. */
-  FLT		noise_threshold(FLT w);
-  
-  bool	peak(FLT* buffer, int index);
-  
-  // returns the maximum index.
-  void	max(FLT *buffer, int N, int* Mi);
-  
-  // returns the index of the peak that carries the fundamental freq.
-  int		fundamentalPeak(FLT *x, FLT* y, int N);
+	//----------------------------------------------------------------
 
+	// the following methods are implemented in peaks.cc
+
+	/* returns noise threshold at a given frequency w. */
+	FLT noise_threshold(FLT w);
+
+	bool peak(FLT* buffer, int index);
+
+	// returns the maximum index.
+	void max(FLT *buffer, int N, int* Mi);
+
+	// returns the index of the peak that carries the fundamental freq.
+	int fundamentalPeak(FLT *x, FLT* y, int N);
 
 public:
 
-  Core(Config*);
-  ~Core();
+	Core(Config*);
+	~Core();
 
 	// start process
 	void start();
-	
+
 	// stop process
 	void stop();
-	
+
 	// process thread
 	void run();
 };

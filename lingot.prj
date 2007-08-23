@@ -28,7 +28,7 @@ anjuta.compatibility.level=1
 project.name=lingot
 project.type=GNOME 2.0
 project.target.type=EXECUTABLE
-project.version=0.7
+project.version=0.7.4
 project.author=Jairo Chapela Martínez
 project.source.target=lingot
 project.has.gettext=1
@@ -41,9 +41,9 @@ project.config.extra.modules.after=
 project.config.blocked=0
 project.config.disable.overwriting=0 0 0 0 0 0 0 0 0 
 
-project.menu.entry=lingot Version 0.7
+project.menu.entry=lingot Version 0.7.4
 project.menu.group=Applications
-project.menu.comment=lingot Version 0.7
+project.menu.comment=lingot Version 0.7.4
 project.menu.icon=lingot-icon.svg
 project.menu.need.terminal=0
 
@@ -91,7 +91,8 @@ module.source.files=\
 	iir.cc\
 	iir.h\
 	signal.cc\
-	tuner.cc
+	lingot.cc\
+	lingot-i18n.h
 
 module.pixmap.name=pixmaps
 module.pixmap.type=

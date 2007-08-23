@@ -1,3 +1,5 @@
 POTFILES
 *.gmo
 Makefile
+stamp-it
+missing

@@ -1,61 +1,60 @@
 //-*- C++ -*-
 /*
-  lingot, a musical instrument tuner.
-
-  Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
-
-  This file is part of lingot.
-
-  lingot is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  lingot is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with lingot; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * lingot, a musical instrument tuner.
+ *
+ * Copyright (C) 2004-2007  IbÃ¡n Cereijo GraÃ±a, Jairo Chapela MartÃ­nez.
+ *
+ * This file is part of lingot.
+ *
+ * lingot is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * lingot is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with lingot; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #ifndef __FILTERS_H__
 #define __FILTERS_H__
 
 /*
-  8 order Chebyshev filters, with wc=0.9/i (normalized respect to
-  Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
-  in order to avoid aliased frequencies near to w=Pi, due to non
-  ideality of the filter.
-
-  The cut frequencies wc=Pi/i, with i=1..20, correspond with the
-  oversampling factor, avoiding aliasing at decimation.
-
-  ¿Why Chebyshev filters?, for a given order, those filters yield
-  abrupt falls than other ones as Butterworth, making the most of
-  the order. Although Chebyshev filters affects more to the phase,
-  it doesn't matter due to the analysis is made on the signal
-  power distribution (only module).
-*/
+ * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
+ * Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
+ * in order to avoid aliased frequencies near to w=Pi, due to non
+ * ideality of the filter.
+ *
+ * The cut frequencies wc=Pi/i, with i=1..20, correspond with the
+ * oversampling factor, avoiding aliasing at decimation.
+ * 
+ * Why Chebyshev filters?, for a given order, those filters yield
+ * abrupt falls than other ones as Butterworth, making the most of
+ * the order. Although Chebyshev filters affects more to the phase,
+ * it doesn't matter due to the analysis is made on the signal
+ * power distribution (only module).
+ */
 
 /*
-  Undefined number of filters, each of one consisting of 2 vectors of 9
-  coefs (order 8).
+ * Undefined number of filters, each of one consisting of 2 vectors of 9
+ * coefs (order 8).
  */
 FLT filtros[][2][9] = {
 
-  {
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }, // a
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }  // b
-  },  
-  {
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, },
-    { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }
-  },
-  {
-    { 1.000000000000000000000000000000, -3.048747378072409919269603051362, 5.938041170694262405049812514335, -7.875101223756617585536332626361, 7.733746866089088456419631256722, -5.632984001373067428630747599527, 2.976789578734021279871058140998, -1.053224419147983148548064491479, 0.199317892114461853170226390830, },
+{ { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, }, // a
+		{	1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,} // b
+	},
+	{
+		{	1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,},
+		{	1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,}
+	},
+	{
+		{	1.000000000000000000000000000000, -3.048747378072409919269603051362, 5.938041170694262405049812514335, -7.875101223756617585536332626361, 7.733746866089088456419631256722, -5.632984001373067428630747599527, 2.976789578734021279871058140998, -1.053224419147983148548064491479, 0.199317892114461853170226390830, },
     { 0.000877085971990654300611822691, 0.007016687775925234404894581530, 0.024558407215744537666068936232, 0.049116814431466870871645369334, 0.061396018039364896878851141082, 0.049116814431463318157966568833, 0.024558407215748978558167436859, 0.007016687775921903735820706061, 0.000877085971991486967880291559, }
   },
   {

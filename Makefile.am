@@ -13,9 +13,21 @@ lingotdoc_DATA = \
 	ChangeLog\
 	INSTALL\
 	NEWS\
-	TODO
+	TODO\
+	THANKS\
+	MAINTAINERS\
+	src/background.xpm\
+	src/lingot-icon.xpm\
+	intltool-extract.in\
+	intltool-merge.in\
+	intltool-update.in
 
 EXTRA_DIST = $(lingotdoc_DATA)
+
+CLEANFILES =\
+	intltool-extract\
+	intltool-merge\
+	intltool-update
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
 gnomemenu_DATA = lingot.desktop
