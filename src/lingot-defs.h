@@ -21,10 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __DEFS_H__
-#define __DEFS_H__
+#ifndef __LINGOT_DEFS_H__
+#define __LINGOT_DEFS_H__
 
 #include <sys/types.h>
+#include "../config.h"
 
 // floating point precission.
 #define FLT                   double
@@ -44,15 +45,5 @@ extern char CONFIG_FILE_NAME[];
 // optionally we can use the following libraries
 //#define LIB_FFTW
 //#define LIBSNDOBJ
-
-/* needed includes for internacionalization */
-#include <libintl.h>
-#include <locale.h>
-#include <langinfo.h>
-#include "../config.h"
-
-#define PACKAGE "lingot"
-#define LOCALEDIR PACKAGE_LOCALE_DIR
-#define _(x) gettext(x)
 
 #endif

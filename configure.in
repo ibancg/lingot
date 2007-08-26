@@ -4,7 +4,7 @@ dnl If you don't want it to overwrite it,
 dnl 	Please disable it in the Anjuta project configuration
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(lingot, 0.7.4)
+AM_INIT_AUTOMAKE(lingot, 0.7.5)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
@@ -13,8 +13,6 @@ AC_PROG_CC
 AM_PROG_CC_STDC
 AC_HEADER_STDC
 
-AC_PROG_CPP
-AC_PROG_CXX
 AC_PROG_INTLTOOL([0.23])
 
 GETTEXT_PACKAGE=lingot

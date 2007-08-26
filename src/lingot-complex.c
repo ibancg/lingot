@@ -21,21 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __AUDIO_H__
-#define __AUDIO_H__
+#include "lingot-complex.h"
 
-// class for audio input handling.
-class audio {
-private:
+void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c)
+  {
+    c->r = a->r + b->r;
+    c->i = a->i + b->i;
+  }
 
-	int dsp; // file handler.
+void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c)
+  {
+    c->r = a->r - b->r;
+    c->i = a->i - b->i;
+  }
 
-public:
+void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c)
+  {
+    c->r = a->r*b->r- a->i*b->i;
+    c->i = a->i*b->r+ a->r*b->i;
+  }
 
-	audio(int channels, int rate, int format, char* fdsp);
-	~audio();
-
-	int read(void* buffer, int size);
-};
-
-#endif

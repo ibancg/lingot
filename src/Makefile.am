@@ -9,33 +9,34 @@ INCLUDES = \
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
 AM_CXXFLAGS =\
-	 -Wall\
-	 -g
+	 -Wall
 
 bin_PROGRAMS = lingot
 
 lingot_SOURCES = \
-	FFT.cc\
-	FFT.h\
-	audio.cc\
-	audio.h\
-	complex.h\
-	config.cc\
-	config.h\
-	core.cc\
-	core.h\
-	defs.h\
-	dialog_config.cc\
-	dialog_config.h\
-	filters.h\
-	gauge.cc\
-	gauge.h\
-	gui.cc\
-	gui.h\
-	iir.cc\
-	iir.h\
-	signal.cc\
-	lingot.cc\
+	lingot-fft.c\
+	lingot-fft.h\
+	lingot-audio.c\
+	lingot-audio.h\
+	lingot-complex.h\
+	lingot-complex.c\
+	lingot-config.c\
+	lingot-config.h\
+	lingot-core.c\
+	lingot-core.h\
+	lingot-defs.h\
+	lingot-config-dialog.c\
+	lingot-config-dialog.h\
+	lingot-filters.h\
+	lingot-gauge.c\
+	lingot-gauge.h\
+	lingot-mainframe.c\
+	lingot-mainframe.h\
+	lingot-filter.c\
+	lingot-filter.h\
+	lingot-signal.c\
+	lingot-signal.h\
+	lingot.c\
 	lingot-i18n.h
 
 lingot_LDFLAGS = 
