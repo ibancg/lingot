@@ -21,28 +21,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef GAUGE_H_
-#define GAUGE_H_
-
-#include "defs.h"
-
-class IIR;
+#ifndef LINGOTSIGNAL_H_
+#define LINGOTSIGNAL_H_
 
 /*
- * Implements the dynamic behaviour of the gauge with a digital filter.
+ peak identification functions.
  */
-class Gauge {
 
-private:
-	IIR* filter;
-	FLT position;
+#include "lingot-defs.h"
+#include "lingot-config.h"
 
-public:
-	Gauge(FLT initial_position);
-	virtual ~Gauge();
+/* returns noise threshold at a given frequency w. */
+FLT lingot_signal_get_noise_threshold(LingotConfig*, FLT w);
 
-	void compute(FLT sample);
-	FLT getPosition();
-};
+int lingot_signal_is_peak(LingotConfig*, FLT* buffer, int index);
 
-#endif /*GAUGE_H_*/
+// returns the maximum index.
+void lingot_signal_get_max(FLT *buffer, int N, int* Mi);
+
+// returns the index of the peak that carries the fundamental freq.
+int lingot_signal_get_fundamental_peak(LingotConfig*, FLT *x, FLT* y, int N);
+
+#endif /*LINGOTSIGNAL_H_*/

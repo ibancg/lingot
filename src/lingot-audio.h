@@ -21,60 +21,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __INTERFAZ_H__
-#define __INTERFAZ_H__
+#ifndef __LINGOT_AUDIO_H__
+#define __LINGOT_AUDIO_H__
 
-#include "defs.h"
-#include "core.h"
+typedef struct _LingotAudio LingotAudio;
 
-#include <gtk/gtk.h>
+struct _LingotAudio
+  {
+    int dsp; // file handler.
+  };
 
-class DialogConfig;
-class Gauge;
-class Config;
+LingotAudio* lingot_audio_new(int channels, int rate, int format, char* fdsp);
+void lingot_audio_destroy(LingotAudio* audio);
+int lingot_audio_read(LingotAudio* audio, void* buffer, int size);
 
-// Window that contains all controls, graphics, etc. of the tuner.
-class GUI {
-
-private:
-
-	// widgets gtk
-	GtkWidget* gauge_area;
-	GtkWidget* spectrum_area;
-	GtkWidget* note_label;
-
-	GtkWidget* freq_label;
-	GtkWidget* error_label;
-
-	GdkPixmap* pix_spectrum;
-	GdkPixmap* pix_stick;
-
-	bool quit;
-	IIR* freq_filter;
-
-	Gauge* gauge;
-
-	Core* core;
-
-public:
-
-	GtkWidget* win;
-
-	DialogConfig* dialog_config;
-	Config* conf;
-
-	GUI(int argc, char *argv[]);
-	~GUI();
-
-	void run();
-
-	void redraw();
-	void putFrequency();
-	void changeConfig(Config*);
-	void drawGauge();
-	void drawSpectrum();
-
-	friend void callbackDestroy(GtkWidget* w, GUI* gui);
-};
-
-#endif //__INTERFAZ_H__
+#endif

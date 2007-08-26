@@ -21,22 +21,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOTI18N_H_
-#define LINGOTI18N_H_
+#ifndef __LINGOT_IIR_H__
+#define __LINGOT_IIR_H__
 
-#include <libintl.h>
-#include <locale.h>
-#include <langinfo.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#include "lingot-defs.h"
+
+/*
+ digital filtering implementation.
+ */
+
+typedef struct _LingotFilter LingotFilter;
+
+struct _LingotFilter
+  {
+
+    FLT* a;
+    FLT* b; // coefs
+    FLT* s; // status
+
+    unsigned int N;
+
+  };
+
+LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a,
+    FLT* b);
+void lingot_filter_destroy(LingotFilter*);
+
+// Digital Filter Implementation II, in & out overlapables. Vector filtering
+void lingot_filter_filter(LingotFilter*, unsigned int n, FLT* in, FLT* out);
+
+// sample filtering
+FLT lingot_filter_filter_sample(LingotFilter*, FLT in);
+
 #endif
-
-#ifdef ENABLE_NLS
-#undef _
-#    define _(String) (const char*) gettext (String)
-#else
-#    define _(String) (String)
-#endif
-
-#endif /*LINGOTI18N_H_*/

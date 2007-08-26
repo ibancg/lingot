@@ -21,37 +21,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __IIR_H__
-#define __IIR_H__
+#ifndef LINGOT_GAUGE_H_
+#define LINGOT_GAUGE_H_
 
-#include <fcntl.h>
-#include <stdlib.h>
-
-#include "defs.h"
+#include "lingot-defs.h"
+#include "lingot-filter.h"
 
 /*
- digital filtering implementation.
+ * Implements the dynamic behaviour of the gauge with a digital filter.
  */
 
-class IIR {
+typedef struct _LingotGauge LingotGauge;
 
-private:
+struct _LingotGauge
+  {
+    LingotFilter* filter;
+    FLT position;
+  };
 
-public:
+LingotGauge* lingot_gauge_new(FLT);
+void lingot_gauge_destroy(LingotGauge*);
+void lingot_gauge_compute(LingotGauge*, FLT);
 
-	FLT* a;
-	FLT* b; // coefs
-	FLT* s; // status
-
-	unsigned int N;
-
-	void filter(unsigned int n, FLT* in, FLT* out); // vector filtering
-	FLT filter(FLT in); // sample filtering
-
-	IIR();
-	IIR(unsigned int Na, unsigned int Nb, FLT* a, FLT* b, FLT* s = NULL);
-	void update(unsigned int Na, unsigned int Nb, FLT* a, FLT* b);
-	~IIR();
-};
-
-#endif
+#endif /*LINGOT_GAUGE_H_*/

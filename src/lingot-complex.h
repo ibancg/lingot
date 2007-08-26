@@ -21,34 +21,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _COMPLEX_H_
-#define _COMPLEX_H_
+#ifndef _LINGOT_COMPLEX_H_
+#define _LINGOT_COMPLEX_H_
 
 #include <math.h>
-#include "defs.h"
+#include "lingot-defs.h"
 
 // single complex arithmetic  :)
 
-class CPX {
+typedef struct _LingotComplex LingotComplex;
 
-public:
+struct _LingotComplex
+  {
+    FLT r;
+    FLT i;
+  };
 
-	FLT r, i;
-
-	inline friend void addCPX(CPX A, CPX B, CPX* R) {
-		R->r = A.r + B.r;
-		R->i = A.i + B.i;
-	}
-
-	inline friend void subCPX(CPX A, CPX B, CPX* R) {
-		R->r = A.r - B.r;
-		R->i = A.i - B.i;
-	}
-
-	inline friend void mulCPX(CPX A, CPX B, CPX* R) {
-		R->r = A.r*B.r- A.i*B.i;
-		R->i = A.i*B.r+ A.r*B.i;
-	}
-};
+void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c);
 
 #endif
