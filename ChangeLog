@@ -1,3 +1,13 @@
+
+2007-08-26 Ib·n Cereijo <ibancg@gmail.com>
+
+	* Code refactoring: migration to C.
+	
+	* Fixed exit SIGSEGV bug.
+	
+	* Fixed extra thread bug.
+	
+	
 2007-08-23 Ib√°n Cereijo  <ibancg@gmail.com>
 
 	* Changes in automake proccess.
