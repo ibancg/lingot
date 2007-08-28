@@ -24,11 +24,22 @@
 #ifndef __LINGOT_AUDIO_H__
 #define __LINGOT_AUDIO_H__
 
+
+//#define ALSA
+
+#ifdef ALSA
+#include <alsa/asoundlib.h>
+#endif
+
 typedef struct _LingotAudio LingotAudio;
 
 struct _LingotAudio
   {
+  	#ifdef ALSA
+  	snd_pcm_t *capture_handle;
+  	#else
     int dsp; // file handler.
+    #endif
   };
 
 LingotAudio* lingot_audio_new(int channels, int rate, int format, char* fdsp);
