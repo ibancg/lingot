@@ -35,7 +35,7 @@
 ## Release information
 my $PROGRAM = "intltool-merge";
 my $PACKAGE = "intltool";
-my $VERSION = "0.35.0";
+my $VERSION = "0.35.5";
 
 ## Loaded modules
 use strict; 
@@ -60,6 +60,7 @@ my $KEYS_STYLE_ARG = 0;
 my $DESKTOP_STYLE_ARG = 0;
 my $SCHEMAS_STYLE_ARG = 0;
 my $RFC822DEB_STYLE_ARG = 0;
+my $QUOTED_STYLE_ARG = 0;
 my $QUIET_ARG = 0;
 my $PASS_THROUGH_ARG = 0;
 my $UTF8_ARG = 0;
@@ -79,6 +80,7 @@ GetOptions
  "desktop-style|d" => \$DESKTOP_STYLE_ARG,
  "schemas-style|s" => \$SCHEMAS_STYLE_ARG,
  "rfc822deb-style|r" => \$RFC822DEB_STYLE_ARG,
+ "quoted-style" => \$QUOTED_STYLE_ARG,
  "pass-through|p" => \$PASS_THROUGH_ARG,
  "utf8|u" => \$UTF8_ARG,
  "multiple-output|m" => \$MULTIPLE_OUTPUT,
@@ -157,6 +159,14 @@ elsif ($RFC822DEB_STYLE_ARG && @ARGV > 2)
 	&rfc822deb_merge_translations;
 	&finalize;
 } 
+elsif ($QUOTED_STYLE_ARG && @ARGV > 2) 
+{
+	&utf8_sanity_check;
+	&preparation;
+	&print_message;
+	&quoted_merge_translations;
+	&finalize;
+} 
 else 
 {
 	&print_help;
@@ -193,6 +203,7 @@ Mandatory options: (exactly one must be specified)
   -k, --keys-style       includes translations in the keys style
   -s, --schemas-style    includes translations in the schemas style
   -r, --rfc822deb-style  includes translations in the RFC822 style
+      --quoted-style     includes translations in the quoted string style
   -x, --xml-style        includes translations in the standard xml style
 
 Other options:
@@ -415,7 +426,7 @@ sub create_translation_database
         {
 	    $nextfuzzy = 1 if /^#, fuzzy/;
        
-	    if (/^msgid "((\\.|[^\\])*)"/ ) 
+	    if (/^msgid "((\\.|[^\\]+)*)"/ ) 
             {
 		$translations{$lang, $msgid} = $msgstr if $inmsgstr && $msgid && $msgstr;
 		$msgid = "";
@@ -431,14 +442,14 @@ sub create_translation_database
 		$nextfuzzy = 0;
 	    }
 
-	    if (/^msgstr "((\\.|[^\\])*)"/) 
+	    if (/^msgstr "((\\.|[^\\]+)*)"/) 
             {
 	        $msgstr = unescape_po_string($1);
 		$inmsgstr = 1;
 		$inmsgid = 0;
 	    }
 
-	    if (/^"((\\.|[^\\])*)"/) 
+	    if (/^"((\\.|[^\\]+)*)"/) 
             {
 	        $msgid .= unescape_po_string($1) if $inmsgid;
 	        $msgstr .= unescape_po_string($1) if $inmsgstr;
@@ -1006,8 +1017,8 @@ sub xml_merge_output
 
     if ($MULTIPLE_OUTPUT) {
         for my $lang (sort keys %po_files_by_lang) {
-	    if ( ! -e $lang ) {
-	        mkdir $lang or die "Cannot create subdirectory $lang: $!\n";
+	    if ( ! -d $lang ) {
+	        mkdir $lang or -d $lang or die "Cannot create subdirectory $lang: $!\n";
             }
             open OUTPUT, ">$lang/$OUTFILE" or die "Cannot open $lang/$OUTFILE: $!\n";
             binmode (OUTPUT) if $^O eq 'MSWin32';
@@ -1354,3 +1365,39 @@ sub rfc822deb_split
     return @list;
 }
 
+sub quoted_translation
+{
+    my ($lang, $string) = @_;
+
+    $string =~ s/\\\"/\"/g;
+
+    my $translation = $translations{$lang, $string};
+    $translation = $string if !$translation;
+
+    $translation =~ s/\"/\\\"/g;
+    return $translation
+}
+
+sub quoted_merge_translations
+{
+    if (!$MULTIPLE_OUTPUT) {
+        print "Quoted only supports Multiple Output.\n";
+        exit(1);
+    }
+
+    for my $lang (sort keys %po_files_by_lang) {
+        if ( ! -d $lang ) {
+            mkdir $lang or -d $lang or die "Cannot create subdirectory $lang: $!\n";
+        }
+        open INPUT, "<${FILE}" or die;
+        open OUTPUT, ">$lang/$OUTFILE" or die "Cannot open $lang/$OUTFILE: $!\n";
+        binmode (OUTPUT) if $^O eq 'MSWin32';
+        while (<INPUT>) 
+        {
+            s/\"(([^\"]|\\\")*[^\\\"])\"/"\"" . &quoted_translation($lang, $1) . "\""/ge;
+            print OUTPUT;
+        }
+        close OUTPUT;
+        close INPUT;
+    }
+}

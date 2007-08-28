@@ -1,11 +1,5 @@
-## Process this file with automake to produce Makefile.in
-
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
-
 INCLUDES = \
-	$(PACKAGE_CFLAGS)\
+	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS)\
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
 AM_CXXFLAGS =\
@@ -39,9 +33,9 @@ lingot_SOURCES = \
 	lingot.c\
 	lingot-i18n.h
 
-lingot_LDFLAGS = 
+lingot_LDFLAGS =
 
 lingot_LDADD =  \
-	$(PACKAGE_LIBS)\
+	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS)\
 	 -lpthread
 
