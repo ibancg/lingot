@@ -47,8 +47,8 @@ struct _LingotCore
   {
 
     //  -- shared data --
-    FLT freq; // analog frequency calculated.
-    FLT X[256]; // visual portion of FFT.
+    FLT  freq; // analog frequency calculated.
+    FLT* X; // visual portion of FFT.
     //  -- shared data --
 
 # ifdef LIBSNDOBJ

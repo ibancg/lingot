@@ -1,5 +1,17 @@
 
-2007-08-26 Ib�n Cereijo <ibancg@gmail.com>
+2007-08-30 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added frequency legend, noise threshold and scroll bar to spectrum area
+		
+	* Reorganized Menu Items
+	
+	* Added a "View" menu item
+	 
+	* Added translations: gl
+	
+	* Released Lingot 0.7.5
+
+2007-08-26 Ibán Cereijo <ibancg@gmail.com>
 
 	* Code refactoring: migration to C.
 	

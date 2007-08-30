@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_DIALOG_CONFIG_H__
-#define __LINGOT_DIALOG_CONFIG_H__
+#ifndef __LINGOT_CONFIG_DIALOG_H__
+#define __LINGOT_CONFIG_DIALOG_H__
 
 #include <gtk/gtk.h>
 
@@ -59,14 +59,16 @@ struct _LingotConfigDialog
     LingotConfig* conf; // provisional configuration.
     LingotConfig* conf_old; // restoration point for cancel.
 
+    LingotMainFrame* mainframe;
+    
     GtkWidget* win; // window
   };
 
-LingotConfigDialog* lingot_config_dialog_new();
+LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
 void lingot_config_dialog_destroy(LingotConfigDialog*);
 
 void lingot_config_dialog_rewrite(LingotConfigDialog*);
 void lingot_config_dialog_apply(LingotConfigDialog*);
 void lingot_config_dialog_close(LingotConfigDialog*);
 
-#endif
+#endif // __LINGOT_CONFIG_DIALOG_H__

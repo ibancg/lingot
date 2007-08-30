@@ -35,7 +35,7 @@
 
 // Window that contains all controls, graphics, etc. of the tuner.
 
-typedef struct _LingotMainFrame LingotMainFrame;
+//typedef struct _LingotMainFrame LingotMainFrame;
 
 struct _LingotMainFrame
   {
@@ -51,7 +51,8 @@ struct _LingotMainFrame
     GdkPixmap* pix_spectrum;
     GdkPixmap* pix_stick;
 
-    int quit;
+    GtkScrolledWindow* spectrum_scroll;
+    
     LingotFilter* freq_filter;
 
     LingotGauge* gauge;
@@ -62,10 +63,10 @@ struct _LingotMainFrame
 
     GdkColor gauge_color;
     GdkColor spectrum_color;
-    
+
     LingotConfigDialog* config_dialog;
     LingotConfig* conf;
-    
+
     // timer uids
     guint visualization_timer_uid;
     guint calculation_timer_uid;
@@ -77,7 +78,5 @@ void lingot_mainframe_destroy(LingotMainFrame*);
 
 void lingot_mainframe_run(LingotMainFrame*);
 void lingot_mainframe_change_config(LingotMainFrame*, LingotConfig*);
-
-extern LingotMainFrame* main_frame_instance;
 
 #endif //__LINGOT_MAIN_FRAME_H__

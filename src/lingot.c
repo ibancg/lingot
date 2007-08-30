@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <getopt.h>
 
 #include "lingot-defs.h"
 #include "lingot-config.h"
@@ -57,16 +58,49 @@ int main(int argc, char *argv[])
       }
     else if (argc > 1)
       {
+        int c;
+        int digit_optind = 0;
 
-        if (strcmp(argv[1], "-c") || (argc < 3))
+        while (1)
           {
-            printf("invalid argument\n");
-            return -1;
+            int this_option_optind = optind ? optind : 1;
+            int option_index = 0;
+            static struct option long_options[] =
+              {
+                  { "config", 1, 0, 'c'},
+                  { 0, 0, 0, 0}
+              };
+
+            c = getopt_long (argc, argv, "c:",
+                long_options, &option_index);
+            if (c == -1)
+            break;
+
+            switch (c)
+              {
+                case 'c':
+                sprintf(CONFIG_FILE_NAME, "%s/%s%s.conf", getenv("HOME"),
+                    CONFIG_DIR_NAME, optarg);
+                printf("using config file %s\n", CONFIG_FILE_NAME);
+                break;
+
+                case '?':
+                break;
+
+                default:
+                printf ("?? getopt returned character code 0%o ??\n", c);
+              }
           }
 
-        sprintf(CONFIG_FILE_NAME, "%s/%s%s.conf", getenv("HOME"),
-            CONFIG_DIR_NAME, argv[2]);
-        printf("using config file %s\n", CONFIG_FILE_NAME);
+        /*        if (strcmp(argv[1], "-c") || (argc < 3))
+         {
+         printf("invalid argument\n");
+         return -1;
+         }
+
+         sprintf(CONFIG_FILE_NAME, "%s/%s%s.conf", getenv("HOME"),
+         CONFIG_DIR_NAME, argv[2]);
+         printf("using config file %s\n", CONFIG_FILE_NAME);*/
       }
 
     // if config file doesn't exists, i will create it.
@@ -80,8 +114,10 @@ int main(int argc, char *argv[])
         mkdir(config_dir, 0777); // creo el directorio.
         printf("creating file %s ...\n", CONFIG_FILE_NAME);
 
-        LingotConfig new_conf; // new configuration with default values.
-        lingot_config_save(&new_conf, CONFIG_FILE_NAME);
+        // new configuration with default values.
+        LingotConfig* new_conf = lingot_config_new();
+        lingot_config_save(new_conf, CONFIG_FILE_NAME);
+        lingot_config_destroy(new_conf);
 
         printf("ok\n");
 

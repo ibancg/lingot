@@ -64,6 +64,11 @@ LingotConfig* lingot_config_new()
     return config;
   }
 
+void lingot_config_destroy(LingotConfig* config)
+  {
+    free(config);
+  }
+
 //----------------------------------------------------------------------------
 void lingot_config_reset(LingotConfig* config)
   {
@@ -73,11 +78,11 @@ void lingot_config_reset(LingotConfig* config)
     config->oversampling = 5;
     config->root_frequency_error = 0; // Hz
     config->min_frequency = 15; // Hz
-    config->fft_size = 256; // samples
-    config->temporal_window = 0.1875; // seconds
+    config->fft_size = 512; // samples
+    config->temporal_window = 0.32; // seconds
     config->calculation_rate = 20; // Hz
-    config->visualization_rate = 25; // Hz
-    config->noise_threshold_db = 10.0; // dB
+    config->visualization_rate = 30; // Hz
+    config->noise_threshold_db = 20.0; // dB
 
     config->peak_number = 3; // peaks
     config->peak_order = 1; // samples
@@ -125,15 +130,15 @@ int lingot_config_update_internal_params(LingotConfig* config)
 
 //----------------------------------------------------------------------------
 
-void lingot_config_save(LingotConfig* config, char* file)
+void lingot_config_save(LingotConfig* config, char* filename)
   {
     unsigned int i;
     FILE* fp;
 
-    if ((fp = fopen(file, "w")) == NULL)
+    if ((fp = fopen(filename, "w")) == NULL)
       {
         char buff[100];
-        sprintf(buff, "error saving config file %s ", file);
+        sprintf(buff, "error saving config file %s ", filename);
         perror(buff);
         return;
       }
@@ -160,24 +165,29 @@ void lingot_config_save(LingotConfig* config, char* file)
 
 //----------------------------------------------------------------------------
 
-void lingot_config_load(LingotConfig* config, char* file)
+void lingot_config_load(LingotConfig* config, char* filename)
   {
     FILE* fp;
     float aux;
+    int line;
+    int token_index;
+    char* char_buffer_pointer;
 
+    const static char* delim = " \t=\n";
+    
 #   define MAX_LINE_SIZE 100
 
     char char_buffer[MAX_LINE_SIZE];
 
-    if ((fp = fopen(file, "r")) == NULL)
+    if ((fp = fopen(filename, "r")) == NULL)
       {
         sprintf(char_buffer,
-            "error opening config file %s, assuming default values ", file);
+            "error opening config file %s, assuming default values ", filename);
         perror(char_buffer);
         return;
       }
 
-    int line = 0;
+    line = 0;
 
     for (;;)
       {
@@ -192,22 +202,19 @@ void lingot_config_load(LingotConfig* config, char* file)
         if (char_buffer[0] == '#')
         continue;
 
-        //    char* p2 = s1; // puntero sobre la l�nea le�da.
-        char* char_buffer_pointer; // contendr� los tokens dentro de la l�nea.
-
-        // cojo la cadena del atributo.
-        /*do {
-         s2 = strsep(&p2, " \t=\n");
-         } while ((s2) && (strlen(s2) == 0));*/
-        char_buffer_pointer = strtok(char_buffer, " \t=\n");
+        // tokens into the line.
+        char_buffer_pointer = strtok(char_buffer, delim);
 
         if (!char_buffer_pointer)
         continue; // blank line.
 
-        int token_index;
         for (token_index = 0; token[token_index]; token_index++)
-        if (!strcmp(char_buffer_pointer, token[token_index]))
-        break; // found token.
+          {
+            if (!strcmp(char_buffer_pointer, token[token_index]))
+              {
+                break; // found token.
+              }
+          }
 
         if (!token[token_index])
           {
@@ -218,7 +225,7 @@ void lingot_config_load(LingotConfig* config, char* file)
           }
 
         // take the attribute value.
-        char_buffer_pointer = strtok(NULL, " \t=\n");
+        char_buffer_pointer = strtok(NULL, delim);
 
         if (!char_buffer_pointer)
           {

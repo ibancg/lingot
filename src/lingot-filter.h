@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_IIR_H__
-#define __LINGOT_IIR_H__
+#ifndef __LINGOT_FILTER_H__
+#define __LINGOT_FILTER_H__
 
 #include <fcntl.h>
 #include <stdlib.h>

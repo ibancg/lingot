@@ -47,7 +47,7 @@ void lingot_config_dialog_callback_click(GtkButton *button,
       }
     else if ((GtkWidget*)button == dialog->button_cancel)
       {
-        lingot_mainframe_change_config(main_frame_instance, dialog->conf_old); // restore old configuration.
+        lingot_mainframe_change_config(dialog->mainframe, dialog->conf_old); // restore old configuration.
         lingot_config_dialog_close(dialog);
       }
     else if ((GtkWidget*)button == dialog->button_apply)
@@ -65,6 +65,7 @@ void lingot_config_dialog_callback_click(GtkButton *button,
 void lingot_config_dialog_callback_close(GtkWidget *widget,
     LingotConfigDialog *dialog)
   {
+    gtk_widget_destroy(dialog->win);
     lingot_config_dialog_destroy(dialog);
   }
 
@@ -131,7 +132,7 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog)
 
 LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
   {
-    GtkWidget* vb;
+    GtkWidget* vertical_box;
     GtkWidget* frame1;
     GtkWidget* tab1;
     GtkWidget* frame2;
@@ -140,6 +141,7 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
     char buff[80];
     LingotConfigDialog* dialog = malloc(sizeof(LingotConfigDialog));
 
+    dialog->mainframe = frame;
     dialog->conf = lingot_config_new();
     dialog->conf_old = lingot_config_new();
 
@@ -148,16 +150,16 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
     *dialog->conf_old = *frame->conf;
 
     dialog->win = gtk_dialog_new_with_buttons (_("lingot configuration"),
-    GTK_WINDOW(frame->win), GTK_DIALOG_MODAL, NULL);
+    GTK_WINDOW(frame->win), 0, NULL);
 
     gtk_container_set_border_width(GTK_CONTAINER(dialog->win), 6);
 
     // items vertically displayed  
-    vb = gtk_vbox_new(FALSE, 6);
-    gtk_container_add(GTK_CONTAINER (GTK_DIALOG(dialog->win)->vbox), vb);
+    vertical_box = gtk_vbox_new(FALSE, 6);
+    gtk_container_add(GTK_CONTAINER (GTK_DIALOG(dialog->win)->vbox), vertical_box);
 
     frame1 = gtk_frame_new(_("General parameters"));
-    gtk_box_pack_start_defaults(GTK_BOX(vb), frame1);
+    gtk_box_pack_start_defaults(GTK_BOX(vertical_box), frame1);
 
     tab1 = gtk_table_new(5, 3, FALSE);
     int row = 0;
@@ -212,7 +214,7 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
 
     dialog->spin_noise_threshold =gtk_spin_button_new(
         (GtkAdjustment*)gtk_adjustment_new(dialog->conf->noise_threshold_db,
-            -30.0, 40.0, 0.1, 0.1, 0.1), 0.1, 1);
+            -30.0, 60.0, 0.1, 0.1, 0.1), 0.1, 1);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(dialog->spin_noise_threshold), TRUE);
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(dialog->spin_noise_threshold), 1) ;
 
@@ -266,7 +268,7 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
     // --------------------------------------------------------------------------
 
     frame2 = gtk_frame_new(_("Advanced parameters"));
-    gtk_box_pack_start_defaults(GTK_BOX(vb), frame2);
+    gtk_box_pack_start_defaults(GTK_BOX(vertical_box), frame2);
 
     tab2 = gtk_table_new(7, 3, FALSE);
     row = 0;
@@ -394,8 +396,6 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
     dialog->button_cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
     dialog->button_apply = gtk_button_new_from_stock(GTK_STOCK_APPLY);
     dialog->button_default = gtk_button_new_with_label(_("Default config"));
-    /*  gtk_button_set_image(GTK_BUTTON(button_default), 
-     gtk_button_get_image(GTK_BUTTON(gtk_button_new_from_stock(GTK_STOCK_UNDO))));*/
 
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog->win)->action_area), dialog->button_default, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog->win)->action_area), dialog->button_apply, TRUE, TRUE, 0);
@@ -418,9 +418,11 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
 
 void lingot_config_dialog_destroy(LingotConfigDialog* dialog)
   {
-    main_frame_instance->config_dialog = NULL;
-    free(dialog->conf);
-    free(dialog->conf_old);
+    dialog->mainframe->config_dialog = NULL;
+    lingot_config_destroy(dialog->conf);
+    lingot_config_destroy(dialog->conf_old);
+
+    //gtk_widget_destroy(dialog->win);
     free(dialog);
   }
 
@@ -448,7 +450,7 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog)
 
     int result = lingot_config_update_internal_params(dialog->conf);
 
-    lingot_mainframe_change_config(main_frame_instance, dialog->conf);
+    lingot_mainframe_change_config(dialog->mainframe, dialog->conf);
 
     if (!result)
       {
