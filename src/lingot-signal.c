@@ -31,8 +31,9 @@
 
 FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w)
   {
-    //  return 0.5*(1.0 - index/conf->FFT_SIZE);
-    return conf->noise_threshold_un;
+    //return 0.5*(1.0 - 0.9*w/M_PI);
+    return pow(10.0, (conf->noise_threshold_db*(1.0 - 0.9*w/M_PI))/10.0);
+    //return conf->noise_threshold_un;
   }
 
 //---------------------------------------------------------------------------

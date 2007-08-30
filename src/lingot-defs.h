@@ -28,7 +28,7 @@
 #include "../config.h"
 
 // floating point precission.
-#define FLT                   double
+#define FLT                  double
 
 #define SAMPLE_TYPE          int16_t
 #define SAMPLE_FORMAT        AFMT_S16_LE
@@ -39,8 +39,11 @@ extern char CONFIG_FILE_NAME[];
 
 #define QUICK_MESSAGES
 
-#define GTK_EVENTS_RATE       20.0
-#define GAUGE_RATE            60.0
+#define GTK_EVENTS_RATE      20.0
+#define GAUGE_RATE           60.0
+
+/* object forward declaration */
+typedef struct _LingotMainFrame LingotMainFrame;
 
 // optionally we can use the following libraries
 //#define LIB_FFTW

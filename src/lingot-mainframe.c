@@ -47,10 +47,26 @@ GdkColor black_color;
 GdkColor gauge_color;
 GdkColor spectrum_background_color;
 GdkColor spectrum_color;
+GdkColor noise_threshold_color;
 GdkColor grid_color;
 GdkColor freq_color;
 
-LingotMainFrame* main_frame_instance= NULL;
+// sizes
+
+int gauge_size_x = 160;
+int gauge_size_y = 100;
+
+int spectrum_size_y = 64;
+
+// spectrum area margins 
+int spectrum_bottom_margin = 16;
+int spectrum_top_margin = 12;
+int spectrum_x_margin = 15;
+
+GtkWidget* view_spectrum_item;
+GtkWidget* spectrum_frame;
+
+PangoFontDescription* spectrum_legend_font_desc;
 
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
     LingotMainFrame* frame)
@@ -78,29 +94,48 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame)
   {
     if (frame->core->running)
       {
-        GtkWidget* about = gtk_about_dialog_new();
-        const gchar** authors = malloc(3*sizeof(gchar*));
-        const gchar** artists = malloc(2*sizeof(gchar*));
+        GtkAboutDialog* about= GTK_ABOUT_DIALOG(gtk_about_dialog_new());
+        GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
+        const gchar* authors[3];
+        const gchar* artists[2];
 
-        gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(about), "Lingot");
-        gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about), VERSION);
-        gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(about), "http://lingot.nongnu.org/");
-        gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about), _("Accurate and easy to use musical instrument tuner"));
         authors[0] = "Ibán Cereijo Graña <ibancg@gmail.com>";
         authors[1] = "Jairo Chapela Martínez <jairochapela@gmail.com>";
         authors[2] = NULL;
         artists[0] = "Matthew Blissett (Logo design)";
         artists[1] = NULL;
-        gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about), authors);
-        gtk_about_dialog_set_artists(GTK_ABOUT_DIALOG(about), artists);
-        gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(about), "Copyright (C) 2004-2007 Ibán Cereijo Graña\nCopyright (C) 2004-2007 Jairo Chapela Martínez");
-        GdkPixbuf* icon = gdk_pixbuf_new_from_xpm_data(lingotlogo);
-        gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about), icon);
-        //gtk_show_about_dialog(GTK_WINDOW(w), "Lingot", NULL);
+
+        gtk_about_dialog_set_name(about, "Lingot");
+        gtk_about_dialog_set_version(about, VERSION);
+        gtk_about_dialog_set_website(about, "http://lingot.nongnu.org/");
+        gtk_about_dialog_set_comments(about, _("Accurate and easy to use musical instrument tuner"));
+        gtk_about_dialog_set_authors(about, authors);
+        gtk_about_dialog_set_artists(about, artists);
+        gtk_about_dialog_set_copyright(
+            about,
+            "Copyright © 2004-2007 Ibán Cereijo Graña\nCopyright © 2004-2007 Jairo Chapela Martínez");
+        gtk_about_dialog_set_logo(about, logo);
+
+        //gtk_show_about_dialog(GTK_WINDOW(about), "Lingot", NULL);
+        gtk_window_set_icon(GTK_WINDOW(about), logo);
+
+        g_object_unref(logo);
+
         gtk_dialog_run (GTK_DIALOG (about));
-        gtk_widget_destroy (about);
-        free(authors);
-        free(artists);
+        gtk_widget_destroy (GTK_WIDGET(about));
+      }
+  }
+
+void lingot_mainframe_callback_view_spectrum(GtkWidget* w,
+    LingotMainFrame* frame)
+  {
+    if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(view_spectrum_item)))
+      {
+        gtk_widget_hide(spectrum_frame);
+      }
+    else
+      {
+        gtk_widget_show(spectrum_frame);
       }
   }
 
@@ -113,8 +148,11 @@ void lingot_mainframe_callback_config_dialog(GtkWidget* w,
           {
             frame->config_dialog = lingot_config_dialog_new(frame);
           }
+        else
+          {
+            // TODO: activate config dialog
+          }
       }
-    //gtk_widget_activate(gui->config_dialog->win);
   }
 
 /* Callback for visualization */
@@ -129,7 +167,7 @@ gboolean lingot_mainframe_callback_visualization(gpointer data)
       {
         lingot_mainframe_draw_gauge(frame);
 
-        period = (int) (1.0e3/frame->conf->visualization_rate);
+        period = 1000/frame->conf->visualization_rate;
         gtk_timeout_add(period, lingot_mainframe_callback_visualization, frame);
       }
 
@@ -146,7 +184,7 @@ gboolean lingot_mainframe_callback_calculation(gpointer data)
       {
         lingot_mainframe_draw_spectrum(frame);
 
-        period = (int) (1.0e3/frame->conf->calculation_rate);
+        period = 1000/frame->conf->calculation_rate;
         gtk_timeout_add(period, lingot_mainframe_callback_calculation, frame);
       }
 
@@ -163,29 +201,37 @@ gboolean lingot_mainframe_callback_frequency(gpointer data)
       {
         lingot_mainframe_put_frequency(frame);
 
-        period = (int) (1.0e3/GAUGE_RATE);
+        period = 1000/GAUGE_RATE;
         gtk_timeout_add(period, lingot_mainframe_callback_frequency, frame);
       }
 
     return 0;
   }
 
+void lingot_mainframe_color(GdkColor* color, int red, int green, int blue)
+  {
+    color->red = red;
+    color->green = green;
+    color->blue = blue;
+  }
+
 LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
   {
-    GtkWidget* vb;
-    GtkWidget* tuner_menu;
+    GtkWidget* vertical_box;
+    GtkWidget* horizontal_box;
+    GtkWidget* file_menu;
+    GtkWidget* edit_menu;
     GtkWidget* help_menu;
-    GtkWidget* options_item;
+    GtkWidget* preferences_item;
     GtkWidget* quit_item;
     GtkWidget* about_item;
-    GtkAccelGroup *accel_group;
+    GtkAccelGroup* accel_group;
     GtkWidget* menu_bar;
-    GtkWidget* tuner_item;
+    GtkWidget* file_item;
+    GtkWidget* edit_item;
     GtkWidget* help_item;
-    GtkWidget* hb;
     GtkWidget* frame1;
     GtkWidget* frame3;
-    GtkWidget* frame4;
     GtkWidget* vbinfo;
     LingotMainFrame* frame;
     unsigned int period;
@@ -193,7 +239,6 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
     frame = malloc(sizeof(LingotMainFrame));
 
     frame->config_dialog = NULL;
-    frame->quit = 0;
     frame->pix_stick = NULL;
 
     frame->conf = lingot_config_new();
@@ -225,6 +270,12 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
 
     // creates the window
     frame->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_position(GTK_WINDOW(frame->win), GTK_WIN_POS_CENTER);
+
+    GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
+    gtk_window_set_icon(GTK_WINDOW(frame->win), logo);
+
+    g_object_unref(logo);
 
     gtk_window_set_title(GTK_WINDOW (frame->win), _("lingot"));
 
@@ -232,28 +283,33 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
 
     // fixed size
     gtk_window_set_resizable(GTK_WINDOW(frame->win), FALSE);
-
     // tab organization by following container
-    vb = gtk_vbox_new(FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(frame->win), vb);
+    vertical_box = gtk_vbox_new(FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(frame->win), vertical_box);
 
-    tuner_menu = gtk_menu_new();
+    file_menu = gtk_menu_new();
+    edit_menu = gtk_menu_new();
     help_menu = gtk_menu_new();
-
-    /* menu elements */
-    options_item = gtk_menu_item_new_with_label(_("Options"));
-    quit_item = gtk_menu_item_new_with_label(_("Quit"));
-
-    about_item = gtk_menu_item_new_with_label(_("About"));
-
-    /* addition */
-    gtk_menu_append( GTK_MENU(tuner_menu), options_item);
-    gtk_menu_append( GTK_MENU(tuner_menu), quit_item);
-    gtk_menu_append( GTK_MENU(help_menu), about_item);
+    GtkWidget* view_menu = gtk_menu_new();
 
     accel_group = gtk_accel_group_new ();
 
-    gtk_widget_add_accelerator (options_item, "activate", accel_group, 'o',
+    /* menu elements */
+    preferences_item
+        = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES, accel_group);
+    quit_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel_group);
+    about_item
+        = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, accel_group);
+    view_spectrum_item= gtk_check_menu_item_new_with_label(_("Spectrum"));
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(view_spectrum_item), TRUE);
+
+    /* addition */
+    gtk_menu_append( GTK_MENU(file_menu), quit_item);
+    gtk_menu_append( GTK_MENU(edit_menu), preferences_item);
+    gtk_menu_append( GTK_MENU(view_menu), view_spectrum_item);
+    gtk_menu_append( GTK_MENU(help_menu), about_item);
+
+    gtk_widget_add_accelerator (preferences_item, "activate", accel_group, 'o',
         GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     gtk_widget_add_accelerator (quit_item, "activate", accel_group, 'q',
@@ -261,7 +317,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
 
     gtk_window_add_accel_group (GTK_WINDOW (frame->win), accel_group);
 
-    gtk_signal_connect( GTK_OBJECT(options_item), "activate",
+    gtk_signal_connect( GTK_OBJECT(preferences_item), "activate",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_config_dialog), frame);
 
     gtk_signal_connect( GTK_OBJECT(quit_item), "activate",
@@ -270,18 +326,27 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
     gtk_signal_connect( GTK_OBJECT(about_item), "activate",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_about), frame);
 
-    menu_bar = gtk_menu_bar_new();
-    gtk_widget_show(menu_bar );
-    gtk_box_pack_start_defaults(GTK_BOX(vb), menu_bar);
+    gtk_signal_connect( GTK_OBJECT(view_spectrum_item), "activate",
+        GTK_SIGNAL_FUNC(lingot_mainframe_callback_view_spectrum), frame);
 
-    tuner_item = gtk_menu_item_new_with_label(_("Tuner"));
-    help_item = gtk_menu_item_new_with_label(_("Help"));
+    menu_bar = gtk_menu_bar_new();
+    gtk_widget_show(menu_bar);
+    gtk_box_pack_start_defaults(GTK_BOX(vertical_box), menu_bar);
+
+    file_item = gtk_menu_item_new_with_mnemonic(_("_File"));
+    edit_item = gtk_menu_item_new_with_mnemonic(_("_Edit"));
+    GtkWidget* view_item = gtk_menu_item_new_with_mnemonic(_("_View"));
+    help_item = gtk_menu_item_new_with_mnemonic(_("_Help"));
     gtk_menu_item_right_justify( GTK_MENU_ITEM(help_item));
 
-    gtk_menu_item_set_submenu( GTK_MENU_ITEM(tuner_item), tuner_menu);
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM(file_item), file_menu);
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM(edit_item), edit_menu);
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM(view_item), view_menu);
     gtk_menu_item_set_submenu( GTK_MENU_ITEM(help_item), help_menu);
 
-    gtk_menu_bar_append( GTK_MENU_BAR (menu_bar), tuner_item );
+    gtk_menu_bar_append( GTK_MENU_BAR (menu_bar), file_item );
+    gtk_menu_bar_append( GTK_MENU_BAR (menu_bar), edit_item );
+    gtk_menu_bar_append( GTK_MENU_BAR (menu_bar), view_item );
     gtk_menu_bar_append( GTK_MENU_BAR (menu_bar), help_item );
 
 #ifdef GTK12
@@ -291,36 +356,51 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
     ////////////////////////////////////////////////////
 
     // a fixed container to put the two upper frames in fixed positions
-    hb = gtk_hbox_new(FALSE, 0);
-    gtk_box_pack_start_defaults(GTK_BOX(vb), hb);
+    horizontal_box = gtk_hbox_new(FALSE, 0);
+    gtk_box_pack_start_defaults(GTK_BOX(vertical_box), horizontal_box);
 
     // gauge frame
     frame1 = gtk_frame_new(_("Deviation"));
     //  gtk_fixed_put(GTK_FIXED(fix), frame1, 0, 0);
-    gtk_box_pack_start_defaults(GTK_BOX(hb), frame1);
+    gtk_box_pack_start(GTK_BOX(horizontal_box), frame1, FALSE, FALSE, 0);
 
     // note frame
     frame3 = gtk_frame_new(_("Note"));
     //gtk_fixed_put(GTK_BOX(hb), frame3, 164, 0);
-    gtk_box_pack_start(GTK_BOX(hb), frame3, TRUE, TRUE, 1);
+    gtk_box_pack_start(GTK_BOX(horizontal_box), frame3, TRUE, TRUE, 0);
 
     // spectrum frame at bottom
-    frame4 = gtk_frame_new(_("Spectrum"));
-    gtk_box_pack_end_defaults(GTK_BOX(vb), frame4);
+    spectrum_frame = gtk_frame_new(_("Spectrum"));
+    gtk_box_pack_end_defaults(GTK_BOX(vertical_box), spectrum_frame);
 
     // for gauge drawing
     frame->gauge_area = gtk_drawing_area_new();
-    gtk_drawing_area_size(GTK_DRAWING_AREA(frame->gauge_area), 160, 100);
+    gtk_widget_set_size_request(GTK_WIDGET(frame->gauge_area), gauge_size_x, gauge_size_y);
     gtk_container_add(GTK_CONTAINER(frame1), frame->gauge_area);
 
     // for spectrum drawing
+    GtkObject* adjust = gtk_adjustment_new (0.0, 0.0, ((frame->conf->fft_size
+        > 256) ? 0.5 : 1.0)*frame->conf->sample_rate, 1.0, 100.0, 100.0);
+    frame->spectrum_scroll = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(GTK_ADJUSTMENT(adjust), NULL));
     frame->spectrum_area = gtk_drawing_area_new();
-    gtk_drawing_area_size(GTK_DRAWING_AREA(frame->spectrum_area), 256, 64);
-    gtk_container_add(GTK_CONTAINER(frame4), frame->spectrum_area);
+
+    int
+        x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
+            + 2*spectrum_x_margin;
+    int y = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
+
+    gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
+    gtk_scrolled_window_set_policy(frame->spectrum_scroll,
+        (frame->conf->fft_size > 512) ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER,
+        GTK_POLICY_NEVER);
+    gtk_scrolled_window_add_with_viewport(frame->spectrum_scroll,
+        frame->spectrum_area);
+    gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll), 260 + 2*spectrum_x_margin, spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin + 4 + ((frame->conf->fft_size > 512) ? 16 : 0));
+    gtk_container_add(GTK_CONTAINER(spectrum_frame), GTK_WIDGET(frame->spectrum_scroll));
 
     // for note and frequency displaying
     vbinfo = gtk_vbox_new(FALSE, 0);
-    gtk_widget_set_size_request(vbinfo, 90, 100);
+    gtk_widget_set_size_request(GTK_WIDGET(vbinfo), 96 + 2*spectrum_x_margin, gauge_size_y);
     gtk_container_add(GTK_CONTAINER(frame3), vbinfo);
 
     frame->freq_label = gtk_label_new(_("freq"));
@@ -338,57 +418,47 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
 
     // two pixmaps for double buffer in gauge and spectrum drawing 
     // (virtual screen)
-    gdk_pixmap_new(frame->gauge_area->window, 160, 100, -1);
-    frame->pix_spectrum= gdk_pixmap_new(frame->gauge_area->window, 256, 64, -1);
+    gdk_pixmap_new(frame->gauge_area->window, gauge_size_x, gauge_size_y, -1);
+    frame->pix_spectrum= gdk_pixmap_new(frame->spectrum_area->window, x, y, -1);
 
     // GTK signals
     gtk_signal_connect(GTK_OBJECT(frame->gauge_area), "expose_event",
-        (GtkSignalFunc) lingot_mainframe_callback_redraw, frame);
+        GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
     gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
-        (GtkSignalFunc) lingot_mainframe_callback_redraw, frame);
+        GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
     gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
-        (GtkSignalFunc) lingot_mainframe_callback_destroy, frame);
+        GTK_SIGNAL_FUNC(lingot_mainframe_callback_destroy), frame);
 
-    period = (int) (1.0e3/frame->conf->visualization_rate);
+    period = 1000/frame->conf->visualization_rate;
     frame->visualization_timer_uid = gtk_timeout_add(period,
         lingot_mainframe_callback_visualization, frame);
 
-    period = (int) (1.0e3/frame->conf->calculation_rate);
+    period = 1000/frame->conf->calculation_rate;
     frame->calculation_timer_uid = gtk_timeout_add(period,
         lingot_mainframe_callback_calculation, frame);
 
-    period = (int) (1.0e3/GAUGE_RATE);
+    period = 1000/GAUGE_RATE;
     frame->freq_timer_uid = gtk_timeout_add(period,
         lingot_mainframe_callback_frequency, frame);
 
-    gauge_color.red = 0xC000;
-    gauge_color.green = 0x0000;
-    gauge_color.blue = 0x2000;
-
-    spectrum_background_color.red = 0x1111;
-    spectrum_background_color.green = 0x3333;
-    spectrum_background_color.blue = 0x1111;
-
-    spectrum_color.red = 0x2222;
-    spectrum_color.green = 0xFFFF;
-    spectrum_color.blue = 0x2222;
-
-    grid_color.red = 0x7000;
-    grid_color.green = 0x7000;
-    grid_color.blue = 0x7000;
-
-    freq_color.red = 0xFFFF;
-    freq_color.green = 0x2222;
-    freq_color.blue = 0x2222;
+    lingot_mainframe_color(&gauge_color, 0xC000, 0x0000, 0x2000);
+    lingot_mainframe_color(&spectrum_background_color, 0x1111, 0x3333, 0x1111);
+    lingot_mainframe_color(&spectrum_color, 0x2222, 0xEEEE, 0x2222);
+    lingot_mainframe_color(&noise_threshold_color, 0x8888, 0x8888, 0x2222);
+    lingot_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
+    lingot_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
 
     gdk_color_alloc(gdk_colormap_get_system(), &gauge_color);
     gdk_color_alloc(gdk_colormap_get_system(), &spectrum_color);
     gdk_color_alloc(gdk_colormap_get_system(), &spectrum_background_color);
+    gdk_color_alloc(gdk_colormap_get_system(), &noise_threshold_color);
     gdk_color_alloc(gdk_colormap_get_system(), &grid_color);
     gdk_color_alloc(gdk_colormap_get_system(), &freq_color);
     gdk_color_black(gdk_colormap_get_system(), &black_color);
 
-    main_frame_instance = frame;
+    spectrum_legend_font_desc
+        =pango_font_description_from_string ("Helvetica Plain 7");
+
     return frame;
   }
 
@@ -397,17 +467,24 @@ void lingot_mainframe_destroy(LingotMainFrame* frame)
     lingot_gauge_destroy(frame->gauge);
     lingot_core_destroy(frame->core);
     lingot_filter_destroy(frame->freq_filter);
-    free(frame->conf);
+    lingot_config_destroy(frame->conf);
     if (frame->config_dialog)
       lingot_config_dialog_destroy(frame->config_dialog);
 
-    /*
-     gdk_color_free(&gauge_color);
-     gdk_color_free(&spectrum_color);
-     gdk_color_free(&spectrum_background_color);
-     gdk_color_free(&grid_color);
-     gdk_color_free(&freq_color);
-     */
+    pango_font_description_free(spectrum_legend_font_desc);
+
+    gtk_widget_destroy(frame->freq_label);
+    gtk_widget_destroy(frame->error_label);
+    gtk_widget_destroy(frame->note_label);
+
+    gtk_widget_destroy(frame->win);
+
+    // gdk_color_free(&gauge_color);
+    // gdk_color_free(&spectrum_color);
+    // gdk_color_free(&spectrum_background_color);
+    // gdk_color_free(&noise_threshold_color);
+    // gdk_color_free(&grid_color);
+    // gdk_color_free(&freq_color);
 
     free(frame);
   }
@@ -436,6 +513,7 @@ void lingot_mainframe_draw_gauge(LingotMainFrame* frame)
 
     gdk_gc_get_values(gc, &gv);
 
+    static FLT gauge_size = 90.0;
     FLT max = 1.0;
 
     // draws background
@@ -450,51 +528,187 @@ void lingot_mainframe_draw_gauge(LingotMainFrame* frame)
     // and draws gauge
     gdk_gc_set_foreground(gc, &gauge_color);
 
-    gdk_draw_line(w, gc, 80, 99, 80 + (int)rint(90.0*sin(frame->gauge->position
-        *M_PI/(1.5*max))), 99 - (int)rint(90.0*cos(frame->gauge->position*M_PI
-        /(1.5*max))));
+    gdk_draw_line(w, gc, gauge_size_x >> 1, gauge_size_y - 1,
+        (gauge_size_x>> 1) + (int)rint(gauge_size*sin(frame->gauge->position
+            *M_PI/(1.5*max))), gauge_size_y - 1- (int)rint(gauge_size
+            *cos(frame->gauge->position*M_PI/(1.5*max))));
 
     // black edge.  
     gdk_gc_set_foreground(gc, &black_color);
-    gdk_draw_rectangle(w, gc, FALSE, 0, 0, 159, 99);
+    gdk_draw_rectangle(w, gc, FALSE, 0, 0, gauge_size_x - 1, gauge_size_y - 1);
 
-    gdk_draw_pixmap(frame->gauge_area->window, gc, w, 0, 0, 0, 0, 160, 100);
+    gdk_draw_pixmap(frame->gauge_area->window, gc, w, 0, 0, 0, 0, gauge_size_x, gauge_size_y);
     gdk_flush();
   }
 
 void lingot_mainframe_draw_spectrum(LingotMainFrame* frame)
   {
+    PangoLayout* layout;
+
+    int
+        spectrum_size_x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size
+            >> 1)
+            : 256);
+
+    // minimum grid size in pixels
+    static int minimum_grid_width = 50;
+
+    /* scale factors to draw the grid. We will choose the smaller factor that
+     respects the minimum_grid_width */
+    static double scales[] =
+      { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+
+    // spectrum drawing mode
+    static gboolean spectrum_drawing_filled = TRUE;
+
+    // grid division in dB
+    static FLT grid_db_height = 25;
+
     register unsigned int i;
+    int j;
+    int old_j;
+
     GdkGC* gc = frame->spectrum_area->style->fg_gc[frame->spectrum_area->state];
-    GdkWindow* w = frame->pix_spectrum; //spectrum->window;
+    GdkWindow* window = frame->pix_spectrum; //spectrum->window;
     GdkGCValues gv;
     gdk_gc_get_values(gc, &gv);
 
     // clear all
     gdk_gc_set_foreground(gc, &spectrum_background_color);
-
-    gdk_draw_rectangle(w, gc, TRUE, 0, 0, 256, 64);
-
-    // grid
-    int Nlx = 9;
-    int Nly = 3;
+    gdk_draw_rectangle(window, gc, TRUE, 0, 0, spectrum_size_x + 2
+        *spectrum_x_margin, spectrum_size_y + spectrum_bottom_margin
+        + spectrum_top_margin);
 
     gdk_gc_set_foreground(gc, &grid_color);
 
-    for (i = 0; i <= Nly; i++)
-      gdk_draw_line(w, gc, 0, i*63/Nly, 255, i*63/Nly);
-    for (i = 0; i <= Nlx; i++)
-      gdk_draw_line(w, gc, i*255/Nlx, 0, i*255/Nlx, 63);
+    gdk_draw_line(window, gc, spectrum_x_margin, spectrum_size_y
+        + spectrum_top_margin, spectrum_x_margin + spectrum_size_x,
+        spectrum_size_y + spectrum_top_margin);
 
-    gdk_gc_set_foreground(gc, &spectrum_color);
+    // choose scale factor
+    for (i = 0; scales[i] > 0.0; i++)
+      {
+        if ((1e3*scales[i]*frame->conf->fft_size*frame->conf->oversampling
+            /frame->conf->sample_rate) > minimum_grid_width)
+          break;
+      }
+
+    if (scales[i] < 0.0)
+      i--;
+
+    FLT scale = scales[i];
+
+    int grid_width = 1e3*scales[i]*frame->conf->fft_size
+        *frame->conf->oversampling/frame->conf->sample_rate;
+
+    char buff[10];
+
+    FLT freq = 0.0;
+    for (i = 0; i <= spectrum_size_x; i += grid_width)
+      {
+        gdk_draw_line(window, gc, spectrum_x_margin + i, spectrum_top_margin,
+            spectrum_x_margin + i, spectrum_size_y + spectrum_top_margin + 3);
+
+        if (freq == 0.0)
+          {
+            sprintf(buff, "0 Hz");
+          }
+        else if (floor(freq) == freq)
+          sprintf(buff, "%0.0f kHz", freq);
+        else if (floor(10*freq) == 10*freq)
+          {
+            if (freq <= 1000.0)
+              sprintf(buff, "%0.0f Hz", 1e3*freq);
+            else
+              sprintf(buff, "%0.1f kHz", freq);
+          }
+        else
+          {
+            if (freq <= 100.0)
+              sprintf(buff, "%0.0f Hz", 1e3*freq);
+            else
+              sprintf(buff, "%0.2f kHz", freq);
+          }
+
+        layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
+        pango_layout_set_font_description (layout, spectrum_legend_font_desc);
+        gdk_draw_layout(window, gc, spectrum_x_margin - 8 + i,
+            spectrum_size_y + spectrum_top_margin + 5, layout);
+        freq += scale;
+      }
 
 # define PLOT_GAIN  8
 
-    // spectrum drawing.
-    for (i = 0; (i < frame->conf->fft_size) && (i < 256); i++)
+    sprintf(buff, "dB");
+
+    layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
+    pango_layout_set_font_description (layout, spectrum_legend_font_desc);
+    gdk_draw_layout(window, gc, spectrum_x_margin - 6, 2, layout);
+    
+    int grid_height = (int) (PLOT_GAIN*log10(pow(10.0, grid_db_height/10.0))); // dB.
+    j = 0;
+    for (i = 0; i <= spectrum_size_y; i += grid_height)
       {
-        int j = (frame->core->X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(frame->core->X[i])) : 64; // dB.
-        gdk_draw_line(w, gc, i, 63, i, j);
+        if (j == 0)
+          sprintf(buff, " %i", j);
+        else
+         sprintf(buff, "%i", j);
+
+        layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
+        pango_layout_set_font_description (layout, spectrum_legend_font_desc);
+        gdk_draw_layout(window, gc, 2, spectrum_size_y
+            + spectrum_top_margin - i - 5, layout);
+        
+        gdk_draw_line(window, gc, spectrum_x_margin, spectrum_size_y
+            + spectrum_top_margin - i, spectrum_x_margin + spectrum_size_x,
+            spectrum_size_y + spectrum_top_margin - i);
+        
+        j += grid_db_height;
+      }
+
+    gdk_gc_set_foreground(gc, &noise_threshold_color);
+
+    // noise threshold drawing.
+    j = -1;
+    for (i = 0; (i < frame->conf->fft_size) && (i < spectrum_size_x); i++)
+      {
+        if ((i % 10) > 5)
+          continue;
+
+        FLT w = 2*M_PI*i/frame->conf->fft_size;
+        //FLT noise = pow(10.0, (frame->conf->noise_threshold_db*(1.0 - 0.9*w/M_PI))/10.0);
+        //FLT noise = lingot_signal_get_noise_threshold(frame->conf, w);
+        FLT noise = frame->conf->noise_threshold_un;
+        old_j = j;
+        j = (noise > 1.0) ? (int) (PLOT_GAIN*log10(noise)) : 0; // dB.
+        if ((old_j >= 0) && (old_j < spectrum_size_y)&& (j >= 0)&& (j
+            < spectrum_size_y))
+          gdk_draw_line(window, gc, spectrum_x_margin + i - 1, spectrum_size_y
+              + spectrum_top_margin - old_j, spectrum_x_margin + i,
+              spectrum_size_y + spectrum_top_margin - j);
+      }
+
+    gdk_gc_set_foreground(gc, &spectrum_color);
+
+    // spectrum drawing.
+    j = -1;
+    for (i = 0; (i < frame->conf->fft_size) && (i < spectrum_size_x); i++)
+      {
+        old_j = j;
+        j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(frame->core->X[i])) : 0; // dB.
+        if (spectrum_drawing_filled)
+          {
+            if (j < spectrum_size_y)
+              gdk_draw_line(window, gc, spectrum_x_margin + i, spectrum_size_y
+                  + spectrum_top_margin - 1, spectrum_x_margin + i,
+                  spectrum_top_margin
+                      + ((j< spectrum_size_y) ? (spectrum_size_y - j) : 0));
+          }
+        else if ((old_j >= 0) && (old_j < spectrum_size_y)&& (j >= 0)&& (j
+            < spectrum_size_y))
+          gdk_draw_line(window, gc, spectrum_x_margin + i - 1, spectrum_size_y
+              + spectrum_top_margin - old_j, spectrum_x_margin + i,
+              spectrum_size_y + spectrum_top_margin - j);
       }
 
     if (frame->core->freq != 0.0)
@@ -504,17 +718,19 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame)
         gdk_gc_set_foreground(gc, &freq_color);
 
         // index of closest sample to fundamental frequency.
-        int i = (int) rint(frame->core->freq*frame->conf->fft_size
+        i = (int) rint(frame->core->freq*frame->conf->fft_size
             *frame->conf->oversampling/frame->conf->sample_rate);
-        int j = (frame->core->X[i] > 1.0) ? (int) (64 - PLOT_GAIN*log10(frame->core->X[i])) : 64; // dB.
-        gdk_draw_rectangle(w, gc, TRUE, i-1, j-1, 3, 3);
+        j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(frame->core->X[i])) : 0; // dB.
+        if (j < spectrum_size_y - 1)
+          gdk_draw_rectangle(window, gc, TRUE, spectrum_x_margin + i-1,
+              spectrum_size_y + spectrum_top_margin - j - 1, 3, 3);
       }
 
 # undef  PLOT_GAIN
 
     gdk_gc_set_foreground(gc, &black_color);
 
-    gdk_draw_pixmap(frame->spectrum_area->window, gc, w, 0, 0, 0, 0, 256, 64);
+    gdk_draw_pixmap(frame->spectrum_area->window, gc, window, 0, 0, 0, 0, spectrum_size_x + 2*spectrum_x_margin, spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin);
     gdk_flush();
   }
 
@@ -528,18 +744,16 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
     FLT fret_f;
     int fret;
     char* current_note;
+    char labeltext_current_note[100];
 
     static char error_string[30], freq_string[30];
 
     if (frame->core->freq < 10.0)
       {
-
         current_note = "---";
         strcpy(error_string, "e = ---");
         strcpy(freq_string, "f = ---");
         lingot_gauge_compute(frame->gauge, frame->conf->vr);
-        //error = conf->VRP;
-
       }
     else
       {
@@ -549,7 +763,6 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
             + 12e2;
 
         lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
-        //error = fret_f - rint(fret_f);
 
         fret = ((int) rint(fret_f)) % 12;
 
@@ -561,8 +774,8 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
 
     gtk_label_set_text(GTK_LABEL(frame->freq_label), freq_string);
     gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
-    char labeltext_current_note[100];
-    sprintf(labeltext_current_note, "<big><b>%s</b></big>", current_note);
+    sprintf(labeltext_current_note,
+        "<big><big><big><big><b>%s</b></big></big></big></big>", current_note);
     gtk_label_set_markup(GTK_LABEL(frame->note_label), labeltext_current_note);
   }
 
@@ -573,6 +786,21 @@ void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf)
 
     // dup.
     *frame->conf = *conf;
+
+    // resize spectrum area
+    g_object_unref(frame->pix_spectrum);
+
+    int
+        x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
+            + 2*spectrum_x_margin;
+    int y = spectrum_size_y + spectrum_top_margin + spectrum_bottom_margin;
+    gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
+    frame->pix_spectrum= gdk_pixmap_new(frame->spectrum_area->window, x, y, -1);
+
+    gtk_scrolled_window_set_policy(frame->spectrum_scroll,
+        (frame->conf->fft_size > 512) ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER,
+        GTK_POLICY_NEVER);
+    gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll), 260 + 2*spectrum_x_margin, spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin + 4 + ((frame->conf->fft_size > 512) ? 16 : 0));
 
     frame->core = lingot_core_new(frame->conf);
     lingot_core_start(frame->core);

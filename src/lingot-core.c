@@ -64,12 +64,16 @@ LingotCore* lingot_core_new(LingotConfig* conf)
     if (core->conf->fft_size > 256)
       {
         core->spd_fft = malloc((core->conf->fft_size >> 1)*sizeof(FLT));
+        core->X = malloc((core->conf->fft_size >> 1)*sizeof(FLT));
         memset(core->spd_fft, 0, (core->conf->fft_size >> 1)*sizeof(FLT));
+        memset(core->X, 0, (core->conf->fft_size >> 1)*sizeof(FLT));
       }
     else
       { // if the fft size is 256, we store the whole signal for representation.
         core->spd_fft = malloc((core->conf->fft_size)*sizeof(FLT));
+        core->X = malloc((core->conf->fft_size)*sizeof(FLT));
         memset(core->spd_fft, 0, core->conf->fft_size*sizeof(FLT));
+        memset(core->X, 0, (core->conf->fft_size)*sizeof(FLT));
       }
 
     core->spd_dft = malloc((core->conf->dft_size)*sizeof(FLT));
@@ -77,6 +81,8 @@ LingotCore* lingot_core_new(LingotConfig* conf)
 
     core->diff2_spd_fft = malloc(core->conf->fft_size*sizeof(FLT)); // 2nd derivative from SPD.
     memset(core->diff2_spd_fft, 0, core->conf->fft_size*sizeof(FLT));
+
+    memset(core->spd_dft, 0, core->conf->dft_size*sizeof(FLT));
 
 #ifndef LIB_FFTW  
     lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
@@ -91,19 +97,20 @@ LingotCore* lingot_core_new(LingotConfig* conf)
 #endif
 
     // read buffer from soundcard.
-    core->read_buffer
-        = malloc((core->conf->read_buffer_size*core->conf->oversampling)*sizeof(SAMPLE_TYPE));
+    core->read_buffer= malloc((core->conf->read_buffer_size
+        *core->conf->oversampling)*sizeof(SAMPLE_TYPE));
     memset(core->read_buffer, 0, (core->conf->read_buffer_size
         *core->conf->oversampling)*sizeof(SAMPLE_TYPE));
 
     // read buffer from soundcard in floating point format.
-    core->flt_read_buffer
-        = malloc((core->conf->read_buffer_size*core->conf->oversampling)*sizeof(FLT));
+    core->flt_read_buffer= malloc((core->conf->read_buffer_size
+        *core->conf->oversampling)*sizeof(FLT));
     memset(core->flt_read_buffer, 0, (core->conf->read_buffer_size
         *core->conf->oversampling)*sizeof(FLT));
 
     // stored samples.
-    core->temporal_window_buffer = malloc((core->conf->temporal_buffer_size)*sizeof(FLT));
+    core->temporal_window_buffer = malloc((core->conf->temporal_buffer_size)
+        *sizeof(FLT));
     memset(core->temporal_window_buffer, 0, core->conf->temporal_buffer_size
         *sizeof(FLT));
 
@@ -137,6 +144,7 @@ void lingot_core_destroy(LingotCore* core)
     lingot_audio_destroy(core->audio);
 
     free(core->spd_fft);
+    free(core->X);
     free(core->spd_dft);
     free(core->diff2_spd_fft);
     free(core->read_buffer);
@@ -273,7 +281,9 @@ void lingot_core_process(LingotCore* core)
 # endif
 
     // representable piece
-    memcpy(core->X, core->spd_fft, 256*sizeof(FLT));
+    memcpy(core->X, core->spd_fft,
+        ((core->conf->fft_size > 256) ? (core->conf->fft_size >> 1) : 256)
+            *sizeof(FLT));
 
     // truncated 2nd derivative esteem, to enhance peaks
     core->diff2_spd_fft[0] = 0.0;
@@ -366,7 +376,7 @@ void lingot_core_start(LingotCore* core)
 void lingot_core_stop(LingotCore* core)
   {
     void* thread_result;
-    
+
     core->running = 0;
 
     // wait for the thread exit

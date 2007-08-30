@@ -95,14 +95,15 @@ struct _LingotConfig
   };
 
 LingotConfig* lingot_config_new();
+void lingot_config_destroy(LingotConfig*);
 
 // back to default configuration.
-void lingot_config_reset(LingotConfig* config);
+void lingot_config_reset(LingotConfig*);
 
 // derivate internal parameters from external ones.
-int lingot_config_update_internal_params(LingotConfig* config);
+int lingot_config_update_internal_params(LingotConfig*);
 
-void lingot_config_save(LingotConfig* config, char* file);
-void lingot_config_load(LingotConfig* config, char* file);
+void lingot_config_save(LingotConfig*, char* filename);
+void lingot_config_load(LingotConfig*, char* filename);
 
 #endif // __LINGOT_CONFIG_H__

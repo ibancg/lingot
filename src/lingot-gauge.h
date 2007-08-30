@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_GAUGE_H_
-#define LINGOT_GAUGE_H_
+#ifndef __LINGOT_GAUGE_H__
+#define __LINGOT_GAUGE_H__
 
 #include "lingot-defs.h"
 #include "lingot-filter.h"
@@ -43,4 +43,4 @@ LingotGauge* lingot_gauge_new(FLT);
 void lingot_gauge_destroy(LingotGauge*);
 void lingot_gauge_compute(LingotGauge*, FLT);
 
-#endif /*LINGOT_GAUGE_H_*/
+#endif /*__LINGOT_GAUGE_H__*/

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+# Ibán Cereijo Graña <ibancg@gmail.com>, 2007.
 #
 #, fuzzy
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "POT-Creation-Date: 2007-08-30 02:54+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
-"Language-Team: Spanish <LL@li.org>\n"
+"Language-Team: Galician <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,7 +22,7 @@ msgstr "configuración de lingot"
 
 #: ../src/lingot-config-dialog.c:161
 msgid "General parameters"
-msgstr "Parámetros generales"
+msgstr "Parámetros xerais"
 
 #: ../src/lingot-config-dialog.c:180
 msgid "Calculation rate"
@@ -44,7 +44,7 @@ msgstr "Tamaño de FFT"
 #: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
 #: ../src/lingot-config-dialog.c:374
 msgid "samples"
-msgstr "muestras"
+msgstr "mostras"
 
 #: ../src/lingot-config-dialog.c:222
 msgid "Noise threshold"
@@ -56,7 +56,7 @@ msgstr "dB"
 
 #: ../src/lingot-config-dialog.c:263
 msgid "Sample rate"
-msgstr "Tasa de muestreo"
+msgstr "Tasa de mostreo"
 
 #. --------------------------------------------------------------------------
 #: ../src/lingot-config-dialog.c:270
@@ -73,7 +73,7 @@ msgstr "Frecuencia base"
 
 #: ../src/lingot-config-dialog.c:319
 msgid "Temporal window"
-msgstr "Ventana temporal"
+msgstr "Ventá temporal"
 
 #: ../src/lingot-config-dialog.c:320
 msgid "seconds"
@@ -105,7 +105,7 @@ msgstr "Orden de pico"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "Relación rechazo picos"
+msgstr "Relación rexeite picos"
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
@@ -117,12 +117,12 @@ msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
-"%0.3f segundos"
+"O búfer da ventá temporal é menor que o de FFT, foi incrementado a %0.3f "
+"segundos"
 
 #: ../src/lingot-mainframe.c:107
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Afinador de instrumentos preciso y fácil de usar"
+msgstr "Afinador de instrumentos preciso e fácil de usar"
 
 #: ../src/lingot-mainframe.c:276
 msgid "lingot"
@@ -135,7 +135,7 @@ msgstr "Espectro"
 
 #: ../src/lingot-mainframe.c:332
 msgid "_File"
-msgstr "_Archivo"
+msgstr "_Arquivo"
 
 #: ../src/lingot-mainframe.c:333
 msgid "_Edit"
@@ -147,7 +147,7 @@ msgstr "_Ver"
 
 #: ../src/lingot-mainframe.c:335
 msgid "_Help"
-msgstr "Ayuda"
+msgstr "Axuda"
 
 #. gauge frame
 #: ../src/lingot-mainframe.c:359
