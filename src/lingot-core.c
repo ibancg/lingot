@@ -34,7 +34,6 @@
 #include "lingot-fft.h"
 #include "lingot-signal.h"
 #include "lingot-core.h"
-#include "lingot-filters.h"
 #include "lingot-config.h"
 
 LingotCore* lingot_core_new(LingotConfig* conf)
@@ -114,10 +113,23 @@ LingotCore* lingot_core_new(LingotConfig* conf)
     memset(core->temporal_window_buffer, 0, core->conf->temporal_buffer_size
         *sizeof(FLT));
 
-    // order 8 Chebyshev antialiasing filter, wc = pi/oversampling
-    core->antialiasing_filter= lingot_filter_new(8, 8,
-        filters[core->conf->oversampling][0],
-        filters[core->conf->oversampling][1]);
+    /*
+     * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
+     * Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
+     * in order to avoid aliased frequencies near to w=Pi, due to non
+     * ideality of the filter.
+     *
+     * The cut frequencies wc=Pi/i, with i=1..20, correspond with the
+     * oversampling factor, avoiding aliasing at decimation.
+     * 
+     * Why Chebyshev filters?, for a given order, those filters yield
+     * abrupt falls than other ones as Butterworth, making the most of
+     * the order. Although Chebyshev filters affects more to the phase,
+     * it doesn't matter due to the analysis is made on the signal
+     * power distribution (only module).
+     */
+    core->antialiasing_filter= lingot_filter_cheby_design(8, 0.5, 0.9
+        /core->conf->oversampling);
 
     // ------------------------------------------------------------
 
@@ -364,7 +376,6 @@ void lingot_core_process(LingotCore* core)
 /* start running the core in another thread */
 void lingot_core_start(LingotCore* core)
   {
-
     pthread_attr_init(&core->attr);
 
     // detached thread.
@@ -386,7 +397,6 @@ void lingot_core_stop(LingotCore* core)
 /* run the core */
 void lingot_core_run(LingotCore* core)
   {
-
     while (core->running)
       {
         lingot_core_process(core); // process new data block.

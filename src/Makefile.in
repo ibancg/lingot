@@ -160,6 +160,7 @@ MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
+MSGFMT_OPTS = @MSGFMT_OPTS@
 NO_PREFIX_PACKAGE_DATA_DIR = @NO_PREFIX_PACKAGE_DATA_DIR@
 NO_PREFIX_PACKAGE_DOC_DIR = @NO_PREFIX_PACKAGE_DOC_DIR@
 NO_PREFIX_PACKAGE_HELP_DIR = @NO_PREFIX_PACKAGE_HELP_DIR@
@@ -258,7 +259,6 @@ lingot_SOURCES = \
 	lingot-defs.h\
 	lingot-config-dialog.c\
 	lingot-config-dialog.h\
-	lingot-filters.h\
 	lingot-gauge.c\
 	lingot-gauge.h\
 	lingot-mainframe.c\

@@ -113,9 +113,9 @@ int lingot_config_update_internal_params(LingotConfig* config)
         *config->sample_rate/config->oversampling);
     config->read_buffer_size = (unsigned int)ceil(config->sample_rate
         /(config->calculation_rate*config->oversampling));
-    config->peak_rejection_relation_un = pow(10.0,
+    config->peak_rejection_relation_nu = pow(10.0,
         config->peak_rejection_relation_db/10.0);
-    config->noise_threshold_un = pow(10.0, config->noise_threshold_db/10.0);
+    config->noise_threshold_nu = pow(10.0, config->noise_threshold_db/10.0);
 
     if (config->temporal_buffer_size < config->fft_size)
       {

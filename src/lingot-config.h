@@ -62,7 +62,7 @@ struct _LingotConfig
     unsigned int read_buffer_size;
 
     FLT noise_threshold_db; // dB
-    FLT noise_threshold_un; // natural units (internal parameter)
+    FLT noise_threshold_nu; // natural units (internal parameter)
 
     // frequency finding algorithm configuration
     //-------------------------------------------
@@ -77,7 +77,7 @@ struct _LingotConfig
      has an amplitude relation with the fundamental considered peak lower than
      this parameter. */
     FLT peak_rejection_relation_db; // dBs
-    FLT peak_rejection_relation_un; // natural units (internal)
+    FLT peak_rejection_relation_nu; // natural units (internal)
 
     // DFT approximation
     unsigned int dft_number; // number of DFTs.

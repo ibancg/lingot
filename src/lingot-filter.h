@@ -46,8 +46,15 @@ struct _LingotFilter
 
   };
 
-LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a,
-    FLT* b);
+LingotFilter
+    * lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a, FLT* b);
+
+/**
+ * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple
+ * with cutoff pi*wc radians.
+ */
+LingotFilter* lingot_filter_cheby_design(unsigned int order, FLT Rp, FLT wc);
+
 void lingot_filter_destroy(LingotFilter*);
 
 // Digital Filter Implementation II, in & out overlapables. Vector filtering
