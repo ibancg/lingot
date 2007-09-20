@@ -119,8 +119,6 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame)
         //gtk_show_about_dialog(GTK_WINDOW(about), "Lingot", NULL);
         gtk_window_set_icon(GTK_WINDOW(about), logo);
 
-        g_object_unref(logo);
-
         gtk_dialog_run (GTK_DIALOG (about));
         gtk_widget_destroy (GTK_WIDGET(about));
       }
@@ -491,7 +489,6 @@ void lingot_mainframe_destroy(LingotMainFrame* frame)
 
 void lingot_mainframe_run(LingotMainFrame* frame)
   {
-
     lingot_core_start(frame->core);
     gtk_main();
   }
@@ -678,7 +675,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame)
         FLT w = 2*M_PI*i/frame->conf->fft_size;
         //FLT noise = pow(10.0, (frame->conf->noise_threshold_db*(1.0 - 0.9*w/M_PI))/10.0);
         //FLT noise = lingot_signal_get_noise_threshold(frame->conf, w);
-        FLT noise = frame->conf->noise_threshold_un;
+        FLT noise = frame->conf->noise_threshold_nu;
         old_j = j;
         j = (noise > 1.0) ? (int) (PLOT_GAIN*log10(noise)) : 0; // dB.
         if ((old_j >= 0) && (old_j < spectrum_size_y)&& (j >= 0)&& (j

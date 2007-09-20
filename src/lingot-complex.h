@@ -40,5 +40,6 @@ struct _LingotComplex
 void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c);
 void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c);
 void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c);
 
 #endif

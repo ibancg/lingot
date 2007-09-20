@@ -66,7 +66,7 @@ int lingot_signal_is_peak(LingotConfig* conf, FLT* x, int index)
     //static   FLT  delta_w_FFT = 2.0*M_PI/conf->FFT_SIZE; // resolution in rads
 
     // a peak must be greater than noise threshold.
-    if (x[index] < conf->noise_threshold_un)
+    if (x[index] < conf->noise_threshold_nu)
       return 0;
 
     for (j = 0; j < conf->peak_order; j++)
@@ -140,7 +140,7 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 
     // all peaks much lower than maximum are deleted.
     for (i = 0; i < conf->peak_number; i++)
-      if ((p_index[i] == -1) ||(conf->peak_rejection_relation_un*x[p_index[i]]
+      if ((p_index[i] == -1) ||(conf->peak_rejection_relation_nu*x[p_index[i]]
           < maximum))
         p_index[i] = N; // there are available places in the buffer.
 

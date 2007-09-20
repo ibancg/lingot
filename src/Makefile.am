@@ -21,7 +21,6 @@ lingot_SOURCES = \
 	lingot-defs.h\
 	lingot-config-dialog.c\
 	lingot-config-dialog.h\
-	lingot-filters.h\
 	lingot-gauge.c\
 	lingot-gauge.h\
 	lingot-mainframe.c\

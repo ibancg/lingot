@@ -16,7 +16,6 @@ src/lingot-core.h
 src/lingot-defs.h
 src/lingot-config-dialog.c
 src/lingot-config-dialog.h
-src/lingot-filters.h
 src/lingot-gauge.c
 src/lingot-gauge.h
 src/lingot-mainframe.c

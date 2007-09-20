@@ -239,7 +239,7 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
 
     dialog->spin_oversampling = gtk_spin_button_new(
         (GtkAdjustment*) gtk_adjustment_new(dialog->conf->oversampling, 1.0,
-            20.0, 1.0, 10.0, 15.0), 1.0, 1);
+            30.0, 1.0, 10.0, 15.0), 1.0, 1);
 
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(dialog->spin_oversampling), TRUE);
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(dialog->spin_oversampling), 0) ;
