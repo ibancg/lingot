@@ -311,7 +311,7 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
 
     dialog->spin_temporal_window =gtk_spin_button_new(
         (GtkAdjustment*)gtk_adjustment_new(dialog->conf->temporal_window, 0.0,
-            2.0, 0.005, 0.1, 0.1), 0.005, 1);
+            15.0, 0.005, 0.1, 0.1), 0.005, 1);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(dialog->spin_temporal_window), TRUE);
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(dialog->spin_temporal_window), 3) ;
 
