@@ -365,12 +365,14 @@ void lingot_core_process(LingotCore* core)
         // ! we use the WHOLE temporal window for greater precission.
         lingot_fft_spd_diffs(core->temporal_window_buffer,
             core->conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
+		//printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
         wkm1 = wk - d1_SPD/d2_SPD;
       }
 
     w = wkm1; // frequency in rads.
     core->freq = (w*core->conf->sample_rate)
         /(2.0*M_PI*core->conf->oversampling); // analog frequency.
+        
   }
 
 /* start running the core in another thread */

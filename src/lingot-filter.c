@@ -201,10 +201,14 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	// compute filter coefficients from pole/zero values
 	a[0] = 1.0;
 	b[0] = 1.0;
+	new_a[0] = 1.0;
+	new_b[0] = 1.0;
 
-	for (i = 1; i < n; i++) {
+	for (i = 1; i <= n; i++) {
 		a[i] = 0.0;
 		b[i] = 0.0;
+		new_a[i] = 0.0;
+		new_b[i] = 0.0;
 	}
 
 	if ((n & 1) == 1) // odd

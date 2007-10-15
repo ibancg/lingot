@@ -273,7 +273,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
     GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
     gtk_window_set_icon(GTK_WINDOW(frame->win), logo);
 
-    g_object_unref(logo);
+//    g_object_unref(logo);
 
     gtk_window_set_title(GTK_WINDOW (frame->win), _("lingot"));
 
@@ -745,7 +745,12 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
 
     static char error_string[30], freq_string[30];
 
-    if (frame->core->freq < 10.0)
+	LingotCore* core1 = frame->core;
+
+	// ignore continuous component
+	// since 1.7.5: core is dumping NANs on some config changes, here we detect
+	// it, but we don't know why the core is generating them. 
+    if (isnan(frame->core->freq) || (frame->core->freq < 10.0))
       {
         current_note = "---";
         strcpy(error_string, "e = ---");
@@ -754,13 +759,11 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
       }
     else
       {
-
         // bring up some octaves to avoid negative frets.
         fret_f = log(frame->core->freq/frame->conf->root_frequency)/Log2*12.0
             + 12e2;
 
         lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
-
         fret = ((int) rint(fret_f)) % 12;
 
         current_note = note_string[fret];
