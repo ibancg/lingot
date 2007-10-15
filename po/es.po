@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-17 09:15+0200\n"
+"POT-Creation-Date: 2007-10-11 17:11+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -124,6 +124,7 @@ msgstr ""
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso y fácil de usar"
 
+#. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:278
 msgid "lingot"
 msgstr "lingot"

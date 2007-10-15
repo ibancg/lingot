@@ -1,115 +1,115 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Ibán Cereijo Graña <ibancg@gmail.com>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lingot\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-11 17:11+0200\n"
-"PO-Revision-Date: 2007-08-23 17:46+0200\n"
-"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
-"Language-Team: Galician <LL@li.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/lingot-config-dialog.c:152
 msgid "lingot configuration"
-msgstr "configuración de lingot"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:161
 msgid "General parameters"
-msgstr "Parámetros xerais"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:180
 msgid "Calculation rate"
-msgstr "Tasa de cálculo"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
 #: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
 msgid "Hz"
-msgstr "Hz"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:192
 msgid "Visualization rate"
-msgstr "Tasa de visualización"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:208
 msgid "FFT size"
-msgstr "Tamaño de FFT"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
 #: ../src/lingot-config-dialog.c:374
 msgid "samples"
-msgstr "mostras"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:222
 msgid "Noise threshold"
-msgstr "Umbral de ruido"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
 msgid "dB"
-msgstr "dB"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:263
 msgid "Sample rate"
-msgstr "Tasa de mostreo"
+msgstr ""
 
 #. --------------------------------------------------------------------------
 #: ../src/lingot-config-dialog.c:270
 msgid "Advanced parameters"
-msgstr "Parámetros avanzados"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:293
 msgid " A (440 Hz) + "
-msgstr " A (440 Hz) + "
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:305
 msgid "Root frequency"
-msgstr "Frecuencia base"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:319
 msgid "Temporal window"
-msgstr "Ventá temporal"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:320
 msgid "seconds"
-msgstr "segundos"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:333
 msgid "DFT number"
-msgstr "Nº de DFTs"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:335
 msgid "DFTs"
-msgstr "DFTs"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:346
 msgid "DFT size"
-msgstr "Tamaño de DFT"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:359
 msgid "Peak number"
-msgstr "Nº de picos"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:361
 msgid "peaks"
-msgstr "picos"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:372
 msgid "Peak order"
-msgstr "Orden de pico"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "Relación rexeite picos"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
-msgstr "Config. defecto"
+msgstr ""
 
 #: ../src/lingot-config-dialog.c:463
 #, c-format
@@ -117,57 +117,55 @@ msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"O búfer da ventá temporal é menor que o de FFT, foi incrementado a %0.3f "
-"segundos"
 
 #: ../src/lingot-mainframe.c:111
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Afinador de instrumentos preciso e fácil de usar"
+msgstr ""
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:278
 msgid "lingot"
-msgstr "lingot"
+msgstr ""
 
 #. spectrum frame at bottom
 #: ../src/lingot-mainframe.c:301 ../src/lingot-mainframe.c:371
 msgid "Spectrum"
-msgstr "Espectro"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:334
 msgid "_File"
-msgstr "_Arquivo"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:335
 msgid "_Edit"
-msgstr "_Editar"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:336
 msgid "_View"
-msgstr "_Ver"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:337
 msgid "_Help"
-msgstr "Axuda"
+msgstr ""
 
 #. gauge frame
 #: ../src/lingot-mainframe.c:361
 msgid "Deviation"
-msgstr "Desviación"
+msgstr ""
 
 #. note frame
 #: ../src/lingot-mainframe.c:366
 msgid "Note"
-msgstr "Nota"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:404
 msgid "freq"
-msgstr "frec"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:407
 msgid "err"
-msgstr "err"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:410
 msgid "note"
-msgstr "nota"
+msgstr ""
