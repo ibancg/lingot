@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-11 17:11+0200\n"
+"POT-Creation-Date: 2007-10-16 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,54 +118,58 @@ msgid ""
 "seconds"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:111
+#: ../src/lingot-mainframe.c:132
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr ""
 
+#: ../src/lingot-mainframe.c:135
+msgid "translator-credits"
+msgstr ""
+
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:278
+#: ../src/lingot-mainframe.c:292
 msgid "lingot"
 msgstr ""
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:301 ../src/lingot-mainframe.c:371
+#: ../src/lingot-mainframe.c:315 ../src/lingot-mainframe.c:385
 msgid "Spectrum"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:334
+#: ../src/lingot-mainframe.c:348
 msgid "_File"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:335
+#: ../src/lingot-mainframe.c:349
 msgid "_Edit"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:350
 msgid "_View"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:337
+#: ../src/lingot-mainframe.c:351
 msgid "_Help"
 msgstr ""
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:361
+#: ../src/lingot-mainframe.c:375
 msgid "Deviation"
 msgstr ""
 
 #. note frame
-#: ../src/lingot-mainframe.c:366
+#: ../src/lingot-mainframe.c:380
 msgid "Note"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:404
+#: ../src/lingot-mainframe.c:418
 msgid "freq"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:407
+#: ../src/lingot-mainframe.c:421
 msgid "err"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:410
+#: ../src/lingot-mainframe.c:424
 msgid "note"
 msgstr ""

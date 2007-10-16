@@ -94,33 +94,27 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame)
   {
     if (frame->core->running)
       {
-        GtkAboutDialog* about= GTK_ABOUT_DIALOG(gtk_about_dialog_new());
-        GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
-        const gchar* authors[3];
-        const gchar* artists[2];
+        static const gchar* authors[] = {
+        	"Ibán Cereijo Graña <ibancg@gmail.com>",
+        	"Jairo Chapela Martínez <jairochapela@gmail.com>",
+        	NULL
+        };
+        
+        const gchar* artists[] = { 
+        	"Matthew Blissett (Logo design)",
+        	NULL
+        };
 
-        authors[0] = "Ibán Cereijo Graña <ibancg@gmail.com>";
-        authors[1] = "Jairo Chapela Martínez <jairochapela@gmail.com>";
-        authors[2] = NULL;
-        artists[0] = "Matthew Blissett (Logo design)";
-        artists[1] = NULL;
-
-        gtk_about_dialog_set_name(about, "Lingot");
-        gtk_about_dialog_set_version(about, VERSION);
-        gtk_about_dialog_set_website(about, "http://lingot.nongnu.org/");
-        gtk_about_dialog_set_comments(about, _("Accurate and easy to use musical instrument tuner"));
-        gtk_about_dialog_set_authors(about, authors);
-        gtk_about_dialog_set_artists(about, artists);
-        gtk_about_dialog_set_copyright(
-            about,
-            "Copyright © 2004-2007 Ibán Cereijo Graña\nCopyright © 2004-2007 Jairo Chapela Martínez");
-        gtk_about_dialog_set_logo(about, logo);
-
-        //gtk_show_about_dialog(GTK_WINDOW(about), "Lingot", NULL);
-        gtk_window_set_icon(GTK_WINDOW(about), logo);
-
-        gtk_dialog_run (GTK_DIALOG (about));
-        gtk_widget_destroy (GTK_WIDGET(about));
+        gtk_show_about_dialog (NULL,
+			"name",		"Lingot",
+			"version",	VERSION,
+			"copyright",	"\xC2\xA9 2004-2007 Ibán Cereijo Graña\n\xC2\xA9 2004-2007 Jairo Chapela Martínez",
+			"comments",	_("Accurate and easy to use musical instrument tuner"),
+			"authors",	authors,
+			"artists", artists,
+			"translator-credits",	_("translator-credits"),
+			"logo-icon-name", "lingot-logo",
+			NULL);
       }
   }
 
@@ -271,6 +265,8 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
     gtk_window_set_position(GTK_WINDOW(frame->win), GTK_WIN_POS_CENTER);
 
     GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
+    gtk_icon_theme_add_builtin_icon("lingot-logo", 64, logo);
+    
     gtk_window_set_icon(GTK_WINDOW(frame->win), logo);
 
 //    g_object_unref(logo);
