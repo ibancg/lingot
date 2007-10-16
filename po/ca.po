@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-11 17:11+0200\n"
+"POT-Creation-Date: 2007-10-16 15:54+0200\n"
 "PO-Revision-Date: 2007-10-02 19:00+0200\n"
 "Last-Translator: Raül Cambeiro <rulet@menta.net>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -119,56 +119,60 @@ msgstr ""
 "La memòria intermèdia temporal és menor que la mida de l'FFT. S'ha augmentat "
 "a %0.3f segons."
 
-#: ../src/lingot-mainframe.c:111
+#: ../src/lingot-mainframe.c:132
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador d'instruments musicals precís i fàcil de fer anar"
 
+#: ../src/lingot-mainframe.c:135
+msgid "translator-credits"
+msgstr "Raúl Cambeiro <rulet@menta.net>, 2007"
+
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:278
+#: ../src/lingot-mainframe.c:292
 msgid "lingot"
 msgstr "Lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:301 ../src/lingot-mainframe.c:371
+#: ../src/lingot-mainframe.c:315 ../src/lingot-mainframe.c:385
 msgid "Spectrum"
 msgstr "Espectre"
 
-#: ../src/lingot-mainframe.c:334
+#: ../src/lingot-mainframe.c:348
 msgid "_File"
 msgstr "_Fitxer"
 
-#: ../src/lingot-mainframe.c:335
+#: ../src/lingot-mainframe.c:349
 msgid "_Edit"
 msgstr "_Edita"
 
-#: ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:350
 msgid "_View"
 msgstr "_Visualitza"
 
-#: ../src/lingot-mainframe.c:337
+#: ../src/lingot-mainframe.c:351
 #, fuzzy
 msgid "_Help"
 msgstr "A_juda"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:361
+#: ../src/lingot-mainframe.c:375
 msgid "Deviation"
 msgstr "Desviació"
 
 #. note frame
-#: ../src/lingot-mainframe.c:366
+#: ../src/lingot-mainframe.c:380
 msgid "Note"
 msgstr "Nota"
 
-#: ../src/lingot-mainframe.c:404
+#: ../src/lingot-mainframe.c:418
 msgid "freq"
 msgstr "freq"
 
-#: ../src/lingot-mainframe.c:407
+#: ../src/lingot-mainframe.c:421
 msgid "err"
 msgstr "err"
 
-#: ../src/lingot-mainframe.c:410
+#: ../src/lingot-mainframe.c:424
 msgid "note"
 msgstr "nota"
 
