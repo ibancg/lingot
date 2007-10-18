@@ -744,8 +744,6 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame)
 	LingotCore* core1 = frame->core;
 
 	// ignore continuous component
-	// since 1.7.5: core is dumping NANs on some config changes, here we detect
-	// it, but we don't know why the core is generating them. 
     if (isnan(frame->core->freq) || (frame->core->freq < 10.0))
       {
         current_note = "---";
