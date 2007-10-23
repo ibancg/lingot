@@ -393,7 +393,7 @@ void lingot_core_stop(LingotCore* core)
     core->running = 0;
 
     // wait for the thread exit
-    pthread_join(core->thread, &thread_result);
+   	pthread_join(core->thread, &thread_result);
   }
 
 /* run the core */
