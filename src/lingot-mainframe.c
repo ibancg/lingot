@@ -68,6 +68,8 @@ GtkWidget* spectrum_frame;
 
 PangoFontDescription* spectrum_legend_font_desc;
 
+int destroyed = 0;
+
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
     LingotMainFrame* frame)
   {
@@ -77,17 +79,19 @@ void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 
 void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
   {
-    if (frame->core->running)
-      {
+  	destroyed = 1;
+
+    if (frame->core->running) {
+  	
+	    gtk_timeout_remove(frame->visualization_timer_uid);
+	    gtk_timeout_remove(frame->calculation_timer_uid);
+	    gtk_timeout_remove(frame->freq_timer_uid);
+
         lingot_core_stop(frame->core);
-
-        gtk_timeout_remove(frame->visualization_timer_uid);
-        gtk_timeout_remove(frame->calculation_timer_uid);
-        gtk_timeout_remove(frame->freq_timer_uid);
-
-        gtk_main_quit();
-        lingot_mainframe_destroy(frame);
-      }
+      
+	    gtk_main_quit();
+	    lingot_mainframe_destroy(frame);
+    }
   }
 
 void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame)
@@ -150,9 +154,11 @@ void lingot_mainframe_callback_config_dialog(GtkWidget* w,
 /* Callback for visualization */
 gboolean lingot_mainframe_callback_visualization(gpointer data)
   {
-    //printf("visualization callback!\n");
-
     unsigned int period;
+    
+  	if (destroyed == 1)
+  		return 0;
+  	
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
     if (frame->core->running)
@@ -170,6 +176,10 @@ gboolean lingot_mainframe_callback_visualization(gpointer data)
 gboolean lingot_mainframe_callback_calculation(gpointer data)
   {
     unsigned int period;
+    
+  	if (destroyed == 1)
+  		return 0;
+  	
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
     if (frame->core->running)
@@ -186,6 +196,9 @@ gboolean lingot_mainframe_callback_calculation(gpointer data)
 /* Callback for frequency calculation */
 gboolean lingot_mainframe_callback_frequency(gpointer data)
   {
+  	if (destroyed == 1)
+  		return 0;
+  		
     unsigned int period;
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
@@ -420,7 +433,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
     gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
-    gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
+    gtk_signal_connect_after(GTK_OBJECT(frame->win), "destroy",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_destroy), frame);
 
     period = 1000/frame->conf->visualization_rate;
