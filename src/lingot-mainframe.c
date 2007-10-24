@@ -69,7 +69,8 @@ GtkWidget* spectrum_frame;
 PangoFontDescription* spectrum_legend_font_desc;
 
 int destroyed = 0;
-
+int destroy_signal_handler_id = -1;
+ 
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
     LingotMainFrame* frame)
   {
@@ -82,7 +83,7 @@ void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
   	destroyed = 1;
 
     if (frame->core->running) {
-  	
+  		gtk_signal_disconnect(GTK_OBJECT(frame->win), destroy_signal_handler_id);
 	    gtk_timeout_remove(frame->visualization_timer_uid);
 	    gtk_timeout_remove(frame->calculation_timer_uid);
 	    gtk_timeout_remove(frame->freq_timer_uid);
@@ -433,7 +434,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
     gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
-    gtk_signal_connect_after(GTK_OBJECT(frame->win), "destroy",
+    destroy_signal_handler_id = gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_destroy), frame);
 
     period = 1000/frame->conf->visualization_rate;
