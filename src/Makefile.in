@@ -58,7 +58,7 @@ am_lingot_OBJECTS = lingot-fft.$(OBJEXT) lingot-audio.$(OBJEXT) \
 	lingot.$(OBJEXT)
 lingot_OBJECTS = $(am_lingot_OBJECTS)
 am__DEPENDENCIES_1 =
-lingot_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+lingot_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -77,8 +77,6 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
-ALSA_CFLAGS = @ALSA_CFLAGS@
-ALSA_LIBS = @ALSA_LIBS@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
