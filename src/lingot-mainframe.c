@@ -68,9 +68,6 @@ GtkWidget* spectrum_frame;
 
 PangoFontDescription* spectrum_legend_font_desc;
 
-int destroyed = 0;
-int destroy_signal_handler_id = -1;
- 
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
     LingotMainFrame* frame)
   {
@@ -80,18 +77,11 @@ void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 
 void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
   {
-  	destroyed = 1;
-
     if (frame->core->running) {
-  		gtk_signal_disconnect(GTK_OBJECT(frame->win), destroy_signal_handler_id);
 	    gtk_timeout_remove(frame->visualization_timer_uid);
 	    gtk_timeout_remove(frame->calculation_timer_uid);
 	    gtk_timeout_remove(frame->freq_timer_uid);
-
-        lingot_core_stop(frame->core);
-      
 	    gtk_main_quit();
-	    lingot_mainframe_destroy(frame);
     }
   }
 
@@ -157,9 +147,6 @@ gboolean lingot_mainframe_callback_visualization(gpointer data)
   {
     unsigned int period;
     
-  	if (destroyed == 1)
-  		return 0;
-  	
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
     if (frame->core->running)
@@ -177,9 +164,6 @@ gboolean lingot_mainframe_callback_visualization(gpointer data)
 gboolean lingot_mainframe_callback_calculation(gpointer data)
   {
     unsigned int period;
-    
-  	if (destroyed == 1)
-  		return 0;
   	
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
@@ -197,9 +181,6 @@ gboolean lingot_mainframe_callback_calculation(gpointer data)
 /* Callback for frequency calculation */
 gboolean lingot_mainframe_callback_frequency(gpointer data)
   {
-  	if (destroyed == 1)
-  		return 0;
-  		
     unsigned int period;
     LingotMainFrame* frame = (LingotMainFrame*) data;
 
@@ -434,7 +415,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[])
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
     gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
-    destroy_signal_handler_id = gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
+    gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
         GTK_SIGNAL_FUNC(lingot_mainframe_callback_destroy), frame);
 
     period = 1000/frame->conf->visualization_rate;
@@ -479,13 +460,11 @@ void lingot_mainframe_destroy(LingotMainFrame* frame)
     if (frame->config_dialog)
       lingot_config_dialog_destroy(frame->config_dialog);
 
-    pango_font_description_free(spectrum_legend_font_desc);
-
-    gtk_widget_destroy(frame->freq_label);
-    gtk_widget_destroy(frame->error_label);
-    gtk_widget_destroy(frame->note_label);
-
-    gtk_widget_destroy(frame->win);
+	// pango_font_description_free(spectrum_legend_font_desc);
+    // gtk_widget_destroy(frame->freq_label);
+    // gtk_widget_destroy(frame->error_label);
+    // gtk_widget_destroy(frame->note_label);
+    // gtk_widget_destroy(frame->win);
 
     // gdk_color_free(&gauge_color);
     // gdk_color_free(&spectrum_color);
@@ -501,6 +480,8 @@ void lingot_mainframe_run(LingotMainFrame* frame)
   {
     lingot_core_start(frame->core);
     gtk_main();
+    lingot_core_stop(frame->core);
+    lingot_mainframe_destroy(frame);
   }
 // ---------------------------------------------------------------------------
 
