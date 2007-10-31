@@ -226,12 +226,6 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	gtk_init(&argc, &argv);
 	gtk_set_locale();
 
-	gtk_rc_parse_string("style \"title\""
-		"{"
-		"font = \"-*-helvetica-bold-r-normal--32-*-*-*-*-*-*-*\""
-		"}"
-		"widget \"*label_nota\" style \"title\"");
-
 	// creates the window
 	frame->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(frame->win), GTK_WIN_POS_CENTER);
@@ -733,10 +727,10 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
 
 	gtk_label_set_text(GTK_LABEL(frame->freq_label), freq_string);
 	gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
-	sprintf(labeltext_current_note,
-			"<big><big><big><big><b>%s</b></big></big></big></big>",
-			current_note);
-	gtk_label_set_markup(GTK_LABEL(frame->note_label), labeltext_current_note);
+
+	char* markup = g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", current_note);
+	gtk_label_set_markup (GTK_LABEL (frame->note_label), markup);
+	g_free (markup);
 }
 
 void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf) {
