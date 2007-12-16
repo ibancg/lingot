@@ -43,47 +43,54 @@
 
 typedef struct _LingotCore LingotCore;
 
-struct _LingotCore
-  {
+struct _LingotCore {
 
-    //  -- shared data --
-    FLT  freq; // analog frequency calculated.
-    FLT* X; // visual portion of FFT.
-    //  -- shared data --
+	//  -- shared data --
+	FLT freq; // analog frequency calculated.
+	FLT* X; // visual portion of FFT.
+	//  -- shared data --
 
 # ifdef LIBSNDOBJ
-    SndRTIO* audio; // audio handler.
+	SndRTIO* audio; // audio handler.
 # else
-    LingotAudio* audio; // audio handler.
+	LingotAudio* audio; // audio handler.
 # endif
 
-    SAMPLE_TYPE* read_buffer;
-    FLT* flt_read_buffer;
-    FLT* temporal_window_buffer; // sample memory.
+	SAMPLE_TYPE* read_buffer;
+	FLT* flt_read_buffer;
+	FLT* temporal_buffer; // sample memory.
 
-    // spectral power distribution esteem.
-    FLT* spd_fft;
-    FLT* spd_dft;
-    FLT* diff2_spd_fft;
+	// precomputed hamming windows
+	FLT* hamming_window_temporal;
+	FLT* hamming_window_fft;
+
+	// windowed signals
+	FLT* windowed_temporal_buffer;
+	FLT* windowed_fft_buffer;
+
+	// spectral power distribution esteem.
+	FLT* spd_fft;
+	FLT* spd_dft;
+	FLT* diff2_spd_fft;
 
 # ifdef LIB_FFTW
-    fftw_complex* fftw_in;
-    fftw_complex* fftw_out; // complex signals in time and freq.
-    fftw_plan fftwplan;
+	fftw_complex* fftw_in;
+	fftw_complex* fftw_out; // complex signals in time and freq.
+	fftw_plan fftwplan;
 # else
-    LingotComplex* fft_out; // complex signal in freq.
+	LingotComplex* fft_out; // complex signal in freq.
 # endif
 
-    LingotFilter* antialiasing_filter; // antialiasing filter for decimation.
+	LingotFilter* antialiasing_filter; // antialiasing filter for decimation.
 
-    int running;
+	int running;
 
-    LingotConfig* conf; // configuration structure
+	LingotConfig* conf; // configuration structure
 
-    // pthread-related  member variables
-    pthread_t thread;
-    pthread_attr_t attr;
-  };
+	// pthread-related  member variables
+	pthread_t thread;
+	pthread_attr_t attr;
+};
 
 //----------------------------------------------------------------
 

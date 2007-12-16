@@ -43,4 +43,7 @@ void lingot_signal_get_max(FLT *buffer, int N, int* Mi);
 // returns the index of the peak that carries the fundamental freq.
 int lingot_signal_get_fundamental_peak(LingotConfig*, FLT *x, FLT* y, int N);
 
+// generates a Hamming window of N samples
+void lingot_signal_hamming_window(int N, FLT* out);
+
 #endif /*__LINGOT_SIGNAL_H__*/
