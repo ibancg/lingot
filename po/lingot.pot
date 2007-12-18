@@ -1,0 +1,175 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-18 23:22+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/lingot-config-dialog.c:152
+msgid "lingot configuration"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:161
+msgid "General parameters"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:180
+msgid "Calculation rate"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
+#: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
+msgid "Hz"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:192
+msgid "Visualization rate"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:208
+msgid "FFT size"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
+#: ../src/lingot-config-dialog.c:374
+msgid "samples"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:222
+msgid "Noise threshold"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
+msgid "dB"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:263
+msgid "Sample rate"
+msgstr ""
+
+#. --------------------------------------------------------------------------
+#: ../src/lingot-config-dialog.c:270
+msgid "Advanced parameters"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:293
+msgid " A (440 Hz) + "
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:305
+msgid "Root frequency"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:319
+msgid "Temporal window"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:320
+msgid "seconds"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:333
+msgid "DFT number"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:335
+msgid "DFTs"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:346
+msgid "DFT size"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:359
+msgid "Peak number"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:361
+msgid "peaks"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:372
+msgid "Peak order"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:388
+msgid "Rejection peak relation"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:398
+msgid "Default config"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:463
+#, c-format
+msgid ""
+"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:101
+msgid "translator-credits"
+msgstr ""
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:240
+msgid "lingot"
+msgstr ""
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:263 ../src/lingot-mainframe.c:334
+msgid "Spectrum"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:297
+msgid "_File"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:298
+msgid "_Edit"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:299
+msgid "_View"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:300
+msgid "_Help"
+msgstr ""
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:324
+msgid "Deviation"
+msgstr ""
+
+#. note frame
+#: ../src/lingot-mainframe.c:329
+msgid "Note"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:374
+msgid "freq"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:377
+msgid "err"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:380
+msgid "note"
+msgstr ""
