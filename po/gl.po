@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-16 15:54+0200\n"
+"POT-Creation-Date: 2007-12-18 23:22+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
@@ -120,58 +120,58 @@ msgstr ""
 "O búfer da ventá temporal é menor que o de FFT, foi incrementado a %0.3f "
 "segundos"
 
-#: ../src/lingot-mainframe.c:132
+#: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso e fácil de usar"
 
-#: ../src/lingot-mainframe.c:135
+#: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:292
+#: ../src/lingot-mainframe.c:240
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:315 ../src/lingot-mainframe.c:385
+#: ../src/lingot-mainframe.c:263 ../src/lingot-mainframe.c:334
 msgid "Spectrum"
 msgstr "Espectro"
 
-#: ../src/lingot-mainframe.c:348
+#: ../src/lingot-mainframe.c:297
 msgid "_File"
 msgstr "_Arquivo"
 
-#: ../src/lingot-mainframe.c:349
+#: ../src/lingot-mainframe.c:298
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/lingot-mainframe.c:350
+#: ../src/lingot-mainframe.c:299
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/lingot-mainframe.c:351
+#: ../src/lingot-mainframe.c:300
 msgid "_Help"
 msgstr "Axuda"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:375
+#: ../src/lingot-mainframe.c:324
 msgid "Deviation"
 msgstr "Desviación"
 
 #. note frame
-#: ../src/lingot-mainframe.c:380
+#: ../src/lingot-mainframe.c:329
 msgid "Note"
 msgstr "Nota"
 
-#: ../src/lingot-mainframe.c:418
+#: ../src/lingot-mainframe.c:374
 msgid "freq"
 msgstr "frec"
 
-#: ../src/lingot-mainframe.c:421
+#: ../src/lingot-mainframe.c:377
 msgid "err"
 msgstr "err"
 
-#: ../src/lingot-mainframe.c:424
+#: ../src/lingot-mainframe.c:380
 msgid "note"
 msgstr "nota"
