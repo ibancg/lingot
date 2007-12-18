@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = lingot
 PACKAGE = lingot
-VERSION = 0.7.5b3
+VERSION = 0.7.5
 
 SHELL = /bin/sh
 
