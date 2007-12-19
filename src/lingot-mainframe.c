@@ -649,7 +649,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	// spectrum drawing.
 	j = -1;
-	for (i = 0; (i < frame->conf->fft_size) && (i < spectrum_size_x); i++) {
+	for (i = 0; (i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1); i++) {
 		old_j = j;
 		j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(frame->core->X[i])) : 0; // dB.
 		if (spectrum_drawing_filled) {
@@ -674,10 +674,12 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		// index of closest sample to fundamental frequency.
 		i = (int) rint(frame->core->freq*frame->conf->fft_size
 				*frame->conf->oversampling/frame->conf->sample_rate);
-		j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(frame->core->X[i])) : 0; // dB.
-		if (j < spectrum_size_y - 1)
-			gdk_draw_rectangle(window, gc, TRUE, spectrum_x_margin + i-1,
-					spectrum_size_y + spectrum_top_margin - j - 1, 3, 3);
+		if ((i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1)) {
+			j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(frame->core->X[i])) : 0; // dB.
+			if (j < spectrum_size_y - 1)
+				gdk_draw_rectangle(window, gc, TRUE, spectrum_x_margin + i-1,
+						spectrum_size_y + spectrum_top_margin - j - 1, 3, 3);
+		}
 	}
 
 # undef  PLOT_GAIN
@@ -728,9 +730,10 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
 	gtk_label_set_text(GTK_LABEL(frame->freq_label), freq_string);
 	gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
 
-	char* markup = g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", current_note);
-	gtk_label_set_markup (GTK_LABEL (frame->note_label), markup);
-	g_free (markup);
+	char* markup = g_markup_printf_escaped(
+			"<span size=\"xx-large\" weight=\"bold\">%s</span>", current_note);
+	gtk_label_set_markup(GTK_LABEL(frame->note_label), markup);
+	g_free(markup);
 }
 
 void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf) {
