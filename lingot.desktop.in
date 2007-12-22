@@ -1,10 +1,8 @@
-
 [Desktop Entry]
-Name=lingot Version 0.7
-Comment=lingot Version 0.7
+Name=Lingot
+Comment=LINGOT Is Not a Guitar-Only Tuner
 Exec=lingot
 Icon=@PACKAGE_PIXMAPS_DIR@/lingot-icon.svg
 Terminal=false
-MultipleArgs=false
 Type=Application
-
+Categories=GNOME;GTK;AudioVideo;

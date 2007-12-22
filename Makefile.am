@@ -1,6 +1,11 @@
+## Process this file with automake to produce Makefile.in
+## Created by Anjuta - will be overwritten
+## If you don't want it to overwrite it,
+## 	Please disable it in the Anjuta project configuration
+
 SUBDIRS = po src pixmaps
 
-lingotdocdir = ${prefix}/doc/lingot
+lingotdocdir = ${docdir}
 lingotdoc_DATA = \
 	README\
 	COPYING\
@@ -24,7 +29,7 @@ CLEANFILES =\
 	intltool-merge\
 	intltool-update
 
-gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
+gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop
 
 

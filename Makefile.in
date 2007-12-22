@@ -248,7 +248,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = po src pixmaps
-lingotdocdir = ${prefix}/doc/lingot
+lingotdocdir = ${docdir}
 lingotdoc_DATA = \
 	README\
 	COPYING\
@@ -271,7 +271,7 @@ CLEANFILES = \
 	intltool-merge\
 	intltool-update
 
-gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@/Applications
+gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
