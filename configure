@@ -2300,7 +2300,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=lingot
- VERSION=0.7.6b3
+ VERSION=0.7.6
 
 
 cat >>confdefs.h <<_ACEOF
