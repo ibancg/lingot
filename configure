@@ -2300,7 +2300,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=lingot
- VERSION=0.7.6b2
+ VERSION=0.7.6b3
 
 
 cat >>confdefs.h <<_ACEOF
@@ -23073,7 +23073,7 @@ packagedocdir=doc/${PACKAGE}
 
 packagepixmapsdir=share/pixmaps/${PACKAGE}
 packagehelpdir=share/gnome/help/${PACKAGE}
-packagemenudir=share/gnome/apps
+packagemenudir=share/applications
 
 NO_PREFIX_PACKAGE_DATA_DIR="${packagedatadir}"
 
