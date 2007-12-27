@@ -1,18 +1,4 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
-#undef ENABLE_NLS
-#undef HAVE_CATGETS
-#undef HAVE_GETTEXT
-#undef HAVE_LC_MESSAGES
-#undef HAVE_STPCPY
-#undef HAVE_LIBSM
-#undef PACKAGE_LOCALE_DIR
-#undef PACKAGE_DOC_DIR
-#undef PACKAGE_DATA_DIR
-#undef PACKAGE_PIXMAPS_DIR
-#undef PACKAGE_HELP_DIR
-#undef PACKAGE_MENU_DIR
-#undef PACKAGE_SOURCE_DIR
-#undef GETTEXT_PACKAGE
 
 /* always defined to indicate that i18n is enabled */
 #undef ENABLE_NLS
@@ -71,11 +57,29 @@
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
+/* Package data dir */
+#undef PACKAGE_DATA_DIR
+
+/* Package doc dir */
+#undef PACKAGE_DOC_DIR
+
+/* Help */
+#undef PACKAGE_HELP_DIR
+
 /* Package local directory */
 #undef PACKAGE_LOCALE_DIR
 
+/* Menu */
+#undef PACKAGE_MENU_DIR
+
 /* Define to the full name of this package. */
 #undef PACKAGE_NAME
+
+/* Pixmaps */
+#undef PACKAGE_PIXMAPS_DIR
+
+/* Source */
+#undef PACKAGE_SRC_DIR
 
 /* Define to the full name and version of this package. */
 #undef PACKAGE_STRING
