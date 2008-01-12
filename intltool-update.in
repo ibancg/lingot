@@ -30,7 +30,7 @@
 
 ## Release information
 my $PROGRAM = "intltool-update";
-my $VERSION = "0.36.2";
+my $VERSION = "0.35.0";
 my $PACKAGE = "intltool";
 
 ## Loaded modules
@@ -71,8 +71,7 @@ my $xml_support =
 "sheet(?:\\.in)+|".	# ?
 "schemas(?:\\.in)+|".	# GConf specific
 "pong(?:\\.in)+|".	# DEPRECATED: PONG is not used [by GNOME] any longer.
-"kbd(?:\\.in)+|".	# GOK specific. 
-"policy(?:\\.in)+";	# PolicyKit files
+"kbd(?:\\.in)+";	# GOK specific. 
 
 my $ini_support =
 "icon(?:\\.in)+|".	# http://www.freedesktop.org/Standards/icon-theme-spec
@@ -91,9 +90,10 @@ my $buildin_gettext_support =
 $| = 1;
 
 ## Sometimes the source tree will be rooted somewhere else.
-my $SRCDIR = $ENV{"srcdir"} || ".";
+my $SRCDIR = ".";
 my $POTFILES_in;
 
+$SRCDIR = $ENV{"srcdir"} if $ENV{"srcdir"};
 $POTFILES_in = "<$SRCDIR/POTFILES.in";
 
 my $devnull = ($^O eq 'MSWin32' ? 'NUL:' : '/dev/null');
@@ -124,10 +124,8 @@ my $arg_count = ($DIST_ARG > 0)
 
 &Console_Write_IntltoolHelp if $arg_count > 1;
 
-my $PKGNAME = FindPackageName ();
-
 # --version and --help don't require a module name
-my $MODULE = $GETTEXT_PACKAGE || $PKGNAME || "unknown";
+my $MODULE = $GETTEXT_PACKAGE || &FindPackageName || "unknown";
 
 if ($POT_ARG)
 {
@@ -318,8 +316,7 @@ sub FindLeftoutFiles
 	@buf_potfiles_ignore,
 	@buf_allfiles,
 	@buf_allfiles_sorted,
-	@buf_potfiles_sorted,
-        @buf_potfiles_ignore_sorted
+	@buf_potfiles_sorted
     );
 
     ## Search and find all translatable files
@@ -329,12 +326,7 @@ sub FindLeftoutFiles
 	push @buf_i18n_ini,          "$File::Find::name" if /\.($ini_support)$/;
 	push @buf_i18n_xml_unmarked, "$File::Find::name" if /\.(schemas(\.in)+)$/;
 	}, "..";
-    find sub { 
-	push @buf_i18n_plain,        "$File::Find::name" if /\.($buildin_gettext_support)$/;
-	push @buf_i18n_xml,          "$File::Find::name" if /\.($xml_support)$/;
-	push @buf_i18n_ini,          "$File::Find::name" if /\.($ini_support)$/;
-	push @buf_i18n_xml_unmarked, "$File::Find::name" if /\.(schemas(\.in)+)$/;
-	}, "$SRCDIR/..";
+
 
     open POTFILES, $POTFILES_in or die "$PROGRAM:  there's no POTFILES.in!\n";
     @buf_potfiles = grep !/^(#|\s*$)/, <POTFILES>;
@@ -350,7 +342,7 @@ sub FindLeftoutFiles
     ## comparing with POTFILES.in
     foreach my $ignore ("POTFILES.skip", "POTFILES.ignore")
     {
-	(-s "$SRCDIR/$ignore") or next;
+	(-s $ignore) or next;
 
 	if ("$ignore" eq "POTFILES.ignore")
 	{
@@ -359,7 +351,7 @@ sub FindLeftoutFiles
 	}
 
 	print "Found $ignore: Ignoring files...\n" if $VERBOSE;
-	open FILE, "<$SRCDIR/$ignore" or die "ERROR: Failed to open $SRCDIR/$ignore!\n";
+	open FILE, "<$ignore" or die "ERROR: Failed to open $ignore!\n";
 	    
 	while (<FILE>)
 	{
@@ -367,7 +359,7 @@ sub FindLeftoutFiles
 	}
 	close FILE;
 
-	@buf_potfiles_ignore_sorted = sort (@buf_potfiles_ignore);
+	@buf_potfiles = (@buf_potfiles_ignore, @buf_potfiles);
     }
 
     foreach my $file (@buf_i18n_plain)
@@ -425,7 +417,7 @@ sub FindLeftoutFiles
 		}
 	    }	    
 
-	    if (/\w\.GetString *\(QUOTEDTEXT/)
+	    if (/\.GetString ?\(QUOTEDTEXT/)
 	    {
                 if (defined isNotValidMissing (unpack("x3 A*", $file))) {
                     ## Remove the first 3 chars and add newline
@@ -434,8 +426,7 @@ sub FindLeftoutFiles
 		last;
 	    }
 
-            ## N_ Q_ and _ are the three macros defined in gi8n.h
-	    if (/[NQ]?_ *\(QUOTEDTEXT/)
+	    if (/_\(QUOTEDTEXT/)
 	    {
                 if (defined isNotValidMissing (unpack("x3 A*", $file))) {
                     ## Remove the first 3 chars and add newline
@@ -495,15 +486,6 @@ sub FindLeftoutFiles
     my %in2;
     foreach (@buf_potfiles_sorted) 
     {
-        s#^$SRCDIR/../##;
-        s#^$SRCDIR/##;
-	$in2{$_} = 1;
-    }
-
-    foreach (@buf_potfiles_ignore_sorted) 
-    {
-        s#^$SRCDIR/../##;
-        s#^$SRCDIR/##;
 	$in2{$_} = 1;
     }
 
@@ -511,16 +493,9 @@ sub FindLeftoutFiles
 
     foreach (@buf_allfiles_sorted)
     {
-        my $dummy = $_;
-        my $srcdir = $SRCDIR;
-
-        $srcdir =~ s#^../##;
-        $dummy =~ s#^$srcdir/../##;
-        $dummy =~ s#^$srcdir/##;
-        $dummy =~ s#_build/##;
-	if (!exists($in2{$dummy}))
+	if (!exists($in2{$_}))
 	{
-	    push @result, $dummy
+	    push @result, $_
 	}
     }
 
@@ -529,7 +504,7 @@ sub FindLeftoutFiles
     foreach (@buf_potfiles_sorted)
     {
 	chomp (my $dummy = $_);
-	if ("$dummy" ne "" and !(-f "$SRCDIR/../$dummy" or -f "../$dummy"))
+	if ("$dummy" ne "" and ! -f "../$dummy")
 	{
 	    push @buf_potfiles_notexist, $_;
 	}
@@ -562,7 +537,7 @@ sub FindLeftoutFiles
 	    warn "\n" if ($VERBOSE or @result);
 	    warn "\e[1mThe following files do not exist anymore:\e[0m\n\n";
 	    warn @buf_potfiles_notexist, "\n";
-	    warn "Please remove them from POTFILES.in. A file \e[1m'notexist'\e[0m\n".
+	    warn "Please remove them from POTFILES.in or POTFILES.skip. A file \e[1m'notexist'\e[0m\n".
 		 "containing this list of absent files has been written in the current directory.\n";
 	}
     }
@@ -580,33 +555,16 @@ sub Console_WriteError_InvalidOption
     exit 1;
 }
 
-sub isProgramInPath
-{
-    my ($file) = @_;
-    # If either a file exists, or when run it returns 0 exit status
-    return 1 if ((-x $file) or (system("$file --version >$devnull") == 0));
-    return 0;
-}
-
-sub isGNUGettextTool
-{
-    my ($file) = @_;
-    # Check that we are using GNU gettext tools
-    if (isProgramInPath ($file))
-    {
-        my $version = `$file --version`;
-        return 1 if ($version =~ m/.*\(GNU .*\).*/);
-    }
-    return 0;
-}
-
 sub GenerateHeaders
 {
-    my $EXTRACT = $ENV{"INTLTOOL_EXTRACT"} || "intltool-extract";
+    my $EXTRACT = "@INTLTOOL_EXTRACT@";
+    chomp $EXTRACT;
+
+    $EXTRACT = $ENV{"INTLTOOL_EXTRACT"} if $ENV{"INTLTOOL_EXTRACT"};
 
     ## Generate the .h header files, so we can allow glade and
     ## xml translation support
-    if (! isProgramInPath ("$EXTRACT"))
+    if (! -x "$EXTRACT")
     {
 	print STDERR "\n *** The intltool-extract script wasn't found!"
 	     ."\n *** Without it, intltool-update can not generate files.\n";
@@ -653,13 +611,13 @@ sub GenerateHeaders
 #
 sub GeneratePOTemplate
 {
-    my $XGETTEXT = $ENV{"XGETTEXT"} || "xgettext";
+    my $XGETTEXT = $ENV{"XGETTEXT"} || "@INTLTOOL_XGETTEXT@";
     my $XGETTEXT_ARGS = $ENV{"XGETTEXT_ARGS"} || '';
     chomp $XGETTEXT;
 
-    if (! isGNUGettextTool ("$XGETTEXT"))
+    if (! -x $XGETTEXT)
     {
-	print STDERR " *** GNU xgettext is not found on this system!\n".
+	print STDERR " *** xgettext is not found on this system!\n".
 		     " *** Without it, intltool-update can not extract strings.\n";
 	exit;
     }
@@ -713,8 +671,12 @@ sub GeneratePOTemplate
 	} 
 	else 
 	{
-            print OUTFILE "$SRCDIR/../$_\n";
-	    $gettext_code = &TextFile_DetermineEncoding ("$SRCDIR/../$_") if ($gettext_support_nonascii and not defined $forced_gettext_code);
+	    if ($SRCDIR eq ".") {
+	        print OUTFILE "../$_\n";
+	    } else {
+	        print OUTFILE "$SRCDIR/../$_\n";
+	    }
+	    $gettext_code = &TextFile_DetermineEncoding ("../$_") if ($gettext_support_nonascii and not defined $forced_gettext_code);
 	}
 
 	next if (! $gettext_support_nonascii);
@@ -755,23 +717,7 @@ sub GeneratePOTemplate
     unlink "$MODULE.pot";
     my @xgettext_argument=("$XGETTEXT",
 			   "--add-comments",
-			   "--directory\=.",
-                           "--default-domain\=$MODULE",
-                           "--flag\=g_strdup_printf:1:c-format",
-                           "--flag\=g_string_printf:2:c-format",
-                           "--flag\=g_string_append_printf:2:c-format",
-                           "--flag\=g_error_new:3:c-format",
-                           "--flag\=g_set_error:4:c-format",
-                           "--flag\=g_markup_printf_escaped:1:c-format",
-                           "--flag\=g_log:3:c-format",
-                           "--flag\=g_print:1:c-format",
-                           "--flag\=g_printerr:1:c-format",
-                           "--flag\=g_printf:1:c-format",
-                           "--flag\=g_fprintf:2:c-format",
-                           "--flag\=g_sprintf:2:c-format",
-                           "--flag\=g_snprintf:3:c-format",
-                           "--flag\=g_scanner_error:2:c-format",
-                           "--flag\=g_scanner_warn:2:c-format",
+			   "--directory\=\.",
 			   "--output\=$MODULE\.pot",
 			   "--files-from\=\.\/POTFILES\.in\.temp");
     my $XGETTEXT_KEYWORDS = &FindPOTKeywords;
@@ -838,15 +784,8 @@ sub POFile_Update
 {
     -f "$MODULE.pot" or die "$PROGRAM: $MODULE.pot does not exist.\n";
 
-    my $MSGMERGE = $ENV{"MSGMERGE"} || "msgmerge";
+    my $MSGMERGE = $ENV{"MSGMERGE"} || "@INTLTOOL_MSGMERGE@";
     my ($lang, $outfile) = @_;
-
-    if (! isGNUGettextTool ("$MSGMERGE"))
-    {
-	print STDERR " *** GNU msgmerge is not found on this system!\n".
-		     " *** Without it, intltool-update can not extract strings.\n";
-	exit;
-    }
 
     print "Merging $SRCDIR/$lang.po with $MODULE.pot..." if $VERBOSE;
 
@@ -888,14 +827,7 @@ sub POFile_GetLanguage ($)
 sub Console_Write_TranslationStatus
 {
     my ($lang, $output_file) = @_;
-    my $MSGFMT = $ENV{"MSGFMT"} || "msgfmt";
-
-    if (! isGNUGettextTool ("$MSGFMT"))
-    {
-	print STDERR " *** GNU msgfmt is not found on this system!\n".
-		     " *** Without it, intltool-update can not extract strings.\n";
-	exit;
-    }
+    my $MSGFMT = $ENV{"MSGFMT"} || "@INTLTOOL_MSGFMT@";
 
     $output_file = "$SRCDIR/$lang.po" if ($output_file eq "");
 
@@ -904,28 +836,21 @@ sub Console_Write_TranslationStatus
 
 sub Console_Write_CoverageReport
 {
-    my $MSGFMT = $ENV{"MSGFMT"} || "msgfmt";
-
-    if (! isGNUGettextTool ("$MSGFMT"))
-    {
-	print STDERR " *** GNU msgfmt is not found on this system!\n".
-		     " *** Without it, intltool-update can not extract strings.\n";
-	exit;
-    }
+    my $MSGFMT = $ENV{"MSGFMT"} || "@INTLTOOL_MSGFMT@";
 
     &GatherPOFiles;
 
     foreach my $lang (@languages) 
     {
-	print STDERR "$lang: ";
+	print "$lang: ";
 	&POFile_Update ($lang, "");
     }
 
-    print STDERR "\n\n * Current translation support in $MODULE \n\n";
+    print "\n\n * Current translation support in $MODULE \n\n";
 
     foreach my $lang (@languages)
     {
-	print STDERR "$lang: ";
+	print "$lang: ";
 	system ("$MSGFMT", "-o", "$devnull", "--verbose", "$SRCDIR/$lang.po");
     }
 }
@@ -999,13 +924,13 @@ sub CONF_Handle_Open
 
 	    $conf_in || die "Cannot find top_builddir in Makevars.";
 	}
-	elsif (-f "$SRCDIR/../configure.ac") 
+	elsif (-f "../configure.ac") 
 	{
-	    $conf_in = "$SRCDIR/../configure.ac";
+	    $conf_in = "../configure.ac";
 	} 
-	elsif (-f "$SRCDIR/../configure.in") 
+	elsif (-f "../configure.in") 
 	{
-	    $conf_in = "$SRCDIR/../configure.in";
+	    $conf_in = "../configure.in";
 	} 
 	else 
 	{
