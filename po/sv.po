@@ -1,32 +1,31 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+# Swedish messages for lingot
+# Copyright (C) 2007-2008  Ibán Cereijo Graña, Jairo Chapela Martínez.
+# This file is distributed under the same license as the lingot package.
+# John Gustafsson <jammin.johng@gmail.com>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-21 00:37+0100\n"
-"PO-Revision-Date: 2007-08-23 17:46+0200\n"
-"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
-"Language-Team: Spanish <LL@li.org>\n"
+"PO-Revision-Date: 2008-02-20 18:53+0100\n"
+"Last-Translator: John Gustafsson <jammin.johng@gmail.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/lingot-config-dialog.c:152
 msgid "lingot configuration"
-msgstr "configuración de lingot"
+msgstr "Konfiguration av Lingot"
 
 #: ../src/lingot-config-dialog.c:161
 msgid "General parameters"
-msgstr "Parámetros generales"
+msgstr "Allmänna parametrar"
 
 #: ../src/lingot-config-dialog.c:180
 msgid "Calculation rate"
-msgstr "Tasa de cálculo"
+msgstr "Beräkningsfrekvens"
 
 #: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
 #: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
@@ -35,20 +34,20 @@ msgstr "Hz"
 
 #: ../src/lingot-config-dialog.c:192
 msgid "Visualization rate"
-msgstr "Tasa de visualización"
+msgstr "Visualiseringsfrekvens"
 
 #: ../src/lingot-config-dialog.c:208
 msgid "FFT size"
-msgstr "Tamaño de FFT"
+msgstr "FFT-storlek"
 
 #: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
 #: ../src/lingot-config-dialog.c:374
 msgid "samples"
-msgstr "muestras"
+msgstr "samplingar"
 
 #: ../src/lingot-config-dialog.c:222
 msgid "Noise threshold"
-msgstr "Umbral de ruido"
+msgstr "Tröskelvärde för brus"
 
 #: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
 msgid "dB"
@@ -56,12 +55,12 @@ msgstr "dB"
 
 #: ../src/lingot-config-dialog.c:263
 msgid "Sample rate"
-msgstr "Tasa de muestreo"
+msgstr "Samplingsfrekvens"
 
 #. --------------------------------------------------------------------------
 #: ../src/lingot-config-dialog.c:270
 msgid "Advanced parameters"
-msgstr "Parámetros avanzados"
+msgstr "Avancerade parametrar"
 
 #: ../src/lingot-config-dialog.c:293
 msgid " A (440 Hz) + "
@@ -69,47 +68,47 @@ msgstr " A (440 Hz) + "
 
 #: ../src/lingot-config-dialog.c:305
 msgid "Root frequency"
-msgstr "Frecuencia base"
+msgstr "Grundfrekvens"
 
 #: ../src/lingot-config-dialog.c:319
 msgid "Temporal window"
-msgstr "Ventana temporal"
+msgstr "Tidsfönster"
 
 #: ../src/lingot-config-dialog.c:320
 msgid "seconds"
-msgstr "segundos"
+msgstr "sekunder"
 
 #: ../src/lingot-config-dialog.c:333
 msgid "DFT number"
-msgstr "Nº de DFTs"
+msgstr "Antal DFTer"
 
 #: ../src/lingot-config-dialog.c:335
 msgid "DFTs"
-msgstr "DFTs"
+msgstr "DFTer"
 
 #: ../src/lingot-config-dialog.c:346
 msgid "DFT size"
-msgstr "Tamaño de DFT"
+msgstr "DFT-storlek"
 
 #: ../src/lingot-config-dialog.c:359
 msgid "Peak number"
-msgstr "Nº de picos"
+msgstr "Antal toppar"
 
 #: ../src/lingot-config-dialog.c:361
 msgid "peaks"
-msgstr "picos"
+msgstr "toppar"
 
 #: ../src/lingot-config-dialog.c:372
 msgid "Peak order"
-msgstr "Orden de pico"
+msgstr "Toppens ordningsföljd"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "Relación rechazo picos"
+msgstr "Förkastelsevärde för topprelation"
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
-msgstr "Config. defecto"
+msgstr "Standardvärden"
 
 #: ../src/lingot-config-dialog.c:463
 #, c-format
@@ -117,61 +116,60 @@ msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
-"%0.3f segundos"
+"Tidsbufferten är mindre än FFT-storleken. Den har ökats till %0.3f sekunder."
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Afinador de instrumentos preciso y fácil de usar"
+msgstr "Precist och lättanvänt stämprogram för musikinstrument"
 
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
-msgstr ""
+msgstr "John Gustafsson <jammin.johng@gmail.com>"
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:240
 msgid "lingot"
-msgstr "lingot"
+msgstr "Lingot"
 
 #. spectrum frame at bottom
 #: ../src/lingot-mainframe.c:263 ../src/lingot-mainframe.c:334
 msgid "Spectrum"
-msgstr "Espectro"
+msgstr "Spektrum"
 
 #: ../src/lingot-mainframe.c:297
 msgid "_File"
-msgstr "_Archivo"
+msgstr "_Arkiv"
 
 #: ../src/lingot-mainframe.c:298
 msgid "_Edit"
-msgstr "_Editar"
+msgstr "_Redigera"
 
 #: ../src/lingot-mainframe.c:299
 msgid "_View"
-msgstr "_Ver"
+msgstr "_Visa"
 
 #: ../src/lingot-mainframe.c:300
 msgid "_Help"
-msgstr "Ayuda"
+msgstr "_Hjälp"
 
 #. gauge frame
 #: ../src/lingot-mainframe.c:324
 msgid "Deviation"
-msgstr "Desviación"
+msgstr "Avvikelse"
 
 #. note frame
 #: ../src/lingot-mainframe.c:329
 msgid "Note"
-msgstr "Nota"
+msgstr "Not"
 
 #: ../src/lingot-mainframe.c:374
 msgid "freq"
-msgstr "frec"
+msgstr "frekv"
 
 #: ../src/lingot-mainframe.c:377
 msgid "err"
-msgstr "err"
+msgstr "fel"
 
 #: ../src/lingot-mainframe.c:380
 msgid "note"
-msgstr "nota"
+msgstr "note"
