@@ -2,13 +2,13 @@
 # Copyright (C) 2007-2008  Ibán Cereijo Graña, Jairo Chapela Martínez.
 # This file is distributed under the same license as the lingot package.
 # John Gustafsson <jammin.johng@gmail.com>, 2008.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-21 00:37+0100\n"
-"PO-Revision-Date: 2008-02-20 18:53+0100\n"
+"PO-Revision-Date: 2008-03-05 20:51+0100\n"
 "Last-Translator: John Gustafsson <jammin.johng@gmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -100,11 +100,11 @@ msgstr "toppar"
 
 #: ../src/lingot-config-dialog.c:372
 msgid "Peak order"
-msgstr "Toppens ordningsföljd"
+msgstr "Halv toppbredd"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "Förkastelsevärde för topprelation"
+msgstr "Tröskelvärde för topprelation"
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
