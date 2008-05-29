@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Lingot
 Comment=LINGOT Is Not a Guitar-Only Tuner
+Comment[cs]=(Nejen kytarová) ladička
 Exec=lingot
 Icon=@PACKAGE_PIXMAPS_DIR@/lingot-icon.svg
 Terminal=false
