@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-21 00:37+0100\n"
+"POT-Creation-Date: 2008-06-21 18:35+0200\n"
 "PO-Revision-Date: 2008-03-05 20:51+0100\n"
 "Last-Translator: John Gustafsson <jammin.johng@gmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -122,54 +122,54 @@ msgstr ""
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Precist och lättanvänt stämprogram för musikinstrument"
 
-#: ../src/lingot-mainframe.c:101
+#: ../src/lingot-mainframe.c:103
 msgid "translator-credits"
 msgstr "John Gustafsson <jammin.johng@gmail.com>"
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:240
+#: ../src/lingot-mainframe.c:242
 msgid "lingot"
 msgstr "Lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:263 ../src/lingot-mainframe.c:334
+#: ../src/lingot-mainframe.c:265 ../src/lingot-mainframe.c:336
 msgid "Spectrum"
 msgstr "Spektrum"
 
-#: ../src/lingot-mainframe.c:297
+#: ../src/lingot-mainframe.c:299
 msgid "_File"
 msgstr "_Arkiv"
 
-#: ../src/lingot-mainframe.c:298
+#: ../src/lingot-mainframe.c:300
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: ../src/lingot-mainframe.c:299
+#: ../src/lingot-mainframe.c:301
 msgid "_View"
 msgstr "_Visa"
 
-#: ../src/lingot-mainframe.c:300
+#: ../src/lingot-mainframe.c:302
 msgid "_Help"
 msgstr "_Hjälp"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:324
+#: ../src/lingot-mainframe.c:326
 msgid "Deviation"
 msgstr "Avvikelse"
 
 #. note frame
-#: ../src/lingot-mainframe.c:329
+#: ../src/lingot-mainframe.c:331
 msgid "Note"
 msgstr "Not"
 
-#: ../src/lingot-mainframe.c:374
+#: ../src/lingot-mainframe.c:376
 msgid "freq"
 msgstr "frekv"
 
-#: ../src/lingot-mainframe.c:377
+#: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "fel"
 
-#: ../src/lingot-mainframe.c:380
+#: ../src/lingot-mainframe.c:382
 msgid "note"
 msgstr "note"

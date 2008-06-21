@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-21 00:37+0100\n"
+"POT-Creation-Date: 2008-06-21 18:35+0200\n"
 "PO-Revision-Date: 2008-01-12 17:23:00+0100\n"
 "Last-Translator: Roland Stigge <stigge@antcom.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -122,54 +122,54 @@ msgstr ""
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Genaues und einfach zu bedienendes Stimmgerät für Musikinstrumente"
 
-#: ../src/lingot-mainframe.c:101
+#: ../src/lingot-mainframe.c:103
 msgid "translator-credits"
 msgstr "Roland Stigge <stigge@antcom.de>"
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:240
+#: ../src/lingot-mainframe.c:242
 msgid "lingot"
 msgstr "Lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:263 ../src/lingot-mainframe.c:334
+#: ../src/lingot-mainframe.c:265 ../src/lingot-mainframe.c:336
 msgid "Spectrum"
 msgstr "Spektrum"
 
-#: ../src/lingot-mainframe.c:297
+#: ../src/lingot-mainframe.c:299
 msgid "_File"
 msgstr "_Datei"
 
-#: ../src/lingot-mainframe.c:298
+#: ../src/lingot-mainframe.c:300
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: ../src/lingot-mainframe.c:299
+#: ../src/lingot-mainframe.c:301
 msgid "_View"
 msgstr "_Anzeige"
 
-#: ../src/lingot-mainframe.c:300
+#: ../src/lingot-mainframe.c:302
 msgid "_Help"
 msgstr "_Hilfe"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:324
+#: ../src/lingot-mainframe.c:326
 msgid "Deviation"
 msgstr "Abweichung"
 
 #. note frame
-#: ../src/lingot-mainframe.c:329
+#: ../src/lingot-mainframe.c:331
 msgid "Note"
 msgstr "Note"
 
-#: ../src/lingot-mainframe.c:374
+#: ../src/lingot-mainframe.c:376
 msgid "freq"
 msgstr "Freq"
 
-#: ../src/lingot-mainframe.c:377
+#: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "Fehler"
 
-#: ../src/lingot-mainframe.c:380
+#: ../src/lingot-mainframe.c:382
 msgid "note"
 msgstr "note"
