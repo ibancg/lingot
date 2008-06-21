@@ -94,10 +94,12 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 		gtk_show_about_dialog(NULL,
 		"name", "Lingot",
 		"version", VERSION,
-		"copyright", "\xC2\xA9 2004-2007 Ibán Cereijo Graña\n\xC2\xA9 2004-2007 Jairo Chapela Martínez",
+		"copyright", "\xC2\xA9 2004-2008 Ibán Cereijo Graña\n\xC2\xA9 2004-2008 Jairo Chapela Martínez",
 		"comments", _("Accurate and easy to use musical instrument tuner"),
 		"authors", authors,
 		"artists", artists,
+		"website-label", "http://lingot.nongnu.org/",
+		"website", "http://lingot.nongnu.org/",
 		"translator-credits", _("translator-credits"),
 		"logo-icon-name", "lingot-logo",
 		NULL);
@@ -592,6 +594,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		pango_layout_set_font_description(layout, spectrum_legend_font_desc);
 		gdk_draw_layout(window, gc, spectrum_x_margin - 8 + i, spectrum_size_y
 				+ spectrum_top_margin + 5, layout);
+		g_object_unref(layout);
 		freq += scale;
 	}
 
@@ -602,6 +605,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
 	pango_layout_set_font_description(layout, spectrum_legend_font_desc);
 	gdk_draw_layout(window, gc, spectrum_x_margin - 6, 2, layout);
+	g_object_unref(layout);
 
 	int grid_height = (int) (PLOT_GAIN*log10(pow(10.0, grid_db_height/10.0))); // dB.
 	j = 0;
@@ -615,6 +619,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		pango_layout_set_font_description(layout, spectrum_legend_font_desc);
 		gdk_draw_layout(window, gc, 2, spectrum_size_y + spectrum_top_margin
 				- i - 5, layout);
+		g_object_unref(layout);
 
 		gdk_draw_line(window, gc, spectrum_x_margin, spectrum_size_y
 				+ spectrum_top_margin - i, spectrum_x_margin + spectrum_size_x,
