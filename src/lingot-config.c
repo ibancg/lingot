@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2008  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <locale.h>
 
 #include "lingot-config.h"
 #include "lingot-mainframe.h"
@@ -74,7 +75,7 @@ void lingot_config_reset(LingotConfig* config)
   {
     sprintf(config->audio_dev, "%s", "/dev/dsp");
 
-    config->sample_rate = 8000; // Hz
+    config->sample_rate = 11025; // Hz
     config->oversampling = 5;
     config->root_frequency_error = 0; // Hz
     config->min_frequency = 15; // Hz
@@ -134,6 +135,12 @@ void lingot_config_save(LingotConfig* config, char* filename)
   {
     unsigned int i;
     FILE* fp;
+    char* lc_all;
+
+    lc_all = setlocale(LC_ALL, NULL);
+// duplicate the string, as the next call to setlocale will destroy it
+    if (lc_all) lc_all = strdup(lc_all);
+    setlocale(LC_ALL, "C");
 
     if ((fp = fopen(filename, "w")) == NULL)
       {
@@ -161,6 +168,11 @@ void lingot_config_save(LingotConfig* config, char* filename)
         }
 
     fclose(fp);
+
+    if (lc_all) {
+        setlocale(LC_ALL, lc_all);
+        free(lc_all);
+    }
   }
 
 //----------------------------------------------------------------------------
