@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = lingot
 PACKAGE = lingot
-VERSION = 0.7.7b2
+VERSION = 0.7.7b3
 
 SHELL = /bin/sh
 
@@ -36,7 +36,7 @@ libdir = ${exec_prefix}/lib
 DATADIRNAME = share
 itlocaledir = $(prefix)/$(DATADIRNAME)/locale
 subdir = po
-install_sh = /home/jairo/Projects/lingot/install-sh
+install_sh = /home/iban/personal/workspace/lingot/install-sh
 # Automake >= 1.8 provides mkdir -p --.
 # Until it can be supposed, use the safe fallback:
 mkdir_p = $(install_sh) -d

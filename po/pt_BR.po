@@ -1,31 +1,33 @@
-# German translation of lingot
-# Copyright (C) 2008 Ibán Cereijo Graña
+# translation of pt_BR.po to Português do Brasil
+# Copyright (C) 2008 Carlos Laué
 # This file is distributed under the same license as the lingot package.
-# Roland Stigge <stigge@antcom.de>, 2008.
 #
+# Carlos Laue <carlosl@seznam.cz>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.7.6\n"
+"Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-24 18:56+0200\n"
-"PO-Revision-Date: 2008-01-12 17:23:00+0100\n"
-"Last-Translator: Roland Stigge <stigge@antcom.de>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2008-06-24 14:00+0200\n"
+"Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
+"Language-Team: Português do Brasil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
 #: ../src/lingot-config-dialog.c:152
 msgid "lingot configuration"
-msgstr "Lingot-Konfiguration"
+msgstr "Configuração do lingot"
 
 #: ../src/lingot-config-dialog.c:161
 msgid "General parameters"
-msgstr "Einstellungen"
+msgstr "Parâmetros gerais"
 
 #: ../src/lingot-config-dialog.c:180
 msgid "Calculation rate"
-msgstr "Berechnungstempo"
+msgstr "Freqüência de cálculo"
 
 #: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
 #: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
@@ -34,20 +36,20 @@ msgstr "Hz"
 
 #: ../src/lingot-config-dialog.c:192
 msgid "Visualization rate"
-msgstr "Darstellungsrate"
+msgstr "Freqüência de visualizaçâo"
 
 #: ../src/lingot-config-dialog.c:208
 msgid "FFT size"
-msgstr "FFT-Größe"
+msgstr "Tamanho da FFT"
 
 #: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
 #: ../src/lingot-config-dialog.c:374
 msgid "samples"
-msgstr "Samples"
+msgstr "amostras"
 
 #: ../src/lingot-config-dialog.c:222
 msgid "Noise threshold"
-msgstr "Rausch-Schwellwert"
+msgstr "Ruído mínimo"
 
 #: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
 msgid "dB"
@@ -55,32 +57,32 @@ msgstr "dB"
 
 #: ../src/lingot-config-dialog.c:263
 msgid "Sample rate"
-msgstr "Samplerate"
+msgstr "Freqüência de amostragem"
 
 #. --------------------------------------------------------------------------
 #: ../src/lingot-config-dialog.c:270
 msgid "Advanced parameters"
-msgstr "Erweiterte Einstellungen"
+msgstr "Parâmetros avançados"
 
 #: ../src/lingot-config-dialog.c:293
 msgid " A (440 Hz) + "
-msgstr " A (440 Hz) + "
+msgstr "A (440 Hz) +"
 
 #: ../src/lingot-config-dialog.c:305
 msgid "Root frequency"
-msgstr "Grundfrequenz"
+msgstr "Freqüência padrão"
 
 #: ../src/lingot-config-dialog.c:319
 msgid "Temporal window"
-msgstr "Zeitfenster"
+msgstr "Janela temporal"
 
 #: ../src/lingot-config-dialog.c:320
 msgid "seconds"
-msgstr "Sekunden"
+msgstr "segundos"
 
 #: ../src/lingot-config-dialog.c:333
 msgid "DFT number"
-msgstr "DFT-Zahl"
+msgstr "Número de DFTs"
 
 #: ../src/lingot-config-dialog.c:335
 msgid "DFTs"
@@ -88,27 +90,27 @@ msgstr "DFTs"
 
 #: ../src/lingot-config-dialog.c:346
 msgid "DFT size"
-msgstr "DFT-Größe"
+msgstr "Tamanho da DFT"
 
 #: ../src/lingot-config-dialog.c:359
 msgid "Peak number"
-msgstr "Peak-Wert"
+msgstr "Número de cristas"
 
 #: ../src/lingot-config-dialog.c:361
 msgid "peaks"
-msgstr "Peaks"
+msgstr "cristas"
 
 #: ../src/lingot-config-dialog.c:372
 msgid "Peak order"
-msgstr "Peak-Reihenfolge"
+msgstr "Ordem de cristas"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "Verhältnis Aussteuerung Spitze"
+msgstr "Relação de rejeição de cristas"
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
-msgstr "Standardeinstellung"
+msgstr "Configuração padrão"
 
 #: ../src/lingot-config-dialog.c:463
 #, c-format
@@ -116,60 +118,64 @@ msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"Zeitfenster ist kleiner als FFT-Größe. Es wurde auf %0.3f Sekunden erhöht."
+"O buffer temporal é menor que o tamanho da FFT escolhido, Fora ampliado para "
+"%0.3f segundos."
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Genaues und einfach zu bedienendes Stimmgerät für Musikinstrumente"
+msgstr "Afinador de instrumentos musicais preciso e fácil de usar"
 
 #: ../src/lingot-mainframe.c:103
 msgid "translator-credits"
-msgstr "Roland Stigge <stigge@antcom.de>"
+msgstr "Carlos Laué <carlosl@seznam.cz>"
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:242
 msgid "lingot"
-msgstr "Lingot"
+msgstr "lingot"
 
 #. spectrum frame at bottom
 #: ../src/lingot-mainframe.c:265 ../src/lingot-mainframe.c:336
 msgid "Spectrum"
-msgstr "Spektrum"
+msgstr "Espectro"
 
 #: ../src/lingot-mainframe.c:299
 msgid "_File"
-msgstr "_Datei"
+msgstr "_Arquivo"
 
 #: ../src/lingot-mainframe.c:300
 msgid "_Edit"
-msgstr "_Bearbeiten"
+msgstr "_Editar"
 
 #: ../src/lingot-mainframe.c:301
 msgid "_View"
-msgstr "_Anzeige"
+msgstr "_Ver"
 
 #: ../src/lingot-mainframe.c:302
 msgid "_Help"
-msgstr "_Hilfe"
+msgstr "A_juda"
 
 #. gauge frame
 #: ../src/lingot-mainframe.c:326
 msgid "Deviation"
-msgstr "Abweichung"
+msgstr "Diferença"
 
 #. note frame
 #: ../src/lingot-mainframe.c:331
 msgid "Note"
-msgstr "Note"
+msgstr "Nota"
 
 #: ../src/lingot-mainframe.c:376
 msgid "freq"
-msgstr "Freq"
+msgstr "freqüência"
 
 #: ../src/lingot-mainframe.c:379
 msgid "err"
-msgstr "Fehler"
+msgstr "erro"
 
 #: ../src/lingot-mainframe.c:382
 msgid "note"
-msgstr "note"
+msgstr "nota"
+
+#~ msgid "Matthew Blissett (Logo design)"
+#~ msgstr "Matthew Blissett (Design do logotipo)"

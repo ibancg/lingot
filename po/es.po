@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 18:35+0200\n"
+"POT-Creation-Date: 2008-06-24 18:56+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -152,7 +152,7 @@ msgstr "_Ver"
 
 #: ../src/lingot-mainframe.c:302
 msgid "_Help"
-msgstr "Ayuda"
+msgstr "A_yuda"
 
 #. gauge frame
 #: ../src/lingot-mainframe.c:326
