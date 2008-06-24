@@ -166,11 +166,6 @@ FFT_SIZE (tamaño FFT)
 	 palabras, tendremos que esperar 10.24 segundos entre nota y nota para
 	 no interferir.
 
-	 Nótese que el espectro sólo muestra 256 muestras, y para valores altos
-	 de este parámetro puede cuadrar la frecuencia fundamental encontrada
-	 fuera del campo de visión (de momento no está implementado un visor
-	 que se desplace en frecuencia)
-
 	 Debe ser un numero entero potencia de 2.
 	 
 TEMPORAL_WINDOW (ventana temporal)
