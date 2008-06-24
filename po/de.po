@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: 2008-01-12 17:23:00+0100\n"
 "Last-Translator: Roland Stigge <stigge@antcom.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -99,7 +99,7 @@ msgid "peaks"
 msgstr "Peaks"
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
+msgid "Peak half-width"
 msgstr "Peak-Reihenfolge"
 
 #: ../src/lingot-config-dialog.c:388
@@ -157,9 +157,9 @@ msgstr "_Hilfe"
 msgid "Deviation"
 msgstr "Abweichung"
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
+msgid "Tone"
 msgstr "Note"
 
 #: ../src/lingot-mainframe.c:376
@@ -169,7 +169,3 @@ msgstr "Freq"
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "Fehler"
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
-msgstr "note"

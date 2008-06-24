@@ -35,8 +35,6 @@ typedef struct _LingotConfig LingotConfig;
 
 struct _LingotConfig
   {
-    void* param[15]; // parameter pointer array.
-
     char audio_dev[80]; // default "/dev/dsp"
     unsigned int sample_rate; // soundcard sample rate.
     unsigned int oversampling; // oversampling factor.
@@ -70,7 +68,7 @@ struct _LingotConfig
     unsigned int peak_number; // number of maximum peaks considered.
 
     // number of adyacent samples needed to consider a peak.
-    unsigned int peak_order;
+    unsigned int peak_half_width;
 
     /* maximum amplitude relation between principal and secondary peaks.
      The max peak doesn't has to be the fundamental frequency carrier if it

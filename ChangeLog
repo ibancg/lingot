@@ -1,12 +1,16 @@
-2008-06-21 Ibán Cereijo <ibancg@gmail.com>
+2008-06-24 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed memory leak in GUI
 	
 	* Added translations: cs, sv, de, pt_BR, pl
 
+	* Changed default sample rate to 11025 Hz instead of 8 KHz
+	
+	
 2007-12-26 Jairo Chapela-Martínez <jairochapela@gmail.com>
 
 	* Fixed some strange issues in the configuration scripts
+
 
 2007-08-30 Ibán Cereijo <ibancg@gmail.com>
 
@@ -19,6 +23,7 @@
 	* Added translations: gl
 	
 	* Released Lingot 0.7.5
+
 
 2007-08-26 Ibán Cereijo <ibancg@gmail.com>
 

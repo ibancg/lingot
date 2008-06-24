@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: 2007-10-02 19:00+0200\n"
 "Last-Translator: Raül Cambeiro <rulet@menta.net>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -99,7 +99,7 @@ msgid "peaks"
 msgstr "pics"
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
+msgid "Peak half-width"
 msgstr "Ordre de pic"
 
 #: ../src/lingot-config-dialog.c:388
@@ -159,9 +159,9 @@ msgstr "A_juda"
 msgid "Deviation"
 msgstr "Desviació"
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
+msgid "Tone"
 msgstr "Nota"
 
 #: ../src/lingot-mainframe.c:376
@@ -171,10 +171,6 @@ msgstr "freq"
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "err"
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
-msgstr "nota"
 
 #~ msgid "Options"
 #~ msgstr "Opcions"
