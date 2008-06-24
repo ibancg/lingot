@@ -157,11 +157,6 @@ FFT_SIZE (Size of the FTT)
 	So, we've to wait 10.24 seconds between note and note to avoid 
 	interferences.
 	
-	Note that the spetrum viewer only displays 256 samples, and higher 
-	values of this parameter can make that the fundamental frecuency
-	matched is out the viewer window (a viewer that shifts in frecuency
-	isn't implemented at the moment)
-
 	It must be an integer power of 2.
 
 
