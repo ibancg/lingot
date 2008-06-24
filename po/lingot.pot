@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgid "peaks"
 msgstr ""
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
+msgid "Peak half-width"
 msgstr ""
 
 #: ../src/lingot-config-dialog.c:388
@@ -157,9 +157,9 @@ msgstr ""
 msgid "Deviation"
 msgstr ""
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
+msgid "Tone"
 msgstr ""
 
 #: ../src/lingot-mainframe.c:376
@@ -168,8 +168,4 @@ msgstr ""
 
 #: ../src/lingot-mainframe.c:379
 msgid "err"
-msgstr ""
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
 msgstr ""

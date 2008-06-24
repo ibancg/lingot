@@ -43,7 +43,7 @@ struct _LingotMainFrame
     // gtk widgets
     GtkWidget* gauge_area;
     GtkWidget* spectrum_area;
-    GtkWidget* note_label;
+    GtkWidget* tone_label;
 
     GtkWidget* freq_label;
     GtkWidget* error_label;

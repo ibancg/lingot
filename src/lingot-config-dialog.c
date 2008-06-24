@@ -120,7 +120,7 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog)
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_dft_number), dialog->conf->dft_number);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_dft_size), dialog->conf->dft_size);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_peak_number), dialog->conf->peak_number);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_peak_order), dialog->conf->peak_order);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_peak_half_width), dialog->conf->peak_half_width);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->spin_peak_rejection_relation), dialog->conf->peak_rejection_relation_db);
     lingot_config_dialog_combo_select_value(dialog->combo_fft_size,
         (int) dialog->conf->fft_size);
@@ -363,14 +363,14 @@ LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame* frame)
 
     // --------------------------------------------------------------------------
 
-    dialog->spin_peak_order = gtk_spin_button_new(
-        (GtkAdjustment*)gtk_adjustment_new(dialog->conf->peak_order, 1.0, 5.0,
+    dialog->spin_peak_half_width = gtk_spin_button_new(
+        (GtkAdjustment*)gtk_adjustment_new(dialog->conf->peak_half_width, 1.0, 5.0,
             1.0, 1.0, 1.0), 1.0, 1);
-    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(dialog->spin_peak_order), TRUE);
-    gtk_spin_button_set_digits(GTK_SPIN_BUTTON(dialog->spin_peak_order), 0) ;
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(dialog->spin_peak_half_width), TRUE);
+    gtk_spin_button_set_digits(GTK_SPIN_BUTTON(dialog->spin_peak_half_width), 0) ;
 
-    gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(_("Peak order")), 0, 1, row, row + 1);
-    gtk_table_attach_defaults(GTK_TABLE(tab2), dialog->spin_peak_order, 1, 2, row, row + 1);
+    gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(_("Peak half-width")), 0, 1, row, row + 1);
+    gtk_table_attach_defaults(GTK_TABLE(tab2), dialog->spin_peak_half_width, 1, 2, row, row + 1);
     gtk_table_attach_defaults(GTK_TABLE(tab2), gtk_label_new(_("samples")), 2, 3, row, row + 1);
     row++;
 
@@ -441,7 +441,7 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog)
     dialog->conf->dft_size = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->spin_dft_size));
     dialog->conf->peak_number
         = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->spin_peak_number));
-    dialog->conf->peak_order= gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->spin_peak_order));
+    dialog->conf->peak_half_width= gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->spin_peak_half_width));
     dialog->conf->peak_rejection_relation_db
         = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->spin_peak_rejection_relation));
     dialog->conf->fft_size = atoi(gtk_combo_box_get_active_text(GTK_COMBO_BOX(dialog->combo_fft_size)));

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: 2008-03-07 16:46+0100\n"
 "Last-Translator: Piotr Pawlow <pp@siedziba.pl>\n"
 "Language-Team: Polish\n"
@@ -101,7 +101,7 @@ msgid "peaks"
 msgstr "szczytów"
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
+msgid "Peak half-width"
 msgstr "Rozmiar szczytu"
 
 #: ../src/lingot-config-dialog.c:388
@@ -160,9 +160,9 @@ msgstr "Pomo_c"
 msgid "Deviation"
 msgstr "Odchylenie"
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
+msgid "Tone"
 msgstr "Nuta"
 
 #: ../src/lingot-mainframe.c:376
@@ -172,7 +172,3 @@ msgstr "częst."
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "błąd"
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
-msgstr "nuta"

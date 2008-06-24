@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: 2008-06-24 14:00+0200\n"
 "Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
 "Language-Team: Português do Brasil\n"
@@ -101,7 +101,7 @@ msgid "peaks"
 msgstr "cristas"
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
+msgid "Peak half-width"
 msgstr "Ordem de cristas"
 
 #: ../src/lingot-config-dialog.c:388
@@ -160,9 +160,9 @@ msgstr "A_juda"
 msgid "Deviation"
 msgstr "Diferença"
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
+msgid "Tone"
 msgstr "Nota"
 
 #: ../src/lingot-mainframe.c:376
@@ -172,10 +172,6 @@ msgstr "freqüência"
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "erro"
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
-msgstr "nota"
 
 #~ msgid "Matthew Blissett (Logo design)"
 #~ msgstr "Matthew Blissett (Design do logotipo)"

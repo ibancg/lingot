@@ -65,7 +65,7 @@ int lingot_signal_is_peak(LingotConfig* conf, FLT* x, int index) {
 	if (x[index] < conf->noise_threshold_nu)
 		return 0;
 
-	for (j = 0; j < conf->peak_order; j++) {
+	for (j = 0; j < conf->peak_half_width; j++) {
 		if (x[index + j] < x[index + j + 1])
 			return 0;
 		if (x[index - j] < x[index - j - 1])
@@ -89,11 +89,11 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 	unsigned int lowest_index = (unsigned int)ceil(conf->min_frequency*(1.0
 			*conf->oversampling/conf->sample_rate)*conf->fft_size);
 
-	if (lowest_index < conf->peak_order)
-		lowest_index = conf->peak_order;
+	if (lowest_index < conf->peak_half_width)
+		lowest_index = conf->peak_half_width;
 
 	// I'll get the PEAK_NUMBER maximum peaks.
-	for (i = lowest_index; i < N - conf->peak_order; i++)
+	for (i = lowest_index; i < N - conf->peak_half_width; i++)
 		if (lingot_signal_is_peak(conf, x, i)) {
 
 			// search a place in the maximums buffer, if it doesn't exists, the

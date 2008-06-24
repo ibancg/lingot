@@ -43,7 +43,7 @@ struct _LingotConfigDialog
     GtkWidget* spin_dft_number;
     GtkWidget* spin_dft_size;
     GtkWidget* spin_peak_number;
-    GtkWidget* spin_peak_order;
+    GtkWidget* spin_peak_half_width;
     GtkWidget* spin_peak_rejection_relation;
     GtkWidget* combo_fft_size;
     GtkWidget* combo_sample_rate;

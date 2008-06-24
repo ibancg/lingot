@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 18:56+0200\n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -100,8 +100,8 @@ msgid "peaks"
 msgstr "picos"
 
 #: ../src/lingot-config-dialog.c:372
-msgid "Peak order"
-msgstr "Orden de pico"
+msgid "Peak half-width"
+msgstr "Ancho de pico"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
@@ -159,10 +159,10 @@ msgstr "A_yuda"
 msgid "Deviation"
 msgstr "Desviación"
 
-#. note frame
+#. tone frame
 #: ../src/lingot-mainframe.c:331
-msgid "Note"
-msgstr "Nota"
+msgid "Tone"
+msgstr "Tono"
 
 #: ../src/lingot-mainframe.c:376
 msgid "freq"
@@ -171,7 +171,3 @@ msgstr "frec"
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "err"
-
-#: ../src/lingot-mainframe.c:382
-msgid "note"
-msgstr "nota"

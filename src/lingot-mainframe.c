@@ -327,8 +327,8 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	//  gtk_fixed_put(GTK_FIXED(fix), frame1, 0, 0);
 	gtk_box_pack_start(GTK_BOX(horizontal_box), frame1, FALSE, FALSE, 0);
 
-	// note frame
-	frame3 = gtk_frame_new(_("Note"));
+	// tone frame
+	frame3 = gtk_frame_new(_("Tone"));
 	//gtk_fixed_put(GTK_BOX(hb), frame3, 164, 0);
 	gtk_box_pack_start(GTK_BOX(horizontal_box), frame3, TRUE, TRUE, 0);
 
@@ -367,7 +367,7 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	gtk_container_add(GTK_CONTAINER(spectrum_frame),
 			GTK_WIDGET(frame->spectrum_scroll));
 
-	// for note and frequency displaying
+	// for tone and frequency displaying
 	vbinfo = gtk_vbox_new(FALSE, 0);
 	gtk_widget_set_size_request(GTK_WIDGET(vbinfo), 96 + 2*spectrum_x_margin,
 			gauge_size_y);
@@ -379,9 +379,9 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	frame->error_label = gtk_label_new(_("err"));
 	gtk_box_pack_end_defaults(GTK_BOX(vbinfo), frame->error_label);
 
-	frame->note_label = gtk_label_new(_("note"));
-	gtk_widget_set_name(frame->note_label, "label_nota");
-	gtk_box_pack_end_defaults(GTK_BOX(vbinfo), frame->note_label);
+	frame->tone_label = gtk_label_new("");
+	gtk_widget_set_name(frame->tone_label, "label_nota");
+	gtk_box_pack_end_defaults(GTK_BOX(vbinfo), frame->tone_label);
 
 	// show all
 	gtk_widget_show_all(frame->win);
@@ -443,7 +443,7 @@ void lingot_mainframe_destroy(LingotMainFrame* frame) {
 	// pango_font_description_free(spectrum_legend_font_desc);
 	// gtk_widget_destroy(frame->freq_label);
 	// gtk_widget_destroy(frame->error_label);
-	// gtk_widget_destroy(frame->note_label);
+	// gtk_widget_destroy(frame->tone_label);
 	// gtk_widget_destroy(frame->win);
 
 	// gdk_color_free(&gauge_color);
@@ -519,7 +519,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	// minimum grid size in pixels
 	static int minimum_grid_width = 50;
 
-	/* scale factors to draw the grid. We will choose the smaller factor that
+	/* scale factors (in KHz) to draw the grid. We will choose the smaller factor that
 	 respects the minimum_grid_width */
 	static double
 			scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
@@ -698,15 +698,15 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 }
 
 void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
-	// note indexation by semitone.
-	static char* note_string[] = { "A", "A#", "B", "C", "C#", "D", "D#", "E",
+	// tone indexation by semitone.
+	static char* tone_string[] = { "A", "A#", "B", "C", "C#", "D", "D#", "E",
 			"F", "F#", "G", "G#" };
 	const FLT Log2 = log(2.0);
 
 	FLT fret_f;
 	int fret;
-	char* current_note;
-	char labeltext_current_note[100];
+	char* current_tone;
+	char labeltext_current_tone[100];
 
 	static char error_string[30], freq_string[30];
 
@@ -714,7 +714,7 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
 
 	// ignore continuous component
 	if (isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
-		current_note = "---";
+		current_tone = "---";
 		strcpy(error_string, "e = ---");
 		strcpy(freq_string, "f = ---");
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
@@ -726,7 +726,7 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
 		lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
 		fret = ((int) rint(fret_f)) % 12;
 
-		current_note = note_string[fret];
+		current_tone = tone_string[fret];
 		sprintf(error_string, "e = %+4.2f%%", frame->gauge->position*100.0);
 		sprintf(freq_string, "f = %6.2f Hz", lingot_filter_filter_sample(
 				frame->freq_filter, frame->core->freq));
@@ -736,8 +736,8 @@ void lingot_mainframe_put_frequency(LingotMainFrame* frame) {
 	gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
 
 	char* markup = g_markup_printf_escaped(
-			"<span size=\"xx-large\" weight=\"bold\">%s</span>", current_note);
-	gtk_label_set_markup(GTK_LABEL(frame->note_label), markup);
+			"<span size=\"xx-large\" weight=\"bold\">%s</span>", current_tone);
+	gtk_label_set_markup(GTK_LABEL(frame->tone_label), markup);
 	g_free(markup);
 }
 
