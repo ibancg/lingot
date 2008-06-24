@@ -1,3 +1,9 @@
+2008-06-21 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed memory leak in GUI
+	
+	* Added translations: cs, sv, de, pt_BR, pl
+
 2007-12-26 Jairo Chapela-Martínez <jairochapela@gmail.com>
 
 	* Fixed some strange issues in the configuration scripts
@@ -27,7 +33,7 @@
 
 	* Changes in automake proccess.
 
-  * fixed charset problems in spanish translation
+	* fixed charset problems in spanish translation
 
 	* Updated translations: es  
 
