@@ -1,0 +1,181 @@
+# translation of es.po to
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: es\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-24 22:44+0200\n"
+"PO-Revision-Date: 2008-07-27 16:13+0200\n"
+"Last-Translator: \n"
+"Language-Team:  <it@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../src/lingot-config-dialog.c:152
+msgid "lingot configuration"
+msgstr "configura lingot"
+
+#: ../src/lingot-config-dialog.c:161
+msgid "General parameters"
+msgstr "Parametri generali"
+
+#: ../src/lingot-config-dialog.c:180
+msgid "Calculation rate"
+msgstr "Tasso di calcolo"
+
+#: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
+#: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/lingot-config-dialog.c:192
+msgid "Visualization rate"
+msgstr "Tasso di visualizzazione"
+
+#: ../src/lingot-config-dialog.c:208
+msgid "FFT size"
+msgstr "Grandezza FFT"
+
+#: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
+#: ../src/lingot-config-dialog.c:374
+msgid "samples"
+msgstr "esempi"
+
+#: ../src/lingot-config-dialog.c:222
+msgid "Noise threshold"
+msgstr "Soglia di rumore"
+
+#: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
+msgid "dB"
+msgstr "dB"
+
+#: ../src/lingot-config-dialog.c:263
+msgid "Sample rate"
+msgstr "Tasso campione"
+
+#. --------------------------------------------------------------------------
+#: ../src/lingot-config-dialog.c:270
+msgid "Advanced parameters"
+msgstr "Parametri avanzati"
+
+#: ../src/lingot-config-dialog.c:293
+msgid " A (440 Hz) + "
+msgstr " A (440 Hz) + "
+
+#: ../src/lingot-config-dialog.c:305
+msgid "Root frequency"
+msgstr "Frequenza base"
+
+#: ../src/lingot-config-dialog.c:319
+msgid "Temporal window"
+msgstr "Finestra temporale"
+
+#: ../src/lingot-config-dialog.c:320
+msgid "seconds"
+msgstr "secondi"
+
+#: ../src/lingot-config-dialog.c:333
+msgid "DFT number"
+msgstr "Numero di DFT"
+
+#: ../src/lingot-config-dialog.c:335
+msgid "DFTs"
+msgstr "DFTs"
+
+#: ../src/lingot-config-dialog.c:346
+msgid "DFT size"
+msgstr "Grandezza DFT"
+
+#: ../src/lingot-config-dialog.c:359
+msgid "Peak number"
+msgstr "Numero di picchi"
+
+#: ../src/lingot-config-dialog.c:361
+msgid "peaks"
+msgstr "picchi"
+
+#: ../src/lingot-config-dialog.c:372
+msgid "Peak half-width"
+msgstr "Ordine di picco"
+
+#: ../src/lingot-config-dialog.c:388
+msgid "Rejection peak relation"
+msgstr "relazione di rigetto picco"
+
+#: ../src/lingot-config-dialog.c:398
+msgid "Default config"
+msgstr "Configurazione predefinita"
+
+#: ../src/lingot-config-dialog.c:463
+#, c-format
+msgid ""
+"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Il buffer temporale è più piccolo dell'FFT. È stato aumentato a %0.3f secondi"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Accordatore di strumenti affidabile e semplice da usare"
+
+#: ../src/lingot-mainframe.c:103
+msgid "translator-credits"
+msgstr "crediti dei traduttori"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:242
+msgid "lingot"
+msgstr "lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:265 ../src/lingot-mainframe.c:336
+msgid "Spectrum"
+msgstr "Spettro"
+
+#: ../src/lingot-mainframe.c:299
+msgid "_File"
+msgstr "_File"
+
+#: ../src/lingot-mainframe.c:300
+msgid "_Edit"
+msgstr "_Modifica"
+
+#: ../src/lingot-mainframe.c:301
+msgid "_View"
+msgstr "_Visualizza"
+
+#: ../src/lingot-mainframe.c:302
+msgid "_Help"
+msgstr "_Aiuto"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:326
+msgid "Deviation"
+msgstr "Deviazione"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:331
+msgid "Tone"
+msgstr "Nota"
+
+#: ../src/lingot-mainframe.c:376
+msgid "freq"
+msgstr "freq"
+
+#: ../src/lingot-mainframe.c:379
+msgid "err"
+msgstr "err"
+
+#~ msgid "Peak order"
+#~ msgstr "Ordine di picco"
+
+#~ msgid "Note"
+#~ msgstr "Nota"
+
+#~ msgid "note"
+#~ msgstr "nota"
