@@ -1,3 +1,4 @@
+# translation of it.po to
 # translation of es.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -5,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: es\n"
+"Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-24 22:44+0200\n"
-"PO-Revision-Date: 2008-07-27 16:13+0200\n"
+"PO-Revision-Date: 2008-07-27 21:38+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +27,7 @@ msgstr "Parametri generali"
 
 #: ../src/lingot-config-dialog.c:180
 msgid "Calculation rate"
-msgstr "Tasso di calcolo"
+msgstr "Soglia di calcolo"
 
 #: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
 #: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
@@ -35,7 +36,7 @@ msgstr "Hz"
 
 #: ../src/lingot-config-dialog.c:192
 msgid "Visualization rate"
-msgstr "Tasso di visualizzazione"
+msgstr "Soglia di visualizzazione"
 
 #: ../src/lingot-config-dialog.c:208
 msgid "FFT size"
@@ -44,7 +45,7 @@ msgstr "Grandezza FFT"
 #: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
 #: ../src/lingot-config-dialog.c:374
 msgid "samples"
-msgstr "esempi"
+msgstr "campioni"
 
 #: ../src/lingot-config-dialog.c:222
 msgid "Noise threshold"
@@ -101,11 +102,11 @@ msgstr "picchi"
 
 #: ../src/lingot-config-dialog.c:372
 msgid "Peak half-width"
-msgstr "Ordine di picco"
+msgstr "Matà larghezza picco"
 
 #: ../src/lingot-config-dialog.c:388
 msgid "Rejection peak relation"
-msgstr "relazione di rigetto picco"
+msgstr "soglia di rigetto picco"
 
 #: ../src/lingot-config-dialog.c:398
 msgid "Default config"
@@ -125,7 +126,7 @@ msgstr "Accordatore di strumenti affidabile e semplice da usare"
 
 #: ../src/lingot-mainframe.c:103
 msgid "translator-credits"
-msgstr "crediti dei traduttori"
+msgstr "Stefano Cereda <communico@tiscali.it>"
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:242
@@ -170,12 +171,3 @@ msgstr "freq"
 #: ../src/lingot-mainframe.c:379
 msgid "err"
 msgstr "err"
-
-#~ msgid "Peak order"
-#~ msgstr "Ordine di picco"
-
-#~ msgid "Note"
-#~ msgstr "Nota"
-
-#~ msgid "note"
-#~ msgstr "nota"
