@@ -157,7 +157,11 @@ void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate0));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate1));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate2));
+		if (gtk_combo_box_get_active(dialog->sample_rate) < 0) {
+			lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->sample_rate), 44100);
+		}
 	}
+	lingot_config_dialog_callback_change_sample_rate(NULL, dialog);
 }
 
 void lingot_config_dialog_callback_change_a_frequence(GtkWidget *widget,
