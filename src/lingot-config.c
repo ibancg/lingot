@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2008  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -31,15 +31,15 @@
 #include "lingot-mainframe.h"
 
 // the following tokens will appear in the config file. The options after | are deprecated options.
-char* option[] = { "AUDIO_DEV", "SAMPLE_RATE", "OVERSAMPLING",
+char* option[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "SAMPLE_RATE", "OVERSAMPLING",
 		"ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY", "FFT_SIZE", "TEMPORAL_WINDOW",
 		"NOISE_THRESHOLD", "CALCULATION_RATE", "VISUALIZATION_RATE",
 		"PEAK_NUMBER", "PEAK_HALF_WIDTH", "PEAK_REJECTION_RELATION",
-		"DFT_NUMBER", "DFT_SIZE", "|", "PEAK_ORDER", NULL // NULL terminated array
-		};
+		"DFT_NUMBER", "DFT_SIZE", "GAIN", "|", "PEAK_ORDER", NULL // NULL terminated array
+	};
 
 // print/scan param formats.
-const char* option_format = "sddffdffffddfdd|i";
+const char* option_format = "dsddffdffffddfddf|i";
 
 //----------------------------------------------------------------------------
 
@@ -58,10 +58,12 @@ void lingot_config_destroy(LingotConfig* config) {
 
 //----------------------------------------------------------------------------
 void lingot_config_reset(LingotConfig* config) {
+
+	config->audio_system = AUDIO_SYSTEM_OSS;
 	sprintf(config->audio_dev, "%s", "/dev/dsp");
 
-	config->sample_rate = 11025; // Hz
-	config->oversampling = 5;
+	config->sample_rate = 44100; // Hz
+	config->oversampling = 25;
 	config->root_frequency_error = 0; // Hz
 	config->min_frequency = 15; // Hz
 	config->fft_size = 512; // samples
@@ -69,6 +71,7 @@ void lingot_config_reset(LingotConfig* config) {
 	config->calculation_rate = 20; // Hz
 	config->visualization_rate = 30; // Hz
 	config->noise_threshold_db = 20.0; // dB
+	config->gain = 0;
 
 	config->peak_number = 3; // peaks
 	config->peak_half_width = 1; // samples
@@ -92,19 +95,21 @@ int lingot_config_update_internal_params(LingotConfig* config) {
 	int result = 1;
 
 	// derived parameters.
-	config->root_frequency = 440.0 *pow(2.0, config->root_frequency_error
-			/1200.0);
-	config->temporal_buffer_size = (unsigned int)ceil(config->temporal_window
-			*config->sample_rate/config->oversampling);
-	config->read_buffer_size = (unsigned int)ceil(config->sample_rate
-			/(config->calculation_rate*config->oversampling));
+	config->root_frequency = 440.0 * pow(2.0, config->root_frequency_error
+			/ 1200.0);
+	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
+			* config->sample_rate / config->oversampling);
+	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
+			/ config->calculation_rate);
+	config->read_buffer_size = 1024;
 	config->peak_rejection_relation_nu = pow(10.0,
-			config->peak_rejection_relation_db/10.0);
-	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db/10.0);
+			config->peak_rejection_relation_db / 10.0);
+	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
+	config->gain_nu = pow(10.0, config->gain / 20.0);
 
 	if (config->temporal_buffer_size < config->fft_size) {
 		config->temporal_window = ((double) config->fft_size
-				*config->oversampling)/config->sample_rate;
+				* config->oversampling) / config->sample_rate;
 		config->temporal_buffer_size = config->fft_size;
 		result = 0;
 	}
@@ -116,40 +121,41 @@ int lingot_config_update_internal_params(LingotConfig* config) {
 
 // internal parameters mapped to each token in the config file.
 void lingot_map_parameters(LingotConfig* config, void* param[]) {
-	void* c_param[] = { &config->audio_dev, &config->sample_rate,
-			&config->oversampling, &config->root_frequency_error,
-			&config->min_frequency, &config->fft_size,
-			&config->temporal_window, &config->noise_threshold_db,
-					&config->calculation_rate, &config->visualization_rate,
-					&config->peak_number, &config->peak_half_width,
-					&config->peak_rejection_relation_db, &config->dft_number,
-					&config->dft_size, NULL, &config->peak_half_width };
+	void* c_param[] = { &config->audio_system, &config->audio_dev,
+			&config->sample_rate, &config->oversampling,
+			&config->root_frequency_error, &config->min_frequency,
+			&config->fft_size, &config->temporal_window,
+			&config->noise_threshold_db, &config->calculation_rate,
+			&config->visualization_rate, &config->peak_number,
+			&config->peak_half_width, &config->peak_rejection_relation_db,
+			&config->dft_number, &config->dft_size, &config->gain, NULL,
+			&config->peak_half_width };
 
-	memcpy(param, c_param, 17*sizeof(void*));
+	memcpy(param, c_param, 19 * sizeof(void*));
 }
 
 void lingot_config_save(LingotConfig* config, char* filename) {
 	unsigned int i;
 	FILE* fp;
 	char* lc_all;
-	void* param[17]; // parameter pointer array.
+	void* param[19]; // parameter pointer array.
 
 	lingot_map_parameters(config, param);
 
 	lc_all = setlocale(LC_ALL, NULL);
 	// duplicate the string, as the next call to setlocale will destroy it
-	if (lc_all)
-		lc_all = strdup(lc_all);
-	setlocale(LC_ALL, "C");
+			if (lc_all)
+			lc_all = strdup(lc_all);
+			setlocale(LC_ALL, "C");
 
-	if ((fp = fopen(filename, "w")) == NULL) {
-		char buff[100];
-		sprintf(buff, "error saving config file %s ", filename);
-		perror(buff);
-		return;
-	}
+			if ((fp = fopen(filename, "w")) == NULL) {
+				char buff[100];
+				sprintf(buff, "error saving config file %s ", filename);
+				perror(buff);
+				return;
+			}
 
-	fprintf(fp, "# Config file automatically created by lingot %s\n\n", VERSION);
+			fprintf(fp, "# Config file automatically created by lingot %s\n\n",VERSION);
 
 	for (i = 0; strcmp(option[i], "|"); i++)
 		switch (option_format[i]) {
@@ -172,7 +178,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	}
 }
 
-//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
 void lingot_config_load(LingotConfig* config, char* filename) {
 	FILE* fp;
@@ -182,7 +188,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	int deprecated_option = 0;
 	char* char_buffer_pointer;
 	const static char* delim = " \t=\n";
-	void* param[17]; // parameter pointer array.
+	void* param[19]; // parameter pointer array.
 
 	lingot_map_parameters(config, param);
 
@@ -229,14 +235,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		if (deprecated_option) {
 			fprintf(stdout,
-			"warning: deprecated option %s\n",
-			char_buffer_pointer);
+			"warning: deprecated option %s\n", char_buffer_pointer);
 		}
 
 		if (!option[option_index]) {
 			fprintf(stderr,
-			"warning: parse error at line %i: unknown keyword %s\n",
-			line, char_buffer_pointer);
+			"warning: parse error at line %i: unknown keyword %s\n", line,
+					char_buffer_pointer);
 			continue;
 		}
 
@@ -244,8 +249,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		char_buffer_pointer = strtok(NULL, delim);
 
 		if (!char_buffer_pointer) {
-			fprintf(stderr, "warning: parse error at line %i: value expected\n",
-			line);
+			fprintf(stderr,
+			"warning: parse error at line %i: value expected\n", line);
 			continue;
 		}
 

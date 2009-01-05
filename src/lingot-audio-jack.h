@@ -1,4 +1,3 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
@@ -21,34 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_DEFS_H__
-#define __LINGOT_DEFS_H__
+#ifndef __LINGOT_AUDIO_JACK_H__
+#define __LINGOT_AUDIO_JACK_H__
 
-#include <sys/types.h>
-#include "../config.h"
+#include "lingot-core.h"
+#include "lingot-audio.h"
 
-// floating point precission.
-#define FLT                  double
-
-#define SAMPLE_TYPE          int16_t
-#define SAMPLE_FORMAT        AFMT_S16_LE
-
-#define CONFIG_DIR_NAME           ".lingot/"
-#define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
-extern char CONFIG_FILE_NAME[];
-
-#define QUICK_MESSAGES
-
-#define GTK_EVENTS_RATE      20.0
-#define GAUGE_RATE           60.0
-
-/* object forward declaration */
-typedef struct _LingotMainFrame LingotMainFrame;
-
-// optionally we can use the following libraries
-//#define LIB_FFTW
-//#define LIBSNDOBJ
-//#define ALSA
-#define JACK
+LingotAudio* lingot_audio_jack_new(LingotCore*);
+void lingot_audio_jack_destroy(LingotAudio*);
+int lingot_audio_jack_read(LingotAudio*, LingotCore*);
 
 #endif

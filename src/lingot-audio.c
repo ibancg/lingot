@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,206 +15,58 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <sys/soundcard.h>
-#include <stdlib.h>
-
 #include "lingot-defs.h"
 #include "lingot-audio.h"
 
-LingotAudio *
-lingot_audio_new (int channels, int rate, int format, char *fdsp)
-{
-  LingotAudio *audio;
-#ifdef ALSA
-  snd_pcm_hw_params_t *hw_params;
-  int err;
-#endif
+#include "lingot-core.h"
+#include "lingot-audio-oss.h"
+#include "lingot-audio-alsa.h"
+#include "lingot-audio-jack.h"
 
-  audio = malloc (sizeof (LingotAudio));
-  //  int dma  = 4;
+LingotAudio* lingot_audio_new(void* p) {
 
-#ifdef ALSA
-
-  if ((err =
-       snd_pcm_open (&audio->capture_handle, "default", SND_PCM_STREAM_CAPTURE,
-		     0)) < 0)
-    {
-      fprintf (stderr, "cannot open audio device %s (%s)\n",
-	       fdsp, snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err = snd_pcm_hw_params_malloc (&hw_params)) < 0)
-    {
-      fprintf (stderr, "cannot allocate hardware parameter structure (%s)\n",
-	       snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err = snd_pcm_hw_params_any (audio->capture_handle, hw_params)) < 0)
-    {
-      fprintf (stderr,
-	       "cannot initialize hardware parameter structure (%s)\n",
-	       snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err =
-       snd_pcm_hw_params_set_access (audio->capture_handle, hw_params,
-				     SND_PCM_ACCESS_RW_INTERLEAVED)) < 0)
-    {
-      fprintf (stderr, "cannot set access type (%s)\n", snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err =
-       snd_pcm_hw_params_set_format (audio->capture_handle, hw_params,
-				     SND_PCM_FORMAT_S16_LE)) < 0)
-    {
-      fprintf (stderr, "cannot set sample format (%s)\n", snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err =
-       snd_pcm_hw_params_set_rate_near (audio->capture_handle, hw_params,
-					&rate, 0)) < 0)
-    {
-      fprintf (stderr, "cannot set sample rate (%s)\n", snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err =
-       snd_pcm_hw_params_set_channels (audio->capture_handle, hw_params,
-				       channels)) < 0)
-    {
-      fprintf (stderr, "cannot set channel count (%s)\n", snd_strerror (err));
-      exit (1);
-    }
-
-  if ((err = snd_pcm_hw_params (audio->capture_handle, hw_params)) < 0)
-    {
-      fprintf (stderr, "cannot set parameters (%s)\n", snd_strerror (err));
-      exit (1);
-    }
-
-  snd_pcm_hw_params_free (hw_params);
-
-  if ((err = snd_pcm_prepare (audio->capture_handle)) < 0)
-    {
-      fprintf (stderr, "cannot prepare audio interface for use (%s)\n",
-	       snd_strerror (err));
-      exit (1);
-    }
-
-#else
-
-  audio->dsp = open (fdsp, O_RDONLY);
-  if (audio->dsp < 0)
-    {
-      char buff[80];
-      sprintf (buff, "Unable to open audio device %s", fdsp);
-      perror (buff);
-      exit (-1);
-    }
-
-  //if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
-  if (ioctl (audio->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0)
-    {
-      perror ("Error setting number of channels");
-      exit (-1);
-    }
-
-  /*  if (ioctl(audio->dsp, SOUND_PCM_WRITE_CHANNELS, &channels) < 0)
-     {
-     perror("Error setting number of channels");
-     exit(-1);
-     } */
-
-  // sample size
-  //if (ioctl(audio->dsp, SOUND_PCM_SETFMT, &format) < 0)
-  if (ioctl (audio->dsp, SNDCTL_DSP_SETFMT, &format) < 0)
-    {
-      perror ("Error setting bits per sample");
-      exit (-1);
-    }
-
-  int fragment_size = 1;
-  int DMA_buffer_size = 512;
-  int param = 0;
-
-  for (param = 0; fragment_size < DMA_buffer_size; param++)
-    fragment_size <<= 1;
-
-  param |= 0x00ff0000;
-
-  if (ioctl (audio->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0)
-    {
-      perror ("Error setting DMA buffer size");
-      exit (-1);
-    }
-
-  // DMA divisor
-  /*  if (ioctl(audio->dsp, SNDCTL_DSP_SUBDIVIDE, &dma) < 0)
-     {
-     perror("Error setting DMA divisor");
-     exit(-1);
-     }
-
-     // Rate de muestreo / reproduccion
-     if (ioctl(audio->dsp, SOUND_PCM_WRITE_RATE, &rate) < 0)
-     {
-     perror("Error setting write rate");
-     exit(-1);
-     } */
-
-  //  if (ioctl(audio->dsp, SOUND_PCM_READ_RATE, &rate) < 0)
-  if (ioctl (audio->dsp, SNDCTL_DSP_SPEED, &rate) < 0)
-    {
-      perror ("Error setting sample rate");
-      exit (-1);
-    }
-
-  /*
-     // non-blocking reads.
-     if (fcntl(audio->dsp, F_SETFL, O_NONBLOCK) < 0)
-     {
-     perror("Error setting non-blocking reads");
-     exit(-1);
-     }
-   */
-#endif
-
-  return audio;
+	LingotCore* core = (LingotCore*) p;
+	switch (core->conf->audio_system) {
+	case AUDIO_SYSTEM_OSS:
+		return lingot_audio_oss_new(core);
+	case AUDIO_SYSTEM_ALSA:
+		return lingot_audio_alsa_new(core);
+	case AUDIO_SYSTEM_JACK:
+		return lingot_audio_jack_new(core);
+	default:
+		return NULL;
+	}
 }
 
-void
-lingot_audio_destroy (LingotAudio * audio)
-{
-#ifdef ALSA
-  snd_pcm_close (audio->capture_handle);
-#else
-  close (audio->dsp);
-  free (audio);
-#endif
+void lingot_audio_destroy(LingotAudio* audio, void* p) {
+	LingotCore* core = (LingotCore*) p;
+	switch (core->conf->audio_system) {
+	case AUDIO_SYSTEM_OSS:
+		lingot_audio_oss_destroy(audio);
+	case AUDIO_SYSTEM_ALSA:
+		lingot_audio_alsa_destroy(audio);
+	case AUDIO_SYSTEM_JACK:
+		return lingot_audio_jack_destroy(audio);
+	}
 }
 
-int
-lingot_audio_read (LingotAudio * audio, void *buffer, int size)
-{
-#ifdef ALSA
-  return snd_pcm_readi (audio->capture_handle, buffer, size);
-#else
-  return read (audio->dsp, buffer, size);
-#endif
+int lingot_audio_read(LingotAudio* audio, void* p) {
+	LingotCore* core = (LingotCore*) p;
+	switch (core->conf->audio_system) {
+	case AUDIO_SYSTEM_OSS:
+		return lingot_audio_oss_read(audio, core);
+	case AUDIO_SYSTEM_ALSA:
+		lingot_audio_alsa_read(audio, core);
+	case AUDIO_SYSTEM_JACK:
+		return lingot_audio_jack_read(audio, core);
+	default:
+		return -1;
+	}
 }
 

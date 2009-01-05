@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -31,15 +31,7 @@
 #include "lingot-filter.h"
 #include "lingot-config.h"
 
-#ifdef LIB_FFTW
-# include <fftw.h>
-#endif
-
-#ifdef LIBSNDOBJ
-#  include <SndObj/AudioDefs.h>
-#else
-#  include "lingot-audio.h"
-#endif
+#include "lingot-audio.h"
 
 typedef struct _LingotCore LingotCore;
 
@@ -50,13 +42,8 @@ struct _LingotCore {
 	FLT* X; // visual portion of FFT.
 	//  -- shared data --
 
-# ifdef LIBSNDOBJ
-	SndRTIO* audio; // audio handler.
-# else
 	LingotAudio* audio; // audio handler.
-# endif
 
-	SAMPLE_TYPE* read_buffer;
 	FLT* flt_read_buffer;
 	FLT* temporal_buffer; // sample memory.
 
@@ -73,13 +60,7 @@ struct _LingotCore {
 	FLT* spd_dft;
 	FLT* diff2_spd_fft;
 
-# ifdef LIB_FFTW
-	fftw_complex* fftw_in;
-	fftw_complex* fftw_out; // complex signals in time and freq.
-	fftw_plan fftwplan;
-# else
 	LingotComplex* fft_out; // complex signal in freq.
-# endif
 
 	LingotFilter* antialiasing_filter; // antialiasing filter for decimation.
 
@@ -88,8 +69,13 @@ struct _LingotCore {
 	LingotConfig* conf; // configuration structure
 
 	// pthread-related  member variables
-	pthread_t thread;
-	pthread_attr_t attr;
+	pthread_t thread_input_read;
+	pthread_attr_t thread_input_read_attr;
+
+	pthread_t thread_computation;
+	pthread_attr_t thread_computation_attr;
+	pthread_cond_t thread_computation_cond;
+	pthread_mutex_t thread_computation_mutex;
 };
 
 //----------------------------------------------------------------
@@ -104,6 +90,6 @@ void lingot_core_start(LingotCore*);
 void lingot_core_stop(LingotCore*);
 
 // process thread
-void lingot_core_run(LingotCore*);
+void lingot_core_run_reading_thread(LingotCore*);
 
 #endif //__LINGOT_CORE_H__
