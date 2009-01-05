@@ -89,7 +89,7 @@ void lingot_config_dialog_change_sample_rate_labels(LingotConfigDialog *dialog,
 
 void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-	char* text = (gtk_combo_box_get_active(dialog->input_system)
+	char* text = (lingot_config_dialog_get_audio_system(dialog->input_system)
 			== AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
 			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
 			GTK_COMBO_BOX(dialog->sample_rate));
@@ -170,6 +170,35 @@ void lingot_config_dialog_callback_change_a_frequence(GtkWidget *widget,
 	gtk_label_set_text(GTK_LABEL(dialog->label_root_frequency), buff);
 }
 
+void lingot_config_dialog_set_audio_system(GtkComboBox* combo, int audio_system) {
+	GtkTreeModel* model = gtk_combo_box_get_model(combo);
+	GtkTreeIter iter;
+
+	gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+	char* tokens[] = { "OSS", "ALSA", "JACK" };
+
+	while (valid) {
+		gchar *str_data;
+		gtk_tree_model_get(model, &iter, 0, &str_data, -1);
+		if (!strcmp(str_data, tokens[audio_system]))
+			gtk_combo_box_set_active_iter(combo, &iter);
+		g_free(str_data);
+		valid = gtk_tree_model_iter_next(model, &iter);
+	}
+}
+
+int lingot_config_dialog_get_audio_system(GtkComboBox* combo) {
+	char* text = gtk_combo_box_get_active_text(combo);
+	if (!strcmp("OSS", text))
+		return AUDIO_SYSTEM_OSS;
+	else if (!strcmp("ALSA", text))
+		return AUDIO_SYSTEM_ALSA;
+	else if (!strcmp("JACK", text))
+		return AUDIO_SYSTEM_JACK;
+	else
+		return -1;
+}
+
 void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value) {
 
 	GtkTreeModel* model = gtk_combo_box_get_model(GTK_COMBO_BOX(combo));
@@ -190,7 +219,8 @@ void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value) {
 void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	LingotConfig* conf = dialog->conf;
 	// TODO: audio dev
-	gtk_combo_box_set_active(dialog->input_system, conf->audio_system);
+	lingot_config_dialog_set_audio_system(dialog->input_system,
+			conf->audio_system);
 	gtk_range_set_value(GTK_RANGE(dialog->calculation_rate), conf->calculation_rate);
 	gtk_range_set_value(GTK_RANGE(dialog->visualization_rate), conf->visualization_rate);
 	gtk_range_set_value(GTK_RANGE(dialog->noise_threshold), conf->noise_threshold_db);
@@ -224,7 +254,8 @@ void lingot_config_dialog_destroy(LingotConfigDialog* dialog) {
 void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 	GtkWidget* message_dialog;
 
-	dialog->conf->audio_system = gtk_combo_box_get_active(dialog->input_system);
+	dialog->conf->audio_system = lingot_config_dialog_get_audio_system(
+			dialog->input_system);
 	sprintf(dialog->conf->audio_dev, "%s", gtk_combo_box_get_active_text(
 			GTK_COMBO_BOX(dialog->input_dev)));
 	dialog->conf->root_frequency_error = gtk_spin_button_get_value_as_float(
@@ -287,7 +318,8 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 	*dialog->conf_old = *frame->conf;
 
 	builder = gtk_builder_new();
-	if (gtk_builder_add_from_file(builder, "src/lingot-config-dialog.xml", &err) == 0) {
+	if (gtk_builder_add_from_file(builder, "src/lingot-config-dialog.xml", &err)
+			== 0) {
 		//error_message(err->message);
 		g_error_free(err);
 		return;
