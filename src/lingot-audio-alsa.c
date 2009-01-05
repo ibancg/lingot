@@ -29,6 +29,8 @@ LingotAudio* lingot_audio_alsa_new(LingotCore* core) {
 	int err;
 	LingotAudio* audio = malloc(sizeof(LingotAudio));
 
+	audio->audio_system = AUDIO_SYSTEM_ALSA;
+
 	if ((err = snd_pcm_open(&audio->capture_handle, "default",
 							SND_PCM_STREAM_CAPTURE, 0)) < 0) {
 		fprintf(stderr, "cannot open audio device %s (%s)\n", fdsp,

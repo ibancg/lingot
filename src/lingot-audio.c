@@ -46,27 +46,29 @@ LingotAudio* lingot_audio_new(void* p) {
 
 void lingot_audio_destroy(LingotAudio* audio, void* p) {
 	LingotCore* core = (LingotCore*) p;
-	switch (core->conf->audio_system) {
-	case AUDIO_SYSTEM_OSS:
-		lingot_audio_oss_destroy(audio);
-	case AUDIO_SYSTEM_ALSA:
-		lingot_audio_alsa_destroy(audio);
-	case AUDIO_SYSTEM_JACK:
-		return lingot_audio_jack_destroy(audio);
-	}
+	if (audio != NULL)
+		switch (audio->audio_system) {
+		case AUDIO_SYSTEM_OSS:
+			lingot_audio_oss_destroy(audio);
+		case AUDIO_SYSTEM_ALSA:
+			lingot_audio_alsa_destroy(audio);
+		case AUDIO_SYSTEM_JACK:
+			lingot_audio_jack_destroy(audio);
+		}
 }
 
 int lingot_audio_read(LingotAudio* audio, void* p) {
 	LingotCore* core = (LingotCore*) p;
-	switch (core->conf->audio_system) {
-	case AUDIO_SYSTEM_OSS:
-		return lingot_audio_oss_read(audio, core);
-	case AUDIO_SYSTEM_ALSA:
-		lingot_audio_alsa_read(audio, core);
-	case AUDIO_SYSTEM_JACK:
-		return lingot_audio_jack_read(audio, core);
-	default:
-		return -1;
-	}
+	if (audio != NULL)
+		switch (audio->audio_system) {
+		case AUDIO_SYSTEM_OSS:
+			return lingot_audio_oss_read(audio, core);
+		case AUDIO_SYSTEM_ALSA:
+			lingot_audio_alsa_read(audio, core);
+		case AUDIO_SYSTEM_JACK:
+			return lingot_audio_jack_read(audio, core);
+		}
+
+	return -1;
 }
 

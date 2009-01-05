@@ -20,46 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_AUDIO_H__
-#define __LINGOT_AUDIO_H__
+#ifndef __LINGOT_ERROR_H__
+#define __LINGOT_ERROR_H__
 
-#ifdef ALSA
-#include <alsa/asoundlib.h>
-#endif
-
-#ifdef JACK
-#include <jack/jack.h>
-#endif
-
-typedef struct _LingotAudio LingotAudio;
-
-struct _LingotAudio {
-
-	int audio_system;
-
-#ifdef ALSA
-	snd_pcm_t *capture_handle;
-#else
-	int dsp; // file handler.
-	SAMPLE_TYPE* read_buffer;
-#endif
-
-#	ifdef JACK
-	jack_port_t *jack_input_port;
-	jack_client_t *jack_client;
-	int nframes;
-#	endif
-
-	char error_message[100];
-};
-
-// creates an audio handler
-LingotAudio* lingot_audio_new(void*);
-
-// destroys an audio handler
-void lingot_audio_destroy(LingotAudio*, void*);
-
-// reads a new piece of signal
-int lingot_audio_read(LingotAudio*, void*);
+void lingot_error_queue_push(char* message);
+char* lingot_error_queue_pop();
 
 #endif

@@ -57,6 +57,8 @@ struct _LingotConfigDialog {
 	GtkLabel* jack_label_sample_rate2;
 	GtkLabel* oss_alsa_label_sample_rate0;
 	GtkLabel* oss_alsa_label_sample_rate2;
+	GtkLabel* oss_alsa_label_input_dev0;
+	GtkLabel* oss_alsa_label_input_dev2;
 
 	LingotConfig* conf; // provisional configuration.
 	LingotConfig* conf_old; // restoration point for cancel.

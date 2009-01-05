@@ -25,6 +25,8 @@ lingot_SOURCES = \
 	lingot-core.c\
 	lingot-core.h\
 	lingot-defs.h\
+	lingot-error.h\
+	lingot-error.c\
 	lingot-config-dialog.c\
 	lingot-config-dialog.h\
 	lingot-gauge.c\

@@ -35,6 +35,8 @@
 #include "lingot-gauge.h"
 #include "lingot-i18n.h"
 
+#include "lingot-error.h"
+
 #include "lingot-background.xpm"
 #include "lingot-logo.xpm"
 
@@ -70,41 +72,35 @@ PangoFontDescription* spectrum_legend_font_desc;
 
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 		LingotMainFrame* frame) {
-	if (frame->core->running)
-		lingot_mainframe_redraw(frame);
+	lingot_mainframe_redraw(frame);
 }
 
 void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
-	if (frame->core->running) {
-		g_source_remove(frame->visualization_timer_uid);
-		g_source_remove(frame->calculation_timer_uid);
-		g_source_remove(frame->freq_timer_uid);
-		gtk_main_quit();
-	}
+	g_source_remove(frame->visualization_timer_uid);
+	g_source_remove(frame->calculation_timer_uid);
+	g_source_remove(frame->freq_timer_uid);
+	gtk_main_quit();
 }
 
 void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
-	if (frame->core->running) {
-		static const gchar* authors[] = {
-				"Ibán Cereijo Graña <ibancg@gmail.com>",
-				"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL};
+	static const gchar* authors[] = { "Ibán Cereijo Graña <ibancg@gmail.com>",
+			"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL};
 
-		const gchar* artists[] = { "Matthew Blissett (Logo design)", NULL};
+	const gchar* artists[] = { "Matthew Blissett (Logo design)", NULL};
 
-		gtk_show_about_dialog(
-				NULL,
-				"name",
-				"Lingot",
-				"version",
-				VERSION,
-				"copyright",
-				"\xC2\xA9 2004-2009 Ibán Cereijo Graña\n\xC2\xA9 2004-2009 Jairo Chapela Martínez",
-				"comments", _("Accurate and easy to use musical instrument tuner"),
-				"authors", authors, "artists", artists, "website-label",
-				"http://lingot.nongnu.org/", "website",
-				"http://lingot.nongnu.org/", "translator-credits", _("translator-credits"),
-				"logo-icon-name", "lingot-logo", NULL);
-	}
+	gtk_show_about_dialog(
+			NULL,
+			"name",
+			"Lingot",
+			"version",
+			VERSION,
+			"copyright",
+			"\xC2\xA9 2004-2009 Ibán Cereijo Graña\n\xC2\xA9 2004-2009 Jairo Chapela Martínez",
+			"comments", _("Accurate and easy to use musical instrument tuner"),
+			"authors", authors, "artists", artists, "website-label",
+			"http://lingot.nongnu.org/", "website",
+			"http://lingot.nongnu.org/", "translator-credits", _("translator-credits"),
+			"logo-icon-name", "lingot-logo", NULL);
 }
 
 void lingot_mainframe_callback_view_spectrum(GtkWidget* w,
@@ -118,14 +114,7 @@ void lingot_mainframe_callback_view_spectrum(GtkWidget* w,
 
 void lingot_mainframe_callback_config_dialog(GtkWidget* w,
 		LingotMainFrame* frame) {
-	if (frame->core->running) {
-		//		if (!frame->config_dialog) {
-		//			frame->config_dialog = lingot_config_dialog_new(frame);
-		//		} else {
-		//			// TODO: activate config dialog
-		//		}
-		lingot_config_dialog_show(frame);
-	}
+	lingot_config_dialog_show(frame);
 }
 
 /* timeout for gauge and labels visualization */
@@ -134,13 +123,11 @@ gboolean lingot_mainframe_callback_tout_gauge_display(gpointer data) {
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
-	if (frame->core->running) {
-		period = 1000 / frame->conf->visualization_rate;
-		frame->visualization_timer_uid = g_timeout_add(period,
-				lingot_mainframe_callback_tout_gauge_display, frame);
+	period = 1000 / frame->conf->visualization_rate;
+	frame->visualization_timer_uid = g_timeout_add(period,
+			lingot_mainframe_callback_tout_gauge_display, frame);
 
-		lingot_mainframe_draw_gauge_and_labels(frame);
-	}
+	lingot_mainframe_draw_gauge_and_labels(frame);
 
 	return 0;
 }
@@ -152,39 +139,45 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
-	if (frame->core->running) {
-		period = 1000 / frame->conf->calculation_rate;
-		frame->calculation_timer_uid = g_timeout_add(period,
-				lingot_mainframe_callback_tout_spectrum_computation_display,
-				frame);
+	period = 1000 / frame->conf->calculation_rate;
+	frame->calculation_timer_uid = g_timeout_add(period,
+			lingot_mainframe_callback_tout_spectrum_computation_display, frame);
 
-		lingot_mainframe_draw_spectrum(frame);
-		//lingot_core_compute_fundamental_fequency(frame->core);
-	}
+	lingot_mainframe_draw_spectrum(frame);
+	//lingot_core_compute_fundamental_fequency(frame->core);
 
 	return 0;
 }
 
 /* timeout for a new gauge position computation */
-gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
+gboolean lingot_mainframe_callback_gauge_computation(LingotMainFrame* frame) {
 	unsigned int period;
-	LingotMainFrame* frame = (LingotMainFrame*) data;
 	const FLT Log2 = log(2.0);
 	double fret_f;
+	GtkWidget* message_dialog;
 
-	if (frame->core->running) {
-		period = 1000 / GAUGE_RATE;
-		frame->freq_timer_uid = g_timeout_add(period,
-				lingot_mainframe_callback_gauge_computation, frame);
+	char* error_message = lingot_error_queue_pop();
+	if (error_message != NULL) {
+		message_dialog = gtk_message_dialog_new(NULL,
+		GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+				error_message);
+		gtk_window_set_title(GTK_WINDOW(message_dialog), "Error");
+		gtk_dialog_run(GTK_DIALOG(message_dialog));
+		gtk_widget_destroy(message_dialog);
+		free(error_message);
+	}
 
-		if (isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
-			lingot_gauge_compute(frame->gauge, frame->conf->vr);
-		} else {
-			// bring up some octaves to avoid negative frets.
-			fret_f = log(frame->core->freq / frame->conf->root_frequency)
-					/ Log2 * 12.0 + 12e2;
-			lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
-		}
+	period = 1000 / GAUGE_RATE;
+	frame->freq_timer_uid = g_timeout_add(period,
+			lingot_mainframe_callback_gauge_computation, frame);
+
+	if (isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
+		lingot_gauge_compute(frame->gauge, frame->conf->vr);
+	} else {
+		// bring up some octaves to avoid negative frets.
+		fret_f = log(frame->core->freq / frame->conf->root_frequency) / Log2
+				* 12.0 + 12e2;
+		lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
 	}
 
 	return 0;

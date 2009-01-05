@@ -50,9 +50,10 @@ am_lingot_OBJECTS = lingot-fft.$(OBJEXT) lingot-audio.$(OBJEXT) \
 	lingot-audio-oss.$(OBJEXT) lingot-audio-alsa.$(OBJEXT) \
 	lingot-audio-jack.$(OBJEXT) lingot-complex.$(OBJEXT) \
 	lingot-config.$(OBJEXT) lingot-core.$(OBJEXT) \
-	lingot-config-dialog.$(OBJEXT) lingot-gauge.$(OBJEXT) \
-	lingot-mainframe.$(OBJEXT) lingot-filter.$(OBJEXT) \
-	lingot-signal.$(OBJEXT) lingot.$(OBJEXT)
+	lingot-error.$(OBJEXT) lingot-config-dialog.$(OBJEXT) \
+	lingot-gauge.$(OBJEXT) lingot-mainframe.$(OBJEXT) \
+	lingot-filter.$(OBJEXT) lingot-signal.$(OBJEXT) \
+	lingot.$(OBJEXT)
 lingot_OBJECTS = $(am_lingot_OBJECTS)
 am__DEPENDENCIES_1 =
 lingot_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -265,6 +266,8 @@ lingot_SOURCES = \
 	lingot-core.c\
 	lingot-core.h\
 	lingot-defs.h\
+	lingot-error.h\
+	lingot-error.c\
 	lingot-config-dialog.c\
 	lingot-config-dialog.h\
 	lingot-gauge.c\
@@ -362,6 +365,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-config-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-core.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-fft.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-gauge.Po@am__quote@
