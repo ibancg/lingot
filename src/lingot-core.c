@@ -46,7 +46,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	LingotCore* core = malloc(sizeof(LingotCore));
 
 	core->conf = conf;
-	core->running = 1;
+	core->running = 0;
 
 	core->audio = lingot_audio_new(core);
 
@@ -120,6 +120,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	// ------------------------------------------------------------
 
 	core->freq = 0.0;
+	core->running = (core->audio == NULL) ? 0 : 1;
 	return core;
 }
 

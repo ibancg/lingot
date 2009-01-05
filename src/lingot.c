@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -33,6 +33,10 @@
 #include "lingot-config.h"
 #include "lingot-mainframe.h"
 #include "lingot-i18n.h"
+
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <glib.h>
 
 char CONFIG_FILE_NAME[100];
 

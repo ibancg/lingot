@@ -41,7 +41,7 @@ int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
  * decides to disconnect the client.
  */
 void lingot_audio_jack_shutdown(void *arg) {
-	exit(1);
+	// TODO
 }
 
 LingotAudio* lingot_audio_jack_new(LingotCore* core) {
@@ -56,6 +56,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	LingotAudio* audio = malloc(sizeof(LingotAudio));
 	LingotConfig* conf = core->conf;
 
+	audio->audio_system = AUDIO_SYSTEM_JACK;
 	audio->jack_client = jack_client_open(client_name, options, &status,
 			server_name);
 	if (audio->jack_client == NULL) {

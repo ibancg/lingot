@@ -8,9 +8,9 @@ lingot-audio-oss.o lingot-audio-oss.o: lingot-audio-oss.c \
   /usr/include/linux/patchkey.h /usr/include/sys/ioctl.h \
   /usr/include/bits/ioctls.h /usr/include/asm/ioctls.h \
   /usr/include/bits/ioctl-types.h /usr/include/sys/ttydefaults.h \
-  lingot-defs.h /usr/include/sys/types.h /usr/include/bits/types.h \
-  /usr/include/bits/typesizes.h /usr/include/time.h \
-  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stddef.h \
+  lingot-error.h lingot-defs.h /usr/include/sys/types.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/time.h /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stddef.h \
   /usr/include/sys/select.h /usr/include/bits/select.h \
   /usr/include/bits/sigset.h /usr/include/bits/time.h \
   /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
@@ -60,6 +60,8 @@ lingot-audio-oss.o lingot-audio-oss.o: lingot-audio-oss.c \
 /usr/include/bits/ioctl-types.h:
 
 /usr/include/sys/ttydefaults.h:
+
+lingot-error.h:
 
 lingot-defs.h:
 

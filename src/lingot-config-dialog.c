@@ -89,7 +89,7 @@ void lingot_config_dialog_change_sample_rate_labels(LingotConfigDialog *dialog,
 
 void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-	char * text = (gtk_combo_box_get_active(dialog->input_system)
+	char* text = (gtk_combo_box_get_active(dialog->input_system)
 			== AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
 			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
 			GTK_COMBO_BOX(dialog->sample_rate));
@@ -99,7 +99,7 @@ void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 
 int lingot_config_dialog_get_jack_sample_rate() {
 	int result = 44100;
-#		ifdef JACK
+#	ifdef JACK
 	const char **ports;
 	const char *client_name = "lingot-gui";
 	const char *server_name = NULL;
@@ -127,7 +127,7 @@ int lingot_config_dialog_get_jack_sample_rate() {
 
 	result = jack_get_sample_rate(jack_client);
 	jack_client_close(jack_client);
-#		endif
+#	endif
 	return result;
 }
 
@@ -141,6 +141,9 @@ void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_sample_rate0));
 		gtk_widget_hide(GTK_WIDGET(dialog->sample_rate));
 		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_sample_rate2));
+		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_input_dev0));
+		gtk_widget_hide(GTK_WIDGET(dialog->input_dev));
+		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_input_dev2));
 		gtk_widget_show(GTK_WIDGET(dialog->jack_label_sample_rate0));
 		gtk_widget_show(GTK_WIDGET(dialog->jack_label_sample_rate1));
 		gtk_widget_show(GTK_WIDGET(dialog->jack_label_sample_rate2));
@@ -148,6 +151,9 @@ void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		gtk_widget_show(GTK_WIDGET(dialog->oss_alsa_label_sample_rate0));
 		gtk_widget_show(GTK_WIDGET(dialog->sample_rate));
 		gtk_widget_show(GTK_WIDGET(dialog->oss_alsa_label_sample_rate2));
+		gtk_widget_show(GTK_WIDGET(dialog->oss_alsa_label_input_dev0));
+		gtk_widget_show(GTK_WIDGET(dialog->input_dev));
+		gtk_widget_show(GTK_WIDGET(dialog->oss_alsa_label_input_dev2));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate0));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate1));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate2));
@@ -322,6 +328,10 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 					"oss_alsa_label_sample_rate0"));
 	dialog->oss_alsa_label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
 					"oss_alsa_label_sample_rate2"));
+	dialog->oss_alsa_label_input_dev0 = GTK_LABEL(gtk_builder_get_object(builder,
+					"oss_alsa_label_input_dev0"));
+	dialog->oss_alsa_label_input_dev2 = GTK_LABEL(gtk_builder_get_object(builder,
+					"oss_alsa_label_input_dev2"));
 
 	gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
 			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);

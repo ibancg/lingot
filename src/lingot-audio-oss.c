@@ -23,6 +23,7 @@
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
 
+#include "lingot-error.h"
 #include "lingot-defs.h"
 #include "lingot-audio-oss.h"
 
@@ -34,13 +35,13 @@ LingotAudio* lingot_audio_oss_new(LingotCore* core) {
 	char *fdsp = core->conf->audio_dev;
 
 	LingotAudio* audio = malloc(sizeof(LingotAudio));
-
+	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(fdsp, O_RDONLY);
 	if (audio->dsp < 0) {
-		char buff[80];
-		sprintf(buff, "Unable to open audio device %s", fdsp);
-		perror(buff);
-		exit(-1);
+		char error_message[100];
+		sprintf(error_message, "Unable to open audio device %s", fdsp);
+		lingot_error_queue_push(error_message);
+		return NULL;
 	}
 
 	//if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
@@ -114,9 +115,11 @@ LingotAudio* lingot_audio_oss_new(LingotCore* core) {
 }
 
 void lingot_audio_oss_destroy(LingotAudio* audio) {
-	close(audio->dsp);
-	free(audio->read_buffer);
-	free(audio);
+	if (audio != NULL) {
+		close(audio->dsp);
+		free(audio->read_buffer);
+		free(audio);
+	}
 }
 
 int lingot_audio_oss_read(LingotAudio* audio, LingotCore* core) {
