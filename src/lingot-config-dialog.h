@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -30,45 +30,48 @@
 
 typedef struct _LingotConfigDialog LingotConfigDialog;
 
-struct _LingotConfigDialog
-  {
+struct _LingotConfigDialog {
 
-    // widgets that contains configuration information.
-    GtkWidget* spin_calculation_rate;
-    GtkWidget* spin_visualization_rate;
-    GtkWidget* spin_oversampling;
-    GtkWidget* spin_root_frequency_error;
-    GtkWidget* spin_temporal_window;
-    GtkWidget* spin_noise_threshold;
-    GtkWidget* spin_dft_number;
-    GtkWidget* spin_dft_size;
-    GtkWidget* spin_peak_number;
-    GtkWidget* spin_peak_half_width;
-    GtkWidget* spin_peak_rejection_relation;
-    GtkWidget* combo_fft_size;
-    GtkWidget* combo_sample_rate;
+	// widgets that contains configuration information.
+	GtkComboBox* input_system;
+	GtkComboBoxEntry* input_dev;
+	GtkComboBox* sample_rate;
+	GtkHScale* calculation_rate;
+	GtkHScale* visualization_rate;
+	GtkHScale* noise_threshold;
+	GtkHScale* gain;
+	GtkSpinButton* oversampling;
+	GtkComboBox* fft_size;
+	GtkSpinButton* temporal_window;
+	GtkSpinButton* root_frequency_error;
+	GtkSpinButton* dft_number;
+	GtkSpinButton* dft_size;
+	GtkSpinButton* peak_number;
+	GtkSpinButton* peak_halfwidth;
+	GtkHScale* rejection_peak_relation;
+	GtkLabel* label_sample_rate1;
+	GtkLabel* label_sample_rate2;
+	GtkLabel* label_root_frequency;
+	GtkLabel* jack_label_sample_rate0;
+	GtkLabel* jack_label_sample_rate1;
+	GtkLabel* jack_label_sample_rate2;
+	GtkLabel* oss_alsa_label_sample_rate0;
+	GtkLabel* oss_alsa_label_sample_rate2;
 
-    GtkWidget* button_ok;
-    GtkWidget* button_cancel;
-    GtkWidget* button_apply;
-    GtkWidget* button_default;
+	LingotConfig* conf; // provisional configuration.
+	LingotConfig* conf_old; // restoration point for cancel.
 
-    GtkWidget* label_sample_rate;
-    GtkWidget* label_root_frequency;
+	LingotMainFrame* mainframe;
 
-    LingotConfig* conf; // provisional configuration.
-    LingotConfig* conf_old; // restoration point for cancel.
+	GtkWidget* win; // window
+};
 
-    LingotMainFrame* mainframe;
-    
-    GtkWidget* win; // window
-  };
-
-LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
+//LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
 void lingot_config_dialog_destroy(LingotConfigDialog*);
 
-void lingot_config_dialog_rewrite(LingotConfigDialog*);
 void lingot_config_dialog_apply(LingotConfigDialog*);
 void lingot_config_dialog_close(LingotConfigDialog*);
+
+void lingot_config_dialog_show(LingotMainFrame* frame);
 
 #endif // __LINGOT_CONFIG_DIALOG_H__

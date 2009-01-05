@@ -9,6 +9,12 @@ src/lingot-fft.c
 src/lingot-fft.h
 src/lingot-audio.c
 src/lingot-audio.h
+src/lingot-audio-oss.c
+src/lingot-audio-oss.h
+src/lingot-audio-alsa.c
+src/lingot-audio-alsa.h
+src/lingot-audio-jack.c
+src/lingot-audio-jack.h
 src/lingot-config.c
 src/lingot-config.h
 src/lingot-core.c

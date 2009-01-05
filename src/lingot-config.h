@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,64 +33,74 @@
 
 typedef struct _LingotConfig LingotConfig;
 
-struct _LingotConfig
-  {
-    char audio_dev[80]; // default "/dev/dsp"
-    unsigned int sample_rate; // soundcard sample rate.
-    unsigned int oversampling; // oversampling factor.
+#define AUDIO_SYSTEM_OSS 0
+#define AUDIO_SYSTEM_ALSA 1
+#define AUDIO_SYSTEM_JACK 2
 
-    // frequency of the root A note (internal parameter).
-    FLT root_frequency;
+struct _LingotConfig {
 
-    FLT root_frequency_error; // deviation of the above root frequency.
+	// audio system:
+	int audio_system;
 
-    FLT min_frequency; // minimum valid frequency.
+	char audio_dev[80]; // default "/dev/dsp"
+	unsigned int sample_rate; // soundcard sample rate.
+	unsigned int oversampling; // oversampling factor.
 
-    unsigned int fft_size; // number of samples of the FFT.
+	// frequency of the root A note (internal parameter).
+	FLT root_frequency;
 
-    FLT calculation_rate;
-    FLT visualization_rate;
+	FLT root_frequency_error; // deviation of the above root frequency.
 
-    FLT temporal_window; // duration in seconds of the temporal window.
+	FLT min_frequency; // minimum valid frequency.
 
-    // samples stored in the temporal window (internal parameter).
-    unsigned int temporal_buffer_size;
+	unsigned int fft_size; // number of samples of the FFT.
 
-    // samples read from soundcard. (internal parameter)
-    unsigned int read_buffer_size;
+	FLT calculation_rate;
+	FLT visualization_rate;
 
-    FLT noise_threshold_db; // dB
-    FLT noise_threshold_nu; // natural units (internal parameter)
+	FLT temporal_window; // duration in seconds of the temporal window.
 
-    // frequency finding algorithm configuration
-    //-------------------------------------------
+	// samples stored in the temporal window (internal parameter).
+	unsigned int temporal_buffer_size;
 
-    unsigned int peak_number; // number of maximum peaks considered.
+	// samples read from soundcard (internal parameter).
+	unsigned int read_buffer_size;
 
-    // number of adyacent samples needed to consider a peak.
-    unsigned int peak_half_width;
+	FLT noise_threshold_db; // dB
+	FLT noise_threshold_nu; // natural units (internal parameter)
 
-    /* maximum amplitude relation between principal and secondary peaks.
-     The max peak doesn't has to be the fundamental frequency carrier if it
-     has an amplitude relation with the fundamental considered peak lower than
-     this parameter. */
-    FLT peak_rejection_relation_db; // dBs
-    FLT peak_rejection_relation_nu; // natural units (internal)
+	// frequency finding algorithm configuration
+	//-------------------------------------------
 
-    // DFT approximation
-    unsigned int dft_number; // number of DFTs.
-    unsigned int dft_size; // samples of each DFT.
+	unsigned int peak_number; // number of maximum peaks considered.
 
-    // max iterations for Newton-Raphson algorithm.
-    unsigned int max_nr_iter;
+	// number of adjacent samples needed to consider a peak.
+	unsigned int peak_half_width;
 
-    //----------------------------------------------------------------------------
+	/* maximum amplitude relation between principal and secondary peaks.
+	 The max peak doesn't has to be the fundamental frequency carrier if it
+	 has an amplitude relation with the fundamental considered peak lower than
+	 this parameter. */
+	FLT peak_rejection_relation_db; // dBs
+	FLT peak_rejection_relation_nu; // natural units (internal)
 
-    // gauge rest value. (gauge contemplates [-0.5, 0.5])
-    FLT vr;
+	FLT gain; // dBs
+	FLT gain_nu; // natural units (internal)
 
-    //----------------------------------------------------------------------------
-  };
+	// DFT approximation
+	unsigned int dft_number; // number of DFTs.
+	unsigned int dft_size; // samples of each DFT.
+
+	// max iterations for Newton-Raphson algorithm.
+	unsigned int max_nr_iter;
+
+	//----------------------------------------------------------------------------
+
+	// gauge rest value. (gauge contemplates [-0.5, 0.5])
+	FLT vr;
+
+	//----------------------------------------------------------------------------
+};
 
 LingotConfig* lingot_config_new();
 void lingot_config_destroy(LingotConfig*);

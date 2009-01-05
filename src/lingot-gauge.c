@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -32,9 +32,9 @@ LingotGauge* lingot_gauge_new(FLT initial_position)
     // dynamic model of the gauge:
     //
     //               2
-    //              d                              d      
+    //              d                              d
     //              --- s(t) = k (e(t) - s(t)) - q -- s(t)
-    //                2                            dt     
+    //                2                            dt
     //              dt
     //
     // acceleration of gauge position 's(t)' linealy depends on the difference
@@ -73,7 +73,7 @@ LingotGauge* lingot_gauge_new(FLT initial_position)
       { k};
 
     LingotGauge* gauge = malloc(sizeof(LingotGauge));
-    
+
     gauge->filter = lingot_filter_new( 2, 0, a, b );
     lingot_gauge_compute(gauge, initial_position);
     return gauge;

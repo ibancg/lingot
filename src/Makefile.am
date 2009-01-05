@@ -12,6 +12,12 @@ lingot_SOURCES = \
 	lingot-fft.h\
 	lingot-audio.c\
 	lingot-audio.h\
+	lingot-audio-oss.c\
+	lingot-audio-oss.h\
+	lingot-audio-alsa.c\
+	lingot-audio-alsa.h\
+	lingot-audio-jack.c\
+	lingot-audio-jack.h\
 	lingot-complex.h\
 	lingot-complex.c\
 	lingot-config.c\
