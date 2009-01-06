@@ -171,7 +171,7 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 	frame->freq_timer_uid = g_timeout_add(period,
 			lingot_mainframe_callback_gauge_computation, frame);
 
-	if (isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
+	if (!frame->core->running || isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
 		// bring up some octaves to avoid negative frets.
@@ -527,7 +527,6 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	static char error_string[30], freq_string[30];
 
-	LingotCore* core1 = frame->core;
 	PangoLayout* layout;
 
 	int
@@ -673,39 +672,44 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	gdk_gc_set_foreground(gc, &spectrum_color);
 
 	// spectrum drawing.
-	j = -1;
-	for (i = 0; (i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1); i++) {
-		old_j = j;
-		j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(
-				frame->core->X[i])) : 0; // dB.
-		if (spectrum_drawing_filled) {
-			if (j < spectrum_size_y)
-				gdk_draw_line(window, gc, spectrum_x_margin + i,
-						spectrum_size_y + spectrum_top_margin - 1,
-						spectrum_x_margin + i, spectrum_top_margin + ((j
-								< spectrum_size_y) ? (spectrum_size_y - j) : 0));
-		} else if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0) && (j
-				< spectrum_size_y))
-			gdk_draw_line(window, gc, spectrum_x_margin + i - 1,
-					spectrum_size_y + spectrum_top_margin - old_j,
-					spectrum_x_margin + i, spectrum_size_y
-							+ spectrum_top_margin - j);
-	}
-
-	if (frame->core->freq != 0.0) {
-
-		// fundamental frequency mark with a red point.
-		gdk_gc_set_foreground(gc, &freq_color);
-
-		// index of closest sample to fundamental frequency.
-		i = (int) rint(frame->core->freq * frame->conf->fft_size
-				* frame->conf->oversampling / frame->conf->sample_rate);
-		if ((i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1)) {
+	if (frame->core->running) {
+		j = -1;
+		for (i = 0; (i < frame->conf->fft_size - 1)
+				&& (i < spectrum_size_x - 1); i++) {
+			old_j = j;
 			j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(
 					frame->core->X[i])) : 0; // dB.
-			if (j < spectrum_size_y - 1)
-				gdk_draw_rectangle(window, gc, TRUE, spectrum_x_margin + i - 1,
-						spectrum_size_y + spectrum_top_margin - j - 1, 3, 3);
+			if (spectrum_drawing_filled) {
+				if (j < spectrum_size_y)
+					gdk_draw_line(window, gc, spectrum_x_margin + i,
+							spectrum_size_y + spectrum_top_margin - 1,
+							spectrum_x_margin + i, spectrum_top_margin + ((j
+									< spectrum_size_y) ? (spectrum_size_y - j)
+									: 0));
+			} else if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
+					&& (j < spectrum_size_y))
+				gdk_draw_line(window, gc, spectrum_x_margin + i - 1,
+						spectrum_size_y + spectrum_top_margin - old_j,
+						spectrum_x_margin + i, spectrum_size_y
+								+ spectrum_top_margin - j);
+		}
+
+		if (frame->core->freq != 0.0) {
+
+			// fundamental frequency mark with a red point.
+			gdk_gc_set_foreground(gc, &freq_color);
+
+			// index of closest sample to fundamental frequency.
+			i = (int) rint(frame->core->freq * frame->conf->fft_size
+					* frame->conf->oversampling / frame->conf->sample_rate);
+			if ((i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1)) {
+				j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN*log10(
+						frame->core->X[i])) : 0; // dB.
+				if (j < spectrum_size_y - 1)
+					gdk_draw_rectangle(window, gc, TRUE, spectrum_x_margin + i
+							- 1, spectrum_size_y + spectrum_top_margin - j - 1,
+							3, 3);
+			}
 		}
 	}
 
@@ -721,7 +725,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	// draw note, error and frequency labels
 
 	// ignore continuous component
-	if (isnan(frame->core->freq) || (frame->core->freq < 10.0)) {
+	if (!frame->core->running || isnan(frame->core->freq) || (frame->core->freq
+			< 10.0)) {
 		current_tone = "---";
 		strcpy(error_string, "e = ---");
 		strcpy(freq_string, "f = ---");
