@@ -46,6 +46,8 @@ void lingot_audio_jack_shutdown(void *arg) {
 
 LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
+	LingotAudio* audio;
+#	ifdef JACK
 	const char **ports;
 	const char *client_name = "lingot";
 	const char *server_name = NULL;
@@ -53,7 +55,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	jack_options_t options = JackNullOption;
 	jack_status_t status;
 
-	LingotAudio* audio = malloc(sizeof(LingotAudio));
+	audio = malloc(sizeof(LingotAudio));
 	LingotConfig* conf = core->conf;
 
 	audio->audio_system = AUDIO_SYSTEM_JACK;
@@ -61,7 +63,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 			server_name);
 	if (audio->jack_client == NULL) {
 		fprintf(stderr, "jack_client_open() failed, "
-			"status = 0x%2.0x\n", status);
+				"status = 0x%2.0x\n", status);
 		if (status & JackServerFailed) {
 			fprintf(stderr, "Unable to connect to JACK server\n");
 		}
@@ -85,9 +87,9 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	conf->read_buffer_size = jack_get_buffer_size(audio->jack_client);
 
 	printf("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate(
-			audio->jack_client));
+					audio->jack_client));
 	printf("buffer size: %" PRIu32 "\n", jack_get_buffer_size(
-			audio->jack_client));
+					audio->jack_client));
 
 	audio->jack_input_port = jack_port_register(audio->jack_client, "input",
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
@@ -103,7 +105,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	}
 
 	ports = jack_get_ports(audio->jack_client, NULL, NULL, JackPortIsPhysical
-	| JackPortIsOutput);
+			| JackPortIsOutput);
 	if (ports == NULL) {
 		fprintf(stderr, "no physical capture ports\n");
 		exit(1);
@@ -116,17 +118,22 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
 	free(ports);
 
+#	endif
 	return audio;
 }
 
 void lingot_audio_jack_destroy(LingotAudio* audio) {
+#	ifdef JACK
 	jack_client_close(audio->jack_client);
+#	endif
 }
 
 int lingot_audio_jack_read(LingotAudio* audio, LingotCore* core) {
+#	ifdef JACK
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
 		core->flt_read_buffer[i] = in[i] * 32768;
+#	endif
 	return 0;
 }
