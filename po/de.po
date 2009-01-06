@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 20:40+0100\n"
+"POT-Creation-Date: 2009-01-06 21:34+0100\n"
 "PO-Revision-Date: 2008-01-12 17:23:00+0100\n"
 "Last-Translator: Roland Stigge <stigge@antcom.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 #, fuzzy
-msgid "Noise Threshold"
+msgid "Noise threshold"
 msgstr "Rausch-Schwellwert"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
@@ -131,13 +131,21 @@ msgstr "Samples"
 msgid "seconds"
 msgstr "Sekunden"
 
-#: ../src/lingot-config-dialog.c:266
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+msgid "The application has not been built with JACK support"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:267
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
 "Zeitfenster ist kleiner als FFT-Größe. Es wurde auf %0.3f Sekunden erhöht."
+
+#: ../src/lingot-config-dialog.c:269
+msgid "Warning"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
@@ -146,6 +154,10 @@ msgstr "Genaues und einfach zu bedienendes Stimmgerät für Musikinstrumente"
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr "Roland Stigge <stigge@antcom.de>"
+
+#: ../src/lingot-mainframe.c:164
+msgid "Error"
+msgstr ""
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:247

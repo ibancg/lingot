@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 20:40+0100\n"
+"POT-Creation-Date: 2009-01-06 21:34+0100\n"
 "PO-Revision-Date: 2008-03-07 16:46+0100\n"
 "Last-Translator: Piotr Pawlow <pp@siedziba.pl>\n"
 "Language-Team: Polish\n"
@@ -81,7 +81,7 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 #, fuzzy
-msgid "Noise Threshold"
+msgid "Noise threshold"
 msgstr "Próg szumu"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
@@ -133,7 +133,11 @@ msgstr "próbek"
 msgid "seconds"
 msgstr "sekund"
 
-#: ../src/lingot-config-dialog.c:266
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+msgid "The application has not been built with JACK support"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:267
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -142,12 +146,20 @@ msgstr ""
 "Bufor czasowy jest mniejszy niż rozmiar FFT. Został powiększony do %0.3f "
 "sekund"
 
+#: ../src/lingot-config-dialog.c:269
+msgid "Warning"
+msgstr ""
+
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Dokładny i prosty w użyciu tuner instrumentów muzycznych"
 
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:164
+msgid "Error"
 msgstr ""
 
 #. g_object_unref(logo);

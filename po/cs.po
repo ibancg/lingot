@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 20:40+0100\n"
+"POT-Creation-Date: 2009-01-06 21:34+0100\n"
 "PO-Revision-Date: 2008-05-25 12:06+0200\n"
 "Last-Translator: Karel Volný <kavol@seznam.cz>\n"
 "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
@@ -81,7 +81,7 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 #, fuzzy
-msgid "Noise Threshold"
+msgid "Noise threshold"
 msgstr "Práh šumu"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
@@ -133,7 +133,11 @@ msgstr "vzorků"
 msgid "seconds"
 msgstr "s"
 
-#: ../src/lingot-config-dialog.c:266
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+msgid "The application has not been built with JACK support"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:267
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -142,6 +146,10 @@ msgstr ""
 "Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na %"
 "0.3f s."
 
+#: ../src/lingot-config-dialog.c:269
+msgid "Warning"
+msgstr ""
+
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
@@ -149,6 +157,10 @@ msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr "Karel Volný <kavol@seznam.cz>"
+
+#: ../src/lingot-mainframe.c:164
+msgid "Error"
+msgstr ""
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:247

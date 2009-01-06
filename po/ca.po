@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 20:40+0100\n"
+"POT-Creation-Date: 2009-01-06 21:34+0100\n"
 "PO-Revision-Date: 2007-10-02 19:00+0200\n"
 "Last-Translator: Raül Cambeiro <rulet@menta.net>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 #, fuzzy
-msgid "Noise Threshold"
+msgid "Noise threshold"
 msgstr "Llindar de soroll"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
@@ -131,7 +131,11 @@ msgstr "mostres"
 msgid "seconds"
 msgstr "segons"
 
-#: ../src/lingot-config-dialog.c:266
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+msgid "The application has not been built with JACK support"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:267
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -140,6 +144,10 @@ msgstr ""
 "La memòria intermèdia temporal és menor que la mida de l'FFT. S'ha augmentat "
 "a %0.3f segons."
 
+#: ../src/lingot-config-dialog.c:269
+msgid "Warning"
+msgstr ""
+
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador d'instruments musicals precís i fàcil de fer anar"
@@ -147,6 +155,10 @@ msgstr "Afinador d'instruments musicals precís i fàcil de fer anar"
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr "Raúl Cambeiro <rulet@menta.net>, 2007"
+
+#: ../src/lingot-mainframe.c:164
+msgid "Error"
+msgstr ""
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:247

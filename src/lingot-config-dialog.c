@@ -192,6 +192,7 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	LingotConfig* conf = dialog->conf;
 	lingot_config_dialog_set_audio_system(dialog->input_system,
 			conf->audio_system);
+	gtk_entry_set_text(dialog->input_dev, conf->audio_dev);
 	gtk_range_set_value(GTK_RANGE(dialog->calculation_rate), conf->calculation_rate);
 	gtk_range_set_value(GTK_RANGE(dialog->visualization_rate), conf->visualization_rate);
 	gtk_range_set_value(GTK_RANGE(dialog->noise_threshold), conf->noise_threshold_db);
@@ -227,8 +228,8 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 
 	dialog->conf->audio_system = lingot_config_dialog_get_audio_system(
 			dialog->input_system);
-	sprintf(dialog->conf->audio_dev, "%s", gtk_combo_box_get_active_text(
-			GTK_COMBO_BOX(dialog->input_dev)));
+	sprintf(dialog->conf->audio_dev, "%s",
+			gtk_entry_get_text(dialog->input_dev));
 	dialog->conf->root_frequency_error = gtk_spin_button_get_value_as_float(
 			dialog->root_frequency_error);
 	dialog->conf->calculation_rate = gtk_range_get_value(GTK_RANGE(dialog->calculation_rate));
@@ -265,7 +266,7 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 						GTK_BUTTONS_CLOSE,
 						_("Temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 						dialog->conf->temporal_window);
-		gtk_window_set_title(GTK_WINDOW(message_dialog), "Warning"); // TODO: i18n
+		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Warning"));
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 	}
@@ -302,7 +303,7 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 
 	dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
 
-	dialog->input_dev = GTK_COMBO_BOX_ENTRY(gtk_builder_get_object(builder, "input_dev"));
+	dialog->input_dev = GTK_ENTRY(gtk_builder_get_object(builder, "input_dev"));
 	dialog->sample_rate = GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
 	dialog->calculation_rate = GTK_HSCALE(gtk_builder_get_object(builder, "calculation_rate"));
 	dialog->visualization_rate = GTK_HSCALE(gtk_builder_get_object(builder, "visualization_rate"));
