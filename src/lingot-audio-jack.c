@@ -23,6 +23,7 @@
 #include <stdio.h>
 
 #include "lingot-defs.h"
+#include "lingot-core.h"
 #include "lingot-audio-jack.h"
 #include "lingot-i18n.h"
 
@@ -40,9 +41,9 @@ int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
  * JACK calls this shutdown_callback if the server ever shuts down or
  * decides to disconnect the client.
  */
-void lingot_audio_jack_shutdown(void *arg) {
-	// TODO
-}
+void lingot_audio_jack_shutdown(LingotCore* core) {
+	core->running = 0;
+	lingot_error_queue_push(_("Missing connection with JACK audio server"));}
 #endif
 
 LingotAudio* lingot_audio_jack_new(LingotCore* core) {
@@ -81,7 +82,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	jack_set_process_callback(audio->jack_client, lingot_audio_jack_process,
 			core);
 
-	jack_on_shutdown(audio->jack_client, lingot_audio_jack_shutdown, 0);
+	jack_on_shutdown(audio->jack_client, lingot_audio_jack_shutdown, core);
 
 	conf->sample_rate = jack_get_sample_rate(audio->jack_client);
 	lingot_config_update_internal_params(conf);

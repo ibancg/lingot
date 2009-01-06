@@ -250,7 +250,9 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 	dialog->conf->peak_rejection_relation_db = gtk_range_get_value(GTK_RANGE(dialog->rejection_peak_relation));
 	dialog->conf->fft_size = atoi(gtk_combo_box_get_active_text(
 			dialog->fft_size));
-	dialog->conf->sample_rate = atoi(gtk_combo_box_get_active_text(
+	dialog->conf->sample_rate = atoi((dialog->conf->audio_system
+			== AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
+			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
 			dialog-> sample_rate));
 
 	int result = lingot_config_update_internal_params(dialog->conf);
