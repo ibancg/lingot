@@ -161,7 +161,7 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 		message_dialog = gtk_message_dialog_new(NULL,
 		GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
 				error_message);
-		gtk_window_set_title(GTK_WINDOW(message_dialog), "Error");
+		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 		free(error_message);
@@ -175,13 +175,13 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
 		// bring up some octaves to avoid negative frets.
-		fret_f = log(frame->core->freq / frame->conf->root_frequency) / Log2
+				fret_f = log(frame->core->freq / frame->conf->root_frequency) / Log2
 				* 12.0 + 12e2;
-		lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
-	}
+				lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
+			}
 
-	return 0;
-}
+			return 0;
+		}
 
 void lingot_mainframe_color(GdkColor* color, int red, int green, int blue) {
 	color->red = red;

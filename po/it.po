@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 20:40+0100\n"
+"POT-Creation-Date: 2009-01-06 21:34+0100\n"
 "PO-Revision-Date: 2008-07-27 21:38+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
@@ -81,7 +81,7 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 #, fuzzy
-msgid "Noise Threshold"
+msgid "Noise threshold"
 msgstr "Soglia di rumore"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
@@ -133,13 +133,21 @@ msgstr "campioni"
 msgid "seconds"
 msgstr "secondi"
 
-#: ../src/lingot-config-dialog.c:266
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+msgid "The application has not been built with JACK support"
+msgstr ""
+
+#: ../src/lingot-config-dialog.c:267
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
 "Il buffer temporale è più piccolo dell'FFT. È stato aumentato a %0.3f secondi"
+
+#: ../src/lingot-config-dialog.c:269
+msgid "Warning"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
@@ -148,6 +156,10 @@ msgstr "Accordatore di strumenti affidabile e semplice da usare"
 #: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr "Stefano Cereda <communico@tiscali.it>"
+
+#: ../src/lingot-mainframe.c:164
+msgid "Error"
+msgstr ""
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:247

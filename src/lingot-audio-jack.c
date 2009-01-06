@@ -24,6 +24,7 @@
 
 #include "lingot-defs.h"
 #include "lingot-audio-jack.h"
+#include "lingot-i18n.h"
 
 #ifdef JACK
 #include <jack/jack.h>
@@ -119,8 +120,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	free(ports);
 
 #	else
-	lingot_error_queue_push(
-			"The application has not been built with JACK support"); // TODO: i18n
+	lingot_error_queue_push(_("The application has not been built with JACK support"));
 #	endif
 	return audio;
 }
@@ -172,8 +172,7 @@ int lingot_audio_jack_get_sample_rate() {
 	result = jack_get_sample_rate(jack_client);
 	jack_client_close(jack_client);
 #	else
-	lingot_error_queue_push(
-			"The application has not been built with JACK support"); // TODO: i18n
+	lingot_error_queue_push(_("The application has not been built with JACK support"));
 #	endif
 	return result;
 }
