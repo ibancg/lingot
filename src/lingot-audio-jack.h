@@ -29,5 +29,6 @@
 LingotAudio* lingot_audio_jack_new(LingotCore*);
 void lingot_audio_jack_destroy(LingotAudio*);
 int lingot_audio_jack_read(LingotAudio*, LingotCore*);
+int lingot_audio_jack_get_sample_rate();
 
 #endif

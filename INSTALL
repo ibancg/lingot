@@ -231,6 +231,9 @@ configuration-related scripts to be executed by `/bin/bash'.
      Look for the package's source code in directory DIR.  Usually
      `configure' can determine that directory automatically.
 
+`--enable-jack'
+	 Provides JACK support
+
 `configure' also accepts some other, not widely useful, options.  Run
 `configure --help' for more details.
 

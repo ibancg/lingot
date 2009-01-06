@@ -5,6 +5,7 @@
 ## 	Please disable it in the Anjuta project configuration
 
 # Source files
+src/glade/lingot-config-dialog.glade
 src/lingot-fft.c
 src/lingot-fft.h
 src/lingot-audio.c

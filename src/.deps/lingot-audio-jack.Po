@@ -19,9 +19,7 @@ lingot-audio-jack.o lingot-audio-jack.o: lingot-audio-jack.c \
   /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
   lingot-filter.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
   /usr/include/stdlib.h /usr/include/alloca.h lingot-config.h \
-  lingot-audio.h /usr/include/jack/jack.h /usr/include/jack/types.h \
-  /usr/include/inttypes.h /usr/include/stdint.h /usr/include/bits/wchar.h \
-  /usr/include/jack/transport.h
+  lingot-audio.h
 
 /usr/include/stdio.h:
 
@@ -118,15 +116,3 @@ lingot-filter.h:
 lingot-config.h:
 
 lingot-audio.h:
-
-/usr/include/jack/jack.h:
-
-/usr/include/jack/types.h:
-
-/usr/include/inttypes.h:
-
-/usr/include/stdint.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/jack/transport.h:

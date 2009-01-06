@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!--Generated with glade3 3.4.5 on Mon Jan  5 23:18:44 2009 -->
+<!--Generated with glade3 3.4.5 on Tue Jan  6 20:35:47 2009 -->
 <interface>
   <object class="GtkAdjustment" id="adjustment1">
-    <property name="upper">40</property>
+    <property name="upper">30</property>
     <property name="lower">1</property>
     <property name="page_increment">0</property>
     <property name="step_increment">1</property>
@@ -74,7 +74,7 @@
     <property name="value">0.32000000000000001</property>
   </object>
   <object class="GtkAdjustment" id="adjustment7">
-    <property name="upper">40</property>
+    <property name="upper">120</property>
     <property name="lower">1</property>
     <property name="page_increment">10</property>
     <property name="step_increment">1</property>
@@ -164,7 +164,8 @@
   <object class="GtkDialog" id="dialog1">
     <property name="visible">True</property>
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Configuraci&#xF3;n de Lingot</property>
+    <property name="title" translatable="yes">lingot configuration</property>
+    <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
     <property name="has_separator">False</property>
@@ -190,7 +191,7 @@
                     <child>
                       <object class="GtkLabel" id="jack_label_sample_rate1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">44100</property>
+                        <property name="label">44100</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -217,7 +218,7 @@
                     <child>
                       <object class="GtkLabel" id="jack_label_sample_rate0">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Tasa de muestreo</property>
+                        <property name="label" translatable="yes">Sample rate</property>
                       </object>
                       <packing>
                         <property name="top_attach">3</property>
@@ -248,7 +249,7 @@
                     <child>
                       <object class="GtkLabel" id="system">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Sistema</property>
+                        <property name="label" translatable="yes">Audio system</property>
                       </object>
                       <packing>
                         <property name="y_options"/>
@@ -257,7 +258,7 @@
                     <child>
                       <object class="GtkLabel" id="oss_alsa_label_input_dev0">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Dispositivo</property>
+                        <property name="label" translatable="yes">Audio dev</property>
                       </object>
                       <packing>
                         <property name="top_attach">1</property>
@@ -297,7 +298,7 @@
                     <child>
                       <object class="GtkLabel" id="oss_alsa_label_input_dev2">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">
+                        <property name="label">
 </property>
                       </object>
                       <packing>
@@ -316,7 +317,6 @@
                           <object class="GtkEntry" id="comboboxentry_input_dev">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="text" translatable="yes">/dev/dsp</property>
                           </object>
                         </child>
                         <property name="model">model3</property>
@@ -338,7 +338,7 @@
                     <child>
                       <object class="GtkLabel" id="oss_alsa_label_sample_rate0">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Tasa de muestreo</property>
+                        <property name="label" translatable="yes">Sample rate</property>
                       </object>
                       <packing>
                         <property name="top_attach">2</property>
@@ -368,7 +368,7 @@
             <child type="tab">
               <object class="GtkLabel" id="input">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Captura</property>
+                <property name="label" translatable="yes">Capture</property>
               </object>
               <packing>
                 <property name="tab_fill">False</property>
@@ -386,7 +386,7 @@
                 <child>
                   <object class="GtkLabel" id="label10">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Tasa de c&#xF3;mputo</property>
+                    <property name="label" translatable="yes">Calculation rate</property>
                   </object>
                   <packing>
                     <property name="x_options"/>
@@ -396,7 +396,7 @@
                 <child>
                   <object class="GtkLabel" id="label11">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Tasa de visualizaci&#xF3;n</property>
+                    <property name="label" translatable="yes">Visualization rate</property>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -408,7 +408,7 @@
                 <child>
                   <object class="GtkLabel" id="label12">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Umbral de ru&#xED;do</property>
+                    <property name="label" translatable="yes">Noise Threshold</property>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
@@ -419,7 +419,7 @@
                 <child>
                   <object class="GtkLabel" id="label13">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Ganancia</property>
+                    <property name="label" translatable="yes">Gain</property>
                   </object>
                   <packing>
                     <property name="top_attach">3</property>
@@ -540,7 +540,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Ajustes</property>
+                <property name="label" translatable="yes">Adjustments</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -576,7 +576,7 @@
                     <child>
                       <object class="GtkLabel" id="label_root_frequency">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">%  = 440 (A)</property>
+                        <property name="label">%  = 440 (A)</property>
                       </object>
                       <packing>
                         <property name="left_attach">2</property>
@@ -586,7 +586,7 @@
                     <child>
                       <object class="GtkLabel" id="label51">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">440 (A) +</property>
+                        <property name="label">440 (A) +</property>
                       </object>
                     </child>
                   </object>
@@ -641,7 +641,7 @@
                     <child>
                       <object class="GtkLabel" id="label_sample_rate1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">8000</property>
+                        <property name="label">8000</property>
                       </object>
                       <packing>
                         <property name="y_options"/>
@@ -650,7 +650,7 @@
                     <child>
                       <object class="GtkLabel" id="label31">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes"> / </property>
+                        <property name="label"> / </property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -675,7 +675,7 @@
                     <child>
                       <object class="GtkLabel" id="label_sample_rate2">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes"> = 2000</property>
+                        <property name="label"> = 2000</property>
                       </object>
                       <packing>
                         <property name="left_attach">3</property>
@@ -706,7 +706,7 @@
                 <child>
                   <object class="GtkLabel" id="label28">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">segundos</property>
+                    <property name="label" translatable="yes">seconds</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -719,7 +719,7 @@
                 <child>
                   <object class="GtkLabel" id="label27">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">muestras</property>
+                    <property name="label" translatable="yes">samples</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -743,7 +743,7 @@
                 <child>
                   <object class="GtkLabel" id="label23">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Frecuencia base</property>
+                    <property name="label" translatable="yes">Root frequency</property>
                   </object>
                   <packing>
                     <property name="top_attach">3</property>
@@ -754,7 +754,7 @@
                 <child>
                   <object class="GtkLabel" id="label22">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Ventana temporal</property>
+                    <property name="label" translatable="yes">Temporal window</property>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
@@ -765,7 +765,7 @@
                 <child>
                   <object class="GtkLabel" id="label21">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Tama&#xF1;o de FFT</property>
+                    <property name="label" translatable="yes">FFT size</property>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -776,7 +776,7 @@
                 <child>
                   <object class="GtkLabel" id="label20">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Tasa efectiva de muestreo</property>
+                    <property name="label" translatable="yes">Effective sample rate</property>
                   </object>
                   <packing>
                     <property name="x_options"/>
@@ -788,7 +788,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">B&#xE1;sico</property>
+                <property name="label" translatable="yes">Basic</property>
               </object>
               <packing>
                 <property name="position">2</property>
@@ -819,7 +819,7 @@
                 <child>
                   <object class="GtkLabel" id="label47">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">muestras</property>
+                    <property name="label" translatable="yes">samples</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -832,7 +832,7 @@
                 <child>
                   <object class="GtkLabel" id="label45">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">picos</property>
+                    <property name="label" translatable="yes">peaks</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -845,7 +845,7 @@
                 <child>
                   <object class="GtkLabel" id="label46">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">muestras</property>
+                    <property name="label" translatable="yes">samples</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -928,7 +928,7 @@
                 <child>
                   <object class="GtkLabel" id="label43">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Relaci&#xF3;n rechazo picos</property>
+                    <property name="label" translatable="yes">Peak rejection relation</property>
                   </object>
                   <packing>
                     <property name="top_attach">4</property>
@@ -952,7 +952,7 @@
                 <child>
                   <object class="GtkLabel" id="label33">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Ancho de pico</property>
+                    <property name="label" translatable="yes">Peak half-width</property>
                   </object>
                   <packing>
                     <property name="top_attach">3</property>
@@ -964,7 +964,7 @@
                 <child>
                   <object class="GtkLabel" id="label32">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">N&#xBA; de picos</property>
+                    <property name="label" translatable="yes">Peak number</property>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
@@ -976,7 +976,7 @@
                 <child>
                   <object class="GtkLabel" id="label25">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Tama&#xF1;o de DFTs</property>
+                    <property name="label" translatable="yes">DFT size</property>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -988,7 +988,7 @@
                 <child>
                   <object class="GtkLabel" id="label18">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">N&#xBA; de DFTs</property>
+                    <property name="label" translatable="yes">DFT number</property>
                   </object>
                   <packing>
                     <property name="x_options"/>
@@ -1000,7 +1000,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Avanzado</property>
+                <property name="label" translatable="yes">Advanced</property>
               </object>
               <packing>
                 <property name="position">3</property>
@@ -1021,7 +1021,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Predeterminado</property>
+                <property name="label" translatable="yes">Default</property>
               </object>
             </child>
             <child>
@@ -1029,7 +1029,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-apply</property>
+                <property name="label">gtk-apply</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -1041,7 +1041,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -1053,7 +1053,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>

@@ -4,7 +4,8 @@ Written by:
   Ibán Cereijo Graña <ibancg@gmail.com>
   Jairo Chapela Martínez <jairocm@wanadoo.es>
 
-Copyright (C) 2004-2007 Ibán Cereijo Graña, Jairo Chapela martínez
+Copyright (C) 2004-2009 Ibán Cereijo Graña, Jairo Chapela martínez,
+		   Graciano Carrillo Pousa
 
 Description
 ===========
@@ -29,14 +30,24 @@ Requisites
 ==========
 
 	* Sound card.
-	* Kernel linux with audio support (OSS).
+	* Kernel linux with audio support (OSS, JACK).
 	* GTK+ library, version 2.0.
 	
 Installation
 ============
 
-	Please, see the INSTALL file.
+	Type:
+	
+	 > configure
+	 > make install
+	
+	With JACK support:
+	
+	 > configure --enable-jack
+	 > make install
 
+	Please, see the INSTALL file.
+	
 Synopsis
 ========
 
@@ -218,7 +229,7 @@ PEAK_REJECTION_RELATION
 
 	Its a real number with dB units.
 
-PEAK_ORDER
+PEAK_HALF_WIDTH
 
 	Number of samples needed to accept a peak. The correct tuning of this
 	parameter will depend on the instrument, and in a more important way,
