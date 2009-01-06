@@ -129,8 +129,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 /* Deallocate resources */
 void lingot_core_destroy(LingotCore* core) {
 
-	pthread_attr_destroy(&core->thread_input_read_attr);
-
 	lingot_fft_destroy_phase_factors(); // destroy phase factors.
 	free(core->fft_out);
 
@@ -393,6 +391,10 @@ void lingot_core_stop(LingotCore* core) {
 
 	pthread_join(core->thread_computation, &thread_result);
 
+	pthread_attr_destroy(&core->thread_computation_attr);
+	if (core->conf->audio_system != AUDIO_SYSTEM_JACK) {
+		pthread_attr_destroy(&core->thread_input_read_attr);
+	}
 }
 
 /* run the core */
