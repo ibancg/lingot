@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 22:44+0200\n"
+"POT-Creation-Date: 2009-01-06 20:40+0100\n"
 "PO-Revision-Date: 2008-03-07 16:46+0100\n"
 "Last-Translator: Piotr Pawlow <pp@siedziba.pl>\n"
 "Language-Team: Polish\n"
@@ -17,102 +17,123 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: ../src/lingot-config-dialog.c:152
-msgid "lingot configuration"
-msgstr "konfiguracja programu lingot"
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr ""
 
-#: ../src/lingot-config-dialog.c:161
-msgid "General parameters"
-msgstr "Ustawienia główne"
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr ""
 
-#: ../src/lingot-config-dialog.c:180
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
 msgid "Calculation rate"
 msgstr "Częstotliwość obliczeń"
 
-#: ../src/lingot-config-dialog.c:182 ../src/lingot-config-dialog.c:194
-#: ../src/lingot-config-dialog.c:265 ../src/lingot-config-dialog.c:307
-msgid "Hz"
-msgstr "Hz"
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr ""
 
-#: ../src/lingot-config-dialog.c:192
-msgid "Visualization rate"
-msgstr "Częstotliwość wizualizacji"
-
-#: ../src/lingot-config-dialog.c:208
-msgid "FFT size"
-msgstr "Rozmiar FFT"
-
-#: ../src/lingot-config-dialog.c:210 ../src/lingot-config-dialog.c:347
-#: ../src/lingot-config-dialog.c:374
-msgid "samples"
-msgstr "próbek"
-
-#: ../src/lingot-config-dialog.c:222
-msgid "Noise threshold"
-msgstr "Próg szumu"
-
-#: ../src/lingot-config-dialog.c:223 ../src/lingot-config-dialog.c:390
-msgid "dB"
-msgstr "dB"
-
-#: ../src/lingot-config-dialog.c:263
-msgid "Sample rate"
-msgstr "Częstotliwość próbkowania"
-
-#. --------------------------------------------------------------------------
-#: ../src/lingot-config-dialog.c:270
-msgid "Advanced parameters"
-msgstr "Ustawienia zaawansowane"
-
-#: ../src/lingot-config-dialog.c:293
-msgid " A (440 Hz) + "
-msgstr " A (440 Hz) + "
-
-#: ../src/lingot-config-dialog.c:305
-msgid "Root frequency"
-msgstr "Częstotliwość bazowa"
-
-#: ../src/lingot-config-dialog.c:319
-msgid "Temporal window"
-msgstr "Okno czasowe"
-
-#: ../src/lingot-config-dialog.c:320
-msgid "seconds"
-msgstr "sekund"
-
-#: ../src/lingot-config-dialog.c:333
+#: ../src/glade/lingot-config-dialog.glade.h:8
 msgid "DFT number"
 msgstr "Ilość DFT w szczycie"
 
-#: ../src/lingot-config-dialog.c:335
-msgid "DFTs"
-msgstr "iteracji"
-
-#: ../src/lingot-config-dialog.c:346
+#: ../src/glade/lingot-config-dialog.glade.h:9
 msgid "DFT size"
 msgstr "Rozmiar DFT w szczycie"
 
-#: ../src/lingot-config-dialog.c:359
-msgid "Peak number"
-msgstr "Numer szczytu"
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "iteracji"
 
-#: ../src/lingot-config-dialog.c:361
-msgid "peaks"
-msgstr "szczytów"
+#: ../src/glade/lingot-config-dialog.glade.h:11
+#, fuzzy
+msgid "Default"
+msgstr "Konfiguracja domyślna"
 
-#: ../src/lingot-config-dialog.c:372
+#: ../src/glade/lingot-config-dialog.glade.h:12
+#, fuzzy
+msgid "Effective sample rate"
+msgstr "Częstotliwość próbkowania"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "Rozmiar FFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+#, fuzzy
+msgid "Noise Threshold"
+msgstr "Próg szumu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Peak half-width"
 msgstr "Rozmiar szczytu"
 
-#: ../src/lingot-config-dialog.c:388
-msgid "Rejection peak relation"
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak number"
+msgstr "Numer szczytu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+#, fuzzy
+msgid "Peak rejection relation"
 msgstr "Stosunek szczytów odrzucanych"
 
-#: ../src/lingot-config-dialog.c:398
-msgid "Default config"
-msgstr "Konfiguracja domyślna"
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Root frequency"
+msgstr "Częstotliwość bazowa"
 
-#: ../src/lingot-config-dialog.c:463
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Sample rate"
+msgstr "Częstotliwość próbkowania"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Temporal window"
+msgstr "Okno czasowe"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Visualization rate"
+msgstr "Częstotliwość wizualizacji"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "lingot configuration"
+msgstr "konfiguracja programu lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "peaks"
+msgstr "szczytów"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "samples"
+msgstr "próbek"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "seconds"
+msgstr "sekund"
+
+#: ../src/lingot-config-dialog.c:266
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -125,50 +146,60 @@ msgstr ""
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Dokładny i prosty w użyciu tuner instrumentów muzycznych"
 
-#: ../src/lingot-mainframe.c:103
+#: ../src/lingot-mainframe.c:101
 msgid "translator-credits"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:242
+#: ../src/lingot-mainframe.c:247
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:265 ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:270 ../src/lingot-mainframe.c:341
 msgid "Spectrum"
 msgstr "Widmo częstotliwości"
 
-#: ../src/lingot-mainframe.c:299
+#: ../src/lingot-mainframe.c:304
 msgid "_File"
 msgstr "_Plik"
 
-#: ../src/lingot-mainframe.c:300
+#: ../src/lingot-mainframe.c:305
 msgid "_Edit"
 msgstr "_Edycja"
 
-#: ../src/lingot-mainframe.c:301
+#: ../src/lingot-mainframe.c:306
 msgid "_View"
 msgstr "_Widok"
 
-#: ../src/lingot-mainframe.c:302
+#: ../src/lingot-mainframe.c:307
 msgid "_Help"
 msgstr "Pomo_c"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:326
+#: ../src/lingot-mainframe.c:331
 msgid "Deviation"
 msgstr "Odchylenie"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:331
+#: ../src/lingot-mainframe.c:336
 msgid "Tone"
 msgstr "Nuta"
 
-#: ../src/lingot-mainframe.c:376
+#: ../src/lingot-mainframe.c:381
 msgid "freq"
 msgstr "częst."
 
-#: ../src/lingot-mainframe.c:379
+#: ../src/lingot-mainframe.c:384
 msgid "err"
 msgstr "błąd"
+
+#, fuzzy
+#~ msgid "440 (A) +"
+#~ msgstr " A (440 Hz) + "
+
+#~ msgid "General parameters"
+#~ msgstr "Ustawienia główne"
+
+#~ msgid "Advanced parameters"
+#~ msgstr "Ustawienia zaawansowane"

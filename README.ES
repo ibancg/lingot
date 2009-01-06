@@ -4,7 +4,7 @@ Escrito por:
   Ibán Cereijo Graña <ibancg@gmail.com>
   Jairo Chapela Martínez <jairocm@wanadoo.es>
 
-Copyright (C) 2004-2007 Ibán Cereijo Graña, Jairo Chapela Martínez,
+Copyright (C) 2004-2009 Ibán Cereijo Graña, Jairo Chapela Martínez,
 		   Graciano Carrillo Pousa.
 
 Descripción
@@ -29,11 +29,21 @@ Requisitos
 ==========
 
 	* Tarjeta de sonido.
-	* Kernel linux con soporte para audio (OSS).
+	* Kernel linux con soporte para audio (OSS, JACK).
 	* librería GTK+ 2.0.
 	
 Instalación
 ===========
+
+	Teclee:
+	
+	 > configure
+	 > make install
+	
+	Con soporte para JACK:
+	
+	 > configure --enable-jack
+	 > make install
 
 	Consulta el archivo INSTALL
 

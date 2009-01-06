@@ -1,3 +1,5 @@
+SUBDIRS = glade
+
 INCLUDES = \
 	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS)\
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"

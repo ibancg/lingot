@@ -1,4 +1,3 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
@@ -40,6 +39,7 @@
 #endif
 
 void lingot_config_dialog_rewrite(LingotConfigDialog*);
+void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value);
 
 /* button press event attention routine. */
 
@@ -89,53 +89,20 @@ void lingot_config_dialog_change_sample_rate_labels(LingotConfigDialog *dialog,
 
 void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-	char* text = (lingot_config_dialog_get_audio_system(dialog->input_system)
-			== AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
+	const char* text = (lingot_config_dialog_get_audio_system(
+			dialog->input_system) == AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
 			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
-			GTK_COMBO_BOX(dialog->sample_rate));
+			dialog->sample_rate);
 	int sr = (text != NULL) ? atoi(text) : 44100;
 	lingot_config_dialog_change_sample_rate_labels(dialog, sr);
-}
-
-int lingot_config_dialog_get_jack_sample_rate() {
-	int result = 44100;
-#	ifdef JACK
-	const char **ports;
-	const char *client_name = "lingot-gui";
-	const char *server_name = NULL;
-
-	jack_options_t options = JackNullOption;
-	jack_status_t status;
-	jack_client_t* jack_client;
-
-	jack_client = jack_client_open(client_name, options, &status, server_name);
-	if (jack_client == NULL) {
-		fprintf(stderr, "jack_client_open() failed, "
-			"status = 0x%2.0x\n", status);
-		if (status & JackServerFailed) {
-			fprintf(stderr, "Unable to connect to JACK server\n");
-		}
-		exit(1);
-	}
-	if (status & JackServerStarted) {
-		fprintf(stderr, "JACK server started\n");
-	}
-	if (status & JackNameNotUnique) {
-		client_name = jack_get_client_name(jack_client);
-		fprintf(stderr, "unique name `%s' assigned\n", client_name);
-	}
-
-	result = jack_get_sample_rate(jack_client);
-	jack_client_close(jack_client);
-#	endif
-	return result;
 }
 
 void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 	char* text = gtk_combo_box_get_active_text(dialog->input_system);
+
 	if (!strcmp("JACK", text)) {
-		dialog->conf->sample_rate = lingot_config_dialog_get_jack_sample_rate();
+		dialog->conf->sample_rate = lingot_audio_jack_get_sample_rate();
 		lingot_config_dialog_change_sample_rate_labels(dialog,
 				dialog->conf->sample_rate);
 		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_sample_rate0));
@@ -193,14 +160,15 @@ void lingot_config_dialog_set_audio_system(GtkComboBox* combo, int audio_system)
 
 int lingot_config_dialog_get_audio_system(GtkComboBox* combo) {
 	char* text = gtk_combo_box_get_active_text(combo);
-	if (!strcmp("OSS", text))
-		return AUDIO_SYSTEM_OSS;
-	else if (!strcmp("ALSA", text))
-		return AUDIO_SYSTEM_ALSA;
-	else if (!strcmp("JACK", text))
-		return AUDIO_SYSTEM_JACK;
-	else
-		return -1;
+	if (text != NULL)
+		if (!strcmp("OSS", text))
+			return AUDIO_SYSTEM_OSS;
+		else if (!strcmp("ALSA", text))
+			return AUDIO_SYSTEM_ALSA;
+		else if (!strcmp("JACK", text))
+			return AUDIO_SYSTEM_JACK;
+
+	return -1;
 }
 
 void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value) {
@@ -222,7 +190,6 @@ void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value) {
 
 void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	LingotConfig* conf = dialog->conf;
-	// TODO: audio dev
 	lingot_config_dialog_set_audio_system(dialog->input_system,
 			conf->audio_system);
 	gtk_range_set_value(GTK_RANGE(dialog->calculation_rate), conf->calculation_rate);
@@ -298,6 +265,7 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 						GTK_BUTTONS_CLOSE,
 						_("Temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 						dialog->conf->temporal_window);
+		gtk_window_set_title(GTK_WINDOW(message_dialog), "Warning"); // TODO: i18n
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 	}
@@ -322,8 +290,10 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 	*dialog->conf_old = *frame->conf;
 
 	builder = gtk_builder_new();
-	if (gtk_builder_add_from_file(builder, "src/lingot-config-dialog.xml", &err)
-			== 0) {
+	// TODO: obtain glade files installation dir by other way
+	if (gtk_builder_add_from_file(builder,
+			"" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml",
+			&err) == 0) {
 		//error_message(err->message);
 		g_error_free(err);
 		return;
@@ -331,6 +301,7 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 	dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
 
 	dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
+
 	dialog->input_dev = GTK_COMBO_BOX_ENTRY(gtk_builder_get_object(builder, "input_dev"));
 	dialog->sample_rate = GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
 	dialog->calculation_rate = GTK_HSCALE(gtk_builder_get_object(builder, "calculation_rate"));

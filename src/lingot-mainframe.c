@@ -1,4 +1,3 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
@@ -150,13 +149,14 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 }
 
 /* timeout for a new gauge position computation */
-gboolean lingot_mainframe_callback_gauge_computation(LingotMainFrame* frame) {
+gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 	unsigned int period;
 	const FLT Log2 = log(2.0);
 	double fret_f;
 	GtkWidget* message_dialog;
-
+	LingotMainFrame* frame = (LingotMainFrame*) data;
 	char* error_message = lingot_error_queue_pop();
+
 	if (error_message != NULL) {
 		message_dialog = gtk_message_dialog_new(NULL,
 		GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,

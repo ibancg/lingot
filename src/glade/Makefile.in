@@ -32,7 +32,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = pixmaps
+subdir = src/glade
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
@@ -50,9 +50,9 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(lingot_pixmapsdir)"
-lingot_pixmapsDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(lingot_pixmaps_DATA)
+am__installdirs = "$(DESTDIR)$(gladedir)"
+gladeDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(glade_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -222,11 +222,11 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lingot_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@
-lingot_pixmaps_DATA = \
-	lingot-icon.svg
+gladedir = $(datadir)/lingot/glade/
+glade_DATA = \
+	lingot-config-dialog.xml
 
-EXTRA_DIST = $(lingot_pixmaps_DATA)
+EXTRA_DIST = $(glade_DATA) 
 all: all-am
 
 .SUFFIXES:
@@ -239,9 +239,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  pixmaps/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/glade/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  pixmaps/Makefile
+	  $(AUTOMAKE) --gnu  src/glade/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -265,22 +265,22 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-lingot_pixmapsDATA: $(lingot_pixmaps_DATA)
+install-gladeDATA: $(glade_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(lingot_pixmapsdir)" || $(MKDIR_P) "$(DESTDIR)$(lingot_pixmapsdir)"
-	@list='$(lingot_pixmaps_DATA)'; for p in $$list; do \
+	test -z "$(gladedir)" || $(MKDIR_P) "$(DESTDIR)$(gladedir)"
+	@list='$(glade_DATA)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
-	  echo " $(lingot_pixmapsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(lingot_pixmapsdir)/$$f'"; \
-	  $(lingot_pixmapsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(lingot_pixmapsdir)/$$f"; \
+	  echo " $(gladeDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(gladedir)/$$f'"; \
+	  $(gladeDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(gladedir)/$$f"; \
 	done
 
-uninstall-lingot_pixmapsDATA:
+uninstall-gladeDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(lingot_pixmaps_DATA)'; for p in $$list; do \
+	@list='$(glade_DATA)'; for p in $$list; do \
 	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(lingot_pixmapsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(lingot_pixmapsdir)/$$f"; \
+	  echo " rm -f '$(DESTDIR)$(gladedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(gladedir)/$$f"; \
 	done
 tags: TAGS
 TAGS:
@@ -319,7 +319,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(lingot_pixmapsdir)"; do \
+	for dir in "$(DESTDIR)$(gladedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -364,7 +364,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-lingot_pixmapsDATA
+install-data-am: install-gladeDATA
 
 install-dvi: install-dvi-am
 
@@ -398,7 +398,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-lingot_pixmapsDATA
+uninstall-am: uninstall-gladeDATA
 
 .MAKE: install-am install-strip
 
@@ -406,13 +406,13 @@ uninstall-am: uninstall-lingot_pixmapsDATA
 	distclean distclean-generic distclean-libtool distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-lingot_pixmapsDATA \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
-	ps ps-am uninstall uninstall-am uninstall-lingot_pixmapsDATA
+	install-exec install-exec-am install-gladeDATA install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-am uninstall-gladeDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -27,7 +27,6 @@
 
 #ifdef JACK
 #include <jack/jack.h>
-#endif
 
 int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
 	jack_default_audio_sample_t *in, *out;
@@ -43,10 +42,11 @@ int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
 void lingot_audio_jack_shutdown(void *arg) {
 	// TODO
 }
+#endif
 
 LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
-	LingotAudio* audio;
+	LingotAudio* audio = NULL;
 #	ifdef JACK
 	const char **ports;
 	const char *client_name = "lingot";
@@ -118,6 +118,9 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
 	free(ports);
 
+#	else
+	lingot_error_queue_push(
+			"The application has not been built with JACK support"); // TODO: i18n
 #	endif
 	return audio;
 }
@@ -133,7 +136,44 @@ int lingot_audio_jack_read(LingotAudio* audio, LingotCore* core) {
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
-		core->flt_read_buffer[i] = in[i] * 32768;
+	core->flt_read_buffer[i] = in[i] * 32768;
 #	endif
 	return 0;
+}
+
+int lingot_audio_jack_get_sample_rate() {
+	int result = 0;
+#	ifdef JACK
+	const char **ports;
+	const char *client_name = "lingot-get-sample-rate";
+	const char *server_name = NULL;
+
+	jack_options_t options = JackNullOption;
+	jack_status_t status;
+	jack_client_t* jack_client;
+
+	jack_client = jack_client_open(client_name, options, &status, server_name);
+	if (jack_client == NULL) {
+		fprintf(stderr, "jack_client_open() failed, "
+				"status = 0x%2.0x\n", status);
+		if (status & JackServerFailed) {
+			fprintf(stderr, "Unable to connect to JACK server\n");
+		}
+		exit(1);
+	}
+	if (status & JackServerStarted) {
+		fprintf(stderr, "JACK server started\n");
+	}
+	if (status & JackNameNotUnique) {
+		client_name = jack_get_client_name(jack_client);
+		fprintf(stderr, "unique name `%s' assigned\n", client_name);
+	}
+
+	result = jack_get_sample_rate(jack_client);
+	jack_client_close(jack_client);
+#	else
+	lingot_error_queue_push(
+			"The application has not been built with JACK support"); // TODO: i18n
+#	endif
+	return result;
 }
