@@ -919,6 +919,8 @@ LIBTOOL
 PKG_CONFIG
 GTK_CFLAGS
 GTK_LIBS
+JACK_CFLAGS
+JACK_LIBS
 NO_PREFIX_PACKAGE_DATA_DIR
 PACKAGE_DATA_DIR
 NO_PREFIX_PACKAGE_DOC_DIR
@@ -949,7 +951,9 @@ F77
 FFLAGS
 PKG_CONFIG
 GTK_CFLAGS
-GTK_LIBS'
+GTK_LIBS
+JACK_CFLAGS
+JACK_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1562,6 +1566,8 @@ Some influential environment variables:
   PKG_CONFIG  path to pkg-config utility
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
+  JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
+  JACK_LIBS   linker flags for JACK, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -8586,7 +8592,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 8589 "configure"' > conftest.$ac_ext
+  echo '#line 8595 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -11164,11 +11170,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:11167: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11173: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:11171: \$? = $ac_status" >&5
+   echo "$as_me:11177: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -11454,11 +11460,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:11457: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11463: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:11461: \$? = $ac_status" >&5
+   echo "$as_me:11467: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -11558,11 +11564,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:11561: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:11567: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:11565: \$? = $ac_status" >&5
+   echo "$as_me:11571: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -13935,7 +13941,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 13938 "configure"
+#line 13944 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14035,7 +14041,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 14038 "configure"
+#line 14044 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -16436,11 +16442,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16439: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16445: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16443: \$? = $ac_status" >&5
+   echo "$as_me:16449: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16540,11 +16546,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16543: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16549: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:16547: \$? = $ac_status" >&5
+   echo "$as_me:16553: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -18138,11 +18144,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18141: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18147: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:18145: \$? = $ac_status" >&5
+   echo "$as_me:18151: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -18242,11 +18248,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:18245: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:18251: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:18249: \$? = $ac_status" >&5
+   echo "$as_me:18255: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -20462,11 +20468,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:20465: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:20471: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:20469: \$? = $ac_status" >&5
+   echo "$as_me:20475: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -20752,11 +20758,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:20755: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:20761: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:20759: \$? = $ac_status" >&5
+   echo "$as_me:20765: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -20856,11 +20862,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:20859: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:20865: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:20863: \$? = $ac_status" >&5
+   echo "$as_me:20869: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -23781,6 +23787,120 @@ fi
 
 
 
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for JACK" >&5
+echo $ECHO_N "checking for JACK... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$JACK_CFLAGS"; then
+        pkg_cv_JACK_CFLAGS="$JACK_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"jack >= 0.100.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "jack >= 0.100.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_JACK_CFLAGS=`$PKG_CONFIG --cflags "jack >= 0.100.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$JACK_LIBS"; then
+        pkg_cv_JACK_LIBS="$JACK_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"jack >= 0.100.0\"") >&5
+  ($PKG_CONFIG --exists --print-errors "jack >= 0.100.0") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_JACK_LIBS=`$PKG_CONFIG --libs "jack >= 0.100.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        JACK_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "jack >= 0.100.0"`
+        else
+	        JACK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "jack >= 0.100.0"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$JACK_PKG_ERRORS" >&5
+
+	{ { echo "$as_me:$LINENO: error: Package requirements (jack >= 0.100.0) were not met:
+
+$JACK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables JACK_CFLAGS
+and JACK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&5
+echo "$as_me: error: Package requirements (jack >= 0.100.0) were not met:
+
+$JACK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables JACK_CFLAGS
+and JACK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables JACK_CFLAGS
+and JACK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&5
+echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables JACK_CFLAGS
+and JACK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+	JACK_CFLAGS=$pkg_cv_JACK_CFLAGS
+	JACK_LIBS=$pkg_cv_JACK_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+CFLAGS="$CFLAGS -DHAVEJACK $JACK_CFLAGS"
+LIBS="$LIBS -DHAVEJACK $JACK_LIBS"
+
 if test "x${prefix}" = "xNONE"; then
 
 cat >>confdefs.h <<_ACEOF
@@ -24745,6 +24865,8 @@ LIBTOOL!$LIBTOOL$ac_delim
 PKG_CONFIG!$PKG_CONFIG$ac_delim
 GTK_CFLAGS!$GTK_CFLAGS$ac_delim
 GTK_LIBS!$GTK_LIBS$ac_delim
+JACK_CFLAGS!$JACK_CFLAGS$ac_delim
+JACK_LIBS!$JACK_LIBS$ac_delim
 NO_PREFIX_PACKAGE_DATA_DIR!$NO_PREFIX_PACKAGE_DATA_DIR$ac_delim
 PACKAGE_DATA_DIR!$PACKAGE_DATA_DIR$ac_delim
 NO_PREFIX_PACKAGE_DOC_DIR!$NO_PREFIX_PACKAGE_DOC_DIR$ac_delim
@@ -24759,7 +24881,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 67; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 69; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

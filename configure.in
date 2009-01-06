@@ -35,6 +35,10 @@ dnl PKG_CHECK_MODULES([ALSA], [alsa])
 dnl AC_SUBST(ALSA_CFLAGS)
 dnl AC_SUBST(ALSA_LIBS)
 
+PKG_CHECK_MODULES(JACK, [jack >= 0.100.0])
+CFLAGS="$CFLAGS -DHAVEJACK $JACK_CFLAGS"
+LIBS="$LIBS -DHAVEJACK $JACK_LIBS"
+
 dnl Set PACKAGE_LOCALE_DIR in config.h.
 if test "x${prefix}" = "xNONE"; then
   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Package local directory])
