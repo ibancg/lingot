@@ -100,9 +100,23 @@ void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 	char* text = gtk_combo_box_get_active_text(dialog->input_system);
+	int core_running;
 
 	if (!strcmp("JACK", text)) {
+
+		core_running = dialog->mainframe->core->running;
+		if (core_running) {
+			lingot_core_stop(dialog->mainframe->core);
+			lingot_core_destroy(dialog->mainframe->core);
+		}
+
 		dialog->conf->sample_rate = lingot_audio_jack_get_sample_rate();
+
+		if (core_running) {
+			dialog->mainframe->core = lingot_core_new(dialog->mainframe->conf);
+			lingot_core_start(dialog->mainframe->core);
+		}
+
 		lingot_config_dialog_change_sample_rate_labels(dialog,
 				dialog->conf->sample_rate);
 		gtk_widget_hide(GTK_WIDGET(dialog->oss_alsa_label_sample_rate0));

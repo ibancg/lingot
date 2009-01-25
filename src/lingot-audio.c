@@ -45,16 +45,21 @@ LingotAudio* lingot_audio_new(void* p) {
 }
 
 void lingot_audio_destroy(LingotAudio* audio, void* p) {
-	LingotCore* core = (LingotCore*) p;
-	if (audio != NULL)
+	if (audio != NULL) {
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			lingot_audio_oss_destroy(audio);
+			break;
 		case AUDIO_SYSTEM_ALSA:
 			lingot_audio_alsa_destroy(audio);
+			break;
 		case AUDIO_SYSTEM_JACK:
 			lingot_audio_jack_destroy(audio);
+			break;
+		default:
+			perror("unknown audio system\n");
 		}
+	}
 }
 
 int lingot_audio_read(LingotAudio* audio, void* p) {
@@ -67,6 +72,8 @@ int lingot_audio_read(LingotAudio* audio, void* p) {
 			lingot_audio_alsa_read(audio, core);
 		case AUDIO_SYSTEM_JACK:
 			return lingot_audio_jack_read(audio, core);
+		default:
+			perror("unknown audio system\n");
 		}
 
 	return -1;

@@ -217,8 +217,9 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	frame->conf = lingot_config_new();
 	lingot_config_load(frame->conf, CONFIG_FILE_NAME);
 
-	frame->gauge = lingot_gauge_new(frame->conf->vr); // gauge in rest situation
 	frame->core = lingot_core_new(frame->conf);
+
+	frame->gauge = lingot_gauge_new(frame->conf->vr); // gauge in rest situation
 
 	// ----- FREQUENCY FILTER CONFIGURATION ------
 
