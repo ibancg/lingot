@@ -322,7 +322,7 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 		}
 		dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
 		gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(GTK_WINDOW(frame->win)));
-
+		//gtk_window_set_position(GTK_WINDOW(dialog->win), GTK_WIN_POS_CENTER_ALWAYS);
 		dialog->mainframe->config_dialog = dialog;
 
 		dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
@@ -386,5 +386,7 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 		lingot_config_dialog_rewrite(dialog);
 
 		gtk_widget_show(dialog->win);
+	} else {
+		gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
 	}
 }
