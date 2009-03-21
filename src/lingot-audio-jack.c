@@ -154,7 +154,7 @@ int lingot_audio_jack_get_sample_rate() {
 	jack_client = jack_client_open(client_name, options, &status, server_name);
 	if (jack_client == NULL) {
 		lingot_error_queue_push(_("Unable to connect to JACK server"));
-		return 48000;
+		return 44100;
 	}
 	if (status & JackServerStarted) {
 		fprintf(stderr, "JACK server started\n");
