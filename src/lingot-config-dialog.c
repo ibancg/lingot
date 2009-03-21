@@ -290,91 +290,98 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 
 void lingot_config_dialog_close(LingotConfigDialog* dialog) {
 	gtk_widget_destroy(dialog->win);
+	dialog->mainframe->config_dialog = NULL;
 }
 
 void lingot_config_dialog_show(LingotMainFrame* frame) {
 	GError *err = NULL;
 	GtkBuilder *builder;
 
-	LingotConfigDialog* dialog = malloc(sizeof(LingotConfigDialog));
+	if (frame->config_dialog == NULL) {
 
-	dialog->mainframe = frame;
-	dialog->conf = lingot_config_new();
-	dialog->conf_old = lingot_config_new();
+		LingotConfigDialog* dialog = malloc(sizeof(LingotConfigDialog));
 
-	// config copy
-	*dialog->conf = *frame->conf;
-	*dialog->conf_old = *frame->conf;
+		dialog->mainframe = frame;
+		dialog->conf = lingot_config_new();
+		dialog->conf_old = lingot_config_new();
 
-	builder = gtk_builder_new();
-	// TODO: obtain glade files installation dir by other way
-	if (gtk_builder_add_from_file(builder,
-			"" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml",
-			&err) == 0) {
-		//error_message(err->message);
-		g_error_free(err);
-		return;
+		// config copy
+		*dialog->conf = *frame->conf;
+		*dialog->conf_old = *frame->conf;
+
+		builder = gtk_builder_new();
+		// TODO: obtain glade files installation dir by other way
+		if (gtk_builder_add_from_file(
+				builder,
+				"" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml",
+				&err) == 0) {
+			//error_message(err->message);
+			g_error_free(err);
+			return;
+		}
+		dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
+		dialog->mainframe->config_dialog = dialog;
+
+		dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
+
+		dialog->input_dev = GTK_ENTRY(gtk_builder_get_object(builder, "input_dev"));
+		dialog->sample_rate = GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
+		dialog->calculation_rate = GTK_HSCALE(gtk_builder_get_object(builder, "calculation_rate"));
+		dialog->visualization_rate = GTK_HSCALE(gtk_builder_get_object(builder, "visualization_rate"));
+		dialog->noise_threshold = GTK_HSCALE(gtk_builder_get_object(builder, "noise_threshold"));
+		dialog->gain = GTK_HSCALE(gtk_builder_get_object(builder, "gain"));
+		dialog->oversampling = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "oversampling"));
+		dialog->fft_size = GTK_COMBO_BOX(gtk_builder_get_object(builder, "fft_size"));
+		dialog->temporal_window = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "temporal_window"));
+		dialog->root_frequency_error = GTK_SPIN_BUTTON(gtk_builder_get_object(builder,
+						"root_frequency_error"));
+		dialog->dft_number = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "dft_number"));
+		dialog->dft_size = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "dft_size"));
+		dialog->peak_number = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "peak_number"));
+		dialog->peak_halfwidth = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "peak_halfwidth"));
+		dialog->rejection_peak_relation = GTK_HSCALE(gtk_builder_get_object(builder,
+						"rejection_peak_relation"));
+		dialog->label_sample_rate1 = GTK_LABEL(gtk_builder_get_object(builder,
+						"label_sample_rate1"));
+		dialog->label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
+						"label_sample_rate2"));
+		dialog->label_root_frequency = GTK_LABEL(gtk_builder_get_object(builder,
+						"label_root_frequency"));
+		dialog->jack_label_sample_rate0 = GTK_LABEL(gtk_builder_get_object(builder,
+						"jack_label_sample_rate0"));
+		dialog->jack_label_sample_rate1 = GTK_LABEL(gtk_builder_get_object(builder,
+						"jack_label_sample_rate1"));
+		dialog->jack_label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
+						"jack_label_sample_rate2"));
+		dialog->oss_alsa_label_sample_rate0 = GTK_LABEL(gtk_builder_get_object(builder,
+						"oss_alsa_label_sample_rate0"));
+		dialog->oss_alsa_label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
+						"oss_alsa_label_sample_rate2"));
+		dialog->oss_alsa_label_input_dev0 = GTK_LABEL(gtk_builder_get_object(builder,
+						"oss_alsa_label_input_dev0"));
+		dialog->oss_alsa_label_input_dev2 = GTK_LABEL(gtk_builder_get_object(builder,
+						"oss_alsa_label_input_dev2"));
+
+		gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
+		gtk_signal_connect(GTK_OBJECT(dialog->sample_rate), "changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+
+		gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+		gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_a_frequence), dialog);
+
+		g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
+		g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
+		g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
+		g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
+
+		g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
+
+		g_object_unref(builder);
+		lingot_config_dialog_rewrite(dialog);
+
+		gtk_widget_show(dialog->win);
 	}
-	dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
-
-	dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
-
-	dialog->input_dev = GTK_ENTRY(gtk_builder_get_object(builder, "input_dev"));
-	dialog->sample_rate = GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
-	dialog->calculation_rate = GTK_HSCALE(gtk_builder_get_object(builder, "calculation_rate"));
-	dialog->visualization_rate = GTK_HSCALE(gtk_builder_get_object(builder, "visualization_rate"));
-	dialog->noise_threshold = GTK_HSCALE(gtk_builder_get_object(builder, "noise_threshold"));
-	dialog->gain = GTK_HSCALE(gtk_builder_get_object(builder, "gain"));
-	dialog->oversampling = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "oversampling"));
-	dialog->fft_size = GTK_COMBO_BOX(gtk_builder_get_object(builder, "fft_size"));
-	dialog->temporal_window = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "temporal_window"));
-	dialog->root_frequency_error = GTK_SPIN_BUTTON(gtk_builder_get_object(builder,
-					"root_frequency_error"));
-	dialog->dft_number = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "dft_number"));
-	dialog->dft_size = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "dft_size"));
-	dialog->peak_number = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "peak_number"));
-	dialog->peak_halfwidth = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "peak_halfwidth"));
-	dialog->rejection_peak_relation = GTK_HSCALE(gtk_builder_get_object(builder,
-					"rejection_peak_relation"));
-	dialog->label_sample_rate1 = GTK_LABEL(gtk_builder_get_object(builder,
-					"label_sample_rate1"));
-	dialog->label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
-					"label_sample_rate2"));
-	dialog->label_root_frequency = GTK_LABEL(gtk_builder_get_object(builder,
-					"label_root_frequency"));
-	dialog->jack_label_sample_rate0 = GTK_LABEL(gtk_builder_get_object(builder,
-					"jack_label_sample_rate0"));
-	dialog->jack_label_sample_rate1 = GTK_LABEL(gtk_builder_get_object(builder,
-					"jack_label_sample_rate1"));
-	dialog->jack_label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
-					"jack_label_sample_rate2"));
-	dialog->oss_alsa_label_sample_rate0 = GTK_LABEL(gtk_builder_get_object(builder,
-					"oss_alsa_label_sample_rate0"));
-	dialog->oss_alsa_label_sample_rate2 = GTK_LABEL(gtk_builder_get_object(builder,
-					"oss_alsa_label_sample_rate2"));
-	dialog->oss_alsa_label_input_dev0 = GTK_LABEL(gtk_builder_get_object(builder,
-					"oss_alsa_label_input_dev0"));
-	dialog->oss_alsa_label_input_dev2 = GTK_LABEL(gtk_builder_get_object(builder,
-					"oss_alsa_label_input_dev2"));
-
-	gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
-	gtk_signal_connect(GTK_OBJECT(dialog->sample_rate), "changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-
-	gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-	gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_a_frequence), dialog);
-
-	g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
-	g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
-	g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
-	g_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
-
-	g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
-
-	g_object_unref(builder);
-	lingot_config_dialog_rewrite(dialog);
-	gtk_widget_show(dialog->win);
 }
