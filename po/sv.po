@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 21:34+0100\n"
+"POT-Creation-Date: 2009-03-21 20:13+0100\n"
 "PO-Revision-Date: 2008-03-05 20:51+0100\n"
 "Last-Translator: John Gustafsson <jammin.johng@gmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -131,11 +131,35 @@ msgstr "samplingar"
 msgid "seconds"
 msgstr "sekunder"
 
-#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:175
+#: ../src/lingot-audio-jack.c:46
+msgid "Missing connection with JACK audio server"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:68 ../src/lingot-audio-jack.c:156
+msgid "Unable to connect to JACK server"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:98
+msgid "No more JACK ports available"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:103
+msgid "Cannot activate client"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:110
+msgid "No physical capture ports"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:116
+msgid "Cannot connect input ports"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:170
 msgid "The application has not been built with JACK support"
 msgstr ""
 
-#: ../src/lingot-config-dialog.c:267
+#: ../src/lingot-config-dialog.c:283
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -143,7 +167,7 @@ msgid ""
 msgstr ""
 "Tidsbufferten är mindre än FFT-storleken. Den har ökats till %0.3f sekunder."
 
-#: ../src/lingot-config-dialog.c:269
+#: ../src/lingot-config-dialog.c:285
 msgid "Warning"
 msgstr ""
 
@@ -160,46 +184,46 @@ msgid "Error"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:247
+#: ../src/lingot-mainframe.c:249
 msgid "lingot"
 msgstr "Lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:270 ../src/lingot-mainframe.c:341
+#: ../src/lingot-mainframe.c:272 ../src/lingot-mainframe.c:343
 msgid "Spectrum"
 msgstr "Spektrum"
 
-#: ../src/lingot-mainframe.c:304
+#: ../src/lingot-mainframe.c:306
 msgid "_File"
 msgstr "_Arkiv"
 
-#: ../src/lingot-mainframe.c:305
+#: ../src/lingot-mainframe.c:307
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: ../src/lingot-mainframe.c:306
+#: ../src/lingot-mainframe.c:308
 msgid "_View"
 msgstr "_Visa"
 
-#: ../src/lingot-mainframe.c:307
+#: ../src/lingot-mainframe.c:309
 msgid "_Help"
 msgstr "_Hjälp"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:331
+#: ../src/lingot-mainframe.c:333
 msgid "Deviation"
 msgstr "Avvikelse"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:338
 msgid "Tone"
 msgstr "Not"
 
-#: ../src/lingot-mainframe.c:381
+#: ../src/lingot-mainframe.c:383
 msgid "freq"
 msgstr "frekv"
 
-#: ../src/lingot-mainframe.c:384
+#: ../src/lingot-mainframe.c:386
 msgid "err"
 msgstr "fel"
 

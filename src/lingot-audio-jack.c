@@ -95,25 +95,25 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
 
 	if ((audio->jack_input_port == NULL)) {
-		lingot_error_queue_push(_("No more JACK ports available\n"));
+		lingot_error_queue_push(_("No more JACK ports available"));
 		return NULL;
 	}
 
 	if (jack_activate(audio->jack_client)) {
-		lingot_error_queue_push(_("Cannot activate client\n"));
+		lingot_error_queue_push(_("Cannot activate client"));
 		return NULL;
 	}
 
 	ports = jack_get_ports(audio->jack_client, NULL, NULL, JackPortIsPhysical
 			| JackPortIsOutput);
 	if (ports == NULL) {
-		lingot_error_queue_push(_("No physical capture ports\n"));
+		lingot_error_queue_push(_("No physical capture ports"));
 		return NULL;
 	}
 
 	if (jack_connect(audio->jack_client, ports[0], jack_port_name(
 							audio->jack_input_port))) {
-		lingot_error_queue_push(_("Cannot connect input ports\n"));
+		lingot_error_queue_push(_("Cannot connect input ports"));
 		return NULL;
 	}
 
