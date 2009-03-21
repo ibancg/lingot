@@ -49,6 +49,9 @@ typedef struct _LingotMainFrame LingotMainFrame;
 //#define LIB_FFTW
 //#define LIBSNDOBJ
 //#define ALSA
+
+#ifdef HAVEJACK
 #define JACK
+#endif
 
 #endif

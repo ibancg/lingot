@@ -87,9 +87,9 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	conf->read_buffer_size = jack_get_buffer_size(audio->jack_client);
 
 	printf("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate(
-			audio->jack_client));
+					audio->jack_client));
 	printf("buffer size: %" PRIu32 "\n", jack_get_buffer_size(
-			audio->jack_client));
+					audio->jack_client));
 
 	audio->jack_input_port = jack_port_register(audio->jack_client, "input",
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
@@ -105,7 +105,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	}
 
 	ports = jack_get_ports(audio->jack_client, NULL, NULL, JackPortIsPhysical
-	| JackPortIsOutput);
+			| JackPortIsOutput);
 	if (ports == NULL) {
 		lingot_error_queue_push(_("No physical capture ports\n"));
 		return NULL;
@@ -120,7 +120,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	free(ports);
 
 #	else
-			lingot_error_queue_push(_("The application has not been built with JACK support"));
+	lingot_error_queue_push(_("The application has not been built with JACK support"));
 #	endif
 	return audio;
 }
@@ -136,13 +136,13 @@ int lingot_audio_jack_read(LingotAudio* audio, LingotCore* core) {
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
-		core->flt_read_buffer[i] = in[i] * 32768;
+	core->flt_read_buffer[i] = in[i] * 32768;
 #	endif
 	return 0;
 }
 
 int lingot_audio_jack_get_sample_rate() {
-	int result = 0;
+	int result = 44100;
 #	ifdef JACK
 	const char *client_name = "lingot-get-sample-rate";
 	const char *server_name = NULL;
@@ -154,7 +154,7 @@ int lingot_audio_jack_get_sample_rate() {
 	jack_client = jack_client_open(client_name, options, &status, server_name);
 	if (jack_client == NULL) {
 		lingot_error_queue_push(_("Unable to connect to JACK server"));
-		return 44100;
+		return result;
 	}
 	if (status & JackServerStarted) {
 		fprintf(stderr, "JACK server started\n");

@@ -162,6 +162,7 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 		GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
 				error_message);
 		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
+		gtk_window_set_icon(GTK_WINDOW(message_dialog), gtk_window_get_icon(GTK_WINDOW(frame->win)));
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 		free(error_message);
