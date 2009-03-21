@@ -84,16 +84,6 @@ int main(int argc, char *argv[]) {
 				printf("?? getopt returned character code 0%o ??\n", c);
 			}
 		}
-
-		/*        if (strcmp(argv[1], "-c") || (argc < 3))
-		 {
-		 printf("invalid argument\n");
-		 return -1;
-		 }
-
-		 sprintf(CONFIG_FILE_NAME, "%s/%s%s.conf", getenv("HOME"),
-		 CONFIG_DIR_NAME, argv[2]);
-		 printf("using config file %s\n", CONFIG_FILE_NAME);*/
 	}
 
 	// if config file doesn't exists, i will create it.
@@ -116,7 +106,7 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
-	printf("%s\n", "" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml");
+	//printf("%s\n", "" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml");
     LingotMainFrame* gui = lingot_mainframe_new(argc, argv);
     lingot_mainframe_run(gui);
 
