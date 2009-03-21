@@ -55,7 +55,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	const char *client_name = "lingot";
 	const char *server_name = NULL;
 
-	jack_options_t options = JackNullOption;
+	jack_options_t options = JackNoStartServer;
 	jack_status_t status;
 
 	audio = malloc(sizeof(LingotAudio));
@@ -147,14 +147,14 @@ int lingot_audio_jack_get_sample_rate() {
 	const char *client_name = "lingot-get-sample-rate";
 	const char *server_name = NULL;
 
-	jack_options_t options = JackNullOption;
+	jack_options_t options = JackNoStartServer;
 	jack_status_t status;
 	jack_client_t* jack_client;
 
 	jack_client = jack_client_open(client_name, options, &status, server_name);
 	if (jack_client == NULL) {
 		lingot_error_queue_push(_("Unable to connect to JACK server"));
-		return 0;
+		return 48000;
 	}
 	if (status & JackServerStarted) {
 		fprintf(stderr, "JACK server started\n");
