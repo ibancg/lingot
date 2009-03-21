@@ -283,6 +283,7 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 						_("Temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 						dialog->conf->temporal_window);
 		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Warning"));
+		gtk_window_set_icon(GTK_WINDOW(message_dialog), gtk_window_get_icon(GTK_WINDOW(dialog->mainframe->win)));
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 	}
@@ -320,6 +321,8 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 			return;
 		}
 		dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
+		gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(GTK_WINDOW(frame->win)));
+
 		dialog->mainframe->config_dialog = dialog;
 
 		dialog->input_system = GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
