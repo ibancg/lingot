@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-21 20:13+0100\n"
+"POT-Creation-Date: 2009-03-28 19:33+0100\n"
 "PO-Revision-Date: 2008-03-05 20:51+0100\n"
 "Last-Translator: John Gustafsson <jammin.johng@gmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -159,7 +159,7 @@ msgstr ""
 msgid "The application has not been built with JACK support"
 msgstr ""
 
-#: ../src/lingot-config-dialog.c:283
+#: ../src/lingot-config-dialog.c:284
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -167,7 +167,7 @@ msgid ""
 msgstr ""
 "Tidsbufferten är mindre än FFT-storleken. Den har ökats till %0.3f sekunder."
 
-#: ../src/lingot-config-dialog.c:285
+#: ../src/lingot-config-dialog.c:286
 msgid "Warning"
 msgstr ""
 

@@ -20,20 +20,8 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   /usr/include/getopt.h /usr/include/signal.h /usr/include/bits/signum.h \
   /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
   /usr/include/bits/sigcontext.h /usr/include/bits/sigstack.h \
-  /usr/include/bits/sigthread.h lingot-defs.h ../config.h lingot-core.h \
-  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
-  /usr/include/bits/setjmp.h lingot-complex.h lingot-filter.h \
-  /usr/include/fcntl.h /usr/include/bits/fcntl.h lingot-config.h \
-  lingot-audio.h /usr/include/jack/jack.h /usr/include/jack/types.h \
-  /usr/include/inttypes.h /usr/include/stdint.h /usr/include/bits/wchar.h \
-  /usr/include/jack/transport.h lingot-mainframe.h lingot-gauge.h \
-  lingot-config-dialog.h /usr/include/gtk-2.0/gtk/gtk.h \
-  /usr/include/gtk-2.0/gdk/gdk.h /usr/include/gtk-2.0/gdk/gdkcairo.h \
-  /usr/include/gtk-2.0/gdk/gdkcolor.h /usr/include/cairo/cairo.h \
-  /usr/include/cairo/cairo-features.h \
-  /usr/include/cairo/cairo-deprecated.h \
-  /usr/include/gtk-2.0/gdk/gdktypes.h /usr/include/glib-2.0/glib.h \
-  /usr/include/glib-2.0/glib/galloca.h \
+  /usr/include/bits/sigthread.h /usr/include/libglade-2.0/glade/glade.h \
+  /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
   /usr/include/glib-2.0/glib/gtypes.h \
   /usr/lib/glib-2.0/include/glibconfig.h \
   /usr/include/glib-2.0/glib/gmacros.h \
@@ -83,6 +71,13 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   /usr/include/glib-2.0/glib/gthreadpool.h \
   /usr/include/glib-2.0/glib/gtimer.h /usr/include/glib-2.0/glib/gtree.h \
   /usr/include/glib-2.0/glib/gurifuncs.h \
+  /usr/include/libglade-2.0/glade/glade-init.h \
+  /usr/include/libglade-2.0/glade/glade-xml.h \
+  /usr/include/gtk-2.0/gtk/gtkwidget.h /usr/include/gtk-2.0/gdk/gdk.h \
+  /usr/include/gtk-2.0/gdk/gdkcairo.h /usr/include/gtk-2.0/gdk/gdkcolor.h \
+  /usr/include/cairo/cairo.h /usr/include/cairo/cairo-features.h \
+  /usr/include/cairo/cairo-deprecated.h \
+  /usr/include/gtk-2.0/gdk/gdktypes.h \
   /usr/include/pango-1.0/pango/pango.h \
   /usr/include/pango-1.0/pango/pango-attributes.h \
   /usr/include/pango-1.0/pango/pango-font.h \
@@ -153,13 +148,8 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   /usr/include/gtk-2.0/gdk/gdkspawn.h \
   /usr/include/gtk-2.0/gdk/gdkvisual.h \
   /usr/include/gtk-2.0/gdk/gdkwindow.h \
-  /usr/include/gtk-2.0/gtk/gtkaboutdialog.h \
-  /usr/include/gtk-2.0/gtk/gtkdialog.h \
-  /usr/include/gtk-2.0/gtk/gtkwindow.h \
   /usr/include/gtk-2.0/gtk/gtkaccelgroup.h \
-  /usr/include/gtk-2.0/gtk/gtkenums.h /usr/include/gtk-2.0/gtk/gtkbin.h \
-  /usr/include/gtk-2.0/gtk/gtkcontainer.h \
-  /usr/include/gtk-2.0/gtk/gtkwidget.h \
+  /usr/include/gtk-2.0/gtk/gtkenums.h \
   /usr/include/gtk-2.0/gtk/gtkobject.h \
   /usr/include/gtk-2.0/gtk/gtktypeutils.h \
   /usr/include/gtk-2.0/gtk/gtktypebuiltins.h \
@@ -170,6 +160,16 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   /usr/include/atk-1.0/atk/atkobject.h \
   /usr/include/atk-1.0/atk/atkstate.h \
   /usr/include/atk-1.0/atk/atkrelationtype.h \
+  /usr/include/gtk-2.0/gtk/gtktooltips.h \
+  /usr/include/gtk-2.0/gtk/gtkwindow.h /usr/include/gtk-2.0/gtk/gtkbin.h \
+  /usr/include/gtk-2.0/gtk/gtkcontainer.h lingot-defs.h ../config.h \
+  lingot-core.h /usr/include/pthread.h /usr/include/sched.h \
+  /usr/include/bits/sched.h /usr/include/bits/setjmp.h lingot-complex.h \
+  lingot-filter.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
+  lingot-config.h lingot-audio.h lingot-mainframe.h lingot-gauge.h \
+  lingot-config-dialog.h /usr/include/gtk-2.0/gtk/gtk.h \
+  /usr/include/gtk-2.0/gtk/gtkaboutdialog.h \
+  /usr/include/gtk-2.0/gtk/gtkdialog.h \
   /usr/include/gtk-2.0/gtk/gtkaccellabel.h \
   /usr/include/gtk-2.0/gtk/gtklabel.h /usr/include/gtk-2.0/gtk/gtkmisc.h \
   /usr/include/gtk-2.0/gtk/gtkmenu.h \
@@ -306,7 +306,6 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   /usr/include/gtk-2.0/gtk/gtkmenu.h \
   /usr/include/gtk-2.0/gtk/gtktoolbutton.h \
   /usr/include/gtk-2.0/gtk/gtktoolitem.h \
-  /usr/include/gtk-2.0/gtk/gtktooltips.h \
   /usr/include/gtk-2.0/gtk/gtkmessagedialog.h \
   /usr/include/gtk-2.0/gtk/gtkmodules.h \
   /usr/include/gtk-2.0/gtk/gtknotebook.h \
@@ -468,65 +467,7 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
 
 /usr/include/bits/sigthread.h:
 
-lingot-defs.h:
-
-../config.h:
-
-lingot-core.h:
-
-/usr/include/pthread.h:
-
-/usr/include/sched.h:
-
-/usr/include/bits/sched.h:
-
-/usr/include/bits/setjmp.h:
-
-lingot-complex.h:
-
-lingot-filter.h:
-
-/usr/include/fcntl.h:
-
-/usr/include/bits/fcntl.h:
-
-lingot-config.h:
-
-lingot-audio.h:
-
-/usr/include/jack/jack.h:
-
-/usr/include/jack/types.h:
-
-/usr/include/inttypes.h:
-
-/usr/include/stdint.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/jack/transport.h:
-
-lingot-mainframe.h:
-
-lingot-gauge.h:
-
-lingot-config-dialog.h:
-
-/usr/include/gtk-2.0/gtk/gtk.h:
-
-/usr/include/gtk-2.0/gdk/gdk.h:
-
-/usr/include/gtk-2.0/gdk/gdkcairo.h:
-
-/usr/include/gtk-2.0/gdk/gdkcolor.h:
-
-/usr/include/cairo/cairo.h:
-
-/usr/include/cairo/cairo-features.h:
-
-/usr/include/cairo/cairo-deprecated.h:
-
-/usr/include/gtk-2.0/gdk/gdktypes.h:
+/usr/include/libglade-2.0/glade/glade.h:
 
 /usr/include/glib-2.0/glib.h:
 
@@ -655,6 +596,26 @@ lingot-config-dialog.h:
 /usr/include/glib-2.0/glib/gtree.h:
 
 /usr/include/glib-2.0/glib/gurifuncs.h:
+
+/usr/include/libglade-2.0/glade/glade-init.h:
+
+/usr/include/libglade-2.0/glade/glade-xml.h:
+
+/usr/include/gtk-2.0/gtk/gtkwidget.h:
+
+/usr/include/gtk-2.0/gdk/gdk.h:
+
+/usr/include/gtk-2.0/gdk/gdkcairo.h:
+
+/usr/include/gtk-2.0/gdk/gdkcolor.h:
+
+/usr/include/cairo/cairo.h:
+
+/usr/include/cairo/cairo-features.h:
+
+/usr/include/cairo/cairo-deprecated.h:
+
+/usr/include/gtk-2.0/gdk/gdktypes.h:
 
 /usr/include/pango-1.0/pango/pango.h:
 
@@ -804,21 +765,9 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gdk/gdkwindow.h:
 
-/usr/include/gtk-2.0/gtk/gtkaboutdialog.h:
-
-/usr/include/gtk-2.0/gtk/gtkdialog.h:
-
-/usr/include/gtk-2.0/gtk/gtkwindow.h:
-
 /usr/include/gtk-2.0/gtk/gtkaccelgroup.h:
 
 /usr/include/gtk-2.0/gtk/gtkenums.h:
-
-/usr/include/gtk-2.0/gtk/gtkbin.h:
-
-/usr/include/gtk-2.0/gtk/gtkcontainer.h:
-
-/usr/include/gtk-2.0/gtk/gtkwidget.h:
 
 /usr/include/gtk-2.0/gtk/gtkobject.h:
 
@@ -841,6 +790,52 @@ lingot-config-dialog.h:
 /usr/include/atk-1.0/atk/atkstate.h:
 
 /usr/include/atk-1.0/atk/atkrelationtype.h:
+
+/usr/include/gtk-2.0/gtk/gtktooltips.h:
+
+/usr/include/gtk-2.0/gtk/gtkwindow.h:
+
+/usr/include/gtk-2.0/gtk/gtkbin.h:
+
+/usr/include/gtk-2.0/gtk/gtkcontainer.h:
+
+lingot-defs.h:
+
+../config.h:
+
+lingot-core.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/bits/setjmp.h:
+
+lingot-complex.h:
+
+lingot-filter.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/bits/fcntl.h:
+
+lingot-config.h:
+
+lingot-audio.h:
+
+lingot-mainframe.h:
+
+lingot-gauge.h:
+
+lingot-config-dialog.h:
+
+/usr/include/gtk-2.0/gtk/gtk.h:
+
+/usr/include/gtk-2.0/gtk/gtkaboutdialog.h:
+
+/usr/include/gtk-2.0/gtk/gtkdialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkaccellabel.h:
 
@@ -1129,8 +1124,6 @@ lingot-config-dialog.h:
 /usr/include/gtk-2.0/gtk/gtktoolbutton.h:
 
 /usr/include/gtk-2.0/gtk/gtktoolitem.h:
-
-/usr/include/gtk-2.0/gtk/gtktooltips.h:
 
 /usr/include/gtk-2.0/gtk/gtkmessagedialog.h:
 
