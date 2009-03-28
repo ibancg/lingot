@@ -314,6 +314,7 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 		// TODO: obtain glade files installation dir by other way
 
 		FILE* fd = fopen("src/glade/lingot-config-dialog.glade", "r");
+		printf("%p\n", fd);
 		if (fd != NULL) {
 			fclose(fd);
 			_gladeXML = glade_xml_new("src/glade/lingot-config-dialog.glade",
