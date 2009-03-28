@@ -27,7 +27,9 @@ lingot-mainframe.o lingot-mainframe.o: lingot-mainframe.c \
   /usr/include/sched.h /usr/include/bits/sched.h \
   /usr/include/bits/setjmp.h lingot-complex.h lingot-filter.h \
   /usr/include/fcntl.h /usr/include/bits/fcntl.h /usr/include/alloca.h \
-  lingot-audio.h lingot-gauge.h lingot-config-dialog.h \
+  lingot-audio.h /usr/include/jack/jack.h /usr/include/jack/types.h \
+  /usr/include/inttypes.h /usr/include/stdint.h /usr/include/bits/wchar.h \
+  /usr/include/jack/transport.h lingot-gauge.h lingot-config-dialog.h \
   /usr/include/gtk-2.0/gtk/gtk.h /usr/include/gtk-2.0/gdk/gdk.h \
   /usr/include/gtk-2.0/gdk/gdkcairo.h /usr/include/gtk-2.0/gdk/gdkcolor.h \
   /usr/include/cairo/cairo.h /usr/include/cairo/cairo-features.h \
@@ -502,6 +504,18 @@ lingot-filter.h:
 /usr/include/alloca.h:
 
 lingot-audio.h:
+
+/usr/include/jack/jack.h:
+
+/usr/include/jack/types.h:
+
+/usr/include/inttypes.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/jack/transport.h:
 
 lingot-gauge.h:
 
