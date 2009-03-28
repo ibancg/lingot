@@ -106,9 +106,8 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
-	//printf("%s\n", "" PACKAGE_LOCALE_DIR "/../lingot/glade/lingot-config-dialog.xml");
-    LingotMainFrame* gui = lingot_mainframe_new(argc, argv);
-    lingot_mainframe_run(gui);
+	LingotMainFrame* gui = lingot_mainframe_new(argc, argv);
+	lingot_mainframe_run(gui);
 
 	return 0;
 }

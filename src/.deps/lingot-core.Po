@@ -27,9 +27,7 @@ lingot-core.o lingot-core.o: lingot-core.c /usr/include/stdio.h \
   lingot-core.h /usr/include/pthread.h /usr/include/sched.h \
   /usr/include/bits/sched.h /usr/include/signal.h \
   /usr/include/bits/setjmp.h lingot-filter.h /usr/include/fcntl.h \
-  /usr/include/bits/fcntl.h lingot-audio.h /usr/include/jack/jack.h \
-  /usr/include/jack/types.h /usr/include/inttypes.h /usr/include/stdint.h \
-  /usr/include/bits/wchar.h /usr/include/jack/transport.h
+  /usr/include/bits/fcntl.h lingot-audio.h
 
 /usr/include/stdio.h:
 
@@ -160,15 +158,3 @@ lingot-filter.h:
 /usr/include/bits/fcntl.h:
 
 lingot-audio.h:
-
-/usr/include/jack/jack.h:
-
-/usr/include/jack/types.h:
-
-/usr/include/inttypes.h:
-
-/usr/include/stdint.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/jack/transport.h:

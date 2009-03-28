@@ -224,7 +224,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 gladedir = $(datadir)/lingot/glade/
 glade_DATA = \
-	lingot-config-dialog.xml
+	lingot-config-dialog.glade
 
 EXTRA_DIST = $(glade_DATA) 
 all: all-am
