@@ -1,3 +1,8 @@
+2009-05-29 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added JACK support
+
+
 2008-06-24 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed memory leak in GUI

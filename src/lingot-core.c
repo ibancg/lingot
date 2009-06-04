@@ -47,7 +47,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 	core->conf = conf;
 	core->running = 0;
-
+	core->audio = NULL;
 	core->audio = lingot_audio_new(core);
 
 	// since the SPD is simmetrical, we only store the 1st half.
@@ -185,7 +185,7 @@ void lingot_core_read(LingotCore* core) {
 	/* we shift the temporal window to leave a hollow where place the new piece
 	 of data read. The buffer is actually a queue. */
 	if (core->conf->temporal_buffer_size > decimation_output_len)
-		memcpy(core->temporal_buffer,
+		memmove(core->temporal_buffer,
 				&core->temporal_buffer[decimation_output_len],
 				(core->conf->temporal_buffer_size - decimation_output_len)
 						* sizeof(FLT));
@@ -299,7 +299,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	}
 
 	FLT w = (Mi - 1) * delta_w_FFT;
-	// frecuencia de la muestra anterior al pico.
+	// frequency of sample previous to the peak
 
 	//  Approximation to fundamental frequency by selective DFTs
 	// ---------------------------------------------------------
@@ -323,7 +323,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		w += (Mi - 1) * d_w; // previous sample to the peak.
 	}
 
-	w += d_w; // approximation by DFTs.
+	w += d_w; // DFT approximation.
 
 	// windowing
 	for (i = 0; i < core->conf->temporal_buffer_size; i++) {

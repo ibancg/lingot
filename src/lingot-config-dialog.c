@@ -80,7 +80,8 @@ void lingot_config_dialog_change_sample_rate_labels(LingotConfigDialog *dialog,
 	char buff1[20];
 	char buff2[20];
 	float srf = sr;
-	float os = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(dialog->oversampling));
+	float os = gtk_spin_button_get_value_as_float(
+			GTK_SPIN_BUTTON(dialog->oversampling));
 	sprintf(buff1, "%d", sr);
 	sprintf(buff2, " = %0.1f", srf / os);
 	gtk_label_set_text(dialog->label_sample_rate1, buff1);
@@ -90,33 +91,39 @@ void lingot_config_dialog_change_sample_rate_labels(LingotConfigDialog *dialog,
 
 void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-	const char* text = (lingot_config_dialog_get_audio_system(
-			dialog->input_system) == AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
-			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
-			dialog->sample_rate);
+	char* text;
+
+	if (lingot_config_dialog_get_audio_system(dialog->input_system)
+			== AUDIO_SYSTEM_JACK) {
+		text = strdup(gtk_label_get_text(dialog->jack_label_sample_rate1));
+	} else {
+		text = gtk_combo_box_get_active_text(dialog->sample_rate);
+	}
+
 	int sr = (text != NULL) ? atoi(text) : 44100;
+	free(text);
 	lingot_config_dialog_change_sample_rate_labels(dialog, sr);
 }
 
 void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 	char* text = gtk_combo_box_get_active_text(dialog->input_system);
-	int core_running;
+	//	int core_running;
 
 	if (!strcmp("JACK", text)) {
 
-		core_running = dialog->mainframe->core->running;
-		if (core_running) {
-			lingot_core_stop(dialog->mainframe->core);
-			lingot_core_destroy(dialog->mainframe->core);
-		}
+		//		core_running = dialog->mainframe->core->running;
+		//		if (core_running) {
+		//			lingot_core_stop(dialog->mainframe->core);
+		//			lingot_core_destroy(dialog->mainframe->core);
+		//		}
 
 		dialog->conf->sample_rate = lingot_audio_jack_get_sample_rate();
 
-		if (core_running) {
-			dialog->mainframe->core = lingot_core_new(dialog->mainframe->conf);
-			lingot_core_start(dialog->mainframe->core);
-		}
+		//		if (core_running) {
+		//			dialog->mainframe->core = lingot_core_new(dialog->mainframe->conf);
+		//			lingot_core_start(dialog->mainframe->core);
+		//		}
 
 		lingot_config_dialog_change_sample_rate_labels(dialog,
 				dialog->conf->sample_rate);
@@ -140,9 +147,12 @@ void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate1));
 		gtk_widget_hide(GTK_WIDGET(dialog->jack_label_sample_rate2));
 		if (gtk_combo_box_get_active(dialog->sample_rate) < 0) {
-			lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->sample_rate), 44100);
+			lingot_config_dialog_combo_select_value(
+					GTK_WIDGET(dialog->sample_rate), 44100);
 		}
 	}
+
+	free(text);
 	lingot_config_dialog_callback_change_sample_rate(NULL, dialog);
 }
 
@@ -150,8 +160,8 @@ void lingot_config_dialog_callback_change_a_frequence(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 	char buff[20];
 
-	float root_freq = 440.0 * pow(2.0, gtk_spin_button_get_value_as_float
-			(GTK_SPIN_BUTTON(dialog->root_frequency_error)) / 1200.0);
+	float root_freq = 440.0 * pow(2.0, gtk_spin_button_get_value_as_float(
+			GTK_SPIN_BUTTON(dialog->root_frequency_error)) / 1200.0);
 	sprintf(buff, "%%    = %0.2f", root_freq);
 	gtk_label_set_text(GTK_LABEL(dialog->label_root_frequency), buff);
 }
@@ -175,15 +185,18 @@ void lingot_config_dialog_set_audio_system(GtkComboBox* combo, int audio_system)
 
 int lingot_config_dialog_get_audio_system(GtkComboBox* combo) {
 	char* text = gtk_combo_box_get_active_text(combo);
+	int result = -1;
+
 	if (text != NULL)
 		if (!strcmp("OSS", text))
-			return AUDIO_SYSTEM_OSS;
+			result = AUDIO_SYSTEM_OSS;
 		else if (!strcmp("ALSA", text))
-			return AUDIO_SYSTEM_ALSA;
+			result = AUDIO_SYSTEM_ALSA;
 		else if (!strcmp("JACK", text))
-			return AUDIO_SYSTEM_JACK;
+			result = AUDIO_SYSTEM_JACK;
 
-	return -1;
+	free(text);
+	return result;
 }
 
 void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value) {
@@ -208,9 +221,12 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	lingot_config_dialog_set_audio_system(dialog->input_system,
 			conf->audio_system);
 	gtk_entry_set_text(dialog->input_dev, conf->audio_dev);
-	gtk_range_set_value(GTK_RANGE(dialog->calculation_rate), conf->calculation_rate);
-	gtk_range_set_value(GTK_RANGE(dialog->visualization_rate), conf->visualization_rate);
-	gtk_range_set_value(GTK_RANGE(dialog->noise_threshold), conf->noise_threshold_db);
+	gtk_range_set_value(GTK_RANGE(dialog->calculation_rate),
+			conf->calculation_rate);
+	gtk_range_set_value(GTK_RANGE(dialog->visualization_rate),
+			conf->visualization_rate);
+	gtk_range_set_value(GTK_RANGE(dialog->noise_threshold),
+			conf->noise_threshold_db);
 	gtk_range_set_value(GTK_RANGE(dialog->gain), conf->gain);
 	gtk_spin_button_set_value(dialog->oversampling, conf->oversampling);
 	gtk_spin_button_set_value(dialog->root_frequency_error,
@@ -221,10 +237,11 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	gtk_spin_button_set_value(dialog->peak_number, conf->peak_number);
 	gtk_spin_button_set_value(dialog->peak_halfwidth, conf->peak_half_width);
 	gtk_range_set_value(GTK_RANGE(dialog->rejection_peak_relation),
-	conf->peak_rejection_relation_db);
-	lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size), (int) conf->fft_size);
+			conf->peak_rejection_relation_db);
+	lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size),
+			(int) conf->fft_size);
 	lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->sample_rate),
-	(int) conf->sample_rate);
+			(int) conf->sample_rate);
 	lingot_config_dialog_callback_change_sample_rate(NULL, dialog);
 	lingot_config_dialog_callback_change_a_frequence(NULL, dialog);
 }
@@ -240,6 +257,7 @@ void lingot_config_dialog_destroy(LingotConfigDialog* dialog) {
 
 void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 	GtkWidget* message_dialog;
+	char* text;
 
 	dialog->conf->audio_system = lingot_config_dialog_get_audio_system(
 			dialog->input_system);
@@ -247,28 +265,37 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 			gtk_entry_get_text(dialog->input_dev));
 	dialog->conf->root_frequency_error = gtk_spin_button_get_value_as_float(
 			dialog->root_frequency_error);
-	dialog->conf->calculation_rate = gtk_range_get_value(GTK_RANGE(dialog->calculation_rate));
-	dialog->conf->visualization_rate = gtk_range_get_value(GTK_RANGE(dialog->visualization_rate));
+	dialog->conf->calculation_rate = gtk_range_get_value(
+			GTK_RANGE(dialog->calculation_rate));
+	dialog->conf->visualization_rate = gtk_range_get_value(
+			GTK_RANGE(dialog->visualization_rate));
 	dialog->conf->temporal_window = gtk_spin_button_get_value_as_float(
 			dialog->temporal_window);
-	dialog->conf->noise_threshold_db = gtk_range_get_value(GTK_RANGE(dialog->noise_threshold));
+	dialog->conf->noise_threshold_db = gtk_range_get_value(
+			GTK_RANGE(dialog->noise_threshold));
 	dialog->conf->gain = gtk_range_get_value(GTK_RANGE(dialog->gain));
 	dialog->conf->oversampling = gtk_spin_button_get_value_as_int(
 			dialog->oversampling);
 	dialog->conf->dft_number = gtk_spin_button_get_value_as_int(
 			dialog->dft_number);
-	dialog->conf->dft_size = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(dialog->dft_size));
+	dialog->conf->dft_size = gtk_spin_button_get_value_as_int(
+			GTK_SPIN_BUTTON(dialog->dft_size));
 	dialog->conf->peak_number = gtk_spin_button_get_value_as_int(
 			dialog->peak_number);
 	dialog->conf->peak_half_width = gtk_spin_button_get_value_as_int(
 			dialog->peak_halfwidth);
-	dialog->conf->peak_rejection_relation_db = gtk_range_get_value(GTK_RANGE(dialog->rejection_peak_relation));
-	dialog->conf->fft_size = atoi(gtk_combo_box_get_active_text(
-			dialog->fft_size));
-	dialog->conf->sample_rate = atoi((dialog->conf->audio_system
-			== AUDIO_SYSTEM_JACK) ? gtk_label_get_text(
-			dialog->jack_label_sample_rate1) : gtk_combo_box_get_active_text(
-			dialog-> sample_rate));
+	dialog->conf->peak_rejection_relation_db = gtk_range_get_value(
+			GTK_RANGE(dialog->rejection_peak_relation));
+	text = gtk_combo_box_get_active_text(dialog->fft_size);
+	dialog->conf->fft_size = atoi(text);
+	free(text);
+	if (dialog->conf->audio_system == AUDIO_SYSTEM_JACK) {
+		text = strdup(gtk_label_get_text(dialog->jack_label_sample_rate1));
+	} else {
+		text = gtk_combo_box_get_active_text(dialog-> sample_rate);
+	}
+	dialog->conf->sample_rate = atoi(text);
+	free(text);
 
 	int result = lingot_config_update_internal_params(dialog->conf);
 
@@ -284,7 +311,8 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 						_("Temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 						dialog->conf->temporal_window);
 		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Warning"));
-		gtk_window_set_icon(GTK_WINDOW(message_dialog), gtk_window_get_icon(GTK_WINDOW(dialog->mainframe->win)));
+		gtk_window_set_icon(GTK_WINDOW(message_dialog), gtk_window_get_icon(
+				GTK_WINDOW(dialog->mainframe->win)));
 		gtk_dialog_run(GTK_DIALOG(message_dialog));
 		gtk_widget_destroy(message_dialog);
 	}
@@ -292,7 +320,6 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 
 void lingot_config_dialog_close(LingotConfigDialog* dialog) {
 	gtk_widget_destroy(dialog->win);
-	dialog->mainframe->config_dialog = NULL;
 }
 
 void lingot_config_dialog_show(LingotMainFrame* frame) {
@@ -314,15 +341,13 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 		// TODO: obtain glade files installation dir by other way
 
 		FILE* fd = fopen("src/glade/lingot-config-dialog.glade", "r");
-		printf("%p\n", fd);
 		if (fd != NULL) {
 			fclose(fd);
 			_gladeXML = glade_xml_new("src/glade/lingot-config-dialog.glade",
 					"dialog1", NULL);
 		} else {
-			_gladeXML = glade_xml_new(LINGOT_GLADEDIR "lingot-config-dialog.glade",
-				"dialog1", NULL);
-		}
+_gladeXML		= glade_xml_new(LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1", NULL);
+	}
 
 	dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
 

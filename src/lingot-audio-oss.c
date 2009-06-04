@@ -33,14 +33,15 @@ LingotAudio* lingot_audio_oss_new(LingotCore* core) {
 	int rate = core->conf->sample_rate;
 	int format = SAMPLE_FORMAT;
 	char *fdsp = core->conf->audio_dev;
+	char error_message[100];
 
 	LingotAudio* audio = malloc(sizeof(LingotAudio));
 	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(fdsp, O_RDONLY);
 	if (audio->dsp < 0) {
-		char error_message[100];
 		sprintf(error_message, "Unable to open audio device %s", fdsp);
 		lingot_error_queue_push(error_message);
+		free(audio);
 		return NULL;
 	}
 
@@ -118,7 +119,6 @@ void lingot_audio_oss_destroy(LingotAudio* audio) {
 	if (audio != NULL) {
 		close(audio->dsp);
 		free(audio->read_buffer);
-		free(audio);
 	}
 }
 

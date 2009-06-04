@@ -166,11 +166,8 @@ lingot-config-dialog.o lingot-config-dialog.o: lingot-config-dialog.c \
   lingot-core.h /usr/include/pthread.h /usr/include/sched.h \
   /usr/include/bits/sched.h /usr/include/bits/setjmp.h lingot-complex.h \
   lingot-filter.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
-  lingot-config.h lingot-audio.h /usr/include/jack/jack.h \
-  /usr/include/jack/types.h /usr/include/inttypes.h /usr/include/stdint.h \
-  /usr/include/bits/wchar.h /usr/include/jack/transport.h \
-  lingot-mainframe.h lingot-gauge.h lingot-config-dialog.h \
-  /usr/include/gtk-2.0/gtk/gtk.h \
+  lingot-config.h lingot-audio.h lingot-mainframe.h lingot-gauge.h \
+  lingot-config-dialog.h /usr/include/gtk-2.0/gtk/gtk.h \
   /usr/include/gtk-2.0/gtk/gtkaboutdialog.h \
   /usr/include/gtk-2.0/gtk/gtkdialog.h \
   /usr/include/gtk-2.0/gtk/gtkaccellabel.h \
@@ -827,18 +824,6 @@ lingot-filter.h:
 lingot-config.h:
 
 lingot-audio.h:
-
-/usr/include/jack/jack.h:
-
-/usr/include/jack/types.h:
-
-/usr/include/inttypes.h:
-
-/usr/include/stdint.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/jack/transport.h:
 
 lingot-mainframe.h:
 

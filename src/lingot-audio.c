@@ -59,6 +59,8 @@ void lingot_audio_destroy(LingotAudio* audio, void* p) {
 		default:
 			perror("unknown audio system\n");
 		}
+
+		free(audio);
 	}
 }
 
