@@ -30,10 +30,14 @@
 #ifdef JACK
 #include <jack/jack.h>
 
+jack_client_t* client = NULL;
+
 int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
 	jack_default_audio_sample_t *in, *out;
-	core->audio->nframes = nframes;
-	lingot_core_read(core);
+	if (core->audio != NULL) {
+		core->audio->nframes = nframes;
+		lingot_core_read(core);
+	}
 	return 0;
 }
 
@@ -69,6 +73,8 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 		return NULL;
 	}
 
+	client = audio->jack_client;
+
 	if (status & JackServerStarted) {
 		fprintf(stderr, "JACK server started\n");
 	}
@@ -86,10 +92,10 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	lingot_config_update_internal_params(conf);
 	conf->read_buffer_size = jack_get_buffer_size(audio->jack_client);
 
-	printf("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate(
-					audio->jack_client));
-	printf("buffer size: %" PRIu32 "\n", jack_get_buffer_size(
-					audio->jack_client));
+	//	printf("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate(
+	//			audio->jack_client));
+	//	printf("buffer size: %" PRIu32 "\n", jack_get_buffer_size(
+	//			audio->jack_client));
 
 	audio->jack_input_port = jack_port_register(audio->jack_client, "input",
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
@@ -112,7 +118,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	}
 
 	if (jack_connect(audio->jack_client, ports[0], jack_port_name(
-							audio->jack_input_port))) {
+			audio->jack_input_port))) {
 		lingot_error_queue_push(_("Cannot connect input ports"));
 		return NULL;
 	}
@@ -120,7 +126,8 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	free(ports);
 
 #	else
-	lingot_error_queue_push(_("The application has not been built with JACK support"));
+	lingot_error_queue_push(
+			_("The application has not been built with JACK support"));
 #	endif
 	return audio;
 }
@@ -128,6 +135,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 void lingot_audio_jack_destroy(LingotAudio* audio) {
 #	ifdef JACK
 	jack_client_close(audio->jack_client);
+	client = NULL;
 #	endif
 }
 
@@ -136,7 +144,7 @@ int lingot_audio_jack_read(LingotAudio* audio, LingotCore* core) {
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
-	core->flt_read_buffer[i] = in[i] * 32768;
+		core->flt_read_buffer[i] = in[i] * 32768;
 #	endif
 	return 0;
 }
@@ -151,23 +159,29 @@ int lingot_audio_jack_get_sample_rate() {
 	jack_status_t status;
 	jack_client_t* jack_client;
 
-	jack_client = jack_client_open(client_name, options, &status, server_name);
-	if (jack_client == NULL) {
-		lingot_error_queue_push(_("Unable to connect to JACK server"));
-		return result;
-	}
-	if (status & JackServerStarted) {
-		fprintf(stderr, "JACK server started\n");
-	}
-	if (status & JackNameNotUnique) {
-		client_name = jack_get_client_name(jack_client);
-		fprintf(stderr, "unique name `%s' assigned\n", client_name);
-	}
+	if (client != NULL) {
+		result = jack_get_sample_rate(client);
+	} else {
+		jack_client = jack_client_open(client_name, options, &status,
+				server_name);
+		if (jack_client == NULL) {
+			lingot_error_queue_push(_("Unable to connect to JACK server"));
+			return result;
+		}
+		if (status & JackServerStarted) {
+			fprintf(stderr, "JACK server started\n");
+		}
+		if (status & JackNameNotUnique) {
+			client_name = jack_get_client_name(jack_client);
+			fprintf(stderr, "unique name `%s' assigned\n", client_name);
+		}
 
-	result = jack_get_sample_rate(jack_client);
-	jack_client_close(jack_client);
+		result = jack_get_sample_rate(jack_client);
+		jack_client_close(jack_client);
+	}
 #	else
-	lingot_error_queue_push(_("The application has not been built with JACK support"));
+	lingot_error_queue_push(
+			_("The application has not been built with JACK support"));
 #	endif
 	return result;
 }
