@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -26,14 +26,15 @@
 #include "lingot-core.h"
 #include "lingot-audio-jack.h"
 #include "lingot-i18n.h"
+#include "lingot-error.h"
 
 #ifdef JACK
 #include <jack/jack.h>
 
 jack_client_t* client = NULL;
 
-int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
-	jack_default_audio_sample_t *in, *out;
+int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
+	LingotCore* core = param;
 	if (core->audio != NULL) {
 		core->audio->nframes = nframes;
 		lingot_core_read(core);
@@ -45,7 +46,8 @@ int lingot_audio_jack_process(jack_nframes_t nframes, LingotCore* core) {
  * JACK calls this shutdown_callback if the server ever shuts down or
  * decides to disconnect the client.
  */
-void lingot_audio_jack_shutdown(LingotCore* core) {
+void lingot_audio_jack_shutdown(void* param) {
+	LingotCore* core = param;
 	core->running = 0;
 	lingot_error_queue_push(_("Missing connection with JACK audio server"));
 }
@@ -70,6 +72,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 			server_name);
 	if (audio->jack_client == NULL) {
 		lingot_error_queue_push(_("Unable to connect to JACK server"));
+		free(audio);
 		return NULL;
 	}
 
@@ -102,11 +105,13 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
 	if ((audio->jack_input_port == NULL)) {
 		lingot_error_queue_push(_("No more JACK ports available"));
+		free(audio);
 		return NULL;
 	}
 
 	if (jack_activate(audio->jack_client)) {
 		lingot_error_queue_push(_("Cannot activate client"));
+		free(audio);
 		return NULL;
 	}
 
@@ -120,6 +125,8 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 	if (jack_connect(audio->jack_client, ports[0], jack_port_name(
 			audio->jack_input_port))) {
 		lingot_error_queue_push(_("Cannot connect input ports"));
+		free(audio);
+		free(ports);
 		return NULL;
 	}
 

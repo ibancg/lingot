@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -88,6 +88,8 @@ void lingot_core_start(LingotCore*);
 
 // stop process
 void lingot_core_stop(LingotCore*);
+
+void lingot_core_read(LingotCore* core);
 
 // process thread
 void lingot_core_run_reading_thread(LingotCore*);

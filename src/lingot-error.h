@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -23,7 +23,7 @@
 #ifndef __LINGOT_ERROR_H__
 #define __LINGOT_ERROR_H__
 
-void lingot_error_queue_push(char* message);
+void lingot_error_queue_push(const char* message);
 char* lingot_error_queue_pop();
 
 #endif

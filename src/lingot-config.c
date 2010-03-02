@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -30,16 +30,39 @@
 #include "lingot-config.h"
 #include "lingot-mainframe.h"
 
+#define N_OPTIONS 20
+
 // the following tokens will appear in the config file. The options after | are deprecated options.
-char* option[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "SAMPLE_RATE", "OVERSAMPLING",
-		"ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY", "FFT_SIZE", "TEMPORAL_WINDOW",
-		"NOISE_THRESHOLD", "CALCULATION_RATE", "VISUALIZATION_RATE",
-		"PEAK_NUMBER", "PEAK_HALF_WIDTH", "PEAK_REJECTION_RELATION",
-		"DFT_NUMBER", "DFT_SIZE", "GAIN", "|", "PEAK_ORDER", NULL // NULL terminated array
-	};
+char* options[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "AUDIO_DEV_ALSA",
+		"SAMPLE_RATE", "OVERSAMPLING", "ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY",
+		"FFT_SIZE", "TEMPORAL_WINDOW", "NOISE_THRESHOLD", "CALCULATION_RATE",
+		"VISUALIZATION_RATE", "PEAK_NUMBER", "PEAK_HALF_WIDTH",
+		"PEAK_REJECTION_RELATION", "DFT_NUMBER", "DFT_SIZE", "GAIN", "|",
+		"PEAK_ORDER", NULL // NULL terminated array
+		};
 
 // print/scan param formats.
-const char* option_format = "dsddffdffffddfddf|i";
+const char* option_formats = "mssddffdffffddfddf|d";
+
+// converts an audio_system_t to a string
+const char* audio_system_t_to_str(audio_system_t audio_system) {
+	const char* values[] = { "OSS", "ALSA", "JACK" };
+	return values[audio_system];
+}
+
+// converts a string to an audio_system_t
+audio_system_t str_to_audio_system_t(char* audio_system) {
+	audio_system_t result = -1;
+	const char* values[] = { "OSS", "ALSA", "JACK", NULL };
+	int i;
+	for (i = 0; values[i] != NULL; i++) {
+		if (!strcmp(audio_system, values[i])) {
+			result = i;
+			break;
+		}
+	}
+	return result;
+}
 
 //----------------------------------------------------------------------------
 
@@ -59,8 +82,9 @@ void lingot_config_destroy(LingotConfig* config) {
 //----------------------------------------------------------------------------
 void lingot_config_reset(LingotConfig* config) {
 
-	config->audio_system = AUDIO_SYSTEM_OSS;
+	config->audio_system = AUDIO_SYSTEM_ALSA;
 	sprintf(config->audio_dev, "%s", "/dev/dsp");
+	sprintf(config->audio_dev_alsa, "%s", "plughw:0");
 
 	config->sample_rate = 44100; // Hz
 	config->oversampling = 25;
@@ -120,55 +144,68 @@ int lingot_config_update_internal_params(LingotConfig* config) {
 //----------------------------------------------------------------------------
 
 // internal parameters mapped to each token in the config file.
-void lingot_map_parameters(LingotConfig* config, void* param[]) {
-	void* c_param[] = { &config->audio_system, &config->audio_dev,
-			&config->sample_rate, &config->oversampling,
-			&config->root_frequency_error, &config->min_frequency,
-			&config->fft_size, &config->temporal_window,
-			&config->noise_threshold_db, &config->calculation_rate,
-			&config->visualization_rate, &config->peak_number,
-			&config->peak_half_width, &config->peak_rejection_relation_db,
-			&config->dft_number, &config->dft_size, &config->gain, NULL,
-			&config->peak_half_width };
+void lingot_map_parameters(LingotConfig* config, void* params[]) {
+	void* c_params[] = { &config->audio_system, &config->audio_dev,
+			&config->audio_dev_alsa, &config->sample_rate,
+			&config->oversampling, &config->root_frequency_error,
+			&config->min_frequency, &config->fft_size,
+			&config->temporal_window, &config->noise_threshold_db,
+			&config->calculation_rate, &config->visualization_rate,
+			&config->peak_number, &config->peak_half_width,
+			&config->peak_rejection_relation_db, &config->dft_number,
+			&config->dft_size, &config->gain, NULL, &config->peak_half_width };
 
-	memcpy(param, c_param, 19 * sizeof(void*));
+	memcpy(params, c_params, N_OPTIONS * sizeof(void*));
 }
 
 void lingot_config_save(LingotConfig* config, char* filename) {
 	unsigned int i;
 	FILE* fp;
 	char* lc_all;
-	void* param[19]; // parameter pointer array.
+	void* params[N_OPTIONS]; // parameter pointer array.
+	void* param = NULL;
+	char* option = NULL;
 
-	lingot_map_parameters(config, param);
+	lingot_map_parameters(config, params);
 
 	lc_all = setlocale(LC_ALL, NULL);
 	// duplicate the string, as the next call to setlocale will destroy it
-			if (lc_all)
-			lc_all = strdup(lc_all);
-			setlocale(LC_ALL, "C");
+	if (lc_all)
+		lc_all = strdup(lc_all);
+	setlocale(LC_ALL, "C");
 
-			if ((fp = fopen(filename, "w")) == NULL) {
-				char buff[100];
-				sprintf(buff, "error saving config file %s ", filename);
-				perror(buff);
-				return;
-			}
+	if ((fp = fopen(filename, "w")) == NULL) {
+		char buff[100];
+		sprintf(buff, "error saving config file %s ", filename);
+		perror(buff);
+		return;
+	}
 
-			fprintf(fp, "# Config file automatically created by lingot %s\n\n",VERSION);
+	fprintf(fp, "# Config file automatically created by lingot %s\n\n", VERSION);
 
-	for (i = 0; strcmp(option[i], "|"); i++)
-		switch (option_format[i]) {
+	for (i = 0; strcmp(options[i], "|"); i++) {
+
+		option = options[i];
+		param = params[i];
+
+		switch (option_formats[i]) {
 		case 's':
-			fprintf(fp, "%s = %s\n", option[i], (char*) param[i]);
+			fprintf(fp, "%s = %s\n", option, (char*) param);
 			break;
 		case 'd':
-			fprintf(fp, "%s = %d\n", option[i], *((unsigned int*) param[i]));
+			fprintf(fp, "%s = %d\n", option, *((unsigned int*) param));
 			break;
 		case 'f':
-			fprintf(fp, "%s = %0.3f\n", option[i], *((FLT*) param[i]));
+			fprintf(fp, "%s = %0.3f\n", option, *((FLT*) param));
+			break;
+		case 'm':
+			if (!strcmp("AUDIO_SYSTEM", option)) {
+				fprintf(fp, "%s = %s\n", option, audio_system_t_to_str(
+						*((audio_system_t*) param)));
+			}
 			break;
 		}
+	}
 
 	fclose(fp);
 
@@ -178,7 +215,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	}
 }
 
-	//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
 void lingot_config_load(LingotConfig* config, char* filename) {
 	FILE* fp;
@@ -188,9 +225,11 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	int deprecated_option = 0;
 	char* char_buffer_pointer;
 	const static char* delim = " \t=\n";
-	void* param[19]; // parameter pointer array.
+	void* params[N_OPTIONS]; // parameter pointer array.
+	void* param = NULL;
+	char* option = NULL;
 
-	lingot_map_parameters(config, param);
+	lingot_map_parameters(config, params);
 
 #   define MAX_LINE_SIZE 100
 
@@ -225,24 +264,27 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			continue; // blank line.
 
 		deprecated_option = 0;
-		for (option_index = 0; option[option_index]; option_index++) {
-			if (!strcmp(char_buffer_pointer, option[option_index])) {
+		for (option_index = 0; options[option_index]; option_index++) {
+			if (!strcmp(char_buffer_pointer, options[option_index])) {
 				break; // found token.
-			} else if (!strcmp("|", option[option_index])) {
+			} else if (!strcmp("|", options[option_index])) {
 				deprecated_option = 1;
 			}
 		}
 
-		if (deprecated_option) {
-			fprintf(stdout,
-			"warning: deprecated option %s\n", char_buffer_pointer);
+		option = options[option_index];
+		param = params[option_index];
+
+		if (!option) {
+			fprintf(stderr,
+					"warning: parse error at line %i: unknown keyword %s\n",
+					line, char_buffer_pointer);
+			continue;
 		}
 
-		if (!option[option_index]) {
-			fprintf(stderr,
-			"warning: parse error at line %i: unknown keyword %s\n", line,
+		if (deprecated_option) {
+			fprintf(stdout, "warning: deprecated option %s\n",
 					char_buffer_pointer);
-			continue;
 		}
 
 		// take the attribute value.
@@ -250,25 +292,36 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		if (!char_buffer_pointer) {
 			fprintf(stderr,
-			"warning: parse error at line %i: value expected\n", line);
+					"warning: parse error at line %i: value expected\n", line);
 			continue;
 		}
 
 		// asign the value to the parameter.
-		switch (option_format[option_index]) {
+		switch (option_formats[option_index]) {
 		case 's':
-			sprintf(((char*) param[option_index]), "%s", char_buffer_pointer);
+			sprintf(((char*) param), "%s", char_buffer_pointer);
 			break;
 		case 'd':
-			sscanf(char_buffer_pointer, "%d",
-					(unsigned int*) param[option_index]);
+			sscanf(char_buffer_pointer, "%d", (unsigned int*) param);
 			break;
 		case 'f':
 			sscanf(char_buffer_pointer, "%f", &aux);
-			*((FLT*) param[option_index]) = aux;
+			*((FLT*) param) = aux;
+			break;
+		case 'm':
+			if (!strcmp("AUDIO_SYSTEM", option)) {
+				*((audio_system_t*) param) = str_to_audio_system_t(
+						char_buffer_pointer);
+				if (*((audio_system_t*) param) == (audio_system_t) -1) {
+					*((audio_system_t*) param) = AUDIO_SYSTEM_ALSA;
+					fprintf(
+							stderr,
+							"warning: parse error at line %i: unrecognized audio system '%s', assuming default audio system.\n",
+							line, char_buffer_pointer);
+				}
+			}
 			break;
 		}
-
 	}
 
 	fclose(fp);

@@ -1,7 +1,8 @@
 SUBDIRS = glade
 
 INCLUDES = \
-	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS)\
+	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS) $(GLADE_CFLAGS)\
+	-DLINGOT_GLADEDIR=\""$(datadir)/lingot/glade/"\" \
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
 AM_CXXFLAGS =\
@@ -45,6 +46,6 @@ lingot_SOURCES = \
 lingot_LDFLAGS =
 
 lingot_LDADD =  \
-	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS)\
+	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(GLADE_LIBS)\
 	 -lpthread
 
