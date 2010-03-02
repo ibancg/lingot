@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2007  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -58,10 +58,10 @@ int main(int argc, char *argv[]) {
 		return -1;
 	} else if (argc > 1) {
 		int c;
-		int digit_optind = 0;
+		//		int digit_optind = 0;
 
 		while (1) {
-			int this_option_optind = optind ? optind : 1;
+			//		int this_option_optind = optind ? optind : 1;
 			int option_index = 0;
 			static struct option long_options[] = { { "config", 1, 0, 'c' }, {
 					0, 0, 0, 0 } };

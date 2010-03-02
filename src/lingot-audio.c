@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -71,7 +71,7 @@ int lingot_audio_read(LingotAudio* audio, void* p) {
 		case AUDIO_SYSTEM_OSS:
 			return lingot_audio_oss_read(audio, core);
 		case AUDIO_SYSTEM_ALSA:
-			lingot_audio_alsa_read(audio, core);
+			return lingot_audio_alsa_read(audio, core);
 		case AUDIO_SYSTEM_JACK:
 			return lingot_audio_jack_read(audio, core);
 		default:

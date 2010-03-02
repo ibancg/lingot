@@ -1,21 +1,19 @@
-# Polish translations for lingot package.
-# Copyright (C) 2008 THE lingot'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the lingot package.
-# Piotr Pawlow <pp@siedziba.pl>, 2008.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: lingot 0.7.6\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-28 19:49+0100\n"
-"PO-Revision-Date: 2008-03-07 16:46+0100\n"
-"Last-Translator: Piotr Pawlow <pp@siedziba.pl>\n"
-"Language-Team: Polish\n"
+"POT-Creation-Date: 2009-06-06 19:57+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
 
 #: ../src/glade/lingot-config-dialog.glade.h:1
 msgid "Adjustments"
@@ -39,7 +37,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:6
 msgid "Calculation rate"
-msgstr "Częstotliwość obliczeń"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:7
 msgid "Capture"
@@ -47,29 +45,27 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:8
 msgid "DFT number"
-msgstr "Ilość DFT w szczycie"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:9
 msgid "DFT size"
-msgstr "Rozmiar DFT w szczycie"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:10
 msgid "DFTs"
-msgstr "iteracji"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:11
-#, fuzzy
 msgid "Default"
-msgstr "Konfiguracja domyślna"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
-#, fuzzy
 msgid "Effective sample rate"
-msgstr "Częstotliwość próbkowania"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:13
 msgid "FFT size"
-msgstr "Rozmiar FFT"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:14
 msgid "Gain"
@@ -77,165 +73,151 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:15
 msgid "Hz"
-msgstr "Hz"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
-#, fuzzy
 msgid "Noise threshold"
-msgstr "Próg szumu"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Peak half-width"
-msgstr "Rozmiar szczytu"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:18
 msgid "Peak number"
-msgstr "Numer szczytu"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
-#, fuzzy
 msgid "Peak rejection relation"
-msgstr "Stosunek szczytów odrzucanych"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:20
 msgid "Root frequency"
-msgstr "Częstotliwość bazowa"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:21
 msgid "Sample rate"
-msgstr "Częstotliwość próbkowania"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:22
 msgid "Temporal window"
-msgstr "Okno czasowe"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:23
 msgid "Visualization rate"
-msgstr "Częstotliwość wizualizacji"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:24
 msgid "dB"
-msgstr "dB"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:25
 msgid "lingot configuration"
-msgstr "konfiguracja programu lingot"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:26
 msgid "peaks"
-msgstr "szczytów"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:27
 msgid "samples"
-msgstr "próbek"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:28
 msgid "seconds"
-msgstr "sekund"
+msgstr ""
 
-#: ../src/lingot-audio-jack.c:46
+#: ../src/lingot-audio-jack.c:52
 msgid "Missing connection with JACK audio server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:68 ../src/lingot-audio-jack.c:156
+#: ../src/lingot-audio-jack.c:74 ../src/lingot-audio-jack.c:170
 msgid "Unable to connect to JACK server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:98
+#: ../src/lingot-audio-jack.c:106
 msgid "No more JACK ports available"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:103
+#: ../src/lingot-audio-jack.c:111
 msgid "Cannot activate client"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:110
+#: ../src/lingot-audio-jack.c:118
 msgid "No physical capture ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:116
+#: ../src/lingot-audio-jack.c:124
 msgid "Cannot connect input ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:170
+#: ../src/lingot-audio-jack.c:132 ../src/lingot-audio-jack.c:186
 msgid "The application has not been built with JACK support"
 msgstr ""
 
-#: ../src/lingot-config-dialog.c:284
+#: ../src/lingot-config-dialog.c:312
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"Bufor czasowy jest mniejszy niż rozmiar FFT. Został powiększony do %0.3f "
-"sekund"
 
-#: ../src/lingot-config-dialog.c:286
+#: ../src/lingot-config-dialog.c:314
 msgid "Warning"
 msgstr ""
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Dokładny i prosty w użyciu tuner instrumentów muzycznych"
+msgstr ""
 
-#: ../src/lingot-mainframe.c:101
+#: ../src/lingot-mainframe.c:102
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:164
+#: ../src/lingot-mainframe.c:165
 msgid "Error"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:249
+#: ../src/lingot-mainframe.c:252
 msgid "lingot"
-msgstr "lingot"
+msgstr ""
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:272 ../src/lingot-mainframe.c:343
+#: ../src/lingot-mainframe.c:275 ../src/lingot-mainframe.c:346
 msgid "Spectrum"
-msgstr "Widmo częstotliwości"
-
-#: ../src/lingot-mainframe.c:306
-msgid "_File"
-msgstr "_Plik"
-
-#: ../src/lingot-mainframe.c:307
-msgid "_Edit"
-msgstr "_Edycja"
-
-#: ../src/lingot-mainframe.c:308
-msgid "_View"
-msgstr "_Widok"
+msgstr ""
 
 #: ../src/lingot-mainframe.c:309
+msgid "_File"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Edit"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:311
+msgid "_View"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:312
 msgid "_Help"
-msgstr "Pomo_c"
+msgstr ""
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:333
+#: ../src/lingot-mainframe.c:336
 msgid "Deviation"
-msgstr "Odchylenie"
+msgstr ""
 
 #. tone frame
-#: ../src/lingot-mainframe.c:338
+#: ../src/lingot-mainframe.c:341
 msgid "Tone"
-msgstr "Nuta"
-
-#: ../src/lingot-mainframe.c:383
-msgid "freq"
-msgstr "częst."
+msgstr ""
 
 #: ../src/lingot-mainframe.c:386
+msgid "freq"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:389
 msgid "err"
-msgstr "błąd"
-
-#, fuzzy
-#~ msgid "440 (A) +"
-#~ msgstr " A (440 Hz) + "
-
-#~ msgid "General parameters"
-#~ msgstr "Ustawienia główne"
-
-#~ msgid "Advanced parameters"
-#~ msgstr "Ustawienia zaawansowane"
+msgstr ""

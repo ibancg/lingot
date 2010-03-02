@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -22,6 +22,8 @@
 
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "lingot-error.h"
 #include "lingot-defs.h"
@@ -47,21 +49,17 @@ LingotAudio* lingot_audio_oss_new(LingotCore* core) {
 
 	//if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
 	if (ioctl(audio->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0) {
-		perror("Error setting number of channels");
-		exit(-1);
+		lingot_error_queue_push("Error setting number of channels");
+		free(audio);
+		return NULL;
 	}
-
-	/*  if (ioctl(audio->dsp, SOUND_PCM_WRITE_CHANNELS, &channels) < 0)
-	 {
-	 perror("Error setting number of channels");
-	 exit(-1);
-	 } */
 
 	// sample size
 	//if (ioctl(audio->dsp, SOUND_PCM_SETFMT, &format) < 0)
 	if (ioctl(audio->dsp, SNDCTL_DSP_SETFMT, &format) < 0) {
-		perror("Error setting bits per sample");
-		exit(-1);
+		lingot_error_queue_push("Error setting bits per sample");
+		free(audio);
+		return NULL;
 	}
 
 	int fragment_size = 1;
@@ -74,38 +72,16 @@ LingotAudio* lingot_audio_oss_new(LingotCore* core) {
 	param |= 0x00ff0000;
 
 	if (ioctl(audio->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0) {
-		perror("Error setting DMA buffer size");
-		exit(-1);
+		lingot_error_queue_push("Error setting DMA buffer size");
+		free(audio);
+		return NULL;
 	}
 
-	// DMA divisor
-	/*  if (ioctl(audio->dsp, SNDCTL_DSP_SUBDIVIDE, &dma) < 0)
-	 {
-	 perror("Error setting DMA divisor");
-	 exit(-1);
-	 }
-
-	 // Rate de muestreo / reproduccion
-	 if (ioctl(audio->dsp, SOUND_PCM_WRITE_RATE, &rate) < 0)
-	 {
-	 perror("Error setting write rate");
-	 exit(-1);
-	 } */
-
-	//  if (ioctl(audio->dsp, SOUND_PCM_READ_RATE, &rate) < 0)
 	if (ioctl(audio->dsp, SNDCTL_DSP_SPEED, &rate) < 0) {
-		perror("Error setting sample rate");
-		exit(-1);
+		lingot_error_queue_push("Error setting sample rate");
+		free(audio);
+		return NULL;
 	}
-
-	/*
-	 // non-blocking reads.
-	 if (fcntl(audio->dsp, F_SETFL, O_NONBLOCK) < 0)
-	 {
-	 perror("Error setting non-blocking reads");
-	 exit(-1);
-	 }
-	 */
 
 	audio->read_buffer = malloc(core->conf->read_buffer_size
 			* sizeof(SAMPLE_TYPE));

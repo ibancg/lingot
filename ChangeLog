@@ -1,13 +1,18 @@
-2009-05-29 Ibán Cereijo <ibancg@gmail.com>
+2010-02-23 Ibán Cereijo <ibancg@gmail.com>
 
-	* Added JACK support
+	* Added ALSA support
+	
+	* Added translations: zh_CN, it
 
+	* Changed default sample rate to 44100 Hz
 
 2008-06-24 Ibán Cereijo <ibancg@gmail.com>
 
+	* Added JACK support
+
 	* Fixed memory leak in GUI
 	
-	* Added translations: cs, sv, de, pt_BR, pl
+	* Added translations: cs, sv, de, pt_BR
 
 	* Changed default sample rate to 11025 Hz instead of 8 KHz
 	

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-28 19:49+0100\n"
+"POT-Creation-Date: 2010-02-26 00:18+0100\n"
 "PO-Revision-Date: 2008-06-24 14:00+0200\n"
 "Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
 "Language-Team: Português do Brasil\n"
@@ -58,12 +58,10 @@ msgid "DFTs"
 msgstr "DFTs"
 
 #: ../src/glade/lingot-config-dialog.glade.h:11
-#, fuzzy
 msgid "Default"
 msgstr "Configuração padrão"
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
-#, fuzzy
 msgid "Effective sample rate"
 msgstr "Freqüência de amostragem"
 
@@ -80,7 +78,6 @@ msgid "Hz"
 msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
-#, fuzzy
 msgid "Noise threshold"
 msgstr "Ruído mínimo"
 
@@ -93,7 +90,6 @@ msgid "Peak number"
 msgstr "Número de cristas"
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
-#, fuzzy
 msgid "Peak rejection relation"
 msgstr "Relação de rejeição de cristas"
 
@@ -133,35 +129,39 @@ msgstr "amostras"
 msgid "seconds"
 msgstr "segundos"
 
-#: ../src/lingot-audio-jack.c:46
+#: ../src/lingot-audio-alsa.c:149
+msgid "The application has not been built with ALSA support"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:52
 msgid "Missing connection with JACK audio server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:68 ../src/lingot-audio-jack.c:156
+#: ../src/lingot-audio-jack.c:74 ../src/lingot-audio-jack.c:175
 msgid "Unable to connect to JACK server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:98
+#: ../src/lingot-audio-jack.c:107
 msgid "No more JACK ports available"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:103
+#: ../src/lingot-audio-jack.c:113
 msgid "Cannot activate client"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:110
+#: ../src/lingot-audio-jack.c:121
 msgid "No physical capture ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:116
+#: ../src/lingot-audio-jack.c:127
 msgid "Cannot connect input ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:170
+#: ../src/lingot-audio-jack.c:137 ../src/lingot-audio-jack.c:191
 msgid "The application has not been built with JACK support"
 msgstr ""
 
-#: ../src/lingot-config-dialog.c:284
+#: ../src/lingot-config-dialog.c:340
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -170,7 +170,7 @@ msgstr ""
 "O buffer temporal é menor que o tamanho da FFT escolhido, Fora ampliado para "
 "%0.3f segundos."
 
-#: ../src/lingot-config-dialog.c:286
+#: ../src/lingot-config-dialog.c:342
 msgid "Warning"
 msgstr ""
 
@@ -178,55 +178,55 @@ msgstr ""
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos musicais preciso e fácil de usar"
 
-#: ../src/lingot-mainframe.c:101
+#: ../src/lingot-mainframe.c:102
 msgid "translator-credits"
 msgstr "Carlos Laué <carlosl@seznam.cz>"
 
-#: ../src/lingot-mainframe.c:164
+#: ../src/lingot-mainframe.c:165
 msgid "Error"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:249
+#: ../src/lingot-mainframe.c:252
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:272 ../src/lingot-mainframe.c:343
+#: ../src/lingot-mainframe.c:275 ../src/lingot-mainframe.c:346
 msgid "Spectrum"
 msgstr "Espectro"
 
-#: ../src/lingot-mainframe.c:306
+#: ../src/lingot-mainframe.c:309
 msgid "_File"
 msgstr "_Arquivo"
 
-#: ../src/lingot-mainframe.c:307
+#: ../src/lingot-mainframe.c:310
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/lingot-mainframe.c:308
+#: ../src/lingot-mainframe.c:311
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/lingot-mainframe.c:309
+#: ../src/lingot-mainframe.c:312
 msgid "_Help"
 msgstr "A_juda"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:333
+#: ../src/lingot-mainframe.c:336
 msgid "Deviation"
 msgstr "Diferença"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:338
+#: ../src/lingot-mainframe.c:341
 msgid "Tone"
 msgstr "Nota"
 
-#: ../src/lingot-mainframe.c:383
+#: ../src/lingot-mainframe.c:386
 msgid "freq"
 msgstr "freqüência"
 
-#: ../src/lingot-mainframe.c:386
+#: ../src/lingot-mainframe.c:389
 msgid "err"
 msgstr "erro"
 

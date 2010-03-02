@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-28 19:49+0100\n"
+"POT-Creation-Date: 2010-02-26 00:18+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -128,39 +127,42 @@ msgstr "muestras"
 msgid "seconds"
 msgstr "segundos"
 
-#: ../src/lingot-audio-jack.c:46
+#: ../src/lingot-audio-alsa.c:149
+#, fuzzy
+msgid "The application has not been built with ALSA support"
+msgstr "La aplicación no ha sido construída con soporte para ALSA"
+
+#: ../src/lingot-audio-jack.c:52
 msgid "Missing connection with JACK audio server"
 msgstr "Perdida conexión con el servidor JACK"
 
-#: ../src/lingot-audio-jack.c:68 ../src/lingot-audio-jack.c:156
+#: ../src/lingot-audio-jack.c:74 ../src/lingot-audio-jack.c:175
 msgid "Unable to connect to JACK server"
 msgstr "No es posible conectar con el servidor JACK"
 
-#: ../src/lingot-audio-jack.c:98
-#, fuzzy
+#: ../src/lingot-audio-jack.c:107
 msgid "No more JACK ports available"
 msgstr "No hay más puertos JACK disponibles"
 
-#: ../src/lingot-audio-jack.c:103
-#, fuzzy
+#: ../src/lingot-audio-jack.c:113
 msgid "Cannot activate client"
 msgstr "No es posible activar el cliente"
 
-#: ../src/lingot-audio-jack.c:110
+#: ../src/lingot-audio-jack.c:121
 #, fuzzy
 msgid "No physical capture ports"
 msgstr "No hay puertos físicos de captura"
 
-#: ../src/lingot-audio-jack.c:116
+#: ../src/lingot-audio-jack.c:127
 #, fuzzy
 msgid "Cannot connect input ports"
 msgstr "No es posible conectar los puertos de entrada"
 
-#: ../src/lingot-audio-jack.c:123 ../src/lingot-audio-jack.c:170
+#: ../src/lingot-audio-jack.c:137 ../src/lingot-audio-jack.c:191
 msgid "The application has not been built with JACK support"
 msgstr "La aplicación no ha sido construída con soporte para JACK"
 
-#: ../src/lingot-config-dialog.c:284
+#: ../src/lingot-config-dialog.c:340
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -169,7 +171,7 @@ msgstr ""
 "El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
 "%0.3f segundos"
 
-#: ../src/lingot-config-dialog.c:286
+#: ../src/lingot-config-dialog.c:342
 msgid "Warning"
 msgstr "Aviso"
 
@@ -177,55 +179,55 @@ msgstr "Aviso"
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso y fácil de usar"
 
-#: ../src/lingot-mainframe.c:101
+#: ../src/lingot-mainframe.c:102
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/lingot-mainframe.c:164
+#: ../src/lingot-mainframe.c:165
 msgid "Error"
 msgstr "Error"
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:249
+#: ../src/lingot-mainframe.c:252
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:272 ../src/lingot-mainframe.c:343
+#: ../src/lingot-mainframe.c:275 ../src/lingot-mainframe.c:346
 msgid "Spectrum"
 msgstr "Espectro"
 
-#: ../src/lingot-mainframe.c:306
+#: ../src/lingot-mainframe.c:309
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/lingot-mainframe.c:307
+#: ../src/lingot-mainframe.c:310
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/lingot-mainframe.c:308
+#: ../src/lingot-mainframe.c:311
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/lingot-mainframe.c:309
+#: ../src/lingot-mainframe.c:312
 msgid "_Help"
 msgstr "A_yuda"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:333
+#: ../src/lingot-mainframe.c:336
 msgid "Deviation"
 msgstr "Desviación"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:338
+#: ../src/lingot-mainframe.c:341
 msgid "Tone"
 msgstr "Tono"
 
-#: ../src/lingot-mainframe.c:383
+#: ../src/lingot-mainframe.c:386
 msgid "freq"
 msgstr "frec"
 
-#: ../src/lingot-mainframe.c:386
+#: ../src/lingot-mainframe.c:389
 msgid "err"
 msgstr "err"
 

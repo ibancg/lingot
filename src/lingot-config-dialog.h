@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -34,7 +34,8 @@ struct _LingotConfigDialog {
 
 	// widgets that contains configuration information.
 	GtkComboBox* input_system;
-	GtkEntry* input_dev;
+	GtkEntry* oss_input_dev;
+	GtkEntry* alsa_input_dev;
 	GtkComboBox* sample_rate;
 	GtkHScale* calculation_rate;
 	GtkHScale* visualization_rate;
@@ -57,8 +58,10 @@ struct _LingotConfigDialog {
 	GtkLabel* jack_label_sample_rate2;
 	GtkLabel* oss_alsa_label_sample_rate0;
 	GtkLabel* oss_alsa_label_sample_rate2;
-	GtkLabel* oss_alsa_label_input_dev0;
-	GtkLabel* oss_alsa_label_input_dev2;
+	GtkLabel* oss_label_input_dev0;
+	GtkLabel* oss_label_input_dev2;
+	GtkLabel* alsa_label_input_dev0;
+	GtkLabel* alsa_label_input_dev2;
 
 	LingotConfig* conf; // provisional configuration.
 	LingotConfig* conf_old; // restoration point for cancel.

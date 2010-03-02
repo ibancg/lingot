@@ -3,3 +3,4 @@ Makefile
 lingot
 *.deps
 .deps
+Makefile.in

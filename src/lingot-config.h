@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -31,18 +31,18 @@
  Some parameters are internal only.
  */
 
-typedef struct _LingotConfig LingotConfig;
+typedef enum audio_system_t {
+	AUDIO_SYSTEM_OSS = 0, AUDIO_SYSTEM_ALSA = 1, AUDIO_SYSTEM_JACK = 2
+} audio_system_t;
 
-#define AUDIO_SYSTEM_OSS 0
-#define AUDIO_SYSTEM_ALSA 1
-#define AUDIO_SYSTEM_JACK 2
+typedef struct _LingotConfig LingotConfig;
 
 struct _LingotConfig {
 
-	// audio system:
-	int audio_system;
+	audio_system_t audio_system;
 
 	char audio_dev[80]; // default "/dev/dsp"
+	char audio_dev_alsa[80]; // default "plughw:0,0"
 	unsigned int sample_rate; // soundcard sample rate.
 	unsigned int oversampling; // oversampling factor.
 
@@ -101,6 +101,11 @@ struct _LingotConfig {
 
 	//----------------------------------------------------------------------------
 };
+
+// converts an audio_system_t to a string
+const char* audio_system_t_to_str(audio_system_t audio_system);
+// converts a string to an audio_system_t
+audio_system_t str_to_audio_system_t(char* audio_system);
 
 LingotConfig* lingot_config_new();
 void lingot_config_destroy(LingotConfig*);

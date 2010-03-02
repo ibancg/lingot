@@ -2,7 +2,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -48,10 +48,5 @@ typedef struct _LingotMainFrame LingotMainFrame;
 // optionally we can use the following libraries
 //#define LIB_FFTW
 //#define LIBSNDOBJ
-//#define ALSA
-
-#ifdef HAVEJACK
-#define JACK
-#endif
 
 #endif
