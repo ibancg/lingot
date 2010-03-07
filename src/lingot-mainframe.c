@@ -193,7 +193,7 @@ void lingot_mainframe_color(GdkColor* color, int red, int green, int blue) {
 	color->blue = blue;
 }
 
-LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
+void lingot_mainframe_create(int argc, char *argv[]) {
 	GtkWidget* vertical_box;
 	GtkWidget* horizontal_box;
 	GtkWidget* file_menu;
@@ -220,8 +220,6 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 
 	frame->conf = lingot_config_new();
 	lingot_config_load(frame->conf, CONFIG_FILE_NAME);
-
-	frame->core = lingot_core_new(frame->conf);
 
 	frame->gauge = lingot_gauge_new(frame->conf->vr); // gauge in rest situation
 
@@ -440,12 +438,18 @@ LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]) {
 	spectrum_legend_font_desc = pango_font_description_from_string(
 			"Helvetica Plain 7");
 
-	return frame;
+	frame->core = lingot_core_new(frame->conf);
+	lingot_core_start(frame->core);
+
+	gtk_main();
 }
 
 void lingot_mainframe_destroy(LingotMainFrame* frame) {
-	lingot_gauge_destroy(frame->gauge);
+
+	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
+
+	lingot_gauge_destroy(frame->gauge);
 	lingot_filter_destroy(frame->freq_filter);
 	lingot_config_destroy(frame->conf);
 	if (frame->config_dialog)
@@ -467,12 +471,6 @@ void lingot_mainframe_destroy(LingotMainFrame* frame) {
 	free(frame);
 }
 
-void lingot_mainframe_run(LingotMainFrame* frame) {
-	lingot_core_start(frame->core);
-	gtk_main();
-	lingot_core_stop(frame->core);
-	lingot_mainframe_destroy(frame);
-}
 // ---------------------------------------------------------------------------
 
 void lingot_mainframe_redraw(LingotMainFrame* frame) {

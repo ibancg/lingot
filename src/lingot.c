@@ -106,8 +106,7 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
-	LingotMainFrame* gui = lingot_mainframe_new(argc, argv);
-	lingot_mainframe_run(gui);
+	lingot_mainframe_create(argc, argv);
 
 	return 0;
 }

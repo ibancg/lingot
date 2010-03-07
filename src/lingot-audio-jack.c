@@ -39,6 +39,7 @@ int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
 		core->audio->nframes = nframes;
 		lingot_core_read(core);
 	}
+
 	return 0;
 }
 
@@ -141,6 +142,7 @@ LingotAudio* lingot_audio_jack_new(LingotCore* core) {
 
 void lingot_audio_jack_destroy(LingotAudio* audio) {
 #	ifdef JACK
+	jack_cycle_wait(audio->jack_client);
 	jack_client_close(audio->jack_client);
 	client = NULL;
 #	endif
