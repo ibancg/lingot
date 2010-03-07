@@ -47,7 +47,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 	core->conf = conf;
 	core->running = 0;
-	core->audio = NULL;
 	core->audio = lingot_audio_new(core);
 
 	// since the SPD is simmetrical, we only store the 1st half.
@@ -237,11 +236,6 @@ void lingot_core_read(LingotCore* core) {
 	// | xxxxxxxxxxxxxxxxyyyyaa | aaaaa | bbbbbbb |
 	//  ------------------------------------------
 	//
-
-	//	printf(
-	//			"decimation_input_len = %d, decimation_output_len = %d, decimation_input_index = %d\n",
-	//			core->conf->read_buffer_size, decimation_output_len,
-	//			decimation_input_index);
 }
 
 void lingot_core_compute_fundamental_fequency(LingotCore* core) {

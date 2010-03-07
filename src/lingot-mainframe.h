@@ -73,10 +73,9 @@ struct _LingotMainFrame
     guint freq_timer_uid;
   };
 
-LingotMainFrame* lingot_mainframe_new(int argc, char *argv[]);
+void lingot_mainframe_create(int argc, char *argv[]);
 void lingot_mainframe_destroy(LingotMainFrame*);
 
-void lingot_mainframe_run(LingotMainFrame*);
 void lingot_mainframe_change_config(LingotMainFrame*, LingotConfig*);
 
 #endif //__LINGOT_MAIN_FRAME_H__
