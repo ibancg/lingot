@@ -265,6 +265,7 @@ void lingot_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	gtk_spin_button_set_value(dialog->dft_size, conf->dft_size);
 	gtk_spin_button_set_value(dialog->peak_number, conf->peak_number);
 	gtk_spin_button_set_value(dialog->peak_halfwidth, conf->peak_half_width);
+	gtk_spin_button_set_value(dialog->minimum_frequency, conf->min_frequency);
 	gtk_range_set_value(GTK_RANGE(dialog->rejection_peak_relation),
 			conf->peak_rejection_relation_db);
 	lingot_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size),
@@ -315,6 +316,8 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 			dialog->peak_halfwidth);
 	dialog->conf->peak_rejection_relation_db = gtk_range_get_value(GTK_RANGE(
 			dialog->rejection_peak_relation));
+	dialog->conf->min_frequency = gtk_spin_button_get_value_as_int(
+			dialog->minimum_frequency);
 	text = gtk_combo_box_get_active_text(dialog->fft_size);
 	dialog->conf->fft_size = atoi(text);
 	free(text);
@@ -375,81 +378,113 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 			_gladeXML = glade_xml_new("src/glade/lingot-config-dialog.glade",
 					"dialog1", NULL);
 		} else {
-_gladeXML		= glade_xml_new(LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1", NULL);
+			_gladeXML = glade_xml_new(
+					LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1",
+					NULL);
+		}
+
+		dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
+
+		gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(
+				GTK_WINDOW(frame->win)));
+		//gtk_window_set_position(GTK_WINDOW(dialog->win), GTK_WIN_POS_CENTER_ALWAYS);
+		dialog->mainframe->config_dialog = dialog;
+
+		dialog->input_system
+				= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "input_system"));
+
+		dialog->oss_input_dev
+				= GTK_ENTRY(glade_xml_get_widget(_gladeXML, "oss_input_dev"));
+		dialog->alsa_input_dev
+				= GTK_ENTRY(glade_xml_get_widget(_gladeXML, "alsa_input_dev"));
+		dialog->sample_rate
+				= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "sample_rate"));
+		dialog->calculation_rate
+				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "calculation_rate"));
+		dialog->visualization_rate
+				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "visualization_rate"));
+		dialog->noise_threshold
+				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "noise_threshold"));
+		dialog->gain = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "gain"));
+		dialog->oversampling
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "oversampling"));
+		dialog->fft_size
+				= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "fft_size"));
+		dialog->temporal_window
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "temporal_window"));
+		dialog->root_frequency_error
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
+								"root_frequency_error"));
+		dialog->dft_number
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_number"));
+		dialog->dft_size
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_size"));
+		dialog->peak_number
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_number"));
+		dialog->peak_halfwidth
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_halfwidth"));
+		dialog->rejection_peak_relation
+				= GTK_HSCALE(glade_xml_get_widget(_gladeXML,
+								"rejection_peak_relation"));
+		dialog->label_sample_rate1 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
+						"label_sample_rate1"));
+		dialog->label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
+						"label_sample_rate2"));
+		dialog->label_root_frequency
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"label_root_frequency"));
+		dialog->jack_label_sample_rate0
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"jack_label_sample_rate0"));
+		dialog->jack_label_sample_rate1
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"jack_label_sample_rate1"));
+		dialog->jack_label_sample_rate2
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"jack_label_sample_rate2"));
+		dialog->oss_alsa_label_sample_rate0
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"oss_alsa_label_sample_rate0"));
+		dialog->oss_alsa_label_sample_rate2
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"oss_alsa_label_sample_rate2"));
+		dialog->oss_label_input_dev0
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"oss_label_input_dev0"));
+		dialog->oss_label_input_dev2
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"oss_label_input_dev2"));
+		dialog->alsa_label_input_dev0
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"alsa_label_input_dev0"));
+		dialog->alsa_label_input_dev2
+				= GTK_LABEL(glade_xml_get_widget(_gladeXML,
+								"alsa_label_input_dev2"));
+		dialog->minimum_frequency
+				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
+								"minimum_frequency"));
+
+		gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
+		gtk_signal_connect(GTK_OBJECT(dialog->sample_rate), "changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+
+		gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+		gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
+				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_a_frequence), dialog);
+
+		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
+		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
+		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
+		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
+		g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
+
+		g_object_unref(_gladeXML);
+		lingot_config_dialog_rewrite(dialog);
+
+		gtk_widget_show(dialog->win);
+	} else {
+		gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
 	}
-
-	dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
-
-	gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(GTK_WINDOW(frame->win)));
-	//gtk_window_set_position(GTK_WINDOW(dialog->win), GTK_WIN_POS_CENTER_ALWAYS);
-	dialog->mainframe->config_dialog = dialog;
-
-	dialog->input_system = GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "input_system"));
-
-	dialog->oss_input_dev = GTK_ENTRY(glade_xml_get_widget(_gladeXML, "oss_input_dev"));
-	dialog->alsa_input_dev = GTK_ENTRY(glade_xml_get_widget(_gladeXML, "alsa_input_dev"));
-	dialog->sample_rate = GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "sample_rate"));
-	dialog->calculation_rate = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "calculation_rate"));
-	dialog->visualization_rate = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "visualization_rate"));
-	dialog->noise_threshold = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "noise_threshold"));
-	dialog->gain = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "gain"));
-	dialog->oversampling = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "oversampling"));
-	dialog->fft_size = GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "fft_size"));
-	dialog->temporal_window = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "temporal_window"));
-	dialog->root_frequency_error = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
-					"root_frequency_error"));
-	dialog->dft_number = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_number"));
-	dialog->dft_size = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_size"));
-	dialog->peak_number = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_number"));
-	dialog->peak_halfwidth = GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_halfwidth"));
-	dialog->rejection_peak_relation = GTK_HSCALE(glade_xml_get_widget(_gladeXML,
-					"rejection_peak_relation"));
-	dialog->label_sample_rate1 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"label_sample_rate1"));
-	dialog->label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"label_sample_rate2"));
-	dialog->label_root_frequency = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"label_root_frequency"));
-	dialog->jack_label_sample_rate0 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"jack_label_sample_rate0"));
-	dialog->jack_label_sample_rate1 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"jack_label_sample_rate1"));
-	dialog->jack_label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"jack_label_sample_rate2"));
-	dialog->oss_alsa_label_sample_rate0 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"oss_alsa_label_sample_rate0"));
-	dialog->oss_alsa_label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"oss_alsa_label_sample_rate2"));
-	dialog->oss_label_input_dev0 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"oss_label_input_dev0"));
-	dialog->oss_label_input_dev2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"oss_label_input_dev2"));
-	dialog->alsa_label_input_dev0 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"alsa_label_input_dev0"));
-	dialog->alsa_label_input_dev2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-					"alsa_label_input_dev2"));
-
-	gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
-	gtk_signal_connect(GTK_OBJECT(dialog->sample_rate), "changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-
-	gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-	gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
-			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_a_frequence), dialog);
-
-	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
-	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
-	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
-	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
-	g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
-
-	g_object_unref(_gladeXML);
-	lingot_config_dialog_rewrite(dialog);
-
-	gtk_widget_show(dialog->win);
-} else {
-	gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
-}
 }
