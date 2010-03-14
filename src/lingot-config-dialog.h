@@ -49,6 +49,7 @@ struct _LingotConfigDialog {
 	GtkSpinButton* dft_size;
 	GtkSpinButton* peak_number;
 	GtkSpinButton* peak_halfwidth;
+	GtkSpinButton* minimum_frequency;
 	GtkHScale* rejection_peak_relation;
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
