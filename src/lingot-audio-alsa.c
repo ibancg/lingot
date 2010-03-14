@@ -72,14 +72,6 @@ LingotAudio* lingot_audio_alsa_new(LingotCore* core) {
 		return NULL;
 	}
 
-	/* set hardware resampling */
-	//	err = snd_pcm_hw_params_set_rate_resample(audio->capture_handle, hw_params,
-	//			resample);
-	//	if (err < 0) {
-	//		printf("Resampling setup failed for playback: %s\n", snd_strerror(err));
-	//		exit(1);
-	//	}
-
 	if ((err = snd_pcm_hw_params_set_access(audio->capture_handle, hw_params,
 			SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
 		sprintf(error_message, "cannot set access type (%s)\n", snd_strerror(
@@ -143,7 +135,6 @@ LingotAudio* lingot_audio_alsa_new(LingotCore* core) {
 			* sizeof(SAMPLE_TYPE));
 	memset(audio->read_buffer, 0, core->conf->read_buffer_size
 			* sizeof(SAMPLE_TYPE));
-
 #	else
 	lingot_error_queue_push(
 			_("The application has not been built with ALSA support"));
