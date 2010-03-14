@@ -375,15 +375,21 @@ void lingot_core_start(LingotCore* core) {
 void lingot_core_stop(LingotCore* core) {
 	void* thread_result;
 
-	core->running = 0;
+	// threads cancelation
+	if (core->conf->audio_system != AUDIO_SYSTEM_JACK)
+		pthread_cancel(core->thread_input_read);
+	pthread_cancel(core->thread_computation);
 
+	// core->running = 0;
+	//
 	// wait for the thread exit
+	//
+	//	if (core->conf->audio_system != AUDIO_SYSTEM_JACK) {
+	//		pthread_join(core->thread_input_read, &thread_result);
+	//	}
+	//
+	//	pthread_join(core->thread_computation, &thread_result);
 
-	if (core->conf->audio_system != AUDIO_SYSTEM_JACK) {
-		pthread_join(core->thread_input_read, &thread_result);
-	}
-
-	pthread_join(core->thread_computation, &thread_result);
 
 	pthread_attr_destroy(&core->thread_computation_attr);
 	if (core->conf->audio_system != AUDIO_SYSTEM_JACK) {
