@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-26 00:18+0100\n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
 "PO-Revision-Date: 2008-06-24 14:00+0200\n"
 "Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
 "Language-Team: Português do Brasil\n"
@@ -78,90 +78,94 @@ msgid "Hz"
 msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Noise threshold"
 msgstr "Ruído mínimo"
 
-#: ../src/glade/lingot-config-dialog.glade.h:17
+#: ../src/glade/lingot-config-dialog.glade.h:18
 msgid "Peak half-width"
 msgstr "Ordem de cristas"
 
-#: ../src/glade/lingot-config-dialog.glade.h:18
+#: ../src/glade/lingot-config-dialog.glade.h:19
 msgid "Peak number"
 msgstr "Número de cristas"
 
-#: ../src/glade/lingot-config-dialog.glade.h:19
+#: ../src/glade/lingot-config-dialog.glade.h:20
 msgid "Peak rejection relation"
 msgstr "Relação de rejeição de cristas"
 
-#: ../src/glade/lingot-config-dialog.glade.h:20
+#: ../src/glade/lingot-config-dialog.glade.h:21
 msgid "Root frequency"
 msgstr "Freqüência padrão"
 
-#: ../src/glade/lingot-config-dialog.glade.h:21
+#: ../src/glade/lingot-config-dialog.glade.h:22
 msgid "Sample rate"
 msgstr "Freqüência de amostragem"
 
-#: ../src/glade/lingot-config-dialog.glade.h:22
+#: ../src/glade/lingot-config-dialog.glade.h:23
 msgid "Temporal window"
 msgstr "Janela temporal"
 
-#: ../src/glade/lingot-config-dialog.glade.h:23
+#: ../src/glade/lingot-config-dialog.glade.h:24
 msgid "Visualization rate"
 msgstr "Freqüência de visualizaçâo"
 
-#: ../src/glade/lingot-config-dialog.glade.h:24
+#: ../src/glade/lingot-config-dialog.glade.h:25
 msgid "dB"
 msgstr "dB"
 
-#: ../src/glade/lingot-config-dialog.glade.h:25
+#: ../src/glade/lingot-config-dialog.glade.h:26
 msgid "lingot configuration"
 msgstr "Configuração do lingot"
 
-#: ../src/glade/lingot-config-dialog.glade.h:26
+#: ../src/glade/lingot-config-dialog.glade.h:27
 msgid "peaks"
 msgstr "cristas"
 
-#: ../src/glade/lingot-config-dialog.glade.h:27
+#: ../src/glade/lingot-config-dialog.glade.h:28
 msgid "samples"
 msgstr "amostras"
 
-#: ../src/glade/lingot-config-dialog.glade.h:28
+#: ../src/glade/lingot-config-dialog.glade.h:29
 msgid "seconds"
 msgstr "segundos"
 
-#: ../src/lingot-audio-alsa.c:149
+#: ../src/lingot-audio-alsa.c:140
 msgid "The application has not been built with ALSA support"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:52
+#: ../src/lingot-audio-jack.c:53
 msgid "Missing connection with JACK audio server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:74 ../src/lingot-audio-jack.c:175
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
 msgid "Unable to connect to JACK server"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:107
+#: ../src/lingot-audio-jack.c:108
 msgid "No more JACK ports available"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:113
+#: ../src/lingot-audio-jack.c:114
 msgid "Cannot activate client"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:121
+#: ../src/lingot-audio-jack.c:122
 msgid "No physical capture ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:127
+#: ../src/lingot-audio-jack.c:128
 msgid "Cannot connect input ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:137 ../src/lingot-audio-jack.c:191
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
 msgid "The application has not been built with JACK support"
 msgstr ""
 
-#: ../src/lingot-config-dialog.c:340
+#: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -170,7 +174,7 @@ msgstr ""
 "O buffer temporal é menor que o tamanho da FFT escolhido, Fora ampliado para "
 "%0.3f segundos."
 
-#: ../src/lingot-config-dialog.c:342
+#: ../src/lingot-config-dialog.c:345
 msgid "Warning"
 msgstr ""
 
@@ -187,46 +191,46 @@ msgid "Error"
 msgstr ""
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:252
+#: ../src/lingot-mainframe.c:250
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:275 ../src/lingot-mainframe.c:346
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
 msgid "Spectrum"
 msgstr "Espectro"
 
-#: ../src/lingot-mainframe.c:309
+#: ../src/lingot-mainframe.c:307
 msgid "_File"
 msgstr "_Arquivo"
 
-#: ../src/lingot-mainframe.c:310
+#: ../src/lingot-mainframe.c:308
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/lingot-mainframe.c:311
+#: ../src/lingot-mainframe.c:309
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/lingot-mainframe.c:312
+#: ../src/lingot-mainframe.c:310
 msgid "_Help"
 msgstr "A_juda"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:334
 msgid "Deviation"
 msgstr "Diferença"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:341
+#: ../src/lingot-mainframe.c:339
 msgid "Tone"
 msgstr "Nota"
 
-#: ../src/lingot-mainframe.c:386
+#: ../src/lingot-mainframe.c:384
 msgid "freq"
 msgstr "freqüência"
 
-#: ../src/lingot-mainframe.c:389
+#: ../src/lingot-mainframe.c:387
 msgid "err"
 msgstr "erro"
 

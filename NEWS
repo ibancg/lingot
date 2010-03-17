@@ -1,4 +1,13 @@
 
+Lingot 0.8.0 (2010-03-17)
+-------------------------
+
+* Added a graphic controller for the MIN_FREQUENCY parameter.
+* Fixed a SIGSEGV in the JACK thread management (bug #29090).
+* Fixed core hang up bug #29091 (#562425 in debian).
+* Fixed https://bugzilla.redhat.com/show_bug.cgi?id=517970#c9
+
+
 Lingot 0.8.0 (2010-02-26)
 -------------------------
 

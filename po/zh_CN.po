@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot 0.7.7b5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-26 00:18+0100\n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
 "PO-Revision-Date: 2009-09-14 17:29+0800\n"
 "Last-Translator: Careone <careoneagain@gmail.com>\n"
 "Language-Team: Chinese/Simplified <lp-l10n-zh-cn@lists.launchpad.net>\n"
@@ -78,97 +78,101 @@ msgid "Hz"
 msgstr "赫兹(Hz)"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Noise threshold"
 msgstr "噪波极限值"
 
-#: ../src/glade/lingot-config-dialog.glade.h:17
+#: ../src/glade/lingot-config-dialog.glade.h:18
 msgid "Peak half-width"
 msgstr "半波峰值"
 
-#: ../src/glade/lingot-config-dialog.glade.h:18
+#: ../src/glade/lingot-config-dialog.glade.h:19
 msgid "Peak number"
 msgstr "高音数字"
 
-#: ../src/glade/lingot-config-dialog.glade.h:19
+#: ../src/glade/lingot-config-dialog.glade.h:20
 msgid "Peak rejection relation"
 msgstr "峰值抑制关系"
 
-#: ../src/glade/lingot-config-dialog.glade.h:20
+#: ../src/glade/lingot-config-dialog.glade.h:21
 msgid "Root frequency"
 msgstr "根频率"
 
-#: ../src/glade/lingot-config-dialog.glade.h:21
+#: ../src/glade/lingot-config-dialog.glade.h:22
 msgid "Sample rate"
 msgstr "采样率"
 
-#: ../src/glade/lingot-config-dialog.glade.h:22
+#: ../src/glade/lingot-config-dialog.glade.h:23
 msgid "Temporal window"
 msgstr "临时窗口"
 
-#: ../src/glade/lingot-config-dialog.glade.h:23
+#: ../src/glade/lingot-config-dialog.glade.h:24
 msgid "Visualization rate"
 msgstr "可见率"
 
-#: ../src/glade/lingot-config-dialog.glade.h:24
+#: ../src/glade/lingot-config-dialog.glade.h:25
 msgid "dB"
 msgstr "分贝(dB)"
 
-#: ../src/glade/lingot-config-dialog.glade.h:25
+#: ../src/glade/lingot-config-dialog.glade.h:26
 msgid "lingot configuration"
 msgstr "lingot 配置"
 
-#: ../src/glade/lingot-config-dialog.glade.h:26
+#: ../src/glade/lingot-config-dialog.glade.h:27
 msgid "peaks"
 msgstr "峰值"
 
-#: ../src/glade/lingot-config-dialog.glade.h:27
+#: ../src/glade/lingot-config-dialog.glade.h:28
 msgid "samples"
 msgstr "采样"
 
-#: ../src/glade/lingot-config-dialog.glade.h:28
+#: ../src/glade/lingot-config-dialog.glade.h:29
 msgid "seconds"
 msgstr "秒"
 
-#: ../src/lingot-audio-alsa.c:149
+#: ../src/lingot-audio-alsa.c:140
 msgid "The application has not been built with ALSA support"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:52
+#: ../src/lingot-audio-jack.c:53
 msgid "Missing connection with JACK audio server"
 msgstr "与插孔音频服务失去连接"
 
-#: ../src/lingot-audio-jack.c:74 ../src/lingot-audio-jack.c:175
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
 msgid "Unable to connect to JACK server"
 msgstr "无法连接到插孔服务"
 
-#: ../src/lingot-audio-jack.c:107
+#: ../src/lingot-audio-jack.c:108
 msgid "No more JACK ports available"
 msgstr "没有更多的插孔端口可以使用"
 
-#: ../src/lingot-audio-jack.c:113
+#: ../src/lingot-audio-jack.c:114
 msgid "Cannot activate client"
 msgstr "无法激活客户端"
 
-#: ../src/lingot-audio-jack.c:121
+#: ../src/lingot-audio-jack.c:122
 msgid "No physical capture ports"
 msgstr "没有物理捕获端口"
 
-#: ../src/lingot-audio-jack.c:127
+#: ../src/lingot-audio-jack.c:128
 msgid "Cannot connect input ports"
 msgstr "无法连接输入端口"
 
-#: ../src/lingot-audio-jack.c:137 ../src/lingot-audio-jack.c:191
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
 msgid "The application has not been built with JACK support"
 msgstr "这个程序无法支持插孔"
 
-#: ../src/lingot-config-dialog.c:340
+#: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
 "Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr "临时缓冲区小于“快速傅里叶变换(FFT)”的大小。提高到 %0.3f 秒"
 
-#: ../src/lingot-config-dialog.c:342
+#: ../src/lingot-config-dialog.c:345
 msgid "Warning"
 msgstr "警告"
 
@@ -185,46 +189,46 @@ msgid "Error"
 msgstr "错误"
 
 #. g_object_unref(logo);
-#: ../src/lingot-mainframe.c:252
+#: ../src/lingot-mainframe.c:250
 msgid "lingot"
 msgstr "lingot"
 
 #. spectrum frame at bottom
-#: ../src/lingot-mainframe.c:275 ../src/lingot-mainframe.c:346
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
 msgid "Spectrum"
 msgstr "乐谱"
 
-#: ../src/lingot-mainframe.c:309
+#: ../src/lingot-mainframe.c:307
 msgid "_File"
 msgstr "文件(_F)"
 
-#: ../src/lingot-mainframe.c:310
+#: ../src/lingot-mainframe.c:308
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: ../src/lingot-mainframe.c:311
+#: ../src/lingot-mainframe.c:309
 msgid "_View"
 msgstr "查看(_V)"
 
-#: ../src/lingot-mainframe.c:312
+#: ../src/lingot-mainframe.c:310
 msgid "_Help"
 msgstr "帮助(_H)"
 
 #. gauge frame
-#: ../src/lingot-mainframe.c:336
+#: ../src/lingot-mainframe.c:334
 msgid "Deviation"
 msgstr "偏差"
 
 #. tone frame
-#: ../src/lingot-mainframe.c:341
+#: ../src/lingot-mainframe.c:339
 msgid "Tone"
 msgstr "音调"
 
-#: ../src/lingot-mainframe.c:386
+#: ../src/lingot-mainframe.c:384
 msgid "freq"
 msgstr "频率"
 
-#: ../src/lingot-mainframe.c:389
+#: ../src/lingot-mainframe.c:387
 msgid "err"
 msgstr "错误"
 
