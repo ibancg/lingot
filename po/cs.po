@@ -169,7 +169,7 @@ msgstr "Aplikace nebyla sestavena s podporou pro JACK"
 #: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
-"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
 "Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na %"

@@ -42,7 +42,7 @@ struct _LingotCore {
 	FLT* X; // visual portion of FFT.
 	//  -- shared data --
 
-	LingotAudio* audio; // audio handler.
+	LingotAudioHandler* audio; // audio handler.
 
 	FLT* flt_read_buffer;
 	FLT* temporal_buffer; // sample memory.
@@ -90,8 +90,5 @@ void lingot_core_start(LingotCore*);
 void lingot_core_stop(LingotCore*);
 
 void lingot_core_read(LingotCore* core);
-
-// process thread
-void lingot_core_run_reading_thread(LingotCore*);
 
 #endif //__LINGOT_CORE_H__

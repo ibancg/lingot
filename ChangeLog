@@ -1,4 +1,26 @@
 
+2010-10-12 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added different scales support.
+	   + Scale edition in a cell table.
+	   + Importation of Scala .scl files.
+	   + The gauge adapts its range to the scale. 
+	   + The deviation control has been moved to the scale tab.
+	* The sample rate control has been changed to a GtkComboBoxEntry.
+	* When the sample rate is not available, the user is notified.
+	* Corrected some minor errors opening audio devices.
+	* Improved OSS error messages.
+	* Minor changes in the capture tab in the config dialog.
+	* lingot-error now supports multiple messages in the queue.
+	* Added some macros to simulate try/catch. Used in audio handling.
+	* The error dispatcher runs now under his own timer.
+
+
+2010-03-17 Ibán Cereijo <ibancg@gmail.com>
+
+	* Released Lingot 0.8.1
+
+
 2010-03-14 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed a SIGSEGV in the JACK thread management (bug #29090).

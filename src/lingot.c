@@ -106,6 +106,12 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
+	//	int i;
+	//	char** argv2 = malloc((argc + 1) * sizeof(char*));
+	//	for (i = 0; i < argc; i++)
+	//		argv2[i] = strdup(argv[i]);
+	//	argv2[argc] = "--g-fatal-warnings";
+	//	lingot_mainframe_create(argc + 1, argv2);
 	lingot_mainframe_create(argc, argv);
 
 	return 0;

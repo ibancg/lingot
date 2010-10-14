@@ -168,7 +168,7 @@ msgstr "这个程序无法支持插孔"
 #: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
-"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr "临时缓冲区小于“快速傅里叶变换(FFT)”的大小。提高到 %0.3f 秒"
 

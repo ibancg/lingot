@@ -25,22 +25,31 @@
 
 #include "lingot-error.h"
 
-char message[200];
-int unpop = 0;
+#define ERROR_QUEUE_SIZE 10
+
+char message[ERROR_QUEUE_SIZE][1000];
+int top = 0;
+
+// TODO: thread sync
 
 void lingot_error_queue_push(const char* msg) {
-	if (unpop == 0) {
-		unpop = 1;
+	if (top < ERROR_QUEUE_SIZE) {
+		// search if the message is already in the queue
+		int i;
+		for (i = 0; i < top; i++) {
+			if (!strcmp(message[i], msg))
+				return;
+		}
+
+		strcpy(message[top++], msg);
 	} else {
-		//printf("WARNING: previous message found on error queue%s\n", msg);
+		printf("WARNING: the queue is full!\n");
 	}
-	strcpy(message, msg);
 }
 
 char* lingot_error_queue_pop() {
-	if (unpop) {
-		unpop = 0;
-		return strdup(message);
+	if (top != 0) {
+		return strdup(message[--top]);
 	} else {
 		return NULL;
 	}

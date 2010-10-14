@@ -45,6 +45,7 @@ void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame*);
 void lingot_mainframe_draw_spectrum(LingotMainFrame*);
 
 GdkColor black_color;
+GdkColor cents_color;
 GdkColor gauge_color;
 GdkColor spectrum_background_color;
 GdkColor spectrum_color;
@@ -68,6 +69,7 @@ GtkWidget* view_spectrum_item;
 GtkWidget* spectrum_frame;
 
 PangoFontDescription* spectrum_legend_font_desc;
+PangoFontDescription* gauge_cents_font_desc;
 
 void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 		LingotMainFrame* frame) {
@@ -76,8 +78,8 @@ void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 
 void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
 	g_source_remove(frame->visualization_timer_uid);
-	g_source_remove(frame->calculation_timer_uid);
-	g_source_remove(frame->freq_timer_uid);
+	g_source_remove(frame->freq_computation_timer_uid);
+	g_source_remove(frame->gauge_computation_uid);
 	gtk_main_quit();
 }
 
@@ -85,7 +87,7 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 	static const gchar* authors[] = { "Ibán Cereijo Graña <ibancg@gmail.com>",
 			"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL };
 
-	const gchar* artists[] = { "Matthew Blissett (Logo design)", NULL };
+	static const gchar* artists[] = { "Matthew Blissett (Logo design)", NULL };
 
 	gtk_show_about_dialog(
 			NULL,
@@ -117,15 +119,61 @@ void lingot_mainframe_callback_config_dialog(GtkWidget* w,
 	lingot_config_dialog_show(frame);
 }
 
+unsigned short int lingot_mainframe_get_closest_note_index(FLT freq,
+		LingotScale* scale, FLT* error_cents) {
+	unsigned short note_index = 0;
+	unsigned short int index;
+
+	FLT offset = 1200.0 * log2(freq / scale->base_frequency);
+	offset = fmod(offset, 1200.0);
+	if (offset < 0.0) {
+		offset += 1200.0;
+	}
+
+	index = floor(scale->notes * offset / 1200.0);
+
+	FLT pitch_inf;
+	FLT pitch_sup;
+	int n = 0;
+	for (;;) {
+		n++;
+		pitch_inf = scale->offset_cents[index];
+		pitch_sup = ((index + 1) < scale->notes) ? scale->offset_cents[index
+				+ 1] : 1200.0;
+
+		if (offset > pitch_sup) {
+			index++;
+			continue;
+		}
+
+		if (offset < pitch_inf) {
+			index--;
+			continue;
+		}
+
+		break;
+	};
+
+	if (fabs(offset - pitch_inf) < fabs(offset - pitch_sup)) {
+		note_index = index;
+		*error_cents = offset - pitch_inf;
+	} else {
+		note_index = index + 1;
+		*error_cents = offset - pitch_sup;
+	}
+
+	return note_index;
+}
+
 /* timeout for gauge and labels visualization */
-gboolean lingot_mainframe_callback_tout_gauge_display(gpointer data) {
+gboolean lingot_mainframe_callback_tout_visualization(gpointer data) {
 	unsigned int period;
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
 	period = 1000 / frame->conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_gauge_display, frame);
+			lingot_mainframe_callback_tout_visualization, frame);
 
 	lingot_mainframe_draw_gauge_and_labels(frame);
 
@@ -140,7 +188,7 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
 	period = 1000 / frame->conf->calculation_rate;
-	frame->calculation_timer_uid = g_timeout_add(period,
+	frame->freq_computation_timer_uid = g_timeout_add(period,
 			lingot_mainframe_callback_tout_spectrum_computation_display, frame);
 
 	lingot_mainframe_draw_spectrum(frame);
@@ -152,37 +200,55 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 /* timeout for a new gauge position computation */
 gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 	unsigned int period;
-	const FLT Log2 = log(2.0);
-	double fret_f;
-	GtkWidget* message_dialog;
+	double error_cents;
+	double normalized_error;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
-	char* error_message = lingot_error_queue_pop();
-
-	if (error_message != NULL) {
-		message_dialog = gtk_message_dialog_new(NULL,
-				GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
-				GTK_BUTTONS_CLOSE, error_message);
-		gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
-		gtk_window_set_icon(GTK_WINDOW(message_dialog), gtk_window_get_icon(
-				GTK_WINDOW(frame->win)));
-		gtk_dialog_run(GTK_DIALOG(message_dialog));
-		gtk_widget_destroy(message_dialog);
-		free(error_message);
-	}
+	unsigned short note_index;
+	FLT freq_ratio;
 
 	period = 1000 / GAUGE_RATE;
-	frame->freq_timer_uid = g_timeout_add(period,
+	frame->gauge_computation_uid = g_timeout_add(period,
 			lingot_mainframe_callback_gauge_computation, frame);
 
 	if (!frame->core->running || isnan(frame->core->freq) || (frame->core->freq
 			< 10.0)) {
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
-		// bring up some octaves to avoid negative frets.
-		fret_f = log(frame->core->freq / frame->conf->root_frequency) / Log2
-				* 12.0 + 12e2;
-		lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
+		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
+				frame->conf->scale, &error_cents);
+		lingot_gauge_compute(frame->gauge, error_cents);
 	}
+
+	return 0;
+}
+
+/* timeout for dispatching the error queue */
+gboolean lingot_mainframe_callback_error_dispatcher(gpointer data) {
+	unsigned int period;
+	GtkWidget* message_dialog;
+	LingotMainFrame* frame = (LingotMainFrame*) data;
+	unsigned short note_index;
+
+	char* error_message = NULL;
+	do {
+		error_message = lingot_error_queue_pop();
+
+		if (error_message != NULL) {
+			message_dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE, error_message);
+			gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
+			gtk_window_set_icon(GTK_WINDOW(message_dialog),
+					gtk_window_get_icon(GTK_WINDOW(frame->win)));
+			gtk_dialog_run(GTK_DIALOG(message_dialog));
+			gtk_widget_destroy(message_dialog);
+			free(error_message);
+		}
+	} while (error_message != NULL);
+
+	period = 1000 / ERROR_DISPATCH_RATE;
+	frame->error_dispatcher_uid = g_timeout_add(period,
+			lingot_mainframe_callback_error_dispatcher, frame);
 
 	return 0;
 }
@@ -211,6 +277,7 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	GtkWidget* frame3;
 	GtkWidget* vbinfo;
 	LingotMainFrame* frame;
+	LingotConfig* conf;
 	unsigned int period;
 
 	frame = malloc(sizeof(LingotMainFrame));
@@ -219,9 +286,10 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	frame->pix_stick = NULL;
 
 	frame->conf = lingot_config_new();
-	lingot_config_load(frame->conf, CONFIG_FILE_NAME);
+	conf = frame->conf;
+	lingot_config_load(conf, CONFIG_FILE_NAME);
 
-	frame->gauge = lingot_gauge_new(frame->conf->vr); // gauge in rest situation
+	frame->gauge = lingot_gauge_new(conf->vr); // gauge in rest situation
 
 	// ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -292,10 +360,10 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_config_dialog), frame);
 
 	gtk_signal_connect(GTK_OBJECT(quit_item), "activate", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_destroy), frame);
+					lingot_mainframe_callback_destroy), frame);
 
 	gtk_signal_connect(GTK_OBJECT(about_item), "activate", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_about), frame);
+					lingot_mainframe_callback_about), frame);
 
 	gtk_signal_connect(GTK_OBJECT(view_spectrum_item), "activate",
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_view_spectrum), frame);
@@ -351,27 +419,25 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gtk_container_add(GTK_CONTAINER(frame1), frame->gauge_area);
 
 	// for spectrum drawing
-	GtkObject* adjust = gtk_adjustment_new(0.0, 0.0, ((frame->conf->fft_size
-			> 256) ? 0.5 : 1.0) * frame->conf->sample_rate, 1.0, 100.0, 100.0);
+	GtkObject* adjust = gtk_adjustment_new(0.0, 0.0,
+			((conf->fft_size > 256) ? 0.5 : 1.0) * conf->sample_rate, 1.0,
+			100.0, 100.0);
 	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(
-			GTK_ADJUSTMENT(adjust), NULL));
+					GTK_ADJUSTMENT(adjust), NULL));
 	frame->spectrum_area = gtk_drawing_area_new();
 
-	int
-			x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1)
-					: 256) + 2 * spectrum_x_margin;
+	int x = ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256) + 2
+			* spectrum_x_margin;
 	int y = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
 
 	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
-	gtk_scrolled_window_set_policy(frame->spectrum_scroll,
-			(frame->conf->fft_size > 512) ? GTK_POLICY_ALWAYS
-					: GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+	gtk_scrolled_window_set_policy(frame->spectrum_scroll, (conf->fft_size
+			> 512) ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 	gtk_scrolled_window_add_with_viewport(frame->spectrum_scroll,
 			frame->spectrum_area);
 	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll), 260 + 2
 			* spectrum_x_margin, spectrum_size_y + spectrum_bottom_margin
-			+ spectrum_top_margin + 4
-			+ ((frame->conf->fft_size > 512) ? 16 : 0));
+			+ spectrum_top_margin + 4 + ((conf->fft_size > 512) ? 16 : 0));
 	gtk_container_add(GTK_CONTAINER(spectrum_frame), GTK_WIDGET(
 			frame->spectrum_scroll));
 
@@ -406,19 +472,23 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
 	gtk_signal_connect(GTK_OBJECT(frame->win), "destroy", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_destroy), frame);
+					lingot_mainframe_callback_destroy), frame);
 
-	period = 1000 / frame->conf->visualization_rate;
+	period = 1000 / conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_gauge_display, frame);
+			lingot_mainframe_callback_tout_visualization, frame);
 
-	period = 1000 / frame->conf->calculation_rate;
-	frame->calculation_timer_uid = g_timeout_add(period,
+	period = 1000 / conf->calculation_rate;
+	frame->freq_computation_timer_uid = g_timeout_add(period,
 			lingot_mainframe_callback_tout_spectrum_computation_display, frame);
 
 	period = 1000 / GAUGE_RATE;
-	frame->freq_timer_uid = g_timeout_add(period,
+	frame->gauge_computation_uid = g_timeout_add(period,
 			lingot_mainframe_callback_gauge_computation, frame);
+
+	period = 1000 / ERROR_DISPATCH_RATE;
+	frame->error_dispatcher_uid = g_timeout_add(period,
+			lingot_mainframe_callback_error_dispatcher, frame);
 
 	lingot_mainframe_color(&gauge_color, 0xC000, 0x0000, 0x2000);
 	lingot_mainframe_color(&spectrum_background_color, 0x1111, 0x3333, 0x1111);
@@ -426,6 +496,7 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	lingot_mainframe_color(&noise_threshold_color, 0x8888, 0x8888, 0x2222);
 	lingot_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
 	lingot_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
+	lingot_mainframe_color(&cents_color, 0x3000, 0x3000, 0x3000);
 
 	gdk_color_alloc(gdk_colormap_get_system(), &gauge_color);
 	gdk_color_alloc(gdk_colormap_get_system(), &spectrum_color);
@@ -434,11 +505,14 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gdk_color_alloc(gdk_colormap_get_system(), &grid_color);
 	gdk_color_alloc(gdk_colormap_get_system(), &freq_color);
 	gdk_color_black(gdk_colormap_get_system(), &black_color);
+	gdk_color_alloc(gdk_colormap_get_system(), &cents_color);
 
 	spectrum_legend_font_desc = pango_font_description_from_string(
 			"Helvetica Plain 7");
+	gauge_cents_font_desc = pango_font_description_from_string(
+			"Helvetica Plain 7");
 
-	frame->core = lingot_core_new(frame->conf);
+	frame->core = lingot_core_new(conf);
 	lingot_core_start(frame->core);
 
 	gtk_main();
@@ -492,19 +566,37 @@ void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
 
 	// draws background
 	if (!frame->pix_stick) {
-		frame->pix_stick = gdk_pixmap_create_from_xpm_d(
-				frame->gauge_area->window, NULL, NULL, background2_xpm);
+		frame->pix_stick = gdk_pixmap_create_from_xpm_d(w, NULL, NULL,
+				background2_xpm);
 	}
-	gdk_draw_pixmap(frame->gauge_area->window, gc, frame->pix_stick, 0, 0, 0,
-			0, 160, 100);
+	gdk_draw_pixmap(w, gc, frame->pix_stick, 0, 0, 0, 0, 160, 100);
 
 	// and draws gauge
 	gdk_gc_set_foreground(gc, &gauge_color);
 
+	FLT normalized_error = frame->gauge->position
+			/ frame->conf->scale->max_offset_rounded;
+	FLT angle = normalized_error * M_PI / (1.5 * max);
 	gdk_draw_line(w, gc, gauge_size_x >> 1, gauge_size_y - 1, (gauge_size_x
-			>> 1) + (int) rint(gauge_size * sin(frame->gauge->position * M_PI
-			/ (1.5 * max))), gauge_size_y - 1 - (int) rint(gauge_size * cos(
-			frame->gauge->position * M_PI / (1.5 * max))));
+			>> 1) + (int) rint(gauge_size * sin(angle)), gauge_size_y - 1
+			- (int) rint(gauge_size * cos(angle)));
+
+	gdk_gc_set_foreground(gc, &cents_color);
+	char buff[10];
+	sprintf(buff, (frame->conf->scale->max_offset_rounded > 1.0) ? "-%.0f c"
+			: "-%.1f c", 0.5 * frame->conf->scale->max_offset_rounded);
+	PangoLayout* layout1 = gtk_widget_create_pango_layout(frame->gauge_area,
+			buff);
+	sprintf(buff, (frame->conf->scale->max_offset_rounded > 1.0) ? "+%.0f c"
+			: "+%.1f c", 0.5 * frame->conf->scale->max_offset_rounded);
+	PangoLayout* layout2 = gtk_widget_create_pango_layout(frame->gauge_area,
+			buff);
+	pango_layout_set_font_description(layout1, gauge_cents_font_desc);
+	gdk_draw_layout(w, gc, 0.05 * gauge_size_x, 0.8 * gauge_size_y, layout1);
+	pango_layout_set_font_description(layout2, gauge_cents_font_desc);
+	gdk_draw_layout(w, gc, 0.75 * gauge_size_x, 0.8 * gauge_size_y, layout2);
+	g_object_unref(layout1);
+	g_object_unref(layout2);
 
 	// black edge.
 	gdk_gc_set_foreground(gc, &black_color);
@@ -517,12 +609,12 @@ void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
 
 void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	// tone indexation by semitone.
-	static char* tone_string[] = { "A", "A#", "B", "C", "C#", "D", "D#", "E",
-			"F", "F#", "G", "G#" };
-	const FLT Log2 = log(2.0);
+	//	static char* tone_string[] = { "A", "A#", "B", "C", "C#", "D", "D#", "E",
+	//			"F", "F#", "G", "G#" };
+	//	const FLT Log2 = log(2.0);
 
-	FLT fret_f;
-	int fret;
+	//FLT fret_f;
+	//int fret;
 	char* current_tone;
 	GtkWidget* widget = NULL;
 
@@ -540,8 +632,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
-	static double
-			scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+	static double scales[] =
+			{ 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
 
 	// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;
@@ -552,8 +644,10 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	register unsigned int i;
 	int j;
 	int old_j;
+	unsigned short note_index;
 
-	GdkGC* gc = frame->spectrum_area->style->fg_gc[frame->spectrum_area->state];
+	GdkGC * gc =
+			frame->spectrum_area->style->fg_gc[frame->spectrum_area->state];
 	GdkPixmap* pixmap = frame->pix_spectrum; //spectrum->window;
 	GdkGCValues gv;
 	gdk_gc_get_values(gc, &gv);
@@ -746,16 +840,15 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		strcpy(freq_string, "f = ---");
 		//lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
-		// bring up some octaves to avoid negative frets.
-		fret_f = log(frame->core->freq / frame->conf->root_frequency) / Log2
-				* 12.0 + 12e2;
+		FLT error_cents; // do not use, unfiltered
+		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
+				frame->conf->scale, &error_cents);
+		if (note_index == frame->conf->scale->notes) {
+			note_index = 0;
+		}
 
-		//lingot_gauge_compute(frame->gauge, fret_f - rint(fret_f));
-		fret = ((int) rint(fret_f)) % 12;
-
-		current_tone = tone_string[fret];
-		sprintf(error_string, "e = %+2.0f cents", (frame->gauge->position
-				* 100.0));
+		current_tone = frame->conf->scale->note_name[note_index];
+		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
 		sprintf(freq_string, "f = %6.2f Hz", lingot_filter_filter_sample(
 				frame->freq_filter, frame->core->freq));
 	}
@@ -774,7 +867,7 @@ void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf) 
 	lingot_core_destroy(frame->core);
 
 	// dup.
-	*frame->conf = *conf;
+	lingot_config_copy(frame->conf, conf);
 
 	// resize spectrum area
 	g_object_unref(frame->pix_spectrum);
@@ -797,4 +890,7 @@ void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf) 
 
 	frame->core = lingot_core_new(frame->conf);
 	lingot_core_start(frame->core);
+
+	// some parameters may have changed
+	lingot_config_copy(conf, frame->conf);
 }

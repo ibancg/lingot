@@ -31,11 +31,14 @@
 #include <jack/jack.h>
 #endif
 
-typedef struct _LingotAudio LingotAudio;
+#include "lingot-config.h"
 
-struct _LingotAudio {
+typedef struct _LingotAudioHandler LingotAudioHandler;
+
+struct _LingotAudioHandler {
 
 	int audio_system;
+	char device[100];
 
 #ifdef ALSA
 	snd_pcm_t *capture_handle;
@@ -51,15 +54,33 @@ struct _LingotAudio {
 #	endif
 
 	char error_message[100];
+	unsigned int real_sample_rate;
 };
 
+typedef struct _LingotAudioSystemProperties LingotAudioSystemProperties;
+
+struct _LingotAudioSystemProperties {
+
+	int forced_sample_rate; // tells whether the sample rate can be changed
+
+	int n_sample_rates; // number of available sample rates
+	int* sample_rates; // sample rates
+
+	int n_devices; // number of available devices
+	char** devices; // devices
+};
+
+LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+		audio_system_t audio_system);
+void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
+
 // creates an audio handler
-LingotAudio* lingot_audio_new(void*);
+LingotAudioHandler* lingot_audio_new(void*);
 
 // destroys an audio handler
-void lingot_audio_destroy(LingotAudio*, void*);
+void lingot_audio_destroy(LingotAudioHandler*, void*);
 
 // reads a new piece of signal
-int lingot_audio_read(LingotAudio*, void*);
+int lingot_audio_read(LingotAudioHandler*, void*);
 
 #endif
