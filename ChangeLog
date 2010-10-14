@@ -3,7 +3,7 @@
 
 	* Added different scales support.
 	   + Scale edition in a cell table.
-	   + Importation of Scala .scl files.
+	   + Importation of Scala .scl files (http://www.huygens-fokker.org/scala/)
 	   + The gauge adapts its range to the scale. 
 	   + The deviation control has been moved to the scale tab.
 	* The sample rate control has been changed to a GtkComboBoxEntry.
