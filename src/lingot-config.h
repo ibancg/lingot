@@ -34,6 +34,26 @@
 typedef enum audio_system_t {
 	AUDIO_SYSTEM_OSS = 0, AUDIO_SYSTEM_ALSA = 1, AUDIO_SYSTEM_JACK = 2
 } audio_system_t;
+//
+//typedef enum root_frequency_reference_note_t {
+//	MIDDLE_A = 0, MIDDLE_C = 1
+//} root_frequency_reference_note_t;
+
+typedef struct _LingotScale LingotScale;
+
+struct _LingotScale {
+	char* name; // name of the scale
+	unsigned short int notes; // number of notes
+	//	char** note_freq_ratio_str; // frequency ratio strings
+	//FLT* note_freq_ratio; // frequency ratios
+	FLT* offset_cents; // offset in cents
+	FLT base_frequency; // frequency of the first note
+	char** note_name; // note names
+
+	// -- internal parameters --
+
+	FLT max_offset_rounded; // round version of maximum offset in cents
+};
 
 typedef struct _LingotConfig LingotConfig;
 
@@ -41,14 +61,14 @@ struct _LingotConfig {
 
 	audio_system_t audio_system;
 
-	char audio_dev[80]; // default "/dev/dsp"
-	char audio_dev_alsa[80]; // default "plughw:0,0"
-	unsigned int sample_rate; // soundcard sample rate.
+	char audio_dev[3][80];
+	int sample_rate; // soundcard sample rate.
 	unsigned int oversampling; // oversampling factor.
 
 	// frequency of the root A note (internal parameter).
-	FLT root_frequency;
+	// FLT middle_C_frequency;
 
+	//	root_frequency_reference_note_t root_frequency_referente_note;
 	FLT root_frequency_error; // deviation of the above root frequency.
 
 	FLT min_frequency; // minimum valid frequency.
@@ -100,6 +120,8 @@ struct _LingotConfig {
 	FLT vr;
 
 	//----------------------------------------------------------------------------
+
+	LingotScale* scale;
 };
 
 // converts an audio_system_t to a string
@@ -107,16 +129,27 @@ const char* audio_system_t_to_str(audio_system_t audio_system);
 // converts a string to an audio_system_t
 audio_system_t str_to_audio_system_t(char* audio_system);
 
+//// converts an root_frequency_reference_note_t to a string
+//const char* root_frequency_reference_note_t_to_str(
+//		root_frequency_reference_note_t root_frequency_reference_note);
+//// converts a string to an root_frequency_reference_note_t
+//root_frequency_reference_note_t str_to_root_frequency_reference_note_t(
+//		char* root_frequency_reference_note);
+
 LingotConfig* lingot_config_new();
 void lingot_config_destroy(LingotConfig*);
+void lingot_config_copy(LingotConfig* dst, LingotConfig* src);
 
 // back to default configuration.
-void lingot_config_reset(LingotConfig*);
+void lingot_config_restore_default_values(LingotConfig*);
 
 // derivate internal parameters from external ones.
-int lingot_config_update_internal_params(LingotConfig*);
+void lingot_config_update_internal_params(LingotConfig*);
 
 void lingot_config_save(LingotConfig*, char* filename);
 void lingot_config_load(LingotConfig*, char* filename);
+
+int lingot_config_scale_load(LingotScale* scale, char* filename);
+double lingot_config_scale_parse_pitch(char*);
 
 #endif // __LINGOT_CONFIG_H__

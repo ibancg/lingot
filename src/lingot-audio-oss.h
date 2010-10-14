@@ -26,8 +26,10 @@
 #include "lingot-core.h"
 #include "lingot-audio.h"
 
-LingotAudio* lingot_audio_oss_new(LingotCore*);
-void lingot_audio_oss_destroy(LingotAudio*);
-int lingot_audio_oss_read(LingotAudio*, LingotCore*);
+LingotAudioHandler* lingot_audio_oss_new(LingotCore*);
+void lingot_audio_oss_destroy(LingotAudioHandler*);
+int lingot_audio_oss_read(LingotAudioHandler*, LingotCore*);
+LingotAudioSystemProperties* lingot_audio_oss_get_audio_system_properties(
+		audio_system_t);
 
 #endif

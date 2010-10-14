@@ -41,6 +41,10 @@ extern char CONFIG_FILE_NAME[];
 
 #define GTK_EVENTS_RATE      20.0
 #define GAUGE_RATE           60.0
+#define ERROR_DISPATCH_RATE	 5.0
+
+#define MID_A_FREQUENCY		440.0
+#define MID_C_FREQUENCY		261.625565
 
 /* object forward declaration */
 typedef struct _LingotMainFrame LingotMainFrame;
@@ -48,5 +52,9 @@ typedef struct _LingotMainFrame LingotMainFrame;
 // optionally we can use the following libraries
 //#define LIB_FFTW
 //#define LIBSNDOBJ
+
+#define try exception = 0; do
+#define throw(a) {exception = a;break;}
+#define catch while (0); if (exception != 0)
 
 #endif

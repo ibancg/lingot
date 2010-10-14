@@ -69,8 +69,9 @@ struct _LingotMainFrame
 
     // timer uids
     guint visualization_timer_uid;
-    guint calculation_timer_uid;
-    guint freq_timer_uid;
+    guint freq_computation_timer_uid;
+    guint gauge_computation_uid;
+    guint error_dispatcher_uid;
   };
 
 void lingot_mainframe_create(int argc, char *argv[]);

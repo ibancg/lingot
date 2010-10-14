@@ -36,90 +36,132 @@
 #include "lingot-signal.h"
 #include "lingot-core.h"
 #include "lingot-config.h"
+#include "lingot-i18n.h"
 
+void lingot_core_run_reading_thread(LingotCore* core);
 void lingot_core_run_computation_thread(LingotCore* core);
 
 int decimation_input_index = 0;
 
 LingotCore* lingot_core_new(LingotConfig* conf) {
 
+	char buff[1000];
 	LingotCore* core = malloc(sizeof(LingotCore));
 
 	core->conf = conf;
 	core->running = 0;
-	core->audio = lingot_audio_new(core);
+	core->audio = NULL;
 
-	// since the SPD is simmetrical, we only store the 1st half.
-	if (core->conf->fft_size > 256) {
-		core->spd_fft = malloc((core->conf->fft_size >> 1) * sizeof(FLT));
-		core->X = malloc((core->conf->fft_size >> 1) * sizeof(FLT));
-		memset(core->spd_fft, 0, (core->conf->fft_size >> 1) * sizeof(FLT));
-		memset(core->X, 0, (core->conf->fft_size >> 1) * sizeof(FLT));
-	} else { // if the fft size is 256, we store the whole signal for representation.
-		core->spd_fft = malloc((core->conf->fft_size) * sizeof(FLT));
-		core->X = malloc((core->conf->fft_size) * sizeof(FLT));
-		memset(core->spd_fft, 0, core->conf->fft_size * sizeof(FLT));
-		memset(core->X, 0, (core->conf->fft_size) * sizeof(FLT));
+	int requested_sample_rate = conf->sample_rate;
+
+	if (conf->sample_rate <= 0) {
+		conf->sample_rate = 0;
 	}
 
-	core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
-	memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
+	core->audio = lingot_audio_new(core);
 
-	core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
-	memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
+	if (core->audio != NULL) {
 
-	memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
+		if (requested_sample_rate != core->audio->real_sample_rate) {
+			conf->sample_rate = core->audio->real_sample_rate;
+			lingot_config_update_internal_params(conf);
+			sprintf(
+					buff,
+					_("The requested sample rate is not available, the real sample rate has been set to %d Hz"),
+					core->audio->real_sample_rate);
+			lingot_error_queue_push(buff);
+		}
 
-	lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
-	core->fft_out = malloc((core->conf->fft_size) * sizeof(LingotComplex)); // complex signal in freq domain.
-	memset(core->fft_out, 0, core->conf->fft_size * sizeof(LingotComplex));
+		if (conf->temporal_buffer_size < conf->fft_size) {
+			conf->temporal_window = ((double) conf->fft_size
+					* conf->oversampling) / conf->sample_rate;
+			conf->temporal_buffer_size = conf->fft_size;
+			lingot_config_update_internal_params(conf);
+			sprintf(
+					buff,
+					_(
+							"The temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
+					conf->temporal_window);
+			lingot_error_queue_push(buff);
+		}
 
-	// audio source read in floating point format.
-	core->flt_read_buffer = malloc(core->conf->read_buffer_size * sizeof(FLT));
-	memset(core->flt_read_buffer, 0, core->conf->read_buffer_size * sizeof(FLT));
+		// since the SPD is simmetrical, we only store the 1st half.
+		if (core->conf->fft_size > 256) {
+			core->spd_fft = malloc((core->conf->fft_size >> 1) * sizeof(FLT));
+			core->X = malloc((core->conf->fft_size >> 1) * sizeof(FLT));
+			memset(core->spd_fft, 0, (core->conf->fft_size >> 1) * sizeof(FLT));
+			memset(core->X, 0, (core->conf->fft_size >> 1) * sizeof(FLT));
+		} else { // if the fft size is 256, we store the whole signal for representation.
+			core->spd_fft = malloc((core->conf->fft_size) * sizeof(FLT));
+			core->X = malloc((core->conf->fft_size) * sizeof(FLT));
+			memset(core->spd_fft, 0, core->conf->fft_size * sizeof(FLT));
+			memset(core->X, 0, (core->conf->fft_size) * sizeof(FLT));
+		}
 
-	// stored samples.
-	core->temporal_buffer = malloc((core->conf->temporal_buffer_size)
-			* sizeof(FLT));
-	memset(core->temporal_buffer, 0, core->conf->temporal_buffer_size
-			* sizeof(FLT));
+		core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
+		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
 
-	core->hamming_window_temporal = malloc((core->conf->temporal_buffer_size)
-			* sizeof(FLT));
-	lingot_signal_hamming_window(core->conf->temporal_buffer_size,
-			core->hamming_window_temporal);
-	core->hamming_window_fft = malloc((core->conf->fft_size) * sizeof(FLT));
-	lingot_signal_hamming_window(core->conf->fft_size, core->hamming_window_fft);
+		core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
+		memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
 
-	core->windowed_temporal_buffer = malloc((core->conf->temporal_buffer_size)
-			* sizeof(FLT));
-	memset(core->windowed_temporal_buffer, 0, core->conf->temporal_buffer_size
-			* sizeof(FLT));
-	core->windowed_fft_buffer = malloc((core->conf->fft_size) * sizeof(FLT));
-	memset(core->windowed_fft_buffer, 0, core->conf->fft_size * sizeof(FLT));
+		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
 
-	/*
-	 * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
-	 * Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
-	 * in order to avoid aliased frequencies near to w=Pi, due to non
-	 * ideality of the filter.
-	 *
-	 * The cut frequencies wc=Pi/i, with i=1..20, correspond with the
-	 * oversampling factor, avoiding aliasing at decimation.
-	 *
-	 * Why Chebyshev filters?, for a given order, those filters yield
-	 * abrupt falls than other ones as Butterworth, making the most of
-	 * the order. Although Chebyshev filters affects more to the phase,
-	 * it doesn't matter due to the analysis is made on the signal
-	 * power distribution (only module).
-	 */
-	core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5, 0.9
-			/ core->conf->oversampling);
+		lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
+		core->fft_out = malloc((core->conf->fft_size) * sizeof(LingotComplex)); // complex signal in freq domain.
+		memset(core->fft_out, 0, core->conf->fft_size * sizeof(LingotComplex));
 
-	// ------------------------------------------------------------
+		// audio source read in floating point format.
+		core->flt_read_buffer = malloc(core->conf->read_buffer_size
+				* sizeof(FLT));
+		memset(core->flt_read_buffer, 0, core->conf->read_buffer_size
+				* sizeof(FLT));
+
+		// stored samples.
+		core->temporal_buffer = malloc((core->conf->temporal_buffer_size)
+				* sizeof(FLT));
+		memset(core->temporal_buffer, 0, core->conf->temporal_buffer_size
+				* sizeof(FLT));
+
+		core->hamming_window_temporal = malloc(
+				(core->conf->temporal_buffer_size) * sizeof(FLT));
+		lingot_signal_hamming_window(core->conf->temporal_buffer_size,
+				core->hamming_window_temporal);
+		core->hamming_window_fft = malloc((core->conf->fft_size) * sizeof(FLT));
+		lingot_signal_hamming_window(core->conf->fft_size,
+				core->hamming_window_fft);
+
+		core->windowed_temporal_buffer = malloc(
+				(core->conf->temporal_buffer_size) * sizeof(FLT));
+		memset(core->windowed_temporal_buffer, 0,
+				core->conf->temporal_buffer_size * sizeof(FLT));
+		core->windowed_fft_buffer
+				= malloc((core->conf->fft_size) * sizeof(FLT));
+		memset(core->windowed_fft_buffer, 0, core->conf->fft_size * sizeof(FLT));
+
+		/*
+		 * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
+		 * Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
+		 * in order to avoid aliased frequencies near to w=Pi, due to non
+		 * ideality of the filter.
+		 *
+		 * The cut frequencies wc=Pi/i, with i=1..20, correspond with the
+		 * oversampling factor, avoiding aliasing at decimation.
+		 *
+		 * Why Chebyshev filters?, for a given order, those filters yield
+		 * abrupt falls than other ones as Butterworth, making the most of
+		 * the order. Although Chebyshev filters affects more to the phase,
+		 * it doesn't matter due to the analysis is made on the signal
+		 * power distribution (only module).
+		 */
+		core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5, 0.9
+				/ core->conf->oversampling);
+
+		// ------------------------------------------------------------
+
+		core->running = 1;
+	}
 
 	core->freq = 0.0;
-	core->running = (core->audio == NULL) ? 0 : 1;
 	return core;
 }
 
@@ -128,25 +170,28 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 /* Deallocate resources */
 void lingot_core_destroy(LingotCore* core) {
 
-	lingot_fft_destroy_phase_factors(); // destroy phase factors.
-	free(core->fft_out);
+	if (core->audio != NULL) {
+		lingot_fft_destroy_phase_factors(); // destroy phase factors.
+		free(core->fft_out);
 
-	lingot_audio_destroy(core->audio, core);
+		lingot_audio_destroy(core->audio, core);
 
-	free(core->spd_fft);
-	free(core->X);
-	free(core->spd_dft);
-	free(core->diff2_spd_fft);
-	free(core->flt_read_buffer);
-	free(core->temporal_buffer);
+		free(core->spd_fft);
+		free(core->X);
+		free(core->spd_dft);
+		free(core->diff2_spd_fft);
+		free(core->flt_read_buffer);
+		free(core->temporal_buffer);
 
-	free(core->windowed_temporal_buffer);
-	free(core->windowed_fft_buffer);
+		free(core->windowed_temporal_buffer);
+		free(core->windowed_fft_buffer);
 
-	free(core->hamming_window_temporal);
-	free(core->hamming_window_fft);
+		free(core->hamming_window_temporal);
+		free(core->hamming_window_fft);
 
-	lingot_filter_destroy(core->antialiasing_filter);
+		if (core->antialiasing_filter != NULL)
+			lingot_filter_destroy(core->antialiasing_filter);
+	}
 
 	free(core);
 }
@@ -161,12 +206,14 @@ void lingot_core_read(LingotCore* core) {
 	int decimation_output_len;
 	FLT* decimation_in;
 	FLT* decimation_out;
+	LingotConfig* conf = core->conf;
 
 	lingot_audio_read(core->audio, core);
 
-	if (core->conf->gain_nu != 1.0)
-		for (i = 0; i < core->conf->read_buffer_size; i++)
-			core->flt_read_buffer[i] *= core->conf->gain_nu;
+	if (conf->gain_nu != 1.0) {
+		for (i = 0; i < conf->read_buffer_size; i++)
+			core->flt_read_buffer[i] *= conf->gain_nu;
+	}
 
 	//
 	// just readed:
@@ -178,15 +225,15 @@ void lingot_core_read(LingotCore* core) {
 	// <----------------------------> read_buffer_size*oversampling
 	//
 
-	decimation_output_len = 1 + (core->conf->read_buffer_size
-			- (decimation_input_index + 1)) / core->conf->oversampling;
+	decimation_output_len = 1 + (conf->read_buffer_size
+			- (decimation_input_index + 1)) / conf->oversampling;
 
 	/* we shift the temporal window to leave a hollow where place the new piece
 	 of data read. The buffer is actually a queue. */
-	if (core->conf->temporal_buffer_size > decimation_output_len)
+	if (conf->temporal_buffer_size > decimation_output_len)
 		memmove(core->temporal_buffer,
 				&core->temporal_buffer[decimation_output_len],
-				(core->conf->temporal_buffer_size - decimation_output_len)
+				(conf->temporal_buffer_size - decimation_output_len)
 						* sizeof(FLT));
 
 	//
@@ -209,26 +256,25 @@ void lingot_core_read(LingotCore* core) {
 	// decimation with lowpass filtering
 
 	/* we decimate the read signal and put it at the end of the buffer. */
-	if (core->conf->oversampling > 1) {
+	if (conf->oversampling > 1) {
 
 		decimation_in = core->flt_read_buffer;
-		decimation_out
-				= &core->temporal_buffer[core->conf->temporal_buffer_size
-						- decimation_output_len];
+		decimation_out = &core->temporal_buffer[conf->temporal_buffer_size
+				- decimation_output_len];
 
 		// low pass filter to avoid aliasing.
-		lingot_filter_filter(core->antialiasing_filter,
-				core->conf->read_buffer_size, decimation_in, decimation_in);
+		lingot_filter_filter(core->antialiasing_filter, conf->read_buffer_size,
+				decimation_in, decimation_in);
 
 		// compression.
 		for (decimation_output_index = 0; decimation_input_index
-				< core->conf->read_buffer_size; decimation_output_index++, decimation_input_index
-				+= core->conf->oversampling)
+				< conf->read_buffer_size; decimation_output_index++, decimation_input_index
+				+= conf->oversampling)
 			decimation_out[decimation_output_index]
 					= decimation_in[decimation_input_index];
-		decimation_input_index -= core->conf->read_buffer_size;
+		decimation_input_index -= conf->read_buffer_size;
 	} else
-		memcpy(&core->temporal_buffer[core->conf->temporal_buffer_size
+		memcpy(&core->temporal_buffer[conf->temporal_buffer_size
 				- decimation_output_len], core->flt_read_buffer,
 				decimation_output_len * sizeof(FLT));
 	//
@@ -241,42 +287,39 @@ void lingot_core_read(LingotCore* core) {
 void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	register unsigned int i, k; // loop variables.
-	FLT delta_w_FFT = 2.0 * M_PI / core->conf->fft_size; // FFT resolution in rads.
+	LingotConfig* conf = core->conf;
+	FLT delta_w_FFT = 2.0 * M_PI / conf->fft_size; // FFT resolution in rads.
 
 	// ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
 
-	FLT _1_N2 = 1.0 / (core->conf->fft_size * core->conf->fft_size);
+	FLT _1_N2 = 1.0 / (conf->fft_size * conf->fft_size);
 	// SPD normalization constant
 
-	//printf("%d samples transformed of a total of %d\n", core->conf->fft_size,
-	//		core->conf->temporal_buffer_size);
+	//printf("%d samples transformed of a total of %d\n", conf->fft_size,
+	//		conf->temporal_buffer_size);
 
 	// windowing
-	for (i = 0; i < core->conf->fft_size; i++) {
+	for (i = 0; i < conf->fft_size; i++) {
 		core->windowed_fft_buffer[i]
-				= core->temporal_buffer[core->conf->temporal_buffer_size
-						- core->conf->fft_size + i]
-						* core->hamming_window_fft[i];
+				= core->temporal_buffer[conf->temporal_buffer_size
+						- conf->fft_size + i] * core->hamming_window_fft[i];
 	}
 
 	// transformation.
-	lingot_fft_fft(core->windowed_fft_buffer, core->fft_out,
-			core->conf->fft_size);
+	lingot_fft_fft(core->windowed_fft_buffer, core->fft_out, conf->fft_size);
 
 	// esteem of SPD from FFT. (normalized squared module)
-	for (i = 0; i < ((core->conf->fft_size > 256) ? (core->conf->fft_size >> 1)
-			: 256); i++)
+	for (i = 0; i < ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256); i++)
 		core->spd_fft[i] = (core->fft_out[i].r * core->fft_out[i].r
 				+ core->fft_out[i].i * core->fft_out[i].i) * _1_N2;
 
 	// representable piece
-	memcpy(core->X, core->spd_fft,
-			((core->conf->fft_size > 256) ? (core->conf->fft_size >> 1) : 256)
-					* sizeof(FLT));
+	memcpy(core->X, core->spd_fft, ((conf->fft_size > 256) ? (conf->fft_size
+			>> 1) : 256) * sizeof(FLT));
 
 	// truncated 2nd derivative esteem, to enhance peaks
 	core->diff2_spd_fft[0] = 0.0;
-	for (i = 1; i < (core->conf->fft_size >> 1) - 1; i++) {
+	for (i = 1; i < (conf->fft_size >> 1) - 1; i++) {
 		core->diff2_spd_fft[i] = 2.0 * core->spd_fft[i] - core->spd_fft[i - 1]
 				- core->spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
 		if (core->diff2_spd_fft[i] < 0.0)
@@ -284,10 +327,10 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	}
 
 	// peaks searching in that signal.
-	int Mi = lingot_signal_get_fundamental_peak(core->conf, core->spd_fft,
-			core->diff2_spd_fft, (core->conf->fft_size >> 1)); // take the fundamental peak.
+	int Mi = lingot_signal_get_fundamental_peak(conf, core->spd_fft,
+			core->diff2_spd_fft, (conf->fft_size >> 1)); // take the fundamental peak.
 
-	if (Mi == (signed) (core->conf->fft_size >> 1)) {
+	if (Mi == (signed) (conf->fft_size >> 1)) {
 		core->freq = 0.0;
 		return;
 	}
@@ -299,20 +342,20 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	// ---------------------------------------------------------
 
 	FLT d_w = delta_w_FFT;
-	for (k = 0; k < core->conf->dft_number; k++) {
+	for (k = 0; k < conf->dft_number; k++) {
 
-		d_w = 2.0 * d_w / (core->conf->dft_size - 1); // resolution in rads.
+		d_w = 2.0 * d_w / (conf->dft_size - 1); // resolution in rads.
 
 		if (k == 0) {
-			lingot_fft_spd(core->windowed_fft_buffer, core->conf->fft_size, w
-					+ d_w, d_w, &core->spd_dft[1], core->conf->dft_size - 2);
+			lingot_fft_spd(core->windowed_fft_buffer, conf->fft_size, w + d_w,
+					d_w, &core->spd_dft[1], conf->dft_size - 2);
 			core->spd_dft[0] = core->spd_fft[Mi - 1];
-			core->spd_dft[core->conf->dft_size - 1] = core->spd_fft[Mi + 1]; // 2 samples known.
+			core->spd_dft[conf->dft_size - 1] = core->spd_fft[Mi + 1]; // 2 samples known.
 		} else
-			lingot_fft_spd(core->windowed_fft_buffer, core->conf->fft_size, w,
-					d_w, core->spd_dft, core->conf->dft_size);
+			lingot_fft_spd(core->windowed_fft_buffer, conf->fft_size, w, d_w,
+					core->spd_dft, conf->dft_size);
 
-		lingot_signal_get_max(core->spd_dft, core->conf->dft_size, &Mi); // search the maximum.
+		lingot_signal_get_max(core->spd_dft, conf->dft_size, &Mi); // search the maximum.
 
 		w += (Mi - 1) * d_w; // previous sample to the peak.
 	}
@@ -320,7 +363,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	w += d_w; // DFT approximation.
 
 	// windowing
-	for (i = 0; i < core->conf->temporal_buffer_size; i++) {
+	for (i = 0; i < conf->temporal_buffer_size; i++) {
 		core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
 				* core->hamming_window_temporal[i];
 	}
@@ -333,19 +376,18 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	// first iterator set to the current approximation.
 	FLT d1_SPD, d2_SPD;
 
-	for (k = 0; (k < core->conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8); k++) {
+	for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8); k++) {
 		wk = wkm1;
 
 		// ! we use the WHOLE temporal window for greater precission.
 		lingot_fft_spd_diffs(core->windowed_temporal_buffer,
-				core->conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
+				conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
 		//printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
 		wkm1 = wk - d1_SPD / d2_SPD;
 	}
 
 	w = wkm1; // frequency in rads.
-	core->freq = (w * core->conf->sample_rate) / (2.0 * M_PI
-			* core->conf->oversampling); // analog frequency.
+	core->freq = (w * conf->sample_rate) / (2.0 * M_PI * conf->oversampling); // analog frequency.
 
 }
 

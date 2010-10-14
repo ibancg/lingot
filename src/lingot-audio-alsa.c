@@ -25,116 +25,114 @@
 #include "lingot-i18n.h"
 #include "lingot-error.h"
 
-LingotAudio* lingot_audio_alsa_new(LingotCore* core) {
+const char* exception;
 
-	LingotAudio* audio = NULL;
+LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
+
+	LingotAudioHandler* audio = NULL;
 
 #	ifdef ALSA
-	snd_pcm_hw_params_t *hw_params;
+	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
-	char error_message[100];
+	char error_message[1000];
 	unsigned int channels = 1;
 
-	audio = malloc(sizeof(LingotAudio));
+	audio = malloc(sizeof(LingotAudioHandler));
+	audio->audio_system = AUDIO_SYSTEM_ALSA;
+	sprintf(audio->device, "%s", "");
 
 	// ALSA allocates some mem to load its config file when we call
 	// snd_card_next. Now that we're done getting the info, let's tell ALSA
 	// to unload the info and free up that mem
 	snd_config_update_free_global();
 
-	audio->audio_system = AUDIO_SYSTEM_ALSA;
+	audio->capture_handle = NULL;
 
-	if ((err = snd_pcm_open(&audio->capture_handle, core->conf->audio_dev_alsa,
-			SND_PCM_STREAM_CAPTURE, 0)) < 0) {
-		sprintf(error_message, "cannot open audio device %s (%s)\n",
-				core->conf->audio_dev_alsa, snd_strerror(err));
-		lingot_error_queue_push(error_message);
+	try {
+		if ((err = snd_pcm_open(&audio->capture_handle,
+				core->conf->audio_dev[AUDIO_SYSTEM_ALSA],
+				SND_PCM_STREAM_CAPTURE, 0)) < 0) {
+			sprintf(error_message, "cannot open audio device %s (%s)\n",
+					core->conf->audio_dev[AUDIO_SYSTEM_ALSA], snd_strerror(err));
+			throw(error_message);
+		}
+
+		sprintf(audio->device, "%s", core->conf->audio_dev[AUDIO_SYSTEM_ALSA]);
+
+		if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
+			sprintf(error_message,
+					"cannot allocate hardware parameter structure (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		if ((err = snd_pcm_hw_params_any(audio->capture_handle, hw_params)) < 0) {
+			sprintf(error_message,
+					"cannot initialize hardware parameter structure (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		if ((err = snd_pcm_hw_params_set_access(audio->capture_handle,
+				hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
+			sprintf(error_message, "cannot set access type (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		if ((err = snd_pcm_hw_params_set_format(audio->capture_handle,
+				hw_params, SND_PCM_FORMAT_S16_LE)) < 0) {
+			sprintf(error_message, "cannot set sample format (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		int rate = core->conf->sample_rate;
+
+		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
+				hw_params, &rate, 0)) < 0) {
+			sprintf(error_message, "cannot set sample rate (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		audio->real_sample_rate = rate;
+
+		if ((err = snd_pcm_hw_params_set_channels(audio->capture_handle,
+				hw_params, channels)) < 0) {
+			sprintf(error_message, "cannot set channel count (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
+			sprintf(error_message, "cannot set parameters (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		if ((err = snd_pcm_prepare(audio->capture_handle)) < 0) {
+			sprintf(error_message,
+					"cannot prepare audio interface for use (%s)\n",
+					snd_strerror(err));
+			throw(error_message);
+		}
+
+		audio->read_buffer = malloc(core->conf->read_buffer_size
+				* sizeof(SAMPLE_TYPE));
+		memset(audio->read_buffer, 0, core->conf->read_buffer_size
+				* sizeof(SAMPLE_TYPE));
+	} catch {
+		if (audio->capture_handle != NULL)
+			snd_pcm_close(audio->capture_handle);
 		free(audio);
-		return NULL;
+		audio = NULL;
+		lingot_error_queue_push(exception);
 	}
 
-	if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
-		sprintf(error_message,
-				"cannot allocate hardware parameter structure (%s)\n",
-				snd_strerror(err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		return NULL;
-	}
-
-	if ((err = snd_pcm_hw_params_any(audio->capture_handle, hw_params)) < 0) {
-		sprintf(error_message,
-				"cannot initialize hardware parameter structure (%s)\n",
-				snd_strerror(err));
-		lingot_error_queue_push(error_message);
-		free(audio);
+	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
 
-	if ((err = snd_pcm_hw_params_set_access(audio->capture_handle, hw_params,
-			SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
-		sprintf(error_message, "cannot set access type (%s)\n", snd_strerror(
-				err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
-
-	if ((err = snd_pcm_hw_params_set_format(audio->capture_handle, hw_params,
-			SND_PCM_FORMAT_S16_LE)) < 0) {
-		sprintf(error_message, "cannot set sample format (%s)\n", snd_strerror(
-				err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
-
-	if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
-			hw_params, &core->conf->sample_rate, 0)) < 0) {
-		sprintf(error_message, "cannot set sample rate (%s)\n", snd_strerror(
-				err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
-
-	if ((err = snd_pcm_hw_params_set_channels(audio->capture_handle, hw_params,
-			channels)) < 0) {
-		sprintf(error_message, "cannot set channel count (%s)\n", snd_strerror(
-				err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
-
-	if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
-		sprintf(error_message, "cannot set parameters (%s)\n",
-				snd_strerror(err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		snd_pcm_hw_params_free(hw_params);
-		return NULL;
-	}
-
-	snd_pcm_hw_params_free(hw_params);
-
-	if ((err = snd_pcm_prepare(audio->capture_handle)) < 0) {
-		sprintf(error_message, "cannot prepare audio interface for use (%s)\n",
-				snd_strerror(err));
-		lingot_error_queue_push(error_message);
-		free(audio);
-		return NULL;
-	}
-
-	audio->read_buffer = malloc(core->conf->read_buffer_size
-			* sizeof(SAMPLE_TYPE));
-	memset(audio->read_buffer, 0, core->conf->read_buffer_size
-			* sizeof(SAMPLE_TYPE));
 #	else
 	lingot_error_queue_push(
 			_("The application has not been built with ALSA support"));
@@ -143,22 +141,29 @@ LingotAudio* lingot_audio_alsa_new(LingotCore* core) {
 	return audio;
 }
 
-void lingot_audio_alsa_destroy(LingotAudio* audio) {
+void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 #	ifdef ALSA
-	snd_pcm_close(audio->capture_handle);
-#	endif
+	if (audio != NULL) {
+		snd_pcm_close(audio->capture_handle);
+	}
 	if (audio != NULL) {
 		free(audio->read_buffer);
 	}
+#	endif
 }
 
-int lingot_audio_alsa_read(LingotAudio* audio, LingotCore* core) {
+int lingot_audio_alsa_read(LingotAudioHandler* audio, LingotCore* core) {
 	int i;
 	int temp_sret;
 
 #	ifdef ALSA
 	temp_sret = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
 			core->conf->read_buffer_size);
+
+	if (temp_sret != core->conf->read_buffer_size) {
+		fprintf(stderr, "read from audio interface failed (%s)\n",
+				snd_strerror(temp_sret));
+	}
 
 	// float point conversion
 	for (i = 0; i < core->conf->read_buffer_size; i++) {
@@ -168,3 +173,26 @@ int lingot_audio_alsa_read(LingotAudio* audio, LingotCore* core) {
 
 	return 0;
 }
+
+LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
+		audio_system_t audio_system) {
+
+	LingotAudioSystemProperties* result =
+			(LingotAudioSystemProperties*) malloc(1
+					* sizeof(LingotAudioSystemProperties));
+
+	// TODO
+	result->forced_sample_rate = 0;
+	result->n_devices = 0;
+	result->devices = NULL;
+
+	result->n_sample_rates = 4;
+	result->sample_rates = malloc(result->n_sample_rates * sizeof(int));
+	result->sample_rates[0] = 8000;
+	result->sample_rates[1] = 11025;
+	result->sample_rates[2] = 22050;
+	result->sample_rates[3] = 44100;
+
+	return result;
+}
+

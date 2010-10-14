@@ -64,30 +64,251 @@ audio_system_t str_to_audio_system_t(char* audio_system) {
 	return result;
 }
 
+//// converts an audio_system_t to a string
+//const char* root_frequency_reference_note_t_to_str(
+//		root_frequency_reference_note_t root_frequency_reference_note) {
+//	const char* values[] = { "mid-A", "mid-C" };
+//	return values[root_frequency_reference_note];
+//}
+//
+//// converts a string to an audio_system_t
+//root_frequency_reference_note_t str_to_root_frequency_reference_note_t(
+//		char* root_frequency_reference_note) {
+//	root_frequency_reference_note_t result = -1;
+//	const char* values[] = { "mid-A", "mid-C", NULL };
+//	int i;
+//	for (i = 0; values[i] != NULL; i++) {
+//		if (!strcmp(root_frequency_reference_note, values[i])) {
+//			result = i;
+//			break;
+//		}
+//	}
+//	return result;
+//}
+
 //----------------------------------------------------------------------------
+
+LingotScale* lingot_config_scale_new() {
+
+	LingotScale* scale = malloc(sizeof(LingotScale));
+
+	scale->name = NULL;
+	scale->notes = 0;
+	scale->note_name = NULL;
+	scale->offset_cents = NULL;
+	scale->base_frequency = 0.0;
+
+	return scale;
+}
+
+void lingot_config_scale_destroy(LingotScale* scale) {
+	unsigned short int i;
+	for (i = 0; i < scale->notes; i++) {
+		free(scale->note_name[i]);
+		//free(scale->note_freq_ratio_str[i]);
+	}
+
+	//free(scale->note_freq_ratio_str);
+	if (scale->offset_cents != NULL)
+		free(scale->offset_cents);
+	//free(scale->note_freq_ratio);
+	if (scale->note_name != NULL)
+		free(scale->note_name);
+	if (scale->name != NULL)
+		free(scale->name);
+
+	scale->name = NULL;
+	scale->notes = 0;
+	scale->note_name = NULL;
+	scale->offset_cents = NULL;
+	scale->base_frequency = 0.0;
+}
+
+void lingot_config_scale_restore_default_values(LingotScale* scale) {
+
+	unsigned short int i;
+	char buff[80];
+	static char* tone_string[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G",
+			"G#", "A", "A#", "B", };
+
+	lingot_config_scale_destroy(scale);
+
+	// default 12 tones equal-tempered scale hardcoded
+	scale->name = strdup("Default equal-tempered scale");
+	scale->notes = 12;
+	//scale->note_freq_ratio = malloc(scale->notes * sizeof(FLT));
+	scale->note_name = malloc(scale->notes * sizeof(char*));
+	scale->offset_cents = malloc(scale->notes * sizeof(FLT));
+	//scale->note_freq_ratio_str = malloc(scale->notes * sizeof(char*));
+	scale->base_frequency = MID_C_FREQUENCY;
+
+	scale->note_name[0] = strdup(tone_string[0]);
+	//scale->note_freq_ratio[0] = 1.0;
+	//	scale->note_freq_ratio_str[0] = strdup("1/1");
+	scale->offset_cents[0] = 0.0;
+
+	for (i = 1; i < scale->notes; i++) {
+		scale->note_name[i] = strdup(tone_string[i]);
+		//scale->note_freq_ratio[i] = pow(2.0, i / 12.0);
+		scale->offset_cents[i] = 100.0 * i;
+		//sprintf(buff, "%f", scale->note_freq_ratio[i]);
+		//scale->note_freq_ratio_str[i] = strdup(buff);
+		//		printf("ratio %f\n", config->scale->note_freq_ratio[i]);
+	}
+}
+
+void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
+	unsigned short int i;
+
+	lingot_config_scale_destroy(dst);
+
+	*dst = *src;
+
+	dst->name = strdup(src->name);
+	//dst->note_freq_ratio = malloc(dst->notes * sizeof(FLT));
+	dst->offset_cents = malloc(dst->notes * sizeof(FLT));
+	//dst->note_freq_ratio_str = malloc(dst->notes * sizeof(char*));
+	dst->note_name = malloc(dst->notes * sizeof(char*));
+
+	for (i = 0; i < dst->notes; i++) {
+		dst->note_name[i] = strdup(src->note_name[i]);
+		//dst->note_freq_ratio[i] = src->note_freq_ratio[i];
+		dst->offset_cents[i] = src->offset_cents[i];
+		//	dst->note_freq_ratio_str[i] = strdup(src->note_freq_ratio_str[i]);
+	}
+}
+
+double lingot_config_scale_parse_pitch(char* char_buffer) {
+	const static char* delim = "/";
+	float result = 0.0;
+	float n1, n2;
+	char* char_buffer_pointer1 = strtok(char_buffer, delim);
+	char* char_buffer_pointer2 = strtok(NULL, delim);
+
+	if (!char_buffer_pointer2) {
+		sscanf(char_buffer_pointer1, "%f", &n1);
+		result = n1;
+	} else {
+		sscanf(char_buffer_pointer1, "%f", &n1);
+		sscanf(char_buffer_pointer2, "%f", &n2);
+		result = 1200.0 * log2(n1 / n2);
+	}
+
+	return result;
+}
+
+int lingot_config_scale_load(LingotScale* scale, char* filename) {
+	FILE* fp;
+	int i;
+	char* char_buffer_pointer1;
+	char* nl;
+	const static char* delim = " \t\n";
+
+#   define MAX_LINE_SIZE 1000
+
+	char char_buffer[MAX_LINE_SIZE];
+
+	if ((fp = fopen(filename, "r")) == NULL) {
+		sprintf(char_buffer, "error opening scale file %s", filename);
+		perror(char_buffer);
+		return;
+	}
+
+	scale->base_frequency = MID_C_FREQUENCY;
+
+	fgets(char_buffer, MAX_LINE_SIZE, fp);
+	if (strchr(char_buffer, '!') != char_buffer) {
+		fclose(fp);
+		return 0;
+	}
+
+	fgets(char_buffer, MAX_LINE_SIZE, fp);
+
+	fgets(char_buffer, MAX_LINE_SIZE, fp);
+	nl = strrchr(char_buffer, '\r');
+	if (nl)
+		*nl = '\0';
+	nl = strrchr(char_buffer, '\n');
+	if (nl)
+		*nl = '\0';
+	scale->name = strdup(char_buffer);
+
+	fgets(char_buffer, MAX_LINE_SIZE, fp);
+	sscanf(char_buffer, "%us", &scale->notes);
+
+	fgets(char_buffer, MAX_LINE_SIZE, fp);
+	//scale->note_freq_ratio = malloc(scale->notes * sizeof(FLT));
+	//	scale->note_freq_ratio_str = malloc(scale->notes * sizeof(char*));
+	scale->offset_cents = malloc(scale->notes * sizeof(FLT));
+
+	scale->note_name = malloc(scale->notes * sizeof(char*));
+
+	scale->note_name[0] = strdup("1");
+	//	scale->note_freq_ratio_str[0] = strdup("1/1");
+	//scale->note_freq_ratio[0] = 1.0;
+	scale->offset_cents[0] = 0.0;
+
+	for (i = 1; i < scale->notes; i++) {
+
+		fgets(char_buffer, MAX_LINE_SIZE, fp);
+
+		char_buffer_pointer1 = strtok(char_buffer, delim);
+
+		scale->offset_cents[i] = lingot_config_scale_parse_pitch(
+				char_buffer_pointer1);
+		//scale->note_freq_ratio[i] = pow(2.0, scale->offset_cents[i] / 1200.0);
+		//		if (strstr(char_buffer_pointer1, "/") != NULL) {
+		//			scale->note_freq_ratio_str[i] = strdup(char_buffer_pointer1);
+		//		} else {
+		//			sprintf(char_buffer, "%f", scale->note_freq_ratio[i]);
+		//			scale->note_freq_ratio_str[i] = strdup(char_buffer);
+		//		}
+
+		sprintf(char_buffer, "%d", i + 1);
+		scale->note_name[i] = strdup(char_buffer);
+	}
+
+	fclose(fp);
+
+#   undef MAX_LINE_SIZE
+	return 1;
+}
 
 LingotConfig* lingot_config_new() {
 
 	LingotConfig* config = malloc(sizeof(LingotConfig));
 
-	lingot_config_reset(config); // set default values.
+	// TODO: remove parameters from config struct
+	config->max_nr_iter = 10; // iterations
 
+	config->scale = lingot_config_scale_new();
 	return config;
 }
 
 void lingot_config_destroy(LingotConfig* config) {
+	lingot_config_scale_destroy(config->scale);
+	free(config->scale);
 	free(config);
 }
 
+void lingot_config_copy(LingotConfig* dst, LingotConfig* src) {
+	LingotScale* dst_scale = dst->scale;
+	*dst = *src;
+	dst->scale = dst_scale;
+	lingot_config_scale_copy(dst->scale, src->scale);
+}
+
 //----------------------------------------------------------------------------
-void lingot_config_reset(LingotConfig* config) {
+
+void lingot_config_restore_default_values(LingotConfig* config) {
 
 	config->audio_system = AUDIO_SYSTEM_ALSA;
-	sprintf(config->audio_dev, "%s", "/dev/dsp");
-	sprintf(config->audio_dev_alsa, "%s", "plughw:0");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_OSS], "%s", "/dev/dsp");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_ALSA], "%s", "plughw:0");
 
 	config->sample_rate = 44100; // Hz
 	config->oversampling = 25;
+	//	config->root_frequency_referente_note = MIDDLE_A;
 	config->root_frequency_error = 0; // Hz
 	config->min_frequency = 15; // Hz
 	config->fft_size = 512; // samples
@@ -104,49 +325,53 @@ void lingot_config_reset(LingotConfig* config) {
 	config->dft_number = 2; // DFTs
 	config->dft_size = 15; // samples
 
-	config->max_nr_iter = 10; // iterations
-
 	//--------------------------------------------------------------------------
 
-	config->vr = -0.45; // near to minimum
-
+	lingot_config_scale_restore_default_values(config->scale);
 	lingot_config_update_internal_params(config);
 }
 
 //----------------------------------------------------------------------------
 
-int lingot_config_update_internal_params(LingotConfig* config) {
-	int result = 1;
+void lingot_config_update_internal_params(LingotConfig* config) {
 
 	// derived parameters.
-	config->root_frequency = 440.0 * pow(2.0, config->root_frequency_error
-			/ 1200.0);
+	//	config->middle_C_frequency = 261.625565 * pow(2.0,
+	//			config->root_frequency_error / 1200.0);
 	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
 			* config->sample_rate / config->oversampling);
 	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
 			/ config->calculation_rate);
-	config->read_buffer_size = 1024;
+	config->read_buffer_size = 128; // TODO
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
 	config->gain_nu = pow(10.0, config->gain / 20.0);
 
-	if (config->temporal_buffer_size < config->fft_size) {
-		config->temporal_window = ((double) config->fft_size
-				* config->oversampling) / config->sample_rate;
-		config->temporal_buffer_size = config->fft_size;
-		result = 0;
+	LingotScale* scale = config->scale;
+	if (scale->notes == 1) {
+		scale->max_offset_rounded = 1200.0;
+	} else {
+		int i;
+		FLT max_offset = 0.0;
+		for (i = 1; i < scale->notes; i++) {
+			max_offset = MAX(max_offset, scale->offset_cents[i]
+					- scale->offset_cents[i - 1]);
+		}
+		scale->max_offset_rounded = max_offset;
 	}
 
-	return result;
+	config->vr = -0.45 * scale->max_offset_rounded;
+	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "");
 }
 
 //----------------------------------------------------------------------------
 
 // internal parameters mapped to each token in the config file.
 void lingot_map_parameters(LingotConfig* config, void* params[]) {
-	void* c_params[] = { &config->audio_system, &config->audio_dev,
-			&config->audio_dev_alsa, &config->sample_rate,
+	void* c_params[] = { &config->audio_system,
+			&config->audio_dev[AUDIO_SYSTEM_OSS],
+			&config->audio_dev[AUDIO_SYSTEM_ALSA], &config->sample_rate,
 			&config->oversampling, &config->root_frequency_error,
 			&config->min_frequency, &config->fft_size,
 			&config->temporal_window, &config->noise_threshold_db,
@@ -207,6 +432,20 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 		}
 	}
 
+	fprintf(fp, "\n");
+	fprintf(fp, "SCALE = {\n");
+	fprintf(fp, "NAME = %s\n", config->scale->name);
+	fprintf(fp, "BASE_FREQUENCY = %f\n", config->scale->base_frequency);
+	fprintf(fp, "NOTE_COUNT = %d\n", config->scale->notes);
+	fprintf(fp, "NOTES = {\n", config->scale->notes);
+
+	for (i = 0; i < config->scale->notes; i++) {
+		fprintf(fp, "%s\t%f\n", config->scale->note_name[i],
+				config->scale->offset_cents[i]);
+	}
+
+	fprintf(fp, "}\n"), fprintf(fp, "}\n"),
+
 	fclose(fp);
 
 	if (lc_all) {
@@ -225,9 +464,16 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	int deprecated_option = 0;
 	char* char_buffer_pointer;
 	const static char* delim = " \t=\n";
+	const static char* delim2 = " \t\n";
 	void* params[N_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
 	char* option = NULL;
+	int reading_scale = 0;
+	int reading_scale_notes = 0;
+	char* nl;
+
+	// restore default values for non specified parameters
+	lingot_config_restore_default_values(config);
 
 	lingot_map_parameters(config, params);
 
@@ -262,6 +508,78 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		if (!char_buffer_pointer)
 			continue; // blank line.
+
+
+		if (!strcmp(char_buffer_pointer, "SCALE")) {
+			reading_scale = 1;
+			config->scale = lingot_config_scale_new();
+			continue;
+		}
+
+		if (reading_scale) {
+
+			if (!strcmp(char_buffer_pointer, "NAME")) {
+				char_buffer_pointer += 7; // TODO
+				nl = strrchr(char_buffer_pointer, '\r');
+				if (nl)
+					*nl = '\0';
+				nl = strrchr(char_buffer_pointer, '\n');
+				if (nl)
+					*nl = '\0';
+				config->scale->name = strdup(char_buffer_pointer);
+				continue;
+			}
+			if (!strcmp(char_buffer_pointer, "BASE_FREQUENCY")) {
+				char_buffer_pointer = strtok(NULL, delim);
+				sscanf(char_buffer_pointer, "%lg",
+						&config->scale->base_frequency);
+				continue;
+			}
+			if (!strcmp(char_buffer_pointer, "NOTE_COUNT")) {
+				char_buffer_pointer = strtok(NULL, delim);
+				sscanf(char_buffer_pointer, "%d", &config->scale->notes);
+				config->scale->note_name = malloc(config->scale->notes
+						* sizeof(char*));
+				config->scale->offset_cents = malloc(config->scale->notes
+						* sizeof(FLT));
+				continue;
+			}
+			if (!strcmp(char_buffer_pointer, "NOTES")) {
+				int i = 0;
+				for (i = 0; i < config->scale->notes; i++) {
+					line++;
+					if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+						break;
+					// tokens into the line.
+					char_buffer_pointer = strtok(char_buffer, delim2);
+					config->scale->note_name[i] = strdup(char_buffer_pointer);
+					char_buffer_pointer = strtok(NULL, delim2);
+					//					nl = strrchr(char_buffer, '\r');
+					//					if (nl)
+					//						*nl = '\0';
+					//					nl = strrchr(char_buffer, '\n');
+					//					if (nl)
+					//						*nl = '\0';
+					//					config->scale->note_name[i] = strdup(char_buffer);
+					//					line++;
+					//					if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+					//						break;
+					sscanf(char_buffer_pointer, "%lg",
+							&config->scale->offset_cents[i]);
+				}
+				line++;
+				if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+					break; // }
+
+				continue;
+			}
+
+			if (!strcmp(char_buffer_pointer, "}")) {
+				reading_scale = 0;
+				continue;
+			}
+
+		}
 
 		deprecated_option = 0;
 		for (option_index = 0; options[option_index]; option_index++) {
@@ -319,6 +637,18 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 							"warning: parse error at line %i: unrecognized audio system '%s', assuming default audio system.\n",
 							line, char_buffer_pointer);
 				}
+				//			} else if (!strcmp("ROOT_FREQUENCY_REFERENCE_NOTE", option)) {
+				//				*((root_frequency_reference_note_t*) param)
+				//						= str_to_root_frequency_reference_note_t(
+				//								char_buffer_pointer);
+				//				if (*((root_frequency_reference_note_t*) param)
+				//						== (root_frequency_reference_note_t) - 1) {
+				//					*((root_frequency_reference_note_t*) param) = MIDDLE_A;
+				//					fprintf(
+				//							stderr,
+				//							"warning: parse error at line %i: unrecognized root frequency reference note '%s', assuming default value.\n",
+				//							line, char_buffer_pointer);
+				//				}
 			}
 			break;
 		}

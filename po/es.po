@@ -170,7 +170,7 @@ msgstr "La aplicación no ha sido construída con soporte para JACK"
 #: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
-"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
 "El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "

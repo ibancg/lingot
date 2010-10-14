@@ -30,20 +30,21 @@
 #define max(a,b) (((a)<(b))?(b):(a))
 
 // given each polynomial order and coefs, with optional initial status.
-LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a, FLT* b) {
+LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a,
+		FLT* b) {
 	unsigned int i;
 	LingotFilter* filter = malloc(sizeof(LingotFilter));
 	filter->N = max(Na, Nb);
 
-	filter->a = malloc((filter->N + 1)*sizeof(FLT));
-	filter->b = malloc((filter->N + 1)*sizeof(FLT));
-	filter->s = malloc((filter->N + 1)*sizeof(FLT));
+	filter->a = malloc((filter->N + 1) * sizeof(FLT));
+	filter->b = malloc((filter->N + 1) * sizeof(FLT));
+	filter->s = malloc((filter->N + 1) * sizeof(FLT));
 
 	for (i = 0; i < filter->N + 1; i++)
 		filter->a[i] = filter->b[i] = filter->s[i] = 0.0;
 
-	memcpy(filter->a, a, (Na + 1)*sizeof(FLT));
-	memcpy(filter->b, b, (Nb + 1)*sizeof(FLT));
+	memcpy(filter->a, a, (Na + 1) * sizeof(FLT));
+	memcpy(filter->b, b, (Nb + 1) * sizeof(FLT));
 
 	for (i = 0; i < filter->N + 1; i++) {
 		filter->a[i] /= a[0]; // polynomial normalization.
@@ -74,12 +75,12 @@ void lingot_filter_filter(LingotFilter* filter, unsigned int n, FLT* in,
 		y = 0.0;
 
 		for (j = filter->N - 1; j >= 0; j--) {
-			w -= filter->a[j + 1]*filter->s[j];
-			y += filter->b[j + 1]*filter->s[j];
+			w -= filter->a[j + 1] * filter->s[j];
+			y += filter->b[j + 1] * filter->s[j];
 			filter->s[j + 1] = filter->s[j];
 		}
 
-		y += w*filter->b[0];
+		y += w * filter->b[0];
 		filter->s[0] = w;
 
 		out[i] = y;
@@ -87,8 +88,7 @@ void lingot_filter_filter(LingotFilter* filter, unsigned int n, FLT* in,
 }
 
 // single sample filtering
-FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in)
-{
+FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in) {
 	FLT result;
 
 	lingot_filter_filter(filter, 1, &in, &result);
@@ -118,18 +118,14 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	int k;
 	int p;
 
-	FLT* a
-	= malloc((n + 1)*sizeof(FLT));
-	FLT* b
-	= malloc((n + 1)*sizeof(FLT));
+	FLT a[n + 1];
+	FLT b[n + 1];
 
-	FLT* new_a
-	= malloc((n + 1)*sizeof(FLT));
-	FLT* new_b
-	= malloc((n + 1)*sizeof(FLT));
+	FLT new_a[n + 1];
+	FLT new_b[n + 1];
 
 	// locate poles
-	LingotComplex* pole = malloc(n*sizeof(LingotComplex));
+	LingotComplex pole[n];
 
 	for (i = 0; i < n; i++) {
 		pole[i].r = 0.0;
@@ -138,28 +134,28 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 
 	FLT T = 2.0;
 	// 2Hz
-	FLT W = 2.0/T*tan(M_PI*wc/T);
+	FLT W = 2.0 / T * tan(M_PI * wc / T);
 
-	FLT epsilon = sqrt(pow(10.0, 0.1*Rp) - 1);
-	FLT v0 = asinh(1/epsilon)/n;
+	FLT epsilon = sqrt(pow(10.0, 0.1 * Rp) - 1);
+	FLT v0 = asinh(1 / epsilon) / n;
 
 	FLT sv0 = sinh(v0);
 	FLT cv0 = cosh(v0);
 
 	FLT t;
 
-	for (i = -(n-1), k = 0; k < n; i+=2, k++) {
-		t = M_PI*i/(2.0*n);
-		pole[k].r = -sv0*cos(t);
-		pole[k].i = cv0*sin(t);
+	for (i = -(n - 1), k = 0; k < n; i += 2, k++) {
+		t = M_PI * i / (2.0 * n);
+		pole[k].r = -sv0 * cos(t);
+		pole[k].i = cv0 * sin(t);
 	}
 
 	LingotComplex gain;
 
 	lingot_filter_vector_product(n, pole, &gain);
 
-	if ((n&1)==0) {// even
-		FLT f = pow(10.0, -0.05*Rp);
+	if ((n & 1) == 0) {// even
+		FLT f = pow(10.0, -0.05 * Rp);
 		gain.r *= f;
 		gain.i *= f;
 	}
@@ -174,11 +170,11 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	}
 
 	// bilinear transform
-	LingotComplex* sp = malloc(n*sizeof(LingotComplex));
+	LingotComplex sp[n];
 
 	for (i = 0; i < n; i++) {
-		sp[i].r = (2.0 - pole[i].r*T)/T;
-		sp[i].i = (0.0 - pole[i].i*T)/T;
+		sp[i].r = (2.0 - pole[i].r * T) / T;
+		sp[i].i = (0.0 - pole[i].i * T) / T;
 	}
 
 	LingotComplex tmp1;
@@ -186,15 +182,13 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 
 	lingot_filter_vector_product(n, sp, &tmp1);
 
-	free(sp);
-
 	lingot_complex_div(&gain, &tmp1, &gain);
 
 	for (i = 0; i < n; i++) {
-		tmp1.r = (2.0 + pole[i].r*T);
-		tmp1.i = (0.0 + pole[i].i*T);
-		aux2.r = (2.0 - pole[i].r*T);
-		aux2.i = (0.0 - pole[i].i*T);
+		tmp1.r = (2.0 + pole[i].r * T);
+		tmp1.i = (0.0 + pole[i].i * T);
+		aux2.r = (2.0 - pole[i].r * T);
+		aux2.i = (0.0 - pole[i].i * T);
 		lingot_complex_div(&tmp1, &aux2, &pole[i]);
 	}
 
@@ -214,26 +208,26 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	if ((n & 1) == 1) // odd
 	{
 		// first subfilter is first order
-		a[1] = -pole[n/2].r;
+		a[1] = -pole[n / 2].r;
 		b[1] = 1.0;
 	}
 
 	// iterate over the conjugate pairs
-	for (p = 0; p < n/2; p++) {
+	for (p = 0; p < n / 2; p++) {
 		FLT b1 = 2.0;
 		FLT b2 = 1.0;
 
-		FLT a1 = -2.0*pole[p].r;
-		FLT a2 = pole[p].r*pole[p].r + pole[p].i*pole[p].i;
+		FLT a1 = -2.0 * pole[p].r;
+		FLT a2 = pole[p].r * pole[p].r + pole[p].i * pole[p].i;
 
 		// 2nd order subfilter per each pair
-		new_a[1] = a[1] + a1*a[0];
-		new_b[1] = b[1] + b1*b[0];
+		new_a[1] = a[1] + a1 * a[0];
+		new_b[1] = b[1] + b1 * b[0];
 
 		// poly multiplication
 		for (i = 2; i <= n; i++) {
-			new_a[i] = a[i] + a1*a[i - 1]+ a2*a[i - 2];
-			new_b[i] = b[i] + b1*b[i - 1]+ b2*b[i - 2];
+			new_a[i] = a[i] + a1 * a[i - 1] + a2 * a[i - 2];
+			new_b[i] = b[i] + b1 * b[i - 1] + b2 * b[i - 2];
 		}
 		for (i = 1; i <= n; i++) {
 			a[i] = new_a[i];
@@ -246,13 +240,5 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 		b[i] *= gain.r;
 	}
 
-	LingotFilter* result = lingot_filter_new(n, n, a, b);
-
-	free(a);
-	free(b);
-	free(new_a);
-	free(new_b);
-	free(pole);
-
-	return result;
+	return lingot_filter_new(n, n, a, b);
 }

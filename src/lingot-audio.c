@@ -29,22 +29,27 @@
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-jack.h"
 
-LingotAudio* lingot_audio_new(void* p) {
+LingotAudioHandler* lingot_audio_new(void* p) {
 
 	LingotCore* core = (LingotCore*) p;
+	LingotAudioHandler* result = NULL;
+
 	switch (core->conf->audio_system) {
 	case AUDIO_SYSTEM_OSS:
-		return lingot_audio_oss_new(core);
+		result = lingot_audio_oss_new(core);
+		break;
 	case AUDIO_SYSTEM_ALSA:
-		return lingot_audio_alsa_new(core);
+		result = lingot_audio_alsa_new(core);
+		break;
 	case AUDIO_SYSTEM_JACK:
-		return lingot_audio_jack_new(core);
-	default:
-		return NULL;
+		result = lingot_audio_jack_new(core);
+		break;
 	}
+
+	return result;
 }
 
-void lingot_audio_destroy(LingotAudio* audio, void* p) {
+void lingot_audio_destroy(LingotAudioHandler* audio, void* p) {
 	if (audio != NULL) {
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
@@ -64,20 +69,61 @@ void lingot_audio_destroy(LingotAudio* audio, void* p) {
 	}
 }
 
-int lingot_audio_read(LingotAudio* audio, void* p) {
+int lingot_audio_read(LingotAudioHandler* audio, void* p) {
 	LingotCore* core = (LingotCore*) p;
+	int result;
+
 	if (audio != NULL)
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
-			return lingot_audio_oss_read(audio, core);
+			result = lingot_audio_oss_read(audio, core);
+			break;
 		case AUDIO_SYSTEM_ALSA:
-			return lingot_audio_alsa_read(audio, core);
+			result = lingot_audio_alsa_read(audio, core);
+			break;
 		case AUDIO_SYSTEM_JACK:
-			return lingot_audio_jack_read(audio, core);
+			result = lingot_audio_jack_read(audio, core);
+			break;
 		default:
 			perror("unknown audio system\n");
+			result = -1;
 		}
 
-	return -1;
+	return result;
 }
 
+LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+		audio_system_t audio_system) {
+	LingotAudioSystemProperties* result;
+
+	switch (audio_system) {
+	case AUDIO_SYSTEM_OSS:
+		result = lingot_audio_oss_get_audio_system_properties(audio_system);
+		break;
+	case AUDIO_SYSTEM_ALSA:
+		result = lingot_audio_alsa_get_audio_system_properties(audio_system);
+		break;
+	case AUDIO_SYSTEM_JACK:
+		result = lingot_audio_jack_get_audio_system_properties(audio_system);
+		break;
+	default:
+		perror("unknown audio system\n");
+		result = NULL;
+	}
+
+	return result;
+}
+
+void lingot_audio_audio_system_properties_destroy(
+		LingotAudioSystemProperties* properties) {
+
+	int i;
+	for (i = 0; i < properties->n_devices; i++) {
+		free(properties->devices[i]);
+	}
+
+	if (properties->sample_rates != NULL)
+		free(properties->sample_rates);
+	if (properties->devices != NULL)
+		free(properties->devices);
+}

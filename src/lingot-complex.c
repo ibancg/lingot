@@ -26,57 +26,47 @@
 /**
  * addition. All parameters are overlapables.
  */
-void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c)
-  {
-    c->r = a->r + b->r;
-    c->i = a->i + b->i;
-  }
+void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
+	c->r = a->r + b->r;
+	c->i = a->i + b->i;
+}
 
 /**
  * substraction. All parameters are overlapables.
  */
-void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c)
-  {
-    c->r = a->r - b->r;
-    c->i = a->i - b->i;
-  }
+void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
+	c->r = a->r - b->r;
+	c->i = a->i - b->i;
+}
 
 /**
  * multiplication. All parameters are overlapables.
  */
-void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c)
-  {
-    if ((c != a) && (c != b))
-      {
-        c->r = a->r*b->r- a->i*b->i;
-        c->i = a->i*b->r+ a->r*b->i;
-      }
-    else
-      {
-        LingotComplex r;
-        r.r = a->r*b->r- a->i*b->i;
-        r.i = a->i*b->r+ a->r*b->i;
-        *c = r;
-      }
-  }
+void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
+	if ((c != a) && (c != b)) {
+		c->r = a->r * b->r - a->i * b->i;
+		c->i = a->i * b->r + a->r * b->i;
+	} else {
+		LingotComplex r;
+		r.r = a->r * b->r - a->i * b->i;
+		r.i = a->i * b->r + a->r * b->i;
+		*c = r;
+	}
+}
 
 /**
  * division. All parameters are overlapables.
  */
-void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c)
-  {
-    FLT bm2 = b->r*b->r + b->i*b->i;
+void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
+	FLT bm2 = b->r * b->r + b->i * b->i;
 
-    if ((c != a) && (c != b))
-      {
-        c->r = (a->r*b->r+ a->i*b->i)/bm2;
-        c->i = (a->i*b->r- a->r*b->i)/bm2;
-      }
-    else
-      {
-        LingotComplex r;
-        r.r = (a->r*b->r+ a->i*b->i)/bm2;
-        r.i = (a->i*b->r- a->r*b->i)/bm2;
-        *c = r;
-      }
-  }
+	if ((c != a) && (c != b)) {
+		c->r = (a->r * b->r + a->i * b->i) / bm2;
+		c->i = (a->i * b->r - a->r * b->i) / bm2;
+	} else {
+		LingotComplex r;
+		r.r = (a->r * b->r + a->i * b->i) / bm2;
+		r.i = (a->i * b->r - a->r * b->i) / bm2;
+		*c = r;
+	}
+}

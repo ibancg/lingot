@@ -34,9 +34,10 @@ struct _LingotConfigDialog {
 
 	// widgets that contains configuration information.
 	GtkComboBox* input_system;
-	GtkEntry* oss_input_dev;
-	GtkEntry* alsa_input_dev;
-	GtkComboBox* sample_rate;
+	//	GtkEntry* oss_input_dev;
+	//	GtkEntry* alsa_input_dev;
+	GtkComboBoxEntry* input_dev;
+	GtkComboBoxEntry* sample_rate;
 	GtkHScale* calculation_rate;
 	GtkHScale* visualization_rate;
 	GtkHScale* noise_threshold;
@@ -53,16 +54,20 @@ struct _LingotConfigDialog {
 	GtkHScale* rejection_peak_relation;
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
-	GtkLabel* label_root_frequency;
-	GtkLabel* jack_label_sample_rate0;
-	GtkLabel* jack_label_sample_rate1;
-	GtkLabel* jack_label_sample_rate2;
-	GtkLabel* oss_alsa_label_sample_rate0;
-	GtkLabel* oss_alsa_label_sample_rate2;
-	GtkLabel* oss_label_input_dev0;
-	GtkLabel* oss_label_input_dev2;
-	GtkLabel* alsa_label_input_dev0;
-	GtkLabel* alsa_label_input_dev2;
+	// GtkLabel* label_root_frequency;
+	// GtkComboBox* combo_root_frequency_reference_note;
+	// GtkLabel* jack_label_sample_rate0;
+	// GtkLabel* jack_label_sample_rate1;
+	// GtkLabel* jack_label_sample_rate2;
+	//	GtkLabel* oss_alsa_label_sample_rate0;
+	//	GtkLabel* oss_alsa_label_sample_rate2;
+	//	GtkLabel* oss_label_input_dev0;
+	//	GtkLabel* oss_label_input_dev2;
+	//	GtkLabel* alsa_label_input_dev0;
+	//	GtkLabel* alsa_label_input_dev2;
+
+	GtkEntry* scale_name;
+	GtkTreeView* scale_treeview;
 
 	LingotConfig* conf; // provisional configuration.
 	LingotConfig* conf_old; // restoration point for cancel.

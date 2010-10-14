@@ -2,19 +2,18 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/stddef.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/stdarg.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h /usr/include/stdlib.h /usr/include/sys/types.h \
- /usr/include/time.h /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
  /usr/include/bits/byteswap.h /usr/include/sys/select.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/string.h /usr/include/xlocale.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h /usr/include/sys/stat.h \
+ /usr/include/string.h /usr/include/xlocale.h /usr/include/sys/stat.h \
  /usr/include/bits/stat.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/confname.h /usr/include/getopt.h lingot-defs.h \
@@ -25,23 +24,24 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
  /usr/include/bits/inf.h /usr/include/bits/nan.h \
  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
- /usr/include/bits/mathinline.h lingot-filter.h lingot-audio.h \
- /usr/include/alsa/asoundlib.h /usr/include/assert.h \
- /usr/include/sys/poll.h /usr/include/bits/poll.h /usr/include/errno.h \
- /usr/include/bits/errno.h /usr/include/linux/errno.h \
- /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
- /usr/include/asm-generic/errno-base.h /usr/include/alsa/asoundef.h \
- /usr/include/alsa/version.h /usr/include/alsa/global.h \
- /usr/include/alsa/input.h /usr/include/alsa/output.h \
- /usr/include/alsa/error.h /usr/include/alsa/conf.h \
- /usr/include/alsa/pcm.h /usr/include/alsa/rawmidi.h \
- /usr/include/alsa/timer.h /usr/include/alsa/hwdep.h \
- /usr/include/alsa/control.h /usr/include/alsa/mixer.h \
- /usr/include/alsa/seq_event.h /usr/include/alsa/seq.h \
- /usr/include/alsa/seqmid.h /usr/include/alsa/seq_midi_event.h \
- /usr/include/jack/jack.h /usr/include/jack/types.h \
- /usr/include/inttypes.h /usr/include/stdint.h /usr/include/bits/wchar.h \
- /usr/include/jack/transport.h lingot-gauge.h lingot-config-dialog.h \
+ lingot-filter.h lingot-audio.h /usr/include/alsa/asoundlib.h \
+ /usr/include/assert.h /usr/include/sys/poll.h /usr/include/bits/poll.h \
+ /usr/include/errno.h /usr/include/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/alsa/asoundef.h /usr/include/alsa/version.h \
+ /usr/include/alsa/global.h /usr/include/alsa/input.h \
+ /usr/include/alsa/output.h /usr/include/alsa/error.h \
+ /usr/include/alsa/conf.h /usr/include/alsa/pcm.h \
+ /usr/include/alsa/rawmidi.h /usr/include/alsa/timer.h \
+ /usr/include/alsa/hwdep.h /usr/include/alsa/control.h \
+ /usr/include/alsa/mixer.h /usr/include/alsa/seq_event.h \
+ /usr/include/alsa/seq.h /usr/include/alsa/seqmid.h \
+ /usr/include/alsa/seq_midi_event.h /usr/include/jack/jack.h \
+ /usr/include/jack/systemdeps.h /usr/include/inttypes.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h \
+ /usr/include/jack/types.h /usr/include/jack/transport.h \
+ /usr/include/jack/weakmacros.h lingot-gauge.h lingot-config-dialog.h \
  /usr/include/gtk-2.0/gtk/gtk.h /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
@@ -51,12 +51,12 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.3/include-fixed/limits.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.3/include-fixed/syslimits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
  /usr/include/bits/posix2_lim.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/float.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/float.h \
  /usr/include/glib-2.0/glib/garray.h \
  /usr/include/glib-2.0/glib/gasyncqueue.h \
  /usr/include/glib-2.0/glib/gthread.h /usr/include/glib-2.0/glib/gerror.h \
@@ -66,6 +66,7 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
  /usr/include/bits/sigcontext.h /usr/include/bits/sigstack.h \
  /usr/include/bits/sigthread.h /usr/include/glib-2.0/glib/gbase64.h \
+ /usr/include/glib-2.0/glib/gbitlock.h \
  /usr/include/glib-2.0/glib/gbookmarkfile.h \
  /usr/include/glib-2.0/glib/gcache.h /usr/include/glib-2.0/glib/glist.h \
  /usr/include/glib-2.0/glib/gmem.h /usr/include/glib-2.0/glib/gslice.h \
@@ -98,6 +99,8 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/gthreadpool.h \
  /usr/include/glib-2.0/glib/gtimer.h /usr/include/glib-2.0/glib/gtree.h \
  /usr/include/glib-2.0/glib/gurifuncs.h \
+ /usr/include/glib-2.0/glib/gvarianttype.h \
+ /usr/include/glib-2.0/glib/gvariant.h \
  /usr/include/glib-2.0/gobject/genums.h \
  /usr/include/glib-2.0/gobject/gobject.h \
  /usr/include/glib-2.0/gobject/gvalue.h \
@@ -123,6 +126,10 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/gio/goutputstream.h \
  /usr/include/glib-2.0/gio/gcancellable.h \
  /usr/include/glib-2.0/gio/gcontenttype.h \
+ /usr/include/glib-2.0/gio/gconverter.h \
+ /usr/include/glib-2.0/gio/gconverterinputstream.h \
+ /usr/include/glib-2.0/gio/gconverteroutputstream.h \
+ /usr/include/glib-2.0/gio/gcharsetconverter.h \
  /usr/include/glib-2.0/gio/gdatainputstream.h \
  /usr/include/glib-2.0/gio/gdataoutputstream.h \
  /usr/include/glib-2.0/gio/gdrive.h \
@@ -170,9 +177,11 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/gio/gthreadedsocketservice.h \
  /usr/include/glib-2.0/gio/gsrvtarget.h \
  /usr/include/glib-2.0/gio/gthemedicon.h /usr/include/glib-2.0/gio/gvfs.h \
- /usr/include/glib-2.0/gio/gvolume.h /usr/include/gtk-2.0/gdk/gdkscreen.h \
- /usr/include/cairo/cairo.h /usr/include/cairo/cairo-version.h \
- /usr/include/cairo/cairo-features.h \
+ /usr/include/glib-2.0/gio/gvolume.h \
+ /usr/include/glib-2.0/gio/gzlibcompressor.h \
+ /usr/include/glib-2.0/gio/gzlibdecompressor.h \
+ /usr/include/gtk-2.0/gdk/gdkscreen.h /usr/include/cairo/cairo.h \
+ /usr/include/cairo/cairo-version.h /usr/include/cairo/cairo-features.h \
  /usr/include/cairo/cairo-deprecated.h \
  /usr/include/gtk-2.0/gdk/gdktypes.h /usr/include/pango-1.0/pango/pango.h \
  /usr/include/pango-1.0/pango/pango-attributes.h \
@@ -259,11 +268,13 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/atk-1.0/atk/atknoopobject.h \
  /usr/include/atk-1.0/atk/atknoopobjectfactory.h \
  /usr/include/atk-1.0/atk/atkobjectfactory.h \
+ /usr/include/atk-1.0/atk/atkplug.h \
  /usr/include/atk-1.0/atk/atkregistry.h \
  /usr/include/atk-1.0/atk/atkobjectfactory.h \
  /usr/include/atk-1.0/atk/atkrelation.h \
  /usr/include/atk-1.0/atk/atkrelationset.h \
  /usr/include/atk-1.0/atk/atkselection.h \
+ /usr/include/atk-1.0/atk/atksocket.h \
  /usr/include/atk-1.0/atk/atkstateset.h \
  /usr/include/atk-1.0/atk/atkstreamablecontent.h \
  /usr/include/atk-1.0/atk/atktable.h /usr/include/atk-1.0/atk/atkmisc.h \
@@ -302,6 +313,7 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtkcellrendererpixbuf.h \
  /usr/include/gtk-2.0/gtk/gtkcellrendererprogress.h \
  /usr/include/gtk-2.0/gtk/gtkcellrendererspin.h \
+ /usr/include/gtk-2.0/gtk/gtkcellrendererspinner.h \
  /usr/include/gtk-2.0/gtk/gtkcellrenderertoggle.h \
  /usr/include/gtk-2.0/gtk/gtkcellview.h \
  /usr/include/gtk-2.0/gtk/gtkcheckbutton.h \
@@ -328,7 +340,6 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtkliststore.h \
  /usr/include/gtk-2.0/gtk/gtktreemodelfilter.h \
  /usr/include/gtk-2.0/gtk/gtkcomboboxentry.h \
- /usr/include/gtk-2.0/gtk/gtkcurve.h \
  /usr/include/gtk-2.0/gtk/gtkdrawingarea.h \
  /usr/include/gtk-2.0/gtk/gtkeventbox.h \
  /usr/include/gtk-2.0/gtk/gtkexpander.h \
@@ -340,8 +351,7 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtkfilechooserdialog.h \
  /usr/include/gtk-2.0/gtk/gtkfilechooserwidget.h \
  /usr/include/gtk-2.0/gtk/gtkfontbutton.h \
- /usr/include/gtk-2.0/gtk/gtkfontsel.h \
- /usr/include/gtk-2.0/gtk/gtkgamma.h /usr/include/gtk-2.0/gtk/gtkgc.h \
+ /usr/include/gtk-2.0/gtk/gtkfontsel.h /usr/include/gtk-2.0/gtk/gtkgc.h \
  /usr/include/gtk-2.0/gtk/gtkhandlebox.h \
  /usr/include/gtk-2.0/gtk/gtkhbbox.h /usr/include/gtk-2.0/gtk/gtkhpaned.h \
  /usr/include/gtk-2.0/gtk/gtkpaned.h /usr/include/gtk-2.0/gtk/gtkhruler.h \
@@ -360,7 +370,6 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtkimcontextsimple.h \
  /usr/include/gtk-2.0/gtk/gtkimmulticontext.h \
  /usr/include/gtk-2.0/gtk/gtkinfobar.h \
- /usr/include/gtk-2.0/gtk/gtkinputdialog.h \
  /usr/include/gtk-2.0/gtk/gtkinvisible.h \
  /usr/include/gtk-2.0/gtk/gtklayout.h \
  /usr/include/gtk-2.0/gtk/gtklinkbutton.h \
@@ -369,10 +378,12 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtktoolbutton.h \
  /usr/include/gtk-2.0/gtk/gtktoolitem.h \
  /usr/include/gtk-2.0/gtk/gtktooltips.h \
+ /usr/include/gtk-2.0/gtk/gtksizegroup.h \
  /usr/include/gtk-2.0/gtk/gtkmessagedialog.h \
  /usr/include/gtk-2.0/gtk/gtkmodules.h \
  /usr/include/gtk-2.0/gtk/gtkmountoperation.h \
  /usr/include/gtk-2.0/gtk/gtknotebook.h \
+ /usr/include/gtk-2.0/gtk/gtkoffscreenwindow.h \
  /usr/include/gtk-2.0/gtk/gtkorientable.h \
  /usr/include/gtk-2.0/gtk/gtkpagesetup.h \
  /usr/include/gtk-2.0/gtk/gtkpapersize.h \
@@ -403,8 +414,8 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtkseparatormenuitem.h \
  /usr/include/gtk-2.0/gtk/gtkseparatortoolitem.h \
  /usr/include/gtk-2.0/gtk/gtkshow.h \
- /usr/include/gtk-2.0/gtk/gtksizegroup.h \
  /usr/include/gtk-2.0/gtk/gtkspinbutton.h \
+ /usr/include/gtk-2.0/gtk/gtkspinner.h \
  /usr/include/gtk-2.0/gtk/gtkstatusbar.h \
  /usr/include/gtk-2.0/gtk/gtkstatusicon.h \
  /usr/include/gtk-2.0/gtk/gtkstock.h /usr/include/gtk-2.0/gtk/gtktable.h \
@@ -416,6 +427,8 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtktextview.h \
  /usr/include/gtk-2.0/gtk/gtktoolbar.h \
  /usr/include/gtk-2.0/gtk/gtkpixmap.h \
+ /usr/include/gtk-2.0/gtk/gtktoolitemgroup.h \
+ /usr/include/gtk-2.0/gtk/gtktoolpalette.h \
  /usr/include/gtk-2.0/gtk/gtktoolshell.h \
  /usr/include/gtk-2.0/gtk/gtktestutils.h \
  /usr/include/gtk-2.0/gtk/gtktreednd.h \
@@ -433,8 +446,10 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtktext.h /usr/include/gtk-2.0/gtk/gtktree.h \
  /usr/include/gtk-2.0/gtk/gtktreeitem.h \
  /usr/include/gtk-2.0/gtk/gtkclist.h /usr/include/gtk-2.0/gtk/gtkcombo.h \
- /usr/include/gtk-2.0/gtk/gtkctree.h \
+ /usr/include/gtk-2.0/gtk/gtkctree.h /usr/include/gtk-2.0/gtk/gtkcurve.h \
  /usr/include/gtk-2.0/gtk/gtkfilesel.h \
+ /usr/include/gtk-2.0/gtk/gtkgamma.h \
+ /usr/include/gtk-2.0/gtk/gtkinputdialog.h \
  /usr/include/gtk-2.0/gtk/gtkitemfactory.h \
  /usr/include/gtk-2.0/gtk/gtklist.h \
  /usr/include/gtk-2.0/gtk/gtklistitem.h \
@@ -459,7 +474,7 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
 
 /usr/include/gnu/stubs-64.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/stddef.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
 
 /usr/include/bits/types.h:
 
@@ -471,13 +486,11 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
 
 /usr/include/wchar.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/stdarg.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
 /usr/include/bits/sys_errlist.h:
-
-/usr/include/bits/stdio.h:
 
 /usr/include/stdlib.h:
 
@@ -508,10 +521,6 @@ lingot.o: lingot.c /usr/include/stdio.h /usr/include/features.h \
 /usr/include/string.h:
 
 /usr/include/xlocale.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
 
 /usr/include/sys/stat.h:
 
@@ -566,8 +575,6 @@ lingot-complex.h:
 /usr/include/bits/mathdef.h:
 
 /usr/include/bits/mathcalls.h:
-
-/usr/include/bits/mathinline.h:
 
 lingot-filter.h:
 
@@ -629,7 +636,7 @@ lingot-audio.h:
 
 /usr/include/jack/jack.h:
 
-/usr/include/jack/types.h:
+/usr/include/jack/systemdeps.h:
 
 /usr/include/inttypes.h:
 
@@ -637,7 +644,11 @@ lingot-audio.h:
 
 /usr/include/bits/wchar.h:
 
+/usr/include/jack/types.h:
+
 /usr/include/jack/transport.h:
+
+/usr/include/jack/weakmacros.h:
 
 lingot-gauge.h:
 
@@ -671,9 +682,9 @@ lingot-config-dialog.h:
 
 /usr/include/glib-2.0/glib/gmacros.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.4.3/include-fixed/limits.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.4.3/include-fixed/syslimits.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
 
 /usr/include/limits.h:
 
@@ -685,7 +696,7 @@ lingot-config-dialog.h:
 
 /usr/include/bits/posix2_lim.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/4.4.3/include/float.h:
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/float.h:
 
 /usr/include/glib-2.0/glib/garray.h:
 
@@ -716,6 +727,8 @@ lingot-config-dialog.h:
 /usr/include/bits/sigthread.h:
 
 /usr/include/glib-2.0/glib/gbase64.h:
+
+/usr/include/glib-2.0/glib/gbitlock.h:
 
 /usr/include/glib-2.0/glib/gbookmarkfile.h:
 
@@ -805,6 +818,10 @@ lingot-config-dialog.h:
 
 /usr/include/glib-2.0/glib/gurifuncs.h:
 
+/usr/include/glib-2.0/glib/gvarianttype.h:
+
+/usr/include/glib-2.0/glib/gvariant.h:
+
 /usr/include/glib-2.0/gobject/genums.h:
 
 /usr/include/glib-2.0/gobject/gobject.h:
@@ -854,6 +871,14 @@ lingot-config-dialog.h:
 /usr/include/glib-2.0/gio/gcancellable.h:
 
 /usr/include/glib-2.0/gio/gcontenttype.h:
+
+/usr/include/glib-2.0/gio/gconverter.h:
+
+/usr/include/glib-2.0/gio/gconverterinputstream.h:
+
+/usr/include/glib-2.0/gio/gconverteroutputstream.h:
+
+/usr/include/glib-2.0/gio/gcharsetconverter.h:
 
 /usr/include/glib-2.0/gio/gdatainputstream.h:
 
@@ -956,6 +981,10 @@ lingot-config-dialog.h:
 /usr/include/glib-2.0/gio/gvfs.h:
 
 /usr/include/glib-2.0/gio/gvolume.h:
+
+/usr/include/glib-2.0/gio/gzlibcompressor.h:
+
+/usr/include/glib-2.0/gio/gzlibdecompressor.h:
 
 /usr/include/gtk-2.0/gdk/gdkscreen.h:
 
@@ -1157,6 +1186,8 @@ lingot-config-dialog.h:
 
 /usr/include/atk-1.0/atk/atkobjectfactory.h:
 
+/usr/include/atk-1.0/atk/atkplug.h:
+
 /usr/include/atk-1.0/atk/atkregistry.h:
 
 /usr/include/atk-1.0/atk/atkobjectfactory.h:
@@ -1166,6 +1197,8 @@ lingot-config-dialog.h:
 /usr/include/atk-1.0/atk/atkrelationset.h:
 
 /usr/include/atk-1.0/atk/atkselection.h:
+
+/usr/include/atk-1.0/atk/atksocket.h:
 
 /usr/include/atk-1.0/atk/atkstateset.h:
 
@@ -1251,6 +1284,8 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkcellrendererspin.h:
 
+/usr/include/gtk-2.0/gtk/gtkcellrendererspinner.h:
+
 /usr/include/gtk-2.0/gtk/gtkcellrenderertoggle.h:
 
 /usr/include/gtk-2.0/gtk/gtkcellview.h:
@@ -1305,8 +1340,6 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkcomboboxentry.h:
 
-/usr/include/gtk-2.0/gtk/gtkcurve.h:
-
 /usr/include/gtk-2.0/gtk/gtkdrawingarea.h:
 
 /usr/include/gtk-2.0/gtk/gtkeventbox.h:
@@ -1330,8 +1363,6 @@ lingot-config-dialog.h:
 /usr/include/gtk-2.0/gtk/gtkfontbutton.h:
 
 /usr/include/gtk-2.0/gtk/gtkfontsel.h:
-
-/usr/include/gtk-2.0/gtk/gtkgamma.h:
 
 /usr/include/gtk-2.0/gtk/gtkgc.h:
 
@@ -1379,8 +1410,6 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkinfobar.h:
 
-/usr/include/gtk-2.0/gtk/gtkinputdialog.h:
-
 /usr/include/gtk-2.0/gtk/gtkinvisible.h:
 
 /usr/include/gtk-2.0/gtk/gtklayout.h:
@@ -1399,6 +1428,8 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtktooltips.h:
 
+/usr/include/gtk-2.0/gtk/gtksizegroup.h:
+
 /usr/include/gtk-2.0/gtk/gtkmessagedialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkmodules.h:
@@ -1406,6 +1437,8 @@ lingot-config-dialog.h:
 /usr/include/gtk-2.0/gtk/gtkmountoperation.h:
 
 /usr/include/gtk-2.0/gtk/gtknotebook.h:
+
+/usr/include/gtk-2.0/gtk/gtkoffscreenwindow.h:
 
 /usr/include/gtk-2.0/gtk/gtkorientable.h:
 
@@ -1469,9 +1502,9 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkshow.h:
 
-/usr/include/gtk-2.0/gtk/gtksizegroup.h:
-
 /usr/include/gtk-2.0/gtk/gtkspinbutton.h:
+
+/usr/include/gtk-2.0/gtk/gtkspinner.h:
 
 /usr/include/gtk-2.0/gtk/gtkstatusbar.h:
 
@@ -1496,6 +1529,10 @@ lingot-config-dialog.h:
 /usr/include/gtk-2.0/gtk/gtktoolbar.h:
 
 /usr/include/gtk-2.0/gtk/gtkpixmap.h:
+
+/usr/include/gtk-2.0/gtk/gtktoolitemgroup.h:
+
+/usr/include/gtk-2.0/gtk/gtktoolpalette.h:
 
 /usr/include/gtk-2.0/gtk/gtktoolshell.h:
 
@@ -1537,7 +1574,13 @@ lingot-config-dialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkctree.h:
 
+/usr/include/gtk-2.0/gtk/gtkcurve.h:
+
 /usr/include/gtk-2.0/gtk/gtkfilesel.h:
+
+/usr/include/gtk-2.0/gtk/gtkgamma.h:
+
+/usr/include/gtk-2.0/gtk/gtkinputdialog.h:
 
 /usr/include/gtk-2.0/gtk/gtkitemfactory.h:
 
