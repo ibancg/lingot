@@ -5,7 +5,7 @@ lingot-fft.o: lingot-fft.c /usr/include/math.h /usr/include/features.h \
  /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
  /usr/include/bits/inf.h /usr/include/bits/nan.h \
  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
- /usr/include/stdlib.h \
+ /usr/include/bits/mathinline.h /usr/include/stdlib.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
  /usr/include/sys/types.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
@@ -43,6 +43,8 @@ lingot-fft.o: lingot-fft.c /usr/include/math.h /usr/include/features.h \
 /usr/include/bits/mathdef.h:
 
 /usr/include/bits/mathcalls.h:
+
+/usr/include/bits/mathinline.h:
 
 /usr/include/stdlib.h:
 

@@ -159,46 +159,11 @@ int lingot_audio_jack_read(LingotAudioHandler* audio, LingotCore* core) {
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
 		core->flt_read_buffer[i] = in[i] * 32768;
-#	endif
 	return 0;
+#	else
+	return -1;
+#	endif
 }
-
-//int lingot_audio_jack_get_sample_rate() {
-//	int result = 44100;
-//#	ifdef JACK
-//	const char *client_name = "lingot-get-sample-rate";
-//	const char *server_name = NULL;
-//
-//	jack_options_t options = JackNoStartServer;
-//	jack_status_t status;
-//	jack_client_t* jack_client;
-//
-//	if (client != NULL) {
-//		result = jack_get_sample_rate(client);
-//	} else {
-//		jack_client = jack_client_open(client_name, options, &status,
-//				server_name);
-//		if (jack_client == NULL) {
-//			lingot_error_queue_push(_("Unable to connect to JACK server"));
-//			return result;
-//		}
-//		if (status & JackServerStarted) {
-//			fprintf(stderr, "JACK server started\n");
-//		}
-//		if (status & JackNameNotUnique) {
-//			client_name = jack_get_client_name(jack_client);
-//			fprintf(stderr, "unique name `%s' assigned\n", client_name);
-//		}
-//
-//		result = jack_get_sample_rate(jack_client);
-//		jack_client_close(jack_client);
-//	}
-//#	else
-//	lingot_error_queue_push(
-//			_("The application has not been built with JACK support"));
-//#	endif
-//	return result;
-//}
 
 LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		audio_system_t audio_system) {

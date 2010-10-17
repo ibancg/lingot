@@ -45,6 +45,9 @@ enum {
 	COLUMN_NAME = 0, COLUMN_PITCH = 1, COLUMN_FREQUENCY = 2, NUM_COLUMNS = 3
 };
 
+
+int lingot_config_dialog_apply(LingotConfigDialog*);
+void lingot_config_dialog_close(LingotConfigDialog*);
 void lingot_config_dialog_rewrite(LingotConfigDialog*);
 void lingot_config_dialog_combo_select_value(GtkWidget* combo, int value);
 audio_system_t lingot_config_dialog_get_audio_system(GtkComboBox* combo);
@@ -60,19 +63,21 @@ void lingot_config_dialog_callback_button_cancel(GtkButton *button,
 
 void lingot_config_dialog_callback_button_ok(GtkButton *button,
 		LingotConfigDialog* dialog) {
-	lingot_config_dialog_apply(dialog);
-	// dumps the current config to the config file
-	lingot_config_save(dialog->conf, CONFIG_FILE_NAME);
-	// establish the current config as the old config, so the close rollback
-	// will do nothing.
-	lingot_config_copy(dialog->conf_old, dialog->conf);
-	lingot_config_dialog_close(dialog);
+	if (lingot_config_dialog_apply(dialog)) {
+		// dumps the current config to the config file
+		lingot_config_save(dialog->conf, CONFIG_FILE_NAME);
+		// establish the current config as the old config, so the close rollback
+		// will do nothing.
+		lingot_config_copy(dialog->conf_old, dialog->conf);
+		lingot_config_dialog_close(dialog);
+	}
 }
 
 void lingot_config_dialog_callback_button_apply(GtkButton *button,
 		LingotConfigDialog* dialog) {
-	lingot_config_dialog_apply(dialog);
-	lingot_config_dialog_rewrite(dialog);
+	if (lingot_config_dialog_apply(dialog)) {
+		lingot_config_dialog_rewrite(dialog);
+	}
 }
 
 void lingot_config_dialog_callback_button_default(GtkButton *button,
@@ -97,8 +102,8 @@ void lingot_config_dialog_callback_close(GtkWidget *widget,
 void lingot_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 
-	gchar* text = gtk_entry_get_text(
-			GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child));
+	gchar* text = gtk_entry_get_text(GTK_ENTRY(
+			GTK_BIN(dialog->sample_rate)->child));
 
 	int sr;
 	if (text != NULL) {
@@ -139,8 +144,8 @@ void lingot_config_dialog_callback_change_input_system(GtkWidget *widget,
 	gtk_widget_set_sensitive(dialog->sample_rate,
 			(gboolean) !properties->forced_sample_rate);
 
-	GtkListStore* model =
-			GTK_LIST_STORE(gtk_combo_box_get_model(dialog->sample_rate));
+	GtkListStore* model = GTK_LIST_STORE(gtk_combo_box_get_model(
+			dialog->sample_rate));
 	gtk_list_store_clear(model);
 
 	int i;
@@ -273,7 +278,7 @@ void lingot_config_dialog_destroy(LingotConfigDialog* dialog) {
 	free(dialog);
 }
 
-void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
+int lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 
 	GtkWidget* message_dialog;
 	gchar* text;
@@ -302,13 +307,13 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 		if (pitch < last_pitch) {
 			lingot_error_queue_push(
 					"There are invalid pitches in the scale: the scale should be ordered");
-			return;
+			return 0;
 		}
 
 		if (pitch >= 1200.0) {
 			lingot_error_queue_push(
 					"There are invalid pitches in the scale: all the pitches should be in the same octave");
-			return;
+			return 0;
 		}
 
 		last_pitch = pitch;
@@ -370,6 +375,8 @@ void lingot_config_dialog_apply(LingotConfigDialog* dialog) {
 
 	lingot_config_update_internal_params(conf);
 	lingot_mainframe_change_config(dialog->mainframe, conf);
+
+	return 1;
 }
 
 void lingot_config_dialog_close(LingotConfigDialog* dialog) {
@@ -450,7 +457,7 @@ void lingot_config_dialog_scale_tree_remove_selected_items(gpointer data,
 		return;
 
 	GList *list = gtk_tree_selection_get_selected_rows(selection, &model);
-	store = GTK_TREE_STORE ( model );
+	store = GTK_TREE_STORE(model);
 
 	int nRemoved = 0;
 	while (list) {
@@ -539,8 +546,8 @@ void lingot_config_dialog_scale_tree_cell_edited_callback(
 		return;
 
 	renderer = &cell->parent;
-	guint column_number = GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(
-							renderer), "my_column_num"));
+	guint column_number = GPOINTER_TO_UINT(g_object_get_data(
+			G_OBJECT(renderer), "my_column_num"));
 
 	switch (column_number) {
 
@@ -665,7 +672,8 @@ static void lingot_config_dialog_scale_tree_add_column(
 	g_object_set(renderer, "editable", TRUE, NULL);
 	g_object_set_data(G_OBJECT(renderer), "my_column_num", GUINT_TO_POINTER(
 			COLUMN_NAME));
-	g_signal_connect(renderer, "edited", (GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
+	g_signal_connect(renderer, "edited",
+			(GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
 			config_dialog);
 
 	gtk_tree_view_append_column(treeview, column);
@@ -683,7 +691,8 @@ static void lingot_config_dialog_scale_tree_add_column(
 			lingot_config_dialog_scale_tree_pitch_cell_data_function, NULL,
 			NULL);
 
-	g_signal_connect(renderer, "edited", (GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
+	g_signal_connect(renderer, "edited",
+			(GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
 			config_dialog);
 
 	gtk_tree_view_append_column(treeview, column);
@@ -701,7 +710,8 @@ static void lingot_config_dialog_scale_tree_add_column(
 			lingot_config_dialog_scale_tree_frequency_cell_data_function,
 			config_dialog, NULL);
 
-	g_signal_connect(renderer, "edited", (GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
+	g_signal_connect(renderer, "edited",
+			(GCallback) lingot_config_dialog_scale_tree_cell_edited_callback,
 			config_dialog);
 
 	gtk_tree_view_append_column(treeview, column);
@@ -717,19 +727,19 @@ static void lingot_config_dialog_import_scl(gpointer data,
 
 	gtk_file_filter_set_name(filefilter, (const gchar *) "Scala files");
 	gtk_file_filter_add_pattern(filefilter, "*.scl");
-	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER (dialog), filefilter);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 
 	if (filechooser_last_folder != NULL) {
-		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (dialog),
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),
 				filechooser_last_folder);
 		free(filechooser_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (dialog));
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 		filechooser_last_folder = strdup(gtk_file_chooser_get_current_folder(
-				GTK_FILE_CHOOSER (dialog)));
+				GTK_FILE_CHOOSER(dialog)));
 		// TODO
 		LingotScale* scale = lingot_config_scale_new();
 		if (!lingot_config_scale_load(scale, filename)) {
@@ -770,119 +780,119 @@ void lingot_config_dialog_show(LingotMainFrame* frame) {
 			_gladeXML = glade_xml_new("src/glade/lingot-config-dialog.glade",
 					"dialog1", NULL);
 		} else {
-			_gladeXML = glade_xml_new(
-					LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1",
-					NULL);
-		}
-
-		dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
-
-		gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(
-				GTK_WINDOW(frame->win)));
-		//gtk_window_set_position(GTK_WINDOW(dialog->win), GTK_WIN_POS_CENTER_ALWAYS);
-		dialog->mainframe->config_dialog = dialog;
-
-		dialog->input_system
-				= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "input_system"));
-		dialog->input_dev
-				= GTK_COMBO_BOX_ENTRY(glade_xml_get_widget(_gladeXML, "input_dev"));
-		dialog->sample_rate
-				= GTK_COMBO_BOX_ENTRY(glade_xml_get_widget(_gladeXML, "sample_rate"));
-		dialog->calculation_rate
-				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "calculation_rate"));
-		dialog->visualization_rate
-				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "visualization_rate"));
-		dialog->noise_threshold
-				= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "noise_threshold"));
-		dialog->gain = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "gain"));
-		dialog->oversampling
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "oversampling"));
-		dialog->fft_size
-				= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "fft_size"));
-		dialog->temporal_window
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "temporal_window"));
-		dialog->root_frequency_error
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
-								"root_frequency_error"));
-		dialog->dft_number
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_number"));
-		dialog->dft_size
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_size"));
-		dialog->peak_number
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_number"));
-		dialog->peak_halfwidth
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_halfwidth"));
-		dialog->rejection_peak_relation
-				= GTK_HSCALE(glade_xml_get_widget(_gladeXML,
-								"rejection_peak_relation"));
-		dialog->label_sample_rate1 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-						"label_sample_rate1"));
-		dialog->label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
-						"label_sample_rate2"));
-		dialog->minimum_frequency
-				= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
-								"minimum_frequency"));
-
-		dialog->scale_name
-				= GTK_ENTRY(glade_xml_get_widget(_gladeXML, "scale_name"));
-		GtkWidget* scroll = glade_xml_get_widget(_gladeXML, "scrolledwindow1");
-
-		/* crea el modelo del arbol */
-		GtkTreeStore *model_store = gtk_tree_store_new(3, G_TYPE_STRING,
-				G_TYPE_DOUBLE, G_TYPE_DOUBLE);
-		GtkTreeModel* model = GTK_TREE_MODEL(model_store);
-
-		/* crea un nuevo widget gtktreeview */
-		dialog->scale_treeview = GTK_TREE_VIEW(gtk_tree_view_new());
-
-		/* agrega columnas al modelo del arbol */
-		lingot_config_dialog_scale_tree_add_column(dialog);
-
-		/* asocia el modelo al gtkteeview */
-		gtk_tree_view_set_model(dialog->scale_treeview, model);
-		gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
-				dialog->scale_treeview), GTK_SELECTION_MULTIPLE);
-
-		g_object_unref(G_OBJECT(model));
-		gtk_container_add(GTK_CONTAINER(scroll),
-				GTK_WIDGET(dialog->scale_treeview));
-
-		GtkButton* button_del = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
-						"button_scale_del"));
-		GtkButton* button_add = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
-						"button_scale_add"));
-		GtkButton* button_import = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
-						"button_scale_import"));
-
-		g_signal_connect(G_OBJECT(button_add), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_add_row_tree),
-				dialog->scale_treeview);
-		g_signal_connect(G_OBJECT(button_del), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_remove_selected_items),
-				dialog->scale_treeview);
-		g_signal_connect(G_OBJECT(button_import), "clicked", G_CALLBACK(lingot_config_dialog_import_scl),
-				dialog);
-
-		gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
-				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
-		gtk_signal_connect(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child), "changed",
-				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-
-		gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
-				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
-		gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
-				GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_deviation), dialog);
-
-		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
-		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
-		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
-		g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
-		g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
-
-		g_object_unref(_gladeXML);
-		lingot_config_dialog_rewrite(dialog);
-
-		gtk_widget_show(dialog->win);
-		gtk_widget_show_all(scroll);
-	} else {
-		gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
+_gladeXML		= glade_xml_new(
+				LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1",
+				NULL);
 	}
+
+	dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
+
+	gtk_window_set_icon(GTK_WINDOW(dialog->win), gtk_window_get_icon(
+					GTK_WINDOW(frame->win)));
+	//gtk_window_set_position(GTK_WINDOW(dialog->win), GTK_WIN_POS_CENTER_ALWAYS);
+	dialog->mainframe->config_dialog = dialog;
+
+	dialog->input_system
+	= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "input_system"));
+	dialog->input_dev
+	= GTK_COMBO_BOX_ENTRY(glade_xml_get_widget(_gladeXML, "input_dev"));
+	dialog->sample_rate
+	= GTK_COMBO_BOX_ENTRY(glade_xml_get_widget(_gladeXML, "sample_rate"));
+	dialog->calculation_rate
+	= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "calculation_rate"));
+	dialog->visualization_rate
+	= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "visualization_rate"));
+	dialog->noise_threshold
+	= GTK_HSCALE(glade_xml_get_widget(_gladeXML, "noise_threshold"));
+	dialog->gain = GTK_HSCALE(glade_xml_get_widget(_gladeXML, "gain"));
+	dialog->oversampling
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "oversampling"));
+	dialog->fft_size
+	= GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "fft_size"));
+	dialog->temporal_window
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "temporal_window"));
+	dialog->root_frequency_error
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
+					"root_frequency_error"));
+	dialog->dft_number
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_number"));
+	dialog->dft_size
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "dft_size"));
+	dialog->peak_number
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_number"));
+	dialog->peak_halfwidth
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML, "peak_halfwidth"));
+	dialog->rejection_peak_relation
+	= GTK_HSCALE(glade_xml_get_widget(_gladeXML,
+					"rejection_peak_relation"));
+	dialog->label_sample_rate1 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
+					"label_sample_rate1"));
+	dialog->label_sample_rate2 = GTK_LABEL(glade_xml_get_widget(_gladeXML,
+					"label_sample_rate2"));
+	dialog->minimum_frequency
+	= GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
+					"minimum_frequency"));
+
+	dialog->scale_name
+	= GTK_ENTRY(glade_xml_get_widget(_gladeXML, "scale_name"));
+	GtkWidget* scroll = glade_xml_get_widget(_gladeXML, "scrolledwindow1");
+
+	/* crea el modelo del arbol */
+	GtkTreeStore *model_store = gtk_tree_store_new(3, G_TYPE_STRING,
+			G_TYPE_DOUBLE, G_TYPE_DOUBLE);
+	GtkTreeModel* model = GTK_TREE_MODEL(model_store);
+
+	/* crea un nuevo widget gtktreeview */
+	dialog->scale_treeview = GTK_TREE_VIEW(gtk_tree_view_new());
+
+	/* agrega columnas al modelo del arbol */
+	lingot_config_dialog_scale_tree_add_column(dialog);
+
+	/* asocia el modelo al gtkteeview */
+	gtk_tree_view_set_model(dialog->scale_treeview, model);
+	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
+					dialog->scale_treeview), GTK_SELECTION_MULTIPLE);
+
+	g_object_unref(G_OBJECT(model));
+	gtk_container_add(GTK_CONTAINER(scroll),
+			GTK_WIDGET(dialog->scale_treeview));
+
+	GtkButton* button_del = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
+					"button_scale_del"));
+	GtkButton* button_add = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
+					"button_scale_add"));
+	GtkButton* button_import = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
+					"button_scale_import"));
+
+	g_signal_connect(G_OBJECT(button_add), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_add_row_tree),
+			dialog->scale_treeview);
+	g_signal_connect(G_OBJECT(button_del), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_remove_selected_items),
+			dialog->scale_treeview);
+	g_signal_connect(G_OBJECT(button_import), "clicked", G_CALLBACK(lingot_config_dialog_import_scl),
+			dialog);
+
+	gtk_signal_connect(GTK_OBJECT(dialog->input_system), "changed",
+			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_input_system), dialog);
+	gtk_signal_connect(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child), "changed",
+			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+
+	gtk_signal_connect (GTK_OBJECT (dialog->oversampling), "value_changed",
+			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_sample_rate), dialog);
+	gtk_signal_connect (GTK_OBJECT (dialog->root_frequency_error), "value_changed",
+			GTK_SIGNAL_FUNC (lingot_config_dialog_callback_change_deviation), dialog);
+
+	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_default")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_default), dialog);
+	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_apply")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_apply), dialog);
+	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_accept")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_ok), dialog);
+	g_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "button_cancel")), "clicked", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_button_cancel), dialog);
+	g_signal_connect(GTK_OBJECT(dialog->win), "destroy", GTK_SIGNAL_FUNC(lingot_config_dialog_callback_close), dialog);
+
+	g_object_unref(_gladeXML);
+	lingot_config_dialog_rewrite(dialog);
+
+	gtk_widget_show(dialog->win);
+	gtk_widget_show_all(scroll);
+} else {
+	gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
+}
 }

@@ -53,8 +53,16 @@ typedef struct _LingotMainFrame LingotMainFrame;
 //#define LIB_FFTW
 //#define LIBSNDOBJ
 
+// simple try-catch simulation, do not use throw inside loops nor nest try-catch
+// blocks
 #define try exception = 0; do
 #define throw(a) {exception = a;break;}
 #define catch while (0); if (exception != 0)
+
+// this option allows us to throw exception from loops, it contains a goto
+// statement, but totally controlled, and it fails to indent the code.
+//#define try exception = 0;do
+//#define throw(a) {exception = a;goto catch_label;}
+//#define catch while (0);catch_label: if (exception != 0)
 
 #endif

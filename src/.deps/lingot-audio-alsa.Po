@@ -16,16 +16,19 @@ lingot-audio-alsa.o: lingot-audio-alsa.c lingot-defs.h \
  /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
  /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
  /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
- /usr/include/bits/mathcalls.h lingot-filter.h /usr/include/fcntl.h \
- /usr/include/bits/fcntl.h /usr/include/stdlib.h /usr/include/alloca.h \
- lingot-config.h lingot-audio.h /usr/include/alsa/asoundlib.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h /usr/include/stdio.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
+ lingot-filter.h /usr/include/fcntl.h /usr/include/bits/fcntl.h \
+ /usr/include/stdlib.h /usr/include/alloca.h lingot-config.h \
+ lingot-audio.h /usr/include/alsa/asoundlib.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+ /usr/include/getopt.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h /usr/include/assert.h /usr/include/sys/poll.h \
- /usr/include/bits/poll.h /usr/include/errno.h /usr/include/bits/errno.h \
+ /usr/include/bits/stdio.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/assert.h /usr/include/sys/poll.h /usr/include/bits/poll.h \
+ /usr/include/errno.h /usr/include/bits/errno.h \
  /usr/include/linux/errno.h /usr/include/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/alsa/asoundef.h /usr/include/alsa/version.h \
@@ -122,6 +125,8 @@ lingot-complex.h:
 
 /usr/include/bits/mathcalls.h:
 
+/usr/include/bits/mathinline.h:
+
 lingot-filter.h:
 
 /usr/include/fcntl.h:
@@ -160,7 +165,13 @@ lingot-audio.h:
 
 /usr/include/bits/sys_errlist.h:
 
+/usr/include/bits/stdio.h:
+
 /usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
 
 /usr/include/assert.h:
 

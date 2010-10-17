@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "lingot-error.h"
 
@@ -30,27 +31,37 @@
 char message[ERROR_QUEUE_SIZE][1000];
 int top = 0;
 
-// TODO: thread sync
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
 void lingot_error_queue_push(const char* msg) {
+
 	if (top < ERROR_QUEUE_SIZE) {
 		// search if the message is already in the queue
+		pthread_mutex_lock(&mutex1);
+
 		int i;
 		for (i = 0; i < top; i++) {
-			if (!strcmp(message[i], msg))
+			if (!strcmp(message[i], msg)) {
+				pthread_mutex_unlock(&mutex1);
 				return;
+			}
 		}
 
 		strcpy(message[top++], msg);
+		pthread_mutex_unlock(&mutex1);
 	} else {
 		printf("WARNING: the queue is full!\n");
 	}
 }
 
 char* lingot_error_queue_pop() {
+	char* result = NULL;
+
 	if (top != 0) {
-		return strdup(message[--top]);
-	} else {
-		return NULL;
+		pthread_mutex_lock(&mutex1);
+		result = strdup(message[--top]);
+		pthread_mutex_unlock(&mutex1);
 	}
+
+	return result;
 }
