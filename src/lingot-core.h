@@ -89,6 +89,6 @@ void lingot_core_start(LingotCore*);
 // stop process
 void lingot_core_stop(LingotCore*);
 
-void lingot_core_read(LingotCore* core);
+int lingot_core_read(LingotCore* core);
 
 #endif //__LINGOT_CORE_H__

@@ -38,6 +38,7 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 	unsigned int channels = 1;
 
 	audio = malloc(sizeof(LingotAudioHandler));
+	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
 	sprintf(audio->device, "%s", "");
 
@@ -118,7 +119,7 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 			throw(error_message);
 		}
 
-		audio->read_buffer = malloc(core->conf->read_buffer_size
+		audio->read_buffer = malloc(channels * core->conf->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
 		memset(audio->read_buffer, 0, core->conf->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
@@ -144,10 +145,10 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 #	ifdef ALSA
 	if (audio != NULL) {
-		snd_pcm_close(audio->capture_handle);
-	}
-	if (audio != NULL) {
-		free(audio->read_buffer);
+		if (audio->capture_handle != NULL)
+			snd_pcm_close(audio->capture_handle);
+		if (audio->read_buffer != NULL)
+			free(audio->read_buffer);
 	}
 #	endif
 }
@@ -161,8 +162,12 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio, LingotCore* core) {
 			core->conf->read_buffer_size);
 
 	if (temp_sret != core->conf->read_buffer_size) {
-		fprintf(stderr, "read from audio interface failed (%s)\n",
-				snd_strerror(temp_sret));
+		char buff[100];
+		sprintf(buff, "read from audio interface failed (%s)", snd_strerror(
+				temp_sret));
+		printf("%s", buff);
+    	lingot_error_queue_push(buff);
+		return -1;
 	}
 
 	// float point conversion

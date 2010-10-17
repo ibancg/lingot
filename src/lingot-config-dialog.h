@@ -79,10 +79,6 @@ struct _LingotConfigDialog {
 
 //LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
 void lingot_config_dialog_destroy(LingotConfigDialog*);
-
-void lingot_config_dialog_apply(LingotConfigDialog*);
-void lingot_config_dialog_close(LingotConfigDialog*);
-
 void lingot_config_dialog_show(LingotMainFrame* frame);
 
 #endif // __LINGOT_CONFIG_DIALOG_H__

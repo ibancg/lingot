@@ -200,15 +200,19 @@ void lingot_core_destroy(LingotCore* core) {
 
 // reads a new piece of signal from audio source, apply filtering and
 // decimation and appends it to the buffer
-void lingot_core_read(LingotCore* core) {
+int lingot_core_read(LingotCore* core) {
 
 	register unsigned int i, decimation_output_index; // loop variables.
 	int decimation_output_len;
 	FLT* decimation_in;
 	FLT* decimation_out;
 	LingotConfig* conf = core->conf;
+	int audio_read_status;
 
-	lingot_audio_read(core->audio, core);
+	audio_read_status = lingot_audio_read(core->audio, core);
+	if (audio_read_status != 0) {
+		return audio_read_status;
+	}
 
 	if (conf->gain_nu != 1.0) {
 		for (i = 0; i < conf->read_buffer_size; i++)
@@ -282,6 +286,8 @@ void lingot_core_read(LingotCore* core) {
 	// | xxxxxxxxxxxxxxxxyyyyaa | aaaaa | bbbbbbb |
 	//  ------------------------------------------
 	//
+
+	return 0;
 }
 
 void lingot_core_compute_fundamental_fequency(LingotCore* core) {
@@ -415,24 +421,25 @@ void lingot_core_start(LingotCore* core) {
 
 /* stop running the core */
 void lingot_core_stop(LingotCore* core) {
-	//void* thread_result;
+	void* thread_result;
+
+	//core->running = 0;
 
 	// threads cancelation
 	if (core->conf->audio_system != AUDIO_SYSTEM_JACK)
 		pthread_cancel(core->thread_input_read);
 	pthread_cancel(core->thread_computation);
 
-	//	core->running = 0;
 	//
 	// wait for the thread exit
 
 	if (core->conf->audio_system != AUDIO_SYSTEM_JACK) {
-		pthread_join(core->thread_input_read, NULL);
+		pthread_join(core->thread_input_read, &thread_result);
 		//		printf("%p %p %i\n", thread_result, PTHREAD_CANCELED, thread_result
 		//				== PTHREAD_CANCELED);
 	}
 
-	pthread_join(core->thread_computation, NULL);
+	pthread_join(core->thread_computation, &thread_result);
 	//	printf("%p %p %i\n", thread_result, PTHREAD_CANCELED, thread_result
 	//			== PTHREAD_CANCELED);
 
@@ -444,9 +451,20 @@ void lingot_core_stop(LingotCore* core) {
 
 /* run the core */
 void lingot_core_run_reading_thread(LingotCore* core) {
+
+	int read_status = 0;
+
 	while (core->running) {
-		lingot_core_read(core); // process new data block.
+		// process new data block.
+		read_status = lingot_core_read(core);
+		if (read_status != 0) {
+			break;
+		}
 	}
+
+	// printf("Leaving read thread, result = %i\n", read_status);
+	//	pthread_exit(NULL);
+	//return read_status;
 }
 
 /* run the core */
@@ -466,4 +484,6 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 		pthread_cond_timedwait(&core->thread_computation_cond,
 				&core->thread_computation_mutex, &tspec);
 	}
+
+	// printf("Leaving computation thread\n");
 }
