@@ -610,13 +610,6 @@ void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
 }
 
 void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
-	// tone indexation by semitone.
-	//	static char* tone_string[] = { "A", "A#", "B", "C", "C#", "D", "D#", "E",
-	//			"F", "F#", "G", "G#" };
-	//	const FLT Log2 = log(2.0);
-
-	//FLT fret_f;
-	//int fret;
 	char* current_tone;
 	GtkWidget* widget = NULL;
 
@@ -634,8 +627,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
-	static double
-			scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+	static double scales[] =
+			{ 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
 
 	// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;
@@ -766,6 +759,7 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	gdk_gc_set_foreground(gc, &spectrum_color);
 
+	// TODO: change access to frame->core->X
 	// spectrum drawing.
 	if (frame->core->running) {
 		j = -1;
@@ -779,42 +773,45 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		if (max >= spectrum_size_x)
 			max = spectrum_size_x;
 
-		for (i = min; i < max; i++) {
-			j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN * log10(
-					frame->core->X[i])) : 0; // dB.
-			if (j >= spectrum_size_y)
-				j = spectrum_size_y - 1;
-			if (spectrum_drawing_filled) {
-				gdk_draw_line(pixmap, gc, spectrum_x_margin + i,
-						spectrum_size_y + spectrum_top_margin - 1,
-						spectrum_x_margin + i, spectrum_top_margin
-								+ spectrum_size_y - j);
-			} else {
-				if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0) && (j
-						< spectrum_size_y))
-					gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
-							spectrum_size_y + spectrum_top_margin - old_j,
-							spectrum_x_margin + i, spectrum_size_y
-									+ spectrum_top_margin - j);
-				old_j = j;
-			}
-		}
-
-		if (frame->core->freq != 0.0) {
-
-			// fundamental frequency mark with a red point.
-			gdk_gc_set_foreground(gc, &freq_color);
-
-			// index of closest sample to fundamental frequency.
-			i = (int) rint(frame->core->freq * frame->conf->fft_size
-					* frame->conf->oversampling / frame->conf->sample_rate);
-			if ((i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1)) {
+		if (frame->core->running) {
+			for (i = min; i < max; i++) {
 				j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN * log10(
 						frame->core->X[i])) : 0; // dB.
-				if (j < spectrum_size_y - 1)
-					gdk_draw_rectangle(pixmap, gc, TRUE, spectrum_x_margin + i
-							- 1, spectrum_size_y + spectrum_top_margin - j - 1,
-							3, 3);
+				if (j >= spectrum_size_y)
+					j = spectrum_size_y - 1;
+				if (spectrum_drawing_filled) {
+					gdk_draw_line(pixmap, gc, spectrum_x_margin + i,
+							spectrum_size_y + spectrum_top_margin - 1,
+							spectrum_x_margin + i, spectrum_top_margin
+									+ spectrum_size_y - j);
+				} else {
+					if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
+							&& (j < spectrum_size_y))
+						gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
+								spectrum_size_y + spectrum_top_margin - old_j,
+								spectrum_x_margin + i, spectrum_size_y
+										+ spectrum_top_margin - j);
+					old_j = j;
+				}
+			}
+
+			if (frame->core->freq != 0.0) {
+
+				// fundamental frequency mark with a red point.
+				gdk_gc_set_foreground(gc, &freq_color);
+
+				// index of closest sample to fundamental frequency.
+				i = (int) rint(frame->core->freq * frame->conf->fft_size
+						* frame->conf->oversampling / frame->conf->sample_rate);
+				if ((i < frame->conf->fft_size - 1)
+						&& (i < spectrum_size_x - 1)) {
+					j = (frame->core->X[i] > 1.0) ? (int) (PLOT_GAIN * log10(
+							frame->core->X[i])) : 0; // dB.
+					if (j < spectrum_size_y - 1)
+						gdk_draw_rectangle(pixmap, gc, TRUE, spectrum_x_margin
+								+ i - 1, spectrum_size_y + spectrum_top_margin
+								- j - 1, 3, 3);
+				}
 			}
 		}
 	}

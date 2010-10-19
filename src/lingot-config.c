@@ -340,9 +340,9 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	//			config->root_frequency_error / 1200.0);
 	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
 			* config->sample_rate / config->oversampling);
-	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
-			/ config->calculation_rate);
-	config->read_buffer_size = 128; // TODO
+//	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
+//			/ config->calculation_rate);
+//	config->read_buffer_size = 128; // TODO
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);

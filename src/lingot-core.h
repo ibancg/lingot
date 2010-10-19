@@ -68,10 +68,6 @@ struct _LingotCore {
 
 	LingotConfig* conf; // configuration structure
 
-	// pthread-related  member variables
-	pthread_t thread_input_read;
-	pthread_attr_t thread_input_read_attr;
-
 	pthread_t thread_computation;
 	pthread_attr_t thread_computation_attr;
 	pthread_cond_t thread_computation_cond;
@@ -89,6 +85,6 @@ void lingot_core_start(LingotCore*);
 // stop process
 void lingot_core_stop(LingotCore*);
 
-int lingot_core_read(LingotCore* core);
+//int lingot_core_read(LingotCore* core);
 
 #endif //__LINGOT_CORE_H__

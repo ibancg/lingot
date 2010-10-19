@@ -27,7 +27,7 @@
 
 const char* exception;
 
-LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
+LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
 
@@ -40,7 +40,8 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 	audio = malloc(sizeof(LingotAudioHandler));
 	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
-	sprintf(audio->device, "%s", "");
+	audio->read_buffer_size = 128; // TODO: ?
+	audio->running = 0;
 
 	// ALSA allocates some mem to load its config file when we call
 	// snd_card_next. Now that we're done getting the info, let's tell ALSA
@@ -50,15 +51,14 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 	audio->capture_handle = NULL;
 
 	try {
-		if ((err = snd_pcm_open(&audio->capture_handle,
-				core->conf->audio_dev[AUDIO_SYSTEM_ALSA],
+		if ((err = snd_pcm_open(&audio->capture_handle, device,
 				SND_PCM_STREAM_CAPTURE, 0)) < 0) {
 			sprintf(error_message, "cannot open audio device %s (%s)\n",
-					core->conf->audio_dev[AUDIO_SYSTEM_ALSA], snd_strerror(err));
+					device, snd_strerror(err));
 			throw(error_message);
 		}
 
-		sprintf(audio->device, "%s", core->conf->audio_dev[AUDIO_SYSTEM_ALSA]);
+		strcpy(audio->device, device);
 
 		if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
 			sprintf(error_message,
@@ -88,7 +88,7 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 			throw(error_message);
 		}
 
-		int rate = core->conf->sample_rate;
+		int rate = sample_rate;
 
 		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
 				hw_params, &rate, 0)) < 0) {
@@ -119,9 +119,9 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 			throw(error_message);
 		}
 
-		audio->read_buffer = malloc(channels * core->conf->read_buffer_size
+		audio->read_buffer = malloc(channels * audio->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0, core->conf->read_buffer_size
+		memset(audio->read_buffer, 0, audio->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
 	} catch {
 		if (audio->capture_handle != NULL)
@@ -145,35 +145,34 @@ LingotAudioHandler* lingot_audio_alsa_new(LingotCore* core) {
 void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 #	ifdef ALSA
 	if (audio != NULL) {
-		if (audio->capture_handle != NULL)
-			snd_pcm_close(audio->capture_handle);
-		if (audio->read_buffer != NULL)
-			free(audio->read_buffer);
+		snd_pcm_close(audio->capture_handle);
+		free(audio->read_buffer);
 	}
 #	endif
 }
 
-int lingot_audio_alsa_read(LingotAudioHandler* audio, LingotCore* core) {
-	int i;
+int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	int temp_sret;
+	int i;
 
 #	ifdef ALSA
 	temp_sret = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
-			core->conf->read_buffer_size);
+			audio->read_buffer_size);
 
-	if (temp_sret != core->conf->read_buffer_size) {
+	if (temp_sret != audio->read_buffer_size) {
 		char buff[100];
 		sprintf(buff, "read from audio interface failed (%s)", snd_strerror(
 				temp_sret));
 		printf("%s", buff);
-    	lingot_error_queue_push(buff);
+		lingot_error_queue_push(buff);
 		return -1;
 	}
 
 	// float point conversion
-	for (i = 0; i < core->conf->read_buffer_size; i++) {
-		core->flt_read_buffer[i] = audio->read_buffer[i];
+	for (i = 0; i < audio->read_buffer_size; i++) {
+		audio->flt_read_buffer[i] = audio->read_buffer[i];
 	}
+
 #	endif
 
 	return 0;
