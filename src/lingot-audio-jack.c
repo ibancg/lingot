@@ -23,7 +23,6 @@
 #include <stdio.h>
 
 #include "lingot-defs.h"
-#include "lingot-core.h"
 #include "lingot-audio-jack.h"
 #include "lingot-i18n.h"
 #include "lingot-error.h"
@@ -34,30 +33,48 @@
 jack_client_t* client = NULL;
 const char* exception;
 
+pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
-	LingotCore* core = param;
-	if (core->audio != NULL) {
-		core->audio->nframes = nframes;
-		lingot_core_read(core);
+	LingotAudioHandler* audio = param;
+	audio->nframes = nframes;
+
+	pthread_mutex_lock(&stop_mutex);
+	if (audio->running) {
+		lingot_audio_jack_read(audio);
+		audio->process_callback(audio->flt_read_buffer,
+				audio->read_buffer_size, audio->process_callback_arg);
 	}
+	pthread_mutex_unlock(&stop_mutex);
 
 	return 0;
 }
 
-/**
- * JACK calls this shutdown_callback if the server ever shuts down or
- * decides to disconnect the client.
- */
-void lingot_audio_jack_shutdown(void* param) {
-	LingotCore* core = param;
-	core->running = 0;
-	lingot_error_queue_push(_("Missing connection with JACK audio server"));
-}
+///**
+// * JACK calls this shutdown_callback if the server ever shuts down or
+// * decides to disconnect the client.
+// */
+//void lingot_audio_jack_shutdown(void* param) {
+//	LingotAudioHandler* audio = param;
+//	lingot_error_queue_push(_("Missing connection with JACK audio server"));
+//	pthread_mutex_lock(&stop_mutex);
+//	// cleans the read buffer
+//	memset(audio->flt_read_buffer, 0, audio->read_buffer_size * sizeof(FLT));
+//	audio->process_callback(audio->flt_read_buffer, audio->read_buffer_size,
+//			audio->process_callback_arg);
+//	pthread_mutex_unlock(&stop_mutex);
+//}
 #endif
 
-LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
+// TODO: quitar core
+LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
+		LingotAudioProcessCallback process_callback,
+		void *process_callback_arg,
+		LingotAudioShutdownCallback shutdown_callback,
+		void* shutdown_callback_arg) {
 
 	LingotAudioHandler* audio = NULL;
+	//LingotCore* core = (LingotCore*) p;
 #	ifdef JACK
 	const char **ports = NULL;
 	const char *client_name = "lingot";
@@ -67,19 +84,17 @@ LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
 	jack_status_t status;
 
 	audio = malloc(sizeof(LingotAudioHandler));
-	LingotConfig* conf = core->conf;
-	sprintf(audio->device, "%s", "");
+	strcpy(audio->device, "");
 
 	audio->audio_system = AUDIO_SYSTEM_JACK;
 	audio->jack_client = jack_client_open(client_name, options, &status,
 			server_name);
+	audio->running = 0;
 
 	try {
 		if (audio->jack_client == NULL) {
 			throw(_("Unable to connect to JACK server"));
 		}
-
-		client = audio->jack_client;
 
 		if (status & JackServerStarted) {
 			fprintf(stderr, "JACK server started\n");
@@ -89,17 +104,14 @@ LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
 			fprintf(stderr, "unique name `%s' assigned\n", client_name);
 		}
 
-		jack_set_process_callback(audio->jack_client,
-				lingot_audio_jack_process, core);
+		audio->process_callback = process_callback;
+		audio->process_callback_arg = process_callback_arg;
 
-		jack_on_shutdown(audio->jack_client, lingot_audio_jack_shutdown, core);
+		jack_on_shutdown(audio->jack_client, shutdown_callback,
+				shutdown_callback_arg);
 
 		audio->real_sample_rate = jack_get_sample_rate(audio->jack_client);
-
-		// TODO: no se deberia cambiar la configuracion desde aqui dentro
-		conf->sample_rate = audio->real_sample_rate;
-		lingot_config_update_internal_params(conf);
-		conf->read_buffer_size = jack_get_buffer_size(audio->jack_client);
+		audio->read_buffer_size = jack_get_buffer_size(audio->jack_client);
 
 		//	printf("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate(
 		//			audio->jack_client));
@@ -113,22 +125,8 @@ LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
 			throw(_("No more JACK ports available"));
 		}
 
-		if (jack_activate(audio->jack_client)) {
-			throw(_("Cannot activate client"));
-		}
+		//printf("Connected to port %s", ports[0]);
 
-		ports = jack_get_ports(audio->jack_client, NULL, NULL,
-				JackPortIsPhysical | JackPortIsOutput); // TODO: ???
-		if (ports == NULL) {
-			throw(_("No physical capture ports"));
-		}
-
-		if (jack_connect(audio->jack_client, ports[0], jack_port_name(
-				audio->jack_input_port))) {
-			throw(_("Cannot connect input ports"));
-		}
-
-		printf("Connected to port %s", ports[0]);
 	} catch {
 		free(audio);
 		audio = NULL;
@@ -137,6 +135,10 @@ LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
 
 	if (ports != NULL)
 		jack_free(ports);
+
+	if (audio != NULL) {
+		client = audio->jack_client;
+	}
 
 #	else
 	lingot_error_queue_push(
@@ -147,18 +149,21 @@ LingotAudioHandler* lingot_audio_jack_new(LingotCore* core) {
 
 void lingot_audio_jack_destroy(LingotAudioHandler* audio) {
 #	ifdef JACK
-	jack_cycle_wait(audio->jack_client);
-	jack_client_close(audio->jack_client);
-	client = NULL;
+	if (audio != NULL) {
+		//jack_cycle_wait(audio->jack_client);
+		//		jack_deactivate(audio->jack_client);
+		jack_client_close(audio->jack_client);
+		client = NULL;
+	}
 #	endif
 }
 
-int lingot_audio_jack_read(LingotAudioHandler* audio, LingotCore* core) {
+int lingot_audio_jack_read(LingotAudioHandler* audio) {
 #	ifdef JACK
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
-		core->flt_read_buffer[i] = in[i] * 32768;
+		audio->flt_read_buffer[i] = in[i] * 32768;
 	return 0;
 #	else
 	return -1;
@@ -255,3 +260,45 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 	return properties;
 }
 
+int lingot_audio_jack_start(LingotAudioHandler* audio) {
+	int result = 0;
+	const char **ports = NULL;
+
+	jack_set_process_callback(audio->jack_client, lingot_audio_jack_process,
+			audio);
+
+	try {
+		if (jack_activate(audio->jack_client)) {
+			throw(_("Cannot activate client"));
+		}
+
+		ports = jack_get_ports(audio->jack_client, NULL, NULL,
+				JackPortIsPhysical | JackPortIsOutput); // TODO: ???
+		if (ports == NULL) {
+			//			jack_deactivate(audio->jack_client);
+			throw(_("No physical capture ports"));
+		}
+
+		if (jack_connect(audio->jack_client, ports[0], jack_port_name(
+				audio->jack_input_port))) {
+			//			jack_deactivate(audio->jack_client);
+			throw(_("Cannot connect input ports"));
+		}
+
+		audio->running = 1;
+
+	} catch {
+		lingot_error_queue_push(exception);
+		result = -1;
+	}
+
+	return result;
+}
+
+void lingot_audio_jack_stop(LingotAudioHandler* audio) {
+	//jack_cycle_wait(audio->jack_client);
+	pthread_mutex_lock(&stop_mutex);
+	jack_deactivate(audio->jack_client);
+	audio->running = 0;
+	pthread_mutex_unlock(&stop_mutex);
+}

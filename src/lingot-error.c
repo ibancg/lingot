@@ -31,24 +31,26 @@
 char message[ERROR_QUEUE_SIZE][1000];
 int top = 0;
 
-pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t error_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// TODO: implement a queue, not a stack
 
 void lingot_error_queue_push(const char* msg) {
 
 	if (top < ERROR_QUEUE_SIZE) {
 		// search if the message is already in the queue
-		pthread_mutex_lock(&mutex1);
+		pthread_mutex_lock(&error_queue_mutex);
 
 		int i;
 		for (i = 0; i < top; i++) {
 			if (!strcmp(message[i], msg)) {
-				pthread_mutex_unlock(&mutex1);
+				pthread_mutex_unlock(&error_queue_mutex);
 				return;
 			}
 		}
 
 		strcpy(message[top++], msg);
-		pthread_mutex_unlock(&mutex1);
+		pthread_mutex_unlock(&error_queue_mutex);
 	} else {
 		printf("WARNING: the queue is full!\n");
 	}
@@ -58,9 +60,9 @@ char* lingot_error_queue_pop() {
 	char* result = NULL;
 
 	if (top != 0) {
-		pthread_mutex_lock(&mutex1);
+		pthread_mutex_lock(&error_queue_mutex);
 		result = strdup(message[--top]);
-		pthread_mutex_unlock(&mutex1);
+		pthread_mutex_unlock(&error_queue_mutex);
 	}
 
 	return result;

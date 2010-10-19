@@ -29,28 +29,47 @@
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-jack.h"
 
-LingotAudioHandler* lingot_audio_new(void* p) {
+LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
+		int sample_rate, LingotAudioProcessCallback process_callback,
+		void *process_callback_arg,
+		LingotAudioShutdownCallback shutdown_callback,
+		void* shutdown_callback_arg) {
 
-	LingotCore* core = (LingotCore*) p;
 	LingotAudioHandler* result = NULL;
 
-	switch (core->conf->audio_system) {
+	switch (audio_system) {
 	case AUDIO_SYSTEM_OSS:
-		result = lingot_audio_oss_new(core);
+		result = lingot_audio_oss_new(device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_ALSA:
-		result = lingot_audio_alsa_new(core);
+		result = lingot_audio_alsa_new(device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_new(core);
+		result = lingot_audio_jack_new(device, sample_rate, process_callback,
+				process_callback_arg, shutdown_callback, shutdown_callback_arg);
 		break;
+	}
+
+	if (result != NULL) {
+		// audio source read in floating point format.
+		result->flt_read_buffer
+				= malloc(result->read_buffer_size * sizeof(FLT));
+		memset(result->flt_read_buffer, 0, result->read_buffer_size
+				* sizeof(FLT));
+		result->process_callback = process_callback;
+		result->process_callback_arg = process_callback_arg;
+		result->shutdown_callback = shutdown_callback;
+		result->shutdown_callback_arg = shutdown_callback_arg;
 	}
 
 	return result;
 }
 
-void lingot_audio_destroy(LingotAudioHandler* audio, void* p) {
+void lingot_audio_destroy(LingotAudioHandler* audio) {
 	if (audio != NULL) {
+
+		free(audio->flt_read_buffer);
+
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			lingot_audio_oss_destroy(audio);
@@ -69,21 +88,20 @@ void lingot_audio_destroy(LingotAudioHandler* audio, void* p) {
 	}
 }
 
-int lingot_audio_read(LingotAudioHandler* audio, void* p) {
-	LingotCore* core = (LingotCore*) p;
+int lingot_audio_read(LingotAudioHandler* audio) {
 	int result;
 
 	if (audio != NULL)
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
-			result = lingot_audio_oss_read(audio, core);
+			result = lingot_audio_oss_read(audio);
 			break;
 		case AUDIO_SYSTEM_ALSA:
-			result = lingot_audio_alsa_read(audio, core);
+			result = lingot_audio_alsa_read(audio);
 			break;
-		case AUDIO_SYSTEM_JACK:
-			result = lingot_audio_jack_read(audio, core);
-			break;
+			//		case AUDIO_SYSTEM_JACK:
+			//			result = lingot_audio_jack_read(audio);
+			//			break;
 		default:
 			perror("unknown audio system\n");
 			result = -1;
@@ -127,3 +145,65 @@ void lingot_audio_audio_system_properties_destroy(
 	if (properties->devices != NULL)
 		free(properties->devices);
 }
+
+void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
+
+	int read_status = 0;
+
+	// TODO: condition?
+	while (audio->running) {
+		// process new data block.
+		read_status = lingot_audio_read(audio);
+
+		if (read_status != 0) {
+			break;
+		}
+
+		audio->process_callback(audio->flt_read_buffer,
+				audio->read_buffer_size, audio->process_callback_arg);
+	}
+
+	audio->running = 0;
+	audio->shutdown_callback(audio->shutdown_callback_arg);
+}
+
+int lingot_audio_start(LingotAudioHandler* audio) {
+
+	int result = 0;
+
+	if (audio->audio_system != AUDIO_SYSTEM_JACK) {
+		pthread_attr_init(&audio->thread_input_read_attr);
+
+		// detached thread.
+		//  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+		pthread_create(&audio->thread_input_read,
+				&audio->thread_input_read_attr,
+				(void* (*)(void*)) lingot_audio_run_reading_thread, audio);
+	} else {
+		result = lingot_audio_jack_start(audio);
+	}
+
+	if (result == 0) {
+		audio->running = 1;
+	}
+
+	return result;
+}
+
+void lingot_audio_stop(LingotAudioHandler* audio) {
+	void* thread_result;
+
+	if (audio->running == 1) {
+
+		// threads cancelation
+		if (audio->audio_system != AUDIO_SYSTEM_JACK) {
+			pthread_cancel(audio->thread_input_read);
+			pthread_join(audio->thread_input_read, &thread_result);
+			pthread_attr_destroy(&audio->thread_input_read_attr);
+			audio->running = 0;
+		} else {
+			lingot_audio_jack_stop(audio);
+		}
+	}
+}
+

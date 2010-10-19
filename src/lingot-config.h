@@ -84,7 +84,7 @@ struct _LingotConfig {
 	unsigned int temporal_buffer_size;
 
 	// samples read from soundcard (internal parameter).
-	unsigned int read_buffer_size;
+	//unsigned int read_buffer_size;
 
 	FLT noise_threshold_db; // dB
 	FLT noise_threshold_nu; // natural units (internal parameter)

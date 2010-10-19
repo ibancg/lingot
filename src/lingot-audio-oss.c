@@ -31,26 +31,25 @@
 
 const char* exception;
 
-LingotAudioHandler* lingot_audio_oss_new(LingotCore* core) {
+LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 	int channels = 1;
-	int rate = core->conf->sample_rate;
 	int format = SAMPLE_FORMAT;
-	char *fdsp = core->conf->audio_dev[AUDIO_SYSTEM_OSS];
 	char error_message[100];
 
 	LingotAudioHandler* audio = malloc(sizeof(LingotAudioHandler));
-	sprintf(audio->device, "%s", "");
 
 	audio->audio_system = AUDIO_SYSTEM_OSS;
-	audio->dsp = open(fdsp, O_RDONLY);
-	sprintf(audio->device, "%s", core->conf->audio_dev[AUDIO_SYSTEM_OSS]);
+	audio->dsp = open(device, O_RDONLY);
+	audio->read_buffer_size = 128; // TODO: review
+	strcpy(audio->device, device);
+	audio->running = 0;
 
 	try {
 
 		if (audio->dsp < 0) {
-			sprintf(error_message, "Unable to open audio device %s (%s)", fdsp,
-					strerror(errno));
+			sprintf(error_message, "Unable to open audio device %s (%s)",
+					device, strerror(errno));
 			throw(error_message);
 		}
 
@@ -84,16 +83,16 @@ LingotAudioHandler* lingot_audio_oss_new(LingotCore* core) {
 			throw(error_message);
 		}
 
-		if (ioctl(audio->dsp, SNDCTL_DSP_SPEED, &rate) < 0) {
+		if (ioctl(audio->dsp, SNDCTL_DSP_SPEED, &sample_rate) < 0) {
 			sprintf(error_message, "Error setting sample rate (%s)", strerror(
 					errno));
 			throw(error_message);
 		}
 
-		audio->real_sample_rate = rate;
-		audio->read_buffer = malloc(core->conf->read_buffer_size
+		audio->real_sample_rate = sample_rate;
+		audio->read_buffer = malloc(audio->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0, core->conf->read_buffer_size
+		memset(audio->read_buffer, 0, audio->read_buffer_size
 				* sizeof(SAMPLE_TYPE));
 
 	} catch {
@@ -113,15 +112,25 @@ void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
 	}
 }
 
-int lingot_audio_oss_read(LingotAudioHandler* audio, LingotCore* core) {
+int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	int i;
+	int read_size;
 
-	read(audio->dsp, audio->read_buffer, core->conf->read_buffer_size
+	read_size = read(audio->dsp, audio->read_buffer, audio->read_buffer_size
 			* sizeof(SAMPLE_TYPE));
 
+	if (read_size != audio->read_buffer_size * sizeof(SAMPLE_TYPE)) {
+		char buff[100];
+		sprintf(buff, "read from audio interface failed (%s)", strerror(errno));
+		printf("%s", buff);
+		lingot_error_queue_push(buff);
+		return -1;
+	}
+
 	// float point conversion
-	for (i = 0; i < core->conf->read_buffer_size; i++)
-		core->flt_read_buffer[i] = audio->read_buffer[i];
+	for (i = 0; i < audio->read_buffer_size; i++) {
+		audio->flt_read_buffer[i] = audio->read_buffer[i];
+	}
 
 	return 0;
 }

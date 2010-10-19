@@ -1,4 +1,11 @@
 
+2010-10-18 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed bug #31369 )https://savannah.nongnu.org/bugs/?31369
+	* Audio API is now transparent, providing the read thread.
+	* Improved error messages from audio device issues.
+	* Released Lingot 0.8.2b2
+
 2010-10-12 Ibán Cereijo <ibancg@gmail.com>
 
 	* Added different scales support.
@@ -14,6 +21,7 @@
 	* lingot-error now supports multiple messages in the queue.
 	* Added some macros to simulate try/catch. Used in audio handling.
 	* The error dispatcher runs now under his own timer.
+	* Released Lingot 0.8.2b1
 
 
 2010-03-17 Ibán Cereijo <ibancg@gmail.com>
