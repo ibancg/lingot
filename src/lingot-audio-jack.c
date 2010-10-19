@@ -50,20 +50,21 @@ int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
 	return 0;
 }
 
-///**
-// * JACK calls this shutdown_callback if the server ever shuts down or
-// * decides to disconnect the client.
-// */
-//void lingot_audio_jack_shutdown(void* param) {
-//	LingotAudioHandler* audio = param;
-//	lingot_error_queue_push(_("Missing connection with JACK audio server"));
-//	pthread_mutex_lock(&stop_mutex);
-//	// cleans the read buffer
-//	memset(audio->flt_read_buffer, 0, audio->read_buffer_size * sizeof(FLT));
-//	audio->process_callback(audio->flt_read_buffer, audio->read_buffer_size,
-//			audio->process_callback_arg);
-//	pthread_mutex_unlock(&stop_mutex);
-//}
+/**
+ * JACK calls this shutdown_callback if the server ever shuts down or
+ * decides to disconnect the client.
+ */
+void lingot_audio_jack_shutdown(void* param) {
+	LingotAudioHandler* audio = param;
+	lingot_error_queue_push(_("Missing connection with JACK audio server"));
+	pthread_mutex_lock(&stop_mutex);
+	// cleans the read buffer
+	memset(audio->flt_read_buffer, 0, audio->read_buffer_size * sizeof(FLT));
+	audio->process_callback(audio->flt_read_buffer, audio->read_buffer_size,
+			audio->process_callback_arg);
+	pthread_mutex_unlock(&stop_mutex);
+	audio->shutdown_callback(audio->shutdown_callback_arg);
+}
 #endif
 
 // TODO: quitar core
@@ -107,8 +108,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 		audio->process_callback = process_callback;
 		audio->process_callback_arg = process_callback_arg;
 
-		jack_on_shutdown(audio->jack_client, shutdown_callback,
-				shutdown_callback_arg);
+		jack_on_shutdown(audio->jack_client, lingot_audio_jack_shutdown, audio);
 
 		audio->real_sample_rate = jack_get_sample_rate(audio->jack_client);
 		audio->read_buffer_size = jack_get_buffer_size(audio->jack_client);

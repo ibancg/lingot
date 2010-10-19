@@ -119,6 +119,9 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	read_size = read(audio->dsp, audio->read_buffer, audio->read_buffer_size
 			* sizeof(SAMPLE_TYPE));
 
+	//	if (rand() < 0.001*RAND_MAX)
+	//		read_size = 0;
+
 	if (read_size != audio->read_buffer_size * sizeof(SAMPLE_TYPE)) {
 		char buff[100];
 		sprintf(buff, "read from audio interface failed (%s)", strerror(errno));

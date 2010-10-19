@@ -230,7 +230,9 @@ int lingot_core_audio_shutdown_callback(void *arg) {
 
 	lingot_core_stop(core);
 
-	lingot_error_queue_push(_("Missing connection with audio server"));
+//	lingot_error_queue_push(_("Missing connection with audio server"));
+
+	//printf("Missing connection with audio server\m");
 }
 
 // reads a new piece of signal from audio source, apply filtering and

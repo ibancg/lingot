@@ -159,12 +159,16 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	temp_sret = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
 			audio->read_buffer_size);
 
+	//	if (rand() < 0.001*RAND_MAX)
+	//		temp_sret = 0;
+
 	if (temp_sret != audio->read_buffer_size) {
 		char buff[100];
 		sprintf(buff, "read from audio interface failed (%s)", snd_strerror(
 				temp_sret));
 		printf("%s", buff);
 		lingot_error_queue_push(buff);
+
 		return -1;
 	}
 
