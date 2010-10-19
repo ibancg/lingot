@@ -1,0 +1,91 @@
+
+2010-10-12 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added different scales support.
+	   + Scale edition in a cell table.
+	   + Importation of Scala .scl files (http://www.huygens-fokker.org/scala/)
+	   + The gauge adapts its range to the scale. 
+	   + The deviation control has been moved to the scale tab.
+	* The sample rate control has been changed to a GtkComboBoxEntry.
+	* When the sample rate is not available, the user is notified.
+	* Corrected some minor errors opening audio devices.
+	* Improved OSS error messages.
+	* Minor changes in the capture tab in the config dialog.
+	* lingot-error now supports multiple messages in the queue.
+	* Added some macros to simulate try/catch. Used in audio handling.
+	* The error dispatcher runs now under his own timer.
+
+
+2010-03-17 Ibán Cereijo <ibancg@gmail.com>
+
+	* Released Lingot 0.8.1
+
+
+2010-03-14 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed a SIGSEGV in the JACK thread management (bug #29090).
+	* Fixed core hang up bug #29091 (#562425 in debian).
+	* Fixed https://bugzilla.redhat.com/show_bug.cgi?id=517970#c9
+	* Added a graphic controller for the MIN_FREQUENCY parameter.
+	
+
+2010-02-26 Ibán Cereijo <ibancg@gmail.com>
+
+	* Released Lingot 0.8.0
+	
+	
+2010-02-23 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added ALSA support
+	* Added translations: zh_CN, it
+	* Changed default sample rate to 44100 Hz
+	
+	
+2008-06-24 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added JACK support
+	* Fixed memory leak in GUI
+	* Added translations: cs, sv, de, pt_BR
+	* Changed default sample rate to 11025 Hz instead of 8 KHz
+	
+	
+2007-12-26 Jairo Chapela-Martínez <jairochapela@gmail.com>
+
+	* Fixed some strange issues in the configuration scripts
+
+
+2008-12-23 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed SIGSEGV bug #21850 (#425867 in debian).
+	* Released Lingot 0.7.6
+	
+	
+2008-12-18 Ibán Cereijo <ibancg@gmail.com>
+
+	* Released Lingot 0.7.5
+
+
+2007-08-30 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added frequency legend, noise threshold and scroll bar to spectrum area		
+	* Reorganized Menu Items	
+	* Added a "View" menu item 
+	* Added translations: gl
+
+
+2007-08-26 Ibán Cereijo <ibancg@gmail.com>
+
+	* Code refactoring: migration to C.
+	* Fixed exit SIGSEGV bug.
+	* Fixed extra thread bug.
+	
+	
+2007-08-23 Ibán Cereijo  <ibancg@gmail.com>
+
+	* Changes in automake proccess.
+	* fixed charset problems in spanish translation
+	* Updated translations: es  
+	* Renamed src/tuner.cc to src/lingot.cc
+	* Added resource src/lingot-i18n.h
+	* Changed ChangeLog and NEWS format
+	* Released Lingot 0.7.4

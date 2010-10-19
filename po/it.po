@@ -1,0 +1,245 @@
+# translation of it.po to
+# translation of es.po to
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: it\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
+"PO-Revision-Date: 2008-07-27 21:38+0200\n"
+"Last-Translator: cereda.ste@gmail.com\n"
+"Language-Team:  <cereda.ste@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"X-Language: it_IT\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr "Regolazioni"
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr "Avanzate"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr "Periferica audio"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr "Sistema audio"
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr "Basilare"
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid "Calculation rate"
+msgstr "Velocità di calcolo"
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr "Cattura"
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid "DFT number"
+msgstr "Numero di DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid "DFT size"
+msgstr "Grandezza DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "DFTs"
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid "Default"
+msgstr "Configurazione predefinita"
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Effective sample rate"
+msgstr "Frequenza di campionamento effettiva"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "Grandezza FFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr "Guadagno"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Noise threshold"
+msgstr "Soglia di rumore"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak half-width"
+msgstr "Metà larghezza picco"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid "Peak number"
+msgstr "Numero di picchi"
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Peak rejection relation"
+msgstr "Soglia di rigetto picco"
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Root frequency"
+msgstr "Frequenza base"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Sample rate"
+msgstr "Frequenza campione"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Temporal window"
+msgstr "Finestra temporale"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Visualization rate"
+msgstr "Soglia di visualizzazione"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "lingot configuration"
+msgstr "configura lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "peaks"
+msgstr "picchi"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "samples"
+msgstr "campioni"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid "seconds"
+msgstr "secondi"
+
+#: ../src/lingot-audio-alsa.c:140
+#, fuzzy
+msgid "The application has not been built with ALSA support"
+msgstr "L'applicazione è stata compilata senza il supporto a ALSA"
+
+#: ../src/lingot-audio-jack.c:53
+msgid "Missing connection with JACK audio server"
+msgstr "Manca la connessione al server audio JACK"
+
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
+msgid "Unable to connect to JACK server"
+msgstr "Impossibile connettersi al server JACK"
+
+#: ../src/lingot-audio-jack.c:108
+msgid "No more JACK ports available"
+msgstr "Nessuna porta di JACK disponibile"
+
+#: ../src/lingot-audio-jack.c:114
+msgid "Cannot activate client"
+msgstr "Impossibile attivare il client"
+
+#: ../src/lingot-audio-jack.c:122
+msgid "No physical capture ports"
+msgstr "Nessuna porta di fisica di cattura"
+
+#: ../src/lingot-audio-jack.c:128
+msgid "Cannot connect input ports"
+msgstr "Impossibile connettere le porte d'ingresso"
+
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
+msgid "The application has not been built with JACK support"
+msgstr "L'applicazione è stata compilata senza il supporto a JACK"
+
+#: ../src/lingot-config-dialog.c:343
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Il buffer temporale è più piccolo dell'FFT. È stato aumentato a %0.3f secondi"
+
+#: ../src/lingot-config-dialog.c:345
+msgid "Warning"
+msgstr "Attenzione"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Accordatore di strumenti affidabile e semplice da usare"
+
+#: ../src/lingot-mainframe.c:102
+msgid "translator-credits"
+msgstr "Stefano Cereda <communico@tiscali.it>"
+
+#: ../src/lingot-mainframe.c:165
+msgid "Error"
+msgstr "Errore"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:250
+msgid "lingot"
+msgstr "lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
+msgid "Spectrum"
+msgstr "Spettro"
+
+#: ../src/lingot-mainframe.c:307
+msgid "_File"
+msgstr "_File"
+
+#: ../src/lingot-mainframe.c:308
+msgid "_Edit"
+msgstr "_Modifica"
+
+#: ../src/lingot-mainframe.c:309
+msgid "_View"
+msgstr "_Visualizza"
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Help"
+msgstr "_Aiuto"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:334
+msgid "Deviation"
+msgstr "Deviazione"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:339
+msgid "Tone"
+msgstr "Nota"
+
+#: ../src/lingot-mainframe.c:384
+msgid "freq"
+msgstr "freq"
+
+#: ../src/lingot-mainframe.c:387
+msgid "err"
+msgstr "err"
+
+#~ msgid "440 (A) +"
+#~ msgstr " A (440 Hz) + "
+
+#~ msgid "General parameters"
+#~ msgstr "Parametri generali"
+
+#~ msgid "Advanced parameters"
+#~ msgstr "Parametri avanzati"
