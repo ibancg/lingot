@@ -48,8 +48,6 @@ void lingot_core_run_computation_thread(LingotCore* core);
 
 int decimation_input_index = 0;
 
-pthread_mutex_t temporal_buffer_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 LingotCore* lingot_core_new(LingotConfig* conf) {
 
 	char buff[1000];
@@ -178,6 +176,8 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5, 0.9
 				/ core->conf->oversampling);
 
+		pthread_mutex_init(&core->temporal_buffer_mutex, NULL);
+
 		// ------------------------------------------------------------
 
 		core->running = 1;
@@ -213,6 +213,8 @@ void lingot_core_destroy(LingotCore* core) {
 
 		if (core->antialiasing_filter != NULL)
 			lingot_filter_destroy(core->antialiasing_filter);
+
+		pthread_mutex_destroy(&core->temporal_buffer_mutex);
 	}
 
 	free(core);
@@ -230,7 +232,7 @@ int lingot_core_audio_shutdown_callback(void *arg) {
 
 	lingot_core_stop(core);
 
-//	lingot_error_queue_push(_("Missing connection with audio server"));
+	//	lingot_error_queue_push(_("Missing connection with audio server"));
 
 	//printf("Missing connection with audio server\m");
 }
@@ -256,7 +258,7 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 
 	if (conf->gain_nu != 1.0) {
 		for (i = 0; i < read_buffer_size; i++)
-			read_buffer[i] *= conf->gain_nu;
+			core->flt_read_buffer[i] *= conf->gain_nu;
 	}
 
 	//
@@ -272,7 +274,7 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	decimation_output_len = 1 + (read_buffer_size
 			- (decimation_input_index + 1)) / conf->oversampling;
 
-	// TODO: thread sync when accessing temporal_buffer
+	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
 	/* we shift the temporal window to leave a hollow where place the new piece
 	 of data read. The buffer is actually a queue. */
@@ -329,6 +331,8 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	//  ------------------------------------------
 	//
 
+	pthread_mutex_unlock(&core->temporal_buffer_mutex);
+
 	return 0;
 }
 
@@ -345,6 +349,8 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	//printf("%d samples transformed of a total of %d\n", conf->fft_size,
 	//		conf->temporal_buffer_size);
+
+	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
 	// windowing
 	for (i = 0; i < conf->fft_size; i++) {
@@ -380,6 +386,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	if (Mi == (signed) (conf->fft_size >> 1)) {
 		core->freq = 0.0;
+		pthread_mutex_unlock(&core->temporal_buffer_mutex);
 		return;
 	}
 
@@ -416,6 +423,8 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 				* core->hamming_window_temporal[i];
 	}
 
+	pthread_mutex_unlock(&core->temporal_buffer_mutex);
+
 	//  Maximum finding by Newton-Raphson
 	// -----------------------------------
 
@@ -436,7 +445,6 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	w = wkm1; // frequency in rads.
 	core->freq = (w * conf->sample_rate) / (2.0 * M_PI * conf->oversampling); // analog frequency.
-
 }
 
 /* start running the core in another thread */
@@ -498,6 +506,7 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 	t.tv_usec = 1e6 / core->conf->calculation_rate;
 
 	while (core->running) {
+		// TODO: implementar con usleep?
 		lingot_core_compute_fundamental_fequency(core);
 		timeradd(&t, &tout, &tout);
 		tspec.tv_sec = tout.tv_sec;

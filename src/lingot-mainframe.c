@@ -120,11 +120,11 @@ void lingot_mainframe_callback_config_dialog(GtkWidget* w,
 }
 
 unsigned short int lingot_mainframe_get_closest_note_index(FLT freq,
-		LingotScale* scale, FLT* error_cents) {
+		LingotScale* scale, FLT deviation, FLT* error_cents) {
 	unsigned short note_index = 0;
 	unsigned short int index;
 
-	FLT offset = 1200.0 * log2(freq / scale->base_frequency);
+	FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
 	offset = fmod(offset, 1200.0);
 	if (offset < 0.0) {
 		offset += 1200.0;
@@ -215,7 +215,8 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
 		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
-				frame->conf->scale, &error_cents);
+				frame->conf->scale, frame->conf->root_frequency_error,
+				&error_cents);
 		lingot_gauge_compute(frame->gauge, error_cents);
 	}
 
@@ -362,10 +363,10 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_config_dialog), frame);
 
 	gtk_signal_connect(GTK_OBJECT(quit_item), "activate", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_destroy), frame);
+					lingot_mainframe_callback_destroy), frame);
 
 	gtk_signal_connect(GTK_OBJECT(about_item), "activate", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_about), frame);
+					lingot_mainframe_callback_about), frame);
 
 	gtk_signal_connect(GTK_OBJECT(view_spectrum_item), "activate",
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_view_spectrum), frame);
@@ -425,7 +426,7 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 			((conf->fft_size > 256) ? 0.5 : 1.0) * conf->sample_rate, 1.0,
 			100.0, 100.0);
 	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(
-			GTK_ADJUSTMENT(adjust), NULL));
+					GTK_ADJUSTMENT(adjust), NULL));
 	frame->spectrum_area = gtk_drawing_area_new();
 
 	int x = ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256) + 2
@@ -474,7 +475,7 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
 			GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
 	gtk_signal_connect(GTK_OBJECT(frame->win), "destroy", GTK_SIGNAL_FUNC(
-			lingot_mainframe_callback_destroy), frame);
+					lingot_mainframe_callback_destroy), frame);
 
 	period = 1000 / conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
@@ -627,8 +628,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
-	static double scales[] =
-			{ 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+	static double
+			scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
 
 	// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;
@@ -841,7 +842,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	} else {
 		FLT error_cents; // do not use, unfiltered
 		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
-				frame->conf->scale, &error_cents);
+				frame->conf->scale, frame->conf->root_frequency_error,
+				&error_cents);
 		if (note_index == frame->conf->scale->notes) {
 			note_index = 0;
 		}

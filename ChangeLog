@@ -1,4 +1,11 @@
 
+2010-10-20 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added sync between computation and read threads over the temporal buffer.
+	* The deviation value didn't work in version 0.8.2b2.
+	* Released Lingot 0.8.2b3.
+	
+	
 2010-10-18 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #31369 )https://savannah.nongnu.org/bugs/?31369
