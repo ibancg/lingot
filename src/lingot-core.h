@@ -72,6 +72,9 @@ struct _LingotCore {
 	pthread_attr_t thread_computation_attr;
 	pthread_cond_t thread_computation_cond;
 	pthread_mutex_t thread_computation_mutex;
+
+	pthread_mutex_t temporal_buffer_mutex;
+
 };
 
 //----------------------------------------------------------------
