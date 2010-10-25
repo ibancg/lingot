@@ -29,13 +29,12 @@
 #include "lingot-defs.h"
 #include "lingot-audio-oss.h"
 
-const char* exception;
-
 LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 	int channels = 1;
 	int format = SAMPLE_FORMAT;
 	char error_message[100];
+	const char* exception;
 
 	LingotAudioHandler* audio = malloc(sizeof(LingotAudioHandler));
 
