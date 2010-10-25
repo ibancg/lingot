@@ -25,11 +25,10 @@
 #include "lingot-i18n.h"
 #include "lingot-error.h"
 
-const char* exception;
-
 LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
+	const char* exception;
 
 #	ifdef ALSA
 	snd_pcm_hw_params_t* hw_params = NULL;

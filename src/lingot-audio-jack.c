@@ -31,7 +31,6 @@
 #include <jack/jack.h>
 
 jack_client_t* client = NULL;
-const char* exception;
 
 pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -75,6 +74,8 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 		void* shutdown_callback_arg) {
 
 	LingotAudioHandler* audio = NULL;
+	const char* exception;
+
 	//LingotCore* core = (LingotCore*) p;
 #	ifdef JACK
 	const char **ports = NULL;
@@ -187,6 +188,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 	jack_status_t status;
 	jack_client_t* jack_client = NULL;
 	const char **ports = NULL;
+	const char* exception;
 
 	try {
 		if (client != NULL) {
@@ -263,6 +265,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 int lingot_audio_jack_start(LingotAudioHandler* audio) {
 	int result = 0;
 	const char **ports = NULL;
+	const char* exception;
 
 	jack_set_process_callback(audio->jack_client, lingot_audio_jack_process,
 			audio);
