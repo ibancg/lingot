@@ -1,0 +1,249 @@
+# translation of cs.po to Czech
+# Copyright (C) 2008 Karel Volný
+# This file is distributed under the same license as the lingot package.
+#
+# Karel Volný <kavol@seznam.cz>, 2008, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: cs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
+"PO-Revision-Date: 2009-08-14 17:00+0200\n"
+"Last-Translator: Karel Volný <kavol@seznam.cz>\n"
+"Language-Team: Czech <diskuze@lists.l10n.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr "Nastavení"
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr "Pokročilé"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr "Zvukové zařízení"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr "Ovladač"
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr "Základní"
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid "Calculation rate"
+msgstr "Frekvence výpočtů"
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr "Vstup"
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid "DFT number"
+msgstr "Počet DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid "DFT size"
+msgstr "Rozsah DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid "Default"
+msgstr "Výchozí nastavení"
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Effective sample rate"
+msgstr "Vzorkovací kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "Rozsah FFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr "Zisk"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+#, fuzzy
+msgid "Minimum frequency"
+msgstr "Nejnižší kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Noise threshold"
+msgstr "Práh šumu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak half-width"
+msgstr "Trvání špičky"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid "Peak number"
+msgstr "Počet špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Peak rejection relation"
+msgstr "Maximální rozdíl špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Root frequency"
+msgstr "Základní kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Sample rate"
+msgstr "Vzorkovací kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Temporal window"
+msgstr "Interval pro analýzu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Visualization rate"
+msgstr "Obnovovací frekvence"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "lingot configuration"
+msgstr "Nastavení lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "peaks"
+msgstr "špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "samples"
+msgstr "vzorků"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid "seconds"
+msgstr "s"
+
+#: ../src/lingot-audio-alsa.c:140
+msgid "The application has not been built with ALSA support"
+msgstr "Aplikace nebyla sestavena s podporou pro ALSA"
+
+#: ../src/lingot-audio-jack.c:53
+msgid "Missing connection with JACK audio server"
+msgstr "Chybí spojení se zvukovým serverem JACK"
+
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
+msgid "Unable to connect to JACK server"
+msgstr "Nelze se připojit k serveru JACK"
+
+#: ../src/lingot-audio-jack.c:108
+msgid "No more JACK ports available"
+msgstr "Nejsou dostupné žádné další porty systému JACK"
+
+#: ../src/lingot-audio-jack.c:114
+msgid "Cannot activate client"
+msgstr "Nelze aktivovat klienta"
+
+#: ../src/lingot-audio-jack.c:122
+msgid "No physical capture ports"
+msgstr "Žádné fyzické vstupní porty"
+
+#: ../src/lingot-audio-jack.c:128
+msgid "Cannot connect input ports"
+msgstr "Nelze připojit vstupní porty"
+
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
+msgid "The application has not been built with JACK support"
+msgstr "Aplikace nebyla sestavena s podporou pro JACK"
+
+#: ../src/lingot-config-dialog.c:343
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na %"
+"0.3f s."
+
+#: ../src/lingot-config-dialog.c:345
+msgid "Warning"
+msgstr "Upozornění"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
+
+#: ../src/lingot-mainframe.c:102
+msgid "translator-credits"
+msgstr "Karel Volný <kavol@seznam.cz>"
+
+#: ../src/lingot-mainframe.c:165
+msgid "Error"
+msgstr "Chyba"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:250
+msgid "lingot"
+msgstr "lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
+msgid "Spectrum"
+msgstr "Spektrum"
+
+#: ../src/lingot-mainframe.c:307
+msgid "_File"
+msgstr "_Soubor"
+
+#: ../src/lingot-mainframe.c:308
+msgid "_Edit"
+msgstr "Úp_ravy"
+
+#: ../src/lingot-mainframe.c:309
+msgid "_View"
+msgstr "_Zobrazení"
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Help"
+msgstr "_Nápověda"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:334
+msgid "Deviation"
+msgstr "Odchylka"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:339
+msgid "Tone"
+msgstr "Tón"
+
+#: ../src/lingot-mainframe.c:384
+msgid "freq"
+msgstr "frekvence"
+
+#: ../src/lingot-mainframe.c:387
+msgid "err"
+msgstr "chyba"
+
+#, fuzzy
+#~ msgid "440 (A) +"
+#~ msgstr " a' (440 Hz) +"
+
+#~ msgid "General parameters"
+#~ msgstr "Obecné"
+
+#~ msgid "Advanced parameters"
+#~ msgstr "Pokročilé"
+
+#~ msgid "Matthew Blissett (Logo design)"
+#~ msgstr "Matthew Blissett (Design loga)"

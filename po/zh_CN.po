@@ -1,0 +1,251 @@
+# Chinese/China translation of lingot.
+# Copyright (C) 2009 THE lingot'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the lingot package.
+# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+# Careone <careoneagain@gmail.com>, 2009.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: lingot 0.7.7b5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
+"PO-Revision-Date: 2009-09-14 17:29+0800\n"
+"Last-Translator: Careone <careoneagain@gmail.com>\n"
+"Language-Team: Chinese/Simplified <lp-l10n-zh-cn@lists.launchpad.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr "校正"
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr "高级"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr "音频设备"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr "音频系统"
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr "基本"
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid "Calculation rate"
+msgstr "运算率"
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr "捕获"
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid "DFT number"
+msgstr "二维傅里叶变换(DFT) 数字"
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid "DFT size"
+msgstr "二维傅里叶变换(DFT) 大小"
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "二维傅里叶变换(DFT)"
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid "Default"
+msgstr "默认值"
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Effective sample rate"
+msgstr "有效采样率"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "快速傅里叶变换(FFT) 大小"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr "增益"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "赫兹(Hz)"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Noise threshold"
+msgstr "噪波极限值"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak half-width"
+msgstr "半波峰值"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid "Peak number"
+msgstr "高音数字"
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Peak rejection relation"
+msgstr "峰值抑制关系"
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Root frequency"
+msgstr "根频率"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Sample rate"
+msgstr "采样率"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Temporal window"
+msgstr "临时窗口"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Visualization rate"
+msgstr "可见率"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "dB"
+msgstr "分贝(dB)"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "lingot configuration"
+msgstr "lingot 配置"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "peaks"
+msgstr "峰值"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "samples"
+msgstr "采样"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid "seconds"
+msgstr "秒"
+
+#: ../src/lingot-audio-alsa.c:140
+msgid "The application has not been built with ALSA support"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:53
+msgid "Missing connection with JACK audio server"
+msgstr "与插孔音频服务失去连接"
+
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
+msgid "Unable to connect to JACK server"
+msgstr "无法连接到插孔服务"
+
+#: ../src/lingot-audio-jack.c:108
+msgid "No more JACK ports available"
+msgstr "没有更多的插孔端口可以使用"
+
+#: ../src/lingot-audio-jack.c:114
+msgid "Cannot activate client"
+msgstr "无法激活客户端"
+
+#: ../src/lingot-audio-jack.c:122
+msgid "No physical capture ports"
+msgstr "没有物理捕获端口"
+
+#: ../src/lingot-audio-jack.c:128
+msgid "Cannot connect input ports"
+msgstr "无法连接输入端口"
+
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
+msgid "The application has not been built with JACK support"
+msgstr "这个程序无法支持插孔"
+
+#: ../src/lingot-config-dialog.c:343
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr "临时缓冲区小于“快速傅里叶变换(FFT)”的大小。提高到 %0.3f 秒"
+
+#: ../src/lingot-config-dialog.c:345
+msgid "Warning"
+msgstr "警告"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "精确和方便的乐器调音师"
+
+#: ../src/lingot-mainframe.c:102
+msgid "translator-credits"
+msgstr "Careone <careoneagain@gmail.com>, (zh_CN)"
+
+#: ../src/lingot-mainframe.c:165
+msgid "Error"
+msgstr "错误"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:250
+msgid "lingot"
+msgstr "lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
+msgid "Spectrum"
+msgstr "乐谱"
+
+#: ../src/lingot-mainframe.c:307
+msgid "_File"
+msgstr "文件(_F)"
+
+#: ../src/lingot-mainframe.c:308
+msgid "_Edit"
+msgstr "编辑(_E)"
+
+#: ../src/lingot-mainframe.c:309
+msgid "_View"
+msgstr "查看(_V)"
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:334
+msgid "Deviation"
+msgstr "偏差"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:339
+msgid "Tone"
+msgstr "音调"
+
+#: ../src/lingot-mainframe.c:384
+msgid "freq"
+msgstr "频率"
+
+#: ../src/lingot-mainframe.c:387
+msgid "err"
+msgstr "错误"
+
+#~ msgid "General parameters"
+#~ msgstr "常规参数"
+
+#~ msgid "Advanced parameters"
+#~ msgstr "高级参数"
+
+#~ msgid " A (440 Hz) + "
+#~ msgstr " A (440 Hz) + "
+
+#~ msgid "Peak order"
+#~ msgstr "高音声阶"
+
+#~ msgid "Note"
+#~ msgstr "音符"
+
+#~ msgid "note"
+#~ msgstr "音符"

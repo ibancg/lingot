@@ -1,0 +1,243 @@
+# Swedish messages for lingot
+# Copyright (C) 2007-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+# This file is distributed under the same license as the lingot package.
+# John Gustafsson <jamminjohn@users.sourceforge.net>, 2008-2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: lingot\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
+"PO-Revision-Date: 2009-07-17 18:04+0100\n"
+"Last-Translator: John Gustafsson <jamminjohn@users.sourceforge.net>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr "Justeringar"
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr "Avancerat"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr "Ljudenhet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr "Ljudsystem"
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr "Grundläggande"
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid "Calculation rate"
+msgstr "Beräkningsfrekvens"
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr "Ljudfångst"
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid "DFT number"
+msgstr "Antal DFTer"
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid "DFT size"
+msgstr "DFT-storlek"
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "DFTer"
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid "Default"
+msgstr "Standardvärde"
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Effective sample rate"
+msgstr "Effektiv samplingsfrekvens"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "FFT-storlek"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr "Förstärkning"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Noise threshold"
+msgstr "Tröskelvärde för brus"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak half-width"
+msgstr "Halv toppbredd"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid "Peak number"
+msgstr "Antal toppar"
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Peak rejection relation"
+msgstr "Tröskelvärde för topprelation"
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Root frequency"
+msgstr "Grundfrekvens"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Sample rate"
+msgstr "Samplingsfrekvens"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Temporal window"
+msgstr "Tidsfönster"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Visualization rate"
+msgstr "Visualiseringsfrekvens"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "lingot configuration"
+msgstr "Konfiguration av Lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "peaks"
+msgstr "toppar"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "samples"
+msgstr "samplingar"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid "seconds"
+msgstr "sekunder"
+
+#: ../src/lingot-audio-alsa.c:140
+#, fuzzy
+msgid "The application has not been built with ALSA support"
+msgstr "Applikationen har inte byggts med stöd för ALSA"
+
+#: ../src/lingot-audio-jack.c:53
+msgid "Missing connection with JACK audio server"
+msgstr "Saknar anslutning till ljudservern JACK"
+
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
+msgid "Unable to connect to JACK server"
+msgstr "Kan inte ansluta till JACK-servern"
+
+#: ../src/lingot-audio-jack.c:108
+msgid "No more JACK ports available"
+msgstr "Inga fler JACK-portar är tillgängliga"
+
+#: ../src/lingot-audio-jack.c:114
+msgid "Cannot activate client"
+msgstr "Kan inte aktivera klient"
+
+#: ../src/lingot-audio-jack.c:122
+msgid "No physical capture ports"
+msgstr "Inga fysiska ljudfångsportar"
+
+#: ../src/lingot-audio-jack.c:128
+msgid "Cannot connect input ports"
+msgstr "Kan inte ansluta ingångsportar"
+
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
+msgid "The application has not been built with JACK support"
+msgstr "Applikationen har inte byggts med stöd för JACK"
+
+#: ../src/lingot-config-dialog.c:343
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Tidsbufferten är mindre än FFT-storleken. Den har ökats till %0.3f sekunder."
+
+#: ../src/lingot-config-dialog.c:345
+msgid "Warning"
+msgstr "Varning"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Precist och lättanvänt stämprogram för musikinstrument"
+
+#: ../src/lingot-mainframe.c:102
+msgid "translator-credits"
+msgstr "John Gustafsson <jamminjohn@users.sourceforge.net>"
+
+#: ../src/lingot-mainframe.c:165
+msgid "Error"
+msgstr "Fel"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:250
+msgid "lingot"
+msgstr "Lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
+msgid "Spectrum"
+msgstr "Spektrum"
+
+#: ../src/lingot-mainframe.c:307
+msgid "_File"
+msgstr "_Arkiv"
+
+#: ../src/lingot-mainframe.c:308
+msgid "_Edit"
+msgstr "_Redigera"
+
+#: ../src/lingot-mainframe.c:309
+msgid "_View"
+msgstr "_Visa"
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Help"
+msgstr "_Hjälp"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:334
+msgid "Deviation"
+msgstr "Avvikelse"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:339
+msgid "Tone"
+msgstr "Not"
+
+#: ../src/lingot-mainframe.c:384
+msgid "freq"
+msgstr "frekv"
+
+#: ../src/lingot-mainframe.c:387
+msgid "err"
+msgstr "fel"
+
+#, fuzzy
+#~ msgid "440 (A) +"
+#~ msgstr " A (440 Hz) + "
+
+#~ msgid "General parameters"
+#~ msgstr "Allmänna parametrar"
+
+#~ msgid "Advanced parameters"
+#~ msgstr "Avancerade parametrar"
