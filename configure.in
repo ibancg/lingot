@@ -20,7 +20,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [lingot])
 
 dnl Languages which your application supports
-ALL_LINGUAS="ca cs de es gl it pt_BR sv zh_CN"
+ALL_LINGUAS="ca cs de es gl it pt_BR sv zh_CN fr"
 AM_GLIB_GNU_GETTEXT
 
 AM_PROG_LIBTOOL
