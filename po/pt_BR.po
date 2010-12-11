@@ -2,7 +2,7 @@
 # Copyright (C) 2008 Carlos Laué
 # This file is distributed under the same license as the lingot package.
 #
-# Carlos Laue <carlosl@seznam.cz>, 2008.
+# Carlos Laue <carlosl@seznam.cz>, 2008, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
@@ -16,26 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
+"X-Language: pt_BR\n"
 
 #: ../src/glade/lingot-config-dialog.glade.h:1
 msgid "Adjustments"
-msgstr ""
+msgstr "Ajustes"
 
 #: ../src/glade/lingot-config-dialog.glade.h:2
 msgid "Advanced"
-msgstr ""
+msgstr "Avançado"
 
 #: ../src/glade/lingot-config-dialog.glade.h:3
 msgid "Audio dev"
-msgstr ""
+msgstr "Dispositivo de som"
 
 #: ../src/glade/lingot-config-dialog.glade.h:4
 msgid "Audio system"
-msgstr ""
+msgstr "Sistema de som"
 
 #: ../src/glade/lingot-config-dialog.glade.h:5
 msgid "Basic"
-msgstr ""
+msgstr "Básico"
 
 #: ../src/glade/lingot-config-dialog.glade.h:6
 msgid "Calculation rate"
@@ -43,7 +44,7 @@ msgstr "Freqüência de cálculo"
 
 #: ../src/glade/lingot-config-dialog.glade.h:7
 msgid "Capture"
-msgstr ""
+msgstr "Captura"
 
 #: ../src/glade/lingot-config-dialog.glade.h:8
 msgid "DFT number"
@@ -63,7 +64,7 @@ msgstr "Configuração padrão"
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
 msgid "Effective sample rate"
-msgstr "Freqüência de amostragem"
+msgstr "Freqüência de amostragem efetiva"
 
 #: ../src/glade/lingot-config-dialog.glade.h:13
 msgid "FFT size"
@@ -71,7 +72,7 @@ msgstr "Tamanho da FFT"
 
 #: ../src/glade/lingot-config-dialog.glade.h:14
 msgid "Gain"
-msgstr ""
+msgstr "Ganho"
 
 #: ../src/glade/lingot-config-dialog.glade.h:15
 msgid "Hz"
@@ -79,11 +80,11 @@ msgstr "Hz"
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 msgid "Minimum frequency"
-msgstr ""
+msgstr "Frequencia mínima"
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Noise threshold"
-msgstr "Ruído mínimo"
+msgstr "Nível de ruído ignorado"
 
 #: ../src/glade/lingot-config-dialog.glade.h:18
 msgid "Peak half-width"
@@ -135,40 +136,40 @@ msgstr "segundos"
 
 #: ../src/lingot-audio-alsa.c:140
 msgid "The application has not been built with ALSA support"
-msgstr ""
+msgstr "A aplicação nao foi compilada com suporte ALSA"
 
 #: ../src/lingot-audio-jack.c:53
 msgid "Missing connection with JACK audio server"
-msgstr ""
+msgstr "Falha de conexão com servidor de áudio JACK"
 
 #: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
 msgid "Unable to connect to JACK server"
-msgstr ""
+msgstr "Impossível de conetar com o servidor JACK"
 
 #: ../src/lingot-audio-jack.c:108
 msgid "No more JACK ports available"
-msgstr ""
+msgstr "Nenhuma porta JACK disponível"
 
 #: ../src/lingot-audio-jack.c:114
 msgid "Cannot activate client"
-msgstr ""
+msgstr "Ativação do cliente impossível"
 
 #: ../src/lingot-audio-jack.c:122
 msgid "No physical capture ports"
-msgstr ""
+msgstr "Porta de captura inexistente"
 
 #: ../src/lingot-audio-jack.c:128
 msgid "Cannot connect input ports"
-msgstr ""
+msgstr "Impossível conetar as portas de entrada"
 
 #: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
 msgid "The application has not been built with JACK support"
-msgstr ""
+msgstr "O programa não foi compilada com o suporte ao JACK"
 
 #: ../src/lingot-config-dialog.c:343
 #, c-format
 msgid ""
-"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"Temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
 "O buffer temporal é menor que o tamanho da FFT escolhido, Fora ampliado para "
@@ -176,7 +177,7 @@ msgstr ""
 
 #: ../src/lingot-config-dialog.c:345
 msgid "Warning"
-msgstr ""
+msgstr "Atenção"
 
 #: ../src/lingot-mainframe.c:98
 msgid "Accurate and easy to use musical instrument tuner"
@@ -188,7 +189,7 @@ msgstr "Carlos Laué <carlosl@seznam.cz>"
 
 #: ../src/lingot-mainframe.c:165
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. g_object_unref(logo);
 #: ../src/lingot-mainframe.c:250
@@ -234,7 +235,6 @@ msgstr "freqüência"
 msgid "err"
 msgstr "erro"
 
-#, fuzzy
 #~ msgid "440 (A) +"
 #~ msgstr "A (440 Hz) +"
 
