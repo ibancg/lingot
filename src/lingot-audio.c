@@ -194,13 +194,12 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 	void* thread_result;
 
 	if (audio->running == 1) {
-
+		audio->running = 0;
 		// threads cancelation
 		if (audio->audio_system != AUDIO_SYSTEM_JACK) {
 			pthread_cancel(audio->thread_input_read);
 			pthread_join(audio->thread_input_read, &thread_result);
 			pthread_attr_destroy(&audio->thread_input_read_attr);
-			audio->running = 0;
 		} else {
 			lingot_audio_jack_stop(audio);
 		}

@@ -302,6 +302,5 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 	//jack_cycle_wait(audio->jack_client);
 	pthread_mutex_lock(&stop_mutex);
 	jack_deactivate(audio->jack_client);
-	audio->running = 0;
 	pthread_mutex_unlock(&stop_mutex);
 }

@@ -474,9 +474,9 @@ void lingot_core_start(LingotCore* core) {
 void lingot_core_stop(LingotCore* core) {
 	void* thread_result;
 
-	//core->running = 0;
-
 	if (core->running == 1) {
+		core->running = 0;
+
 		// threads cancelation
 		pthread_cancel(core->thread_computation);
 		pthread_join(core->thread_computation, &thread_result);
@@ -506,7 +506,6 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 	t.tv_usec = 1e6 / core->conf->calculation_rate;
 
 	while (core->running) {
-		// TODO: implementar con usleep?
 		lingot_core_compute_fundamental_fequency(core);
 		timeradd(&t, &tout, &tout);
 		tspec.tv_sec = tout.tv_sec;
@@ -514,6 +513,4 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 		pthread_cond_timedwait(&core->thread_computation_cond,
 				&core->thread_computation_mutex, &tspec);
 	}
-
-	// printf("Leaving computation thread\n");
 }
