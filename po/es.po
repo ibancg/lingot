@@ -1,0 +1,243 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: lingot\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-17 21:19+0100\n"
+"PO-Revision-Date: 2007-08-23 17:46+0200\n"
+"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
+"Language-Team: Spanish <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid "Adjustments"
+msgstr "Ajustes"
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Audio dev"
+msgstr "Dispositivo audio"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid "Audio system"
+msgstr "Sistema audio"
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid "Basic"
+msgstr "Básico"
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid "Calculation rate"
+msgstr "Tasa de cálculo"
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid "Capture"
+msgstr "Captura"
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid "DFT number"
+msgstr "Nº de DFTs"
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid "DFT size"
+msgstr "Tamaño de DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "DFTs"
+msgstr "DFTs"
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid "Default"
+msgstr "Predet."
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Effective sample rate"
+msgstr "Tasa muestreo efectiva"
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "FFT size"
+msgstr "Tamaño de FFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Gain"
+msgstr "Ganancia"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+#, fuzzy
+msgid "Minimum frequency"
+msgstr "Frecuencia mínima"
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Noise threshold"
+msgstr "Umbral de ruido"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Peak half-width"
+msgstr "Ancho de pico"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid "Peak number"
+msgstr "Nº de picos"
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid "Peak rejection relation"
+msgstr "Relación rechazo picos"
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "Root frequency"
+msgstr "Frecuencia base"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "Sample rate"
+msgstr "Tasa de muestreo"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "Temporal window"
+msgstr "Ventana temporal"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Visualization rate"
+msgstr "Tasa de visualización"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid "lingot configuration"
+msgstr "configuración de lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+msgid "peaks"
+msgstr "picos"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "samples"
+msgstr "muestras"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid "seconds"
+msgstr "segundos"
+
+#: ../src/lingot-audio-alsa.c:140
+#, fuzzy
+msgid "The application has not been built with ALSA support"
+msgstr "La aplicación no ha sido construída con soporte para ALSA"
+
+#: ../src/lingot-audio-jack.c:53
+msgid "Missing connection with JACK audio server"
+msgstr "Perdida conexión con el servidor JACK"
+
+#: ../src/lingot-audio-jack.c:75 ../src/lingot-audio-jack.c:177
+msgid "Unable to connect to JACK server"
+msgstr "No es posible conectar con el servidor JACK"
+
+#: ../src/lingot-audio-jack.c:108
+msgid "No more JACK ports available"
+msgstr "No hay más puertos JACK disponibles"
+
+#: ../src/lingot-audio-jack.c:114
+msgid "Cannot activate client"
+msgstr "No es posible activar el cliente"
+
+#: ../src/lingot-audio-jack.c:122
+#, fuzzy
+msgid "No physical capture ports"
+msgstr "No hay puertos físicos de captura"
+
+#: ../src/lingot-audio-jack.c:128
+#, fuzzy
+msgid "Cannot connect input ports"
+msgstr "No es posible conectar los puertos de entrada"
+
+#: ../src/lingot-audio-jack.c:138 ../src/lingot-audio-jack.c:193
+msgid "The application has not been built with JACK support"
+msgstr "La aplicación no ha sido construída con soporte para JACK"
+
+#: ../src/lingot-config-dialog.c:343
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
+"%0.3f segundos"
+
+#: ../src/lingot-config-dialog.c:345
+msgid "Warning"
+msgstr "Aviso"
+
+#: ../src/lingot-mainframe.c:98
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Afinador de instrumentos preciso y fácil de usar"
+
+#: ../src/lingot-mainframe.c:102
+msgid "translator-credits"
+msgstr ""
+
+#: ../src/lingot-mainframe.c:165
+msgid "Error"
+msgstr "Error"
+
+#. g_object_unref(logo);
+#: ../src/lingot-mainframe.c:250
+msgid "lingot"
+msgstr "lingot"
+
+#. spectrum frame at bottom
+#: ../src/lingot-mainframe.c:273 ../src/lingot-mainframe.c:344
+msgid "Spectrum"
+msgstr "Espectro"
+
+#: ../src/lingot-mainframe.c:307
+msgid "_File"
+msgstr "_Archivo"
+
+#: ../src/lingot-mainframe.c:308
+msgid "_Edit"
+msgstr "_Editar"
+
+#: ../src/lingot-mainframe.c:309
+msgid "_View"
+msgstr "_Ver"
+
+#: ../src/lingot-mainframe.c:310
+msgid "_Help"
+msgstr "A_yuda"
+
+#. gauge frame
+#: ../src/lingot-mainframe.c:334
+msgid "Deviation"
+msgstr "Desviación"
+
+#. tone frame
+#: ../src/lingot-mainframe.c:339
+msgid "Tone"
+msgstr "Tono"
+
+#: ../src/lingot-mainframe.c:384
+msgid "freq"
+msgstr "frec"
+
+#: ../src/lingot-mainframe.c:387
+msgid "err"
+msgstr "err"
+
+#~ msgid "Deviation in cents from the root frequency"
+#~ msgstr "Desviación en cents desde la frecuencia base"
+
+#~ msgid "Oversampling factor"
+#~ msgstr "Factor de sobremuestreo"
