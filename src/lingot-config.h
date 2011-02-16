@@ -35,7 +35,7 @@ typedef enum audio_system_t {
 } audio_system_t;
 
 typedef enum window_type_t {
-	NONE = 0, HAMMING = 1
+	NONE = 0, RECTANGULAR = 1, HANNING = 2, HAMMING = 3
 } window_type_t;
 
 //

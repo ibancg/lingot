@@ -256,7 +256,7 @@ LingotConfig* lingot_config_new() {
 
 	// TODO: remove parameters from config struct
 	config->max_nr_iter = 10; // iterations
-	config->window_type = NONE;
+	config->window_type = HAMMING;
 	config->scale = lingot_config_scale_new();
 	return config;
 }

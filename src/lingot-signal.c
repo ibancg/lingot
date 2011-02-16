@@ -144,8 +144,22 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 //---------------------------------------------------------------------------
 
 // generates a Hamming window of N samples
-void lingot_signal_hamming_window(int N, FLT* out) {
+void lingot_signal_window(int N, FLT* out, window_type_t window_type) {
 	register int i;
-	for (i = 0; i < N; i++)
-		out[i] = 0.53836 - 0.46164 * cos((2.0 * M_PI * i) / (N - 1));
+	switch (window_type) {
+	case RECTANGULAR:
+		for (i = 0; i < N; i++)
+			out[i] = 1.0;
+		break;
+	case HANNING:
+		for (i = 0; i < N; i++)
+			out[i] = 0.5 * (1 - cos((2.0 * M_PI * i) / (N - 1)));
+		break;
+	case HAMMING:
+		for (i = 0; i < N; i++)
+			out[i] = 0.53836 - 0.46164 * cos((2.0 * M_PI * i) / (N - 1));
+		break;
+	default:
+		break;
+	}
 }
