@@ -151,12 +151,10 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 			core->hamming_window_fft = malloc((core->conf->fft_size)
 					* sizeof(FLT));
 
-			if (conf->window_type == HAMMING) {
-				lingot_signal_hamming_window(core->conf->temporal_buffer_size,
-						core->hamming_window_temporal);
-				lingot_signal_hamming_window(core->conf->fft_size,
-						core->hamming_window_fft);
-			}
+			lingot_signal_window(core->conf->temporal_buffer_size,
+					core->hamming_window_temporal, conf->window_type);
+			lingot_signal_window(core->conf->fft_size,
+					core->hamming_window_fft, conf->window_type);
 		}
 
 		core->windowed_temporal_buffer = malloc(
@@ -216,11 +214,17 @@ void lingot_core_destroy(LingotCore* core) {
 
 		if (core->hamming_window_fft != NULL) {
 			free(core->hamming_window_temporal);
+		}
+
+		if (core->windowed_temporal_buffer != NULL) {
 			free(core->windowed_temporal_buffer);
 		}
 
 		if (core->hamming_window_fft != NULL) {
 			free(core->hamming_window_fft);
+		}
+
+		if (core->windowed_fft_buffer != NULL) {
 			free(core->windowed_fft_buffer);
 		}
 
@@ -255,22 +259,19 @@ int lingot_core_audio_shutdown_callback(void *arg) {
 // decimation and appends it to the buffer
 int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg) {
 
-	register unsigned int i, decimation_output_index; // loop variables.
+	unsigned int i, decimation_output_index; // loop variables.
 	int decimation_output_len;
 	FLT* decimation_in;
 	FLT* decimation_out;
 	LingotCore* core = (LingotCore*) arg;
 	LingotConfig* conf = core->conf;
 
-	//	audio_read_status = lingot_audio_read(core->audio);
-	//	if (audio_read_status != 0) {
-	//		return audio_read_status;
-	//	}
-
 	memcpy(core->flt_read_buffer, read_buffer, read_buffer_size * sizeof(FLT));
 
+	//	double freq = 100.0;
 	//	for (i = 0; i < read_buffer_size; i++) {
-	//		core->flt_read_buffer[i] = 1.0e4 * sin(200.0 * i);
+	//		core->flt_read_buffer[i] = 5e2 * cos(2.0 * M_PI * freq * i
+	//				/ conf->sample_rate);
 	//	}
 
 	if (conf->gain_nu != 1.0) {
@@ -295,11 +296,12 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 
 	/* we shift the temporal window to leave a hollow where place the new piece
 	 of data read. The buffer is actually a queue. */
-	if (conf->temporal_buffer_size > decimation_output_len)
+	if (conf->temporal_buffer_size > decimation_output_len) {
 		memmove(core->temporal_buffer,
 				&core->temporal_buffer[decimation_output_len],
 				(conf->temporal_buffer_size - decimation_output_len)
 						* sizeof(FLT));
+	}
 
 	//
 	// previous buffer situation:
@@ -370,16 +372,16 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
 	// windowing
-	if (core->hamming_window_fft != NULL) {
+	if (conf->window_type != NONE) {
 		for (i = 0; i < conf->fft_size; i++) {
 			core->windowed_fft_buffer[i]
 					= core->temporal_buffer[conf->temporal_buffer_size
 							- conf->fft_size + i] * core->hamming_window_fft[i];
 		}
 	} else {
-		core->windowed_fft_buffer
-				= &core->temporal_buffer[conf->temporal_buffer_size
-						- conf->fft_size];
+		memmove(core->windowed_fft_buffer,
+				&core->temporal_buffer[conf->temporal_buffer_size
+						- conf->fft_size], conf->fft_size * sizeof(FLT));
 	}
 
 	// transformation.
@@ -441,13 +443,14 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	w += d_w; // DFT approximation.
 
 	// windowing
-	if (core->hamming_window_temporal != NULL) {
+	if (conf->window_type != NONE) {
 		for (i = 0; i < conf->temporal_buffer_size; i++) {
 			core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
 					* core->hamming_window_temporal[i];
 		}
 	} else {
-		core->windowed_temporal_buffer = core->temporal_buffer;
+		memmove(core->windowed_temporal_buffer, core->temporal_buffer,
+				conf->temporal_buffer_size * sizeof(FLT));
 	}
 
 	pthread_mutex_unlock(&core->temporal_buffer_mutex);
