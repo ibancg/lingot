@@ -33,6 +33,11 @@
 typedef enum audio_system_t {
 	AUDIO_SYSTEM_OSS = 0, AUDIO_SYSTEM_ALSA = 1, AUDIO_SYSTEM_JACK = 2
 } audio_system_t;
+
+typedef enum window_type_t {
+	NONE = 0, HAMMING = 1
+} window_type_t;
+
 //
 //typedef enum root_frequency_reference_note_t {
 //	MIDDLE_A = 0, MIDDLE_C = 1
@@ -43,8 +48,6 @@ typedef struct _LingotScale LingotScale;
 struct _LingotScale {
 	char* name; // name of the scale
 	unsigned short int notes; // number of notes
-	//	char** note_freq_ratio_str; // frequency ratio strings
-	//FLT* note_freq_ratio; // frequency ratios
 	FLT* offset_cents; // offset in cents
 	FLT base_frequency; // frequency of the first note
 	char** note_name; // note names
@@ -87,6 +90,8 @@ struct _LingotConfig {
 
 	FLT noise_threshold_db; // dB
 	FLT noise_threshold_nu; // natural units (internal parameter)
+
+	window_type_t window_type;
 
 	// frequency finding algorithm configuration
 	//-------------------------------------------
