@@ -534,8 +534,8 @@ void lingot_config_dialog_scale_show(LingotConfigDialog* dialog,
 	g_signal_connect(G_OBJECT(button_import), "clicked", G_CALLBACK(lingot_config_dialog_import_scl),
 			dialog);
 
-	gtk_tree_view_set_tooltip_column(dialog->scale_treeview, 1);
-	gtk_widget_set_tooltip_text(dialog->scale_treeview, "SEIN");
-	gtk_tree_view_set_tooltip_column(dialog->scale_treeview, 2);
-	gtk_widget_set_tooltip_text(dialog->scale_treeview, "NOS");
+	//	gtk_tree_view_set_tooltip_column(dialog->scale_treeview, 1);
+	//	gtk_widget_set_tooltip_text(dialog->scale_treeview, "SEIN");
+	//	gtk_tree_view_set_tooltip_column(dialog->scale_treeview, 2);
+	//	gtk_widget_set_tooltip_text(dialog->scale_treeview, "NOS");
 }
