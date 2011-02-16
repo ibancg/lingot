@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -37,6 +36,7 @@
 #include "lingot-core.h"
 #include "lingot-config.h"
 #include "lingot-i18n.h"
+#include "lingot-error.h"
 
 int
 lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg);
@@ -235,6 +235,7 @@ int lingot_core_audio_shutdown_callback(void *arg) {
 	//	lingot_error_queue_push(_("Missing connection with audio server"));
 
 	//printf("Missing connection with audio server\m");
+	return 0;
 }
 
 // reads a new piece of signal from audio source, apply filtering and
@@ -247,7 +248,6 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	FLT* decimation_out;
 	LingotCore* core = (LingotCore*) arg;
 	LingotConfig* conf = core->conf;
-	int audio_read_status;
 
 	//	audio_read_status = lingot_audio_read(core->audio);
 	//	if (audio_read_status != 0) {

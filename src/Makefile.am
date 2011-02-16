@@ -32,6 +32,8 @@ lingot_SOURCES = \
 	lingot-error.c\
 	lingot-config-dialog.c\
 	lingot-config-dialog.h\
+	lingot-config-dialog-scale.c\
+	lingot-config-dialog-scale.h\
 	lingot-gauge.c\
 	lingot-gauge.h\
 	lingot-mainframe.c\

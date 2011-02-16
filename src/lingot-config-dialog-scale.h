@@ -20,23 +20,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_AUDIO_JACK_H__
-#define __LINGOT_AUDIO_JACK_H__
+#ifndef LINGOT_CONFIG_DIALOG_SCALE_TREE_H_
+#define LINGOT_CONFIG_DIALOG_SCALE_TREE_H_
 
-#include "lingot-audio.h"
+#include <gtk/gtk.h>
 
-// TODO: quitar core
-LingotAudioHandler*
-lingot_audio_jack_new(char* device, int sample_rate,
-		LingotAudioProcessCallback process_callback,
-		void *process_callback_arg,
-		LingotAudioShutdownCallback shutdown_callback,
-		void* shutdown_callback_arg);
-void lingot_audio_jack_destroy(LingotAudioHandler*);
-int lingot_audio_jack_read(LingotAudioHandler*);
-LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
-		audio_system_t);
-int lingot_audio_jack_start(LingotAudioHandler*);
-void lingot_audio_jack_stop(LingotAudioHandler*);
+struct LingotConfigDialog;
+struct LingotScale;
+struct GladeXML;
 
-#endif
+// initialize and show the components
+void lingot_config_dialog_scale_show(LingotConfigDialog*, GladeXML*);
+
+// validate the information stored in the table
+int lingot_config_dialog_scale_validate(LingotConfigDialog* dialog,
+		LingotScale* scale);
+
+// copies the information stores in the table to the internal data structure
+void lingot_config_dialog_scale_apply(LingotConfigDialog* dialog,
+		LingotScale* scale);
+
+// fills the table with the information carried by the structure
+void lingot_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
+		LingotScale* scale);
+
+#endif /* LINGOT_CONFIG_DIALOG_SCALE_TREE_H_ */

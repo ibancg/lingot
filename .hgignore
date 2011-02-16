@@ -65,3 +65,5 @@ syntax: regexp
 ^stamp-h1$
 syntax: regexp
 ^ltmain\.sh$
+syntax: regexp
+^src/\.deps$

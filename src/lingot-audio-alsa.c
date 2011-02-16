@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -87,7 +87,7 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 			throw(error_message);
 		}
 
-		int rate = sample_rate;
+		unsigned int rate = sample_rate;
 
 		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
 				hw_params, &rate, 0)) < 0) {

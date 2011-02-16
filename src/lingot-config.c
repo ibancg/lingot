@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -127,7 +126,6 @@ void lingot_config_scale_destroy(LingotScale* scale) {
 void lingot_config_scale_restore_default_values(LingotScale* scale) {
 
 	unsigned short int i;
-	char buff[80];
 	static char* tone_string[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G",
 			"G#", "A", "A#", "B", };
 
@@ -211,7 +209,7 @@ int lingot_config_scale_load(LingotScale* scale, char* filename) {
 	if ((fp = fopen(filename, "r")) == NULL) {
 		sprintf(char_buffer, "error opening scale file %s", filename);
 		perror(char_buffer);
-		return;
+		return 0;
 	}
 
 	scale->base_frequency = MID_C_FREQUENCY;
@@ -234,7 +232,7 @@ int lingot_config_scale_load(LingotScale* scale, char* filename) {
 	scale->name = strdup(char_buffer);
 
 	fgets(char_buffer, MAX_LINE_SIZE, fp);
-	sscanf(char_buffer, "%us", &scale->notes);
+	sscanf(char_buffer, "%hu", &scale->notes);
 
 	fgets(char_buffer, MAX_LINE_SIZE, fp);
 	//scale->note_freq_ratio = malloc(scale->notes * sizeof(FLT));
@@ -437,7 +435,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	fprintf(fp, "NAME = %s\n", config->scale->name);
 	fprintf(fp, "BASE_FREQUENCY = %f\n", config->scale->base_frequency);
 	fprintf(fp, "NOTE_COUNT = %d\n", config->scale->notes);
-	fprintf(fp, "NOTES = {\n", config->scale->notes);
+	fprintf(fp, "NOTES = {\n");
 
 	for (i = 0; i < config->scale->notes; i++) {
 		fprintf(fp, "%s\t%f\n", config->scale->note_name[i],
@@ -469,7 +467,6 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	void* param = NULL;
 	char* option = NULL;
 	int reading_scale = 0;
-	int reading_scale_notes = 0;
 	char* nl;
 
 	// restore default values for non specified parameters
@@ -537,7 +534,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			}
 			if (!strcmp(char_buffer_pointer, "NOTE_COUNT")) {
 				char_buffer_pointer = strtok(NULL, delim);
-				sscanf(char_buffer_pointer, "%d", &config->scale->notes);
+				sscanf(char_buffer_pointer, "%hu", &config->scale->notes);
 				config->scale->note_name = malloc(config->scale->notes
 						* sizeof(char*));
 				config->scale->offset_cents = malloc(config->scale->notes
