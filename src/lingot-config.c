@@ -63,28 +63,6 @@ audio_system_t str_to_audio_system_t(char* audio_system) {
 	return result;
 }
 
-//// converts an audio_system_t to a string
-//const char* root_frequency_reference_note_t_to_str(
-//		root_frequency_reference_note_t root_frequency_reference_note) {
-//	const char* values[] = { "mid-A", "mid-C" };
-//	return values[root_frequency_reference_note];
-//}
-//
-//// converts a string to an audio_system_t
-//root_frequency_reference_note_t str_to_root_frequency_reference_note_t(
-//		char* root_frequency_reference_note) {
-//	root_frequency_reference_note_t result = -1;
-//	const char* values[] = { "mid-A", "mid-C", NULL };
-//	int i;
-//	for (i = 0; values[i] != NULL; i++) {
-//		if (!strcmp(root_frequency_reference_note, values[i])) {
-//			result = i;
-//			break;
-//		}
-//	}
-//	return result;
-//}
-
 //----------------------------------------------------------------------------
 
 LingotScale* lingot_config_scale_new() {
@@ -221,8 +199,8 @@ int lingot_config_scale_load(LingotScale* scale, char* filename) {
 	}
 
 	fgets(char_buffer, MAX_LINE_SIZE, fp);
-
 	fgets(char_buffer, MAX_LINE_SIZE, fp);
+
 	nl = strrchr(char_buffer, '\r');
 	if (nl)
 		*nl = '\0';
@@ -278,7 +256,7 @@ LingotConfig* lingot_config_new() {
 
 	// TODO: remove parameters from config struct
 	config->max_nr_iter = 10; // iterations
-
+	config->window_type = NONE;
 	config->scale = lingot_config_scale_new();
 	return config;
 }
@@ -338,9 +316,9 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	//			config->root_frequency_error / 1200.0);
 	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
 			* config->sample_rate / config->oversampling);
-//	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
-//			/ config->calculation_rate);
-//	config->read_buffer_size = 128; // TODO
+	//	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
+	//			/ config->calculation_rate);
+	//	config->read_buffer_size = 128; // TODO
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);

@@ -142,13 +142,22 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		memset(core->temporal_buffer, 0, core->conf->temporal_buffer_size
 				* sizeof(FLT));
 
-		core->hamming_window_temporal = malloc(
-				(core->conf->temporal_buffer_size) * sizeof(FLT));
-		lingot_signal_hamming_window(core->conf->temporal_buffer_size,
-				core->hamming_window_temporal);
-		core->hamming_window_fft = malloc((core->conf->fft_size) * sizeof(FLT));
-		lingot_signal_hamming_window(core->conf->fft_size,
-				core->hamming_window_fft);
+		core->hamming_window_temporal = NULL;
+		core->hamming_window_fft = NULL;
+
+		if (conf->window_type != NONE) {
+			core->hamming_window_temporal = malloc(
+					(core->conf->temporal_buffer_size) * sizeof(FLT));
+			core->hamming_window_fft = malloc((core->conf->fft_size)
+					* sizeof(FLT));
+
+			if (conf->window_type == HAMMING) {
+				lingot_signal_hamming_window(core->conf->temporal_buffer_size,
+						core->hamming_window_temporal);
+				lingot_signal_hamming_window(core->conf->fft_size,
+						core->hamming_window_fft);
+			}
+		}
 
 		core->windowed_temporal_buffer = malloc(
 				(core->conf->temporal_buffer_size) * sizeof(FLT));
@@ -205,11 +214,15 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
 
-		free(core->windowed_temporal_buffer);
-		free(core->windowed_fft_buffer);
+		if (core->hamming_window_fft != NULL) {
+			free(core->hamming_window_temporal);
+			free(core->windowed_temporal_buffer);
+		}
 
-		free(core->hamming_window_temporal);
-		free(core->hamming_window_fft);
+		if (core->hamming_window_fft != NULL) {
+			free(core->hamming_window_fft);
+			free(core->windowed_fft_buffer);
+		}
 
 		if (core->antialiasing_filter != NULL)
 			lingot_filter_destroy(core->antialiasing_filter);
@@ -255,6 +268,10 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	//	}
 
 	memcpy(core->flt_read_buffer, read_buffer, read_buffer_size * sizeof(FLT));
+
+	//	for (i = 0; i < read_buffer_size; i++) {
+	//		core->flt_read_buffer[i] = 1.0e4 * sin(200.0 * i);
+	//	}
 
 	if (conf->gain_nu != 1.0) {
 		for (i = 0; i < read_buffer_size; i++)
@@ -353,10 +370,16 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
 	// windowing
-	for (i = 0; i < conf->fft_size; i++) {
-		core->windowed_fft_buffer[i]
-				= core->temporal_buffer[conf->temporal_buffer_size
-						- conf->fft_size + i] * core->hamming_window_fft[i];
+	if (core->hamming_window_fft != NULL) {
+		for (i = 0; i < conf->fft_size; i++) {
+			core->windowed_fft_buffer[i]
+					= core->temporal_buffer[conf->temporal_buffer_size
+							- conf->fft_size + i] * core->hamming_window_fft[i];
+		}
+	} else {
+		core->windowed_fft_buffer
+				= &core->temporal_buffer[conf->temporal_buffer_size
+						- conf->fft_size];
 	}
 
 	// transformation.
@@ -418,9 +441,13 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	w += d_w; // DFT approximation.
 
 	// windowing
-	for (i = 0; i < conf->temporal_buffer_size; i++) {
-		core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
-				* core->hamming_window_temporal[i];
+	if (core->hamming_window_temporal != NULL) {
+		for (i = 0; i < conf->temporal_buffer_size; i++) {
+			core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
+					* core->hamming_window_temporal[i];
+		}
+	} else {
+		core->windowed_temporal_buffer = core->temporal_buffer;
 	}
 
 	pthread_mutex_unlock(&core->temporal_buffer_mutex);
