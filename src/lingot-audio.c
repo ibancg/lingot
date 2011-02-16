@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -89,7 +88,7 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 }
 
 int lingot_audio_read(LingotAudioHandler* audio) {
-	int result;
+	int result = -1;
 
 	if (audio != NULL)
 		switch (audio->audio_system) {

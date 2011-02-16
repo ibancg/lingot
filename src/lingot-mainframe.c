@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -96,7 +96,7 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 			"version",
 			VERSION,
 			"copyright",
-			"\xC2\xA9 2004-2010 Ibán Cereijo Graña\n\xC2\xA9 2004-2010 Jairo Chapela Martínez",
+			"\xC2\xA9 2004-2011 Ibán Cereijo Graña\n\xC2\xA9 2004-2011 Jairo Chapela Martínez",
 			"comments", _("Accurate and easy to use musical instrument tuner"),
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website",
@@ -201,10 +201,8 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 	unsigned int period;
 	double error_cents;
-	double normalized_error;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 	unsigned short note_index;
-	FLT freq_ratio;
 
 	period = 1000 / GAUGE_RATE;
 	frame->gauge_computation_uid = g_timeout_add(period,
@@ -228,7 +226,6 @@ gboolean lingot_mainframe_callback_error_dispatcher(gpointer data) {
 	unsigned int period;
 	GtkWidget* message_dialog;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
-	unsigned short note_index;
 
 	char* error_message = NULL;
 	do {
@@ -236,10 +233,12 @@ gboolean lingot_mainframe_callback_error_dispatcher(gpointer data) {
 
 		if (error_message != NULL) {
 
-			message_dialog = gtk_message_dialog_new((frame->config_dialog
-					!= NULL) ? frame->config_dialog->win : frame->win,
-					GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
-					GTK_BUTTONS_CLOSE, error_message);
+			message_dialog
+					= gtk_message_dialog_new(
+							GTK_WINDOW((frame->config_dialog
+											!= NULL) ? frame->config_dialog->win : frame->win),
+							GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
+							GTK_BUTTONS_CLOSE, error_message);
 			gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
 					gtk_window_get_icon(GTK_WINDOW(frame->win)));
@@ -628,8 +627,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
-	static double
-			scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+	static double scales[] =
+			{ 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
 
 	// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;

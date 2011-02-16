@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -149,6 +148,8 @@ void lingot_config_update_internal_params(LingotConfig*);
 void lingot_config_save(LingotConfig*, char* filename);
 void lingot_config_load(LingotConfig*, char* filename);
 
+LingotScale* lingot_config_scale_new();
+void lingot_config_scale_destroy(LingotScale* scale);
 int lingot_config_scale_load(LingotScale* scale, char* filename);
 double lingot_config_scale_parse_pitch(char*);
 
