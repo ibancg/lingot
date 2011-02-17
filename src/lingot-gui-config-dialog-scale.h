@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_CONFIG_DIALOG_SCALE_TREE_H_
-#define LINGOT_CONFIG_DIALOG_SCALE_TREE_H_
+#ifndef LINGOT_GUI_CONFIG_DIALOG_SCALE_H_
+#define LINGOT_GUI_CONFIG_DIALOG_SCALE_H_
 
 #include <gtk/gtk.h>
 
@@ -30,18 +30,18 @@ struct LingotScale;
 struct GladeXML;
 
 // initialize and show the components
-void lingot_config_dialog_scale_show(LingotConfigDialog*, GladeXML*);
+void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GladeXML*);
 
 // validate the information stored in the table
-int lingot_config_dialog_scale_validate(LingotConfigDialog* dialog,
+int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		LingotScale* scale);
 
 // copies the information stores in the table to the internal data structure
-void lingot_config_dialog_scale_apply(LingotConfigDialog* dialog,
+void lingot_gui_config_dialog_scale_apply(LingotConfigDialog* dialog,
 		LingotScale* scale);
 
 // fills the table with the information carried by the structure
-void lingot_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
+void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
 		LingotScale* scale);
 
-#endif /* LINGOT_CONFIG_DIALOG_SCALE_TREE_H_ */
+#endif /* LINGOT_GUI_CONFIG_DIALOG_SCALE_H_ */

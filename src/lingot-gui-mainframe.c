@@ -29,8 +29,8 @@
 #include "lingot-defs.h"
 
 #include "lingot-config.h"
-#include "lingot-mainframe.h"
-#include "lingot-config-dialog.h"
+#include "lingot-gui-mainframe.h"
+#include "lingot-gui-config-dialog.h"
 #include "lingot-gauge.h"
 #include "lingot-i18n.h"
 
@@ -39,10 +39,10 @@
 #include "lingot-background.xpm"
 #include "lingot-logo.xpm"
 
-void lingot_mainframe_redraw(LingotMainFrame*);
+void lingot_gui_mainframe_redraw(LingotMainFrame*);
 void lingot_mainframe_filter_frequency_value(LingotMainFrame*);
-void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame*);
-void lingot_mainframe_draw_spectrum(LingotMainFrame*);
+void lingot_gui_mainframe_draw_gauge_and_labels(LingotMainFrame*);
+void lingot_gui_mainframe_draw_spectrum(LingotMainFrame*);
 
 GdkColor black_color;
 GdkColor cents_color;
@@ -71,19 +71,19 @@ GtkWidget* spectrum_frame;
 PangoFontDescription* spectrum_legend_font_desc;
 PangoFontDescription* gauge_cents_font_desc;
 
-void lingot_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
+void lingot_gui_mainframe_callback_redraw(GtkWidget* w, GdkEventExpose* e,
 		LingotMainFrame* frame) {
-	lingot_mainframe_redraw(frame);
+	lingot_gui_mainframe_redraw(frame);
 }
 
-void lingot_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
 	g_source_remove(frame->visualization_timer_uid);
 	g_source_remove(frame->freq_computation_timer_uid);
 	g_source_remove(frame->gauge_computation_uid);
 	gtk_main_quit();
 }
 
-void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 	static const gchar* authors[] = { "Ibán Cereijo Graña <ibancg@gmail.com>",
 			"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL };
 
@@ -105,7 +105,7 @@ void lingot_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 			NULL);
 }
 
-void lingot_mainframe_callback_view_spectrum(GtkWidget* w,
+void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
 	if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(view_spectrum_item))) {
 		gtk_widget_hide(spectrum_frame);
@@ -114,12 +114,12 @@ void lingot_mainframe_callback_view_spectrum(GtkWidget* w,
 	}
 }
 
-void lingot_mainframe_callback_config_dialog(GtkWidget* w,
+void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 		LingotMainFrame* frame) {
-	lingot_config_dialog_show(frame);
+	lingot_gui_config_dialog_show(frame);
 }
 
-unsigned short int lingot_mainframe_get_closest_note_index(FLT freq,
+unsigned short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
 		LingotScale* scale, FLT deviation, FLT* error_cents) {
 	unsigned short note_index = 0;
 	unsigned short int index;
@@ -166,22 +166,22 @@ unsigned short int lingot_mainframe_get_closest_note_index(FLT freq,
 }
 
 /* timeout for gauge and labels visualization */
-gboolean lingot_mainframe_callback_tout_visualization(gpointer data) {
+gboolean lingot_gui_mainframe_callback_tout_visualization(gpointer data) {
 	unsigned int period;
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
 	period = 1000 / frame->conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_visualization, frame);
+			lingot_gui_mainframe_callback_tout_visualization, frame);
 
-	lingot_mainframe_draw_gauge_and_labels(frame);
+	lingot_gui_mainframe_draw_gauge_and_labels(frame);
 
 	return 0;
 }
 
 /* timeout for spectrum computation and display */
-gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
+gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(
 		gpointer data) {
 	unsigned int period;
 
@@ -189,16 +189,17 @@ gboolean lingot_mainframe_callback_tout_spectrum_computation_display(
 
 	period = 1000 / frame->conf->calculation_rate;
 	frame->freq_computation_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_spectrum_computation_display, frame);
+			lingot_gui_mainframe_callback_tout_spectrum_computation_display,
+			frame);
 
-	lingot_mainframe_draw_spectrum(frame);
+	lingot_gui_mainframe_draw_spectrum(frame);
 	//lingot_core_compute_fundamental_fequency(frame->core);
 
 	return 0;
 }
 
 /* timeout for a new gauge position computation */
-gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
+gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 	unsigned int period;
 	double error_cents;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
@@ -206,15 +207,15 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 
 	period = 1000 / GAUGE_RATE;
 	frame->gauge_computation_uid = g_timeout_add(period,
-			lingot_mainframe_callback_gauge_computation, frame);
+			lingot_gui_mainframe_callback_gauge_computation, frame);
 
 	if (!frame->core->running || isnan(frame->core->freq) || (frame->core->freq
 			< 10.0)) {
 		lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
-		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
-				frame->conf->scale, frame->conf->root_frequency_error,
-				&error_cents);
+		note_index = lingot_gui_mainframe_get_closest_note_index(
+				frame->core->freq, frame->conf->scale,
+				frame->conf->root_frequency_error, &error_cents);
 		lingot_gauge_compute(frame->gauge, error_cents);
 	}
 
@@ -222,7 +223,7 @@ gboolean lingot_mainframe_callback_gauge_computation(gpointer data) {
 }
 
 /* timeout for dispatching the error queue */
-gboolean lingot_mainframe_callback_error_dispatcher(gpointer data) {
+gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 	unsigned int period;
 	GtkWidget* message_dialog;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
@@ -250,18 +251,18 @@ gboolean lingot_mainframe_callback_error_dispatcher(gpointer data) {
 
 	period = 1000 / ERROR_DISPATCH_RATE;
 	frame->error_dispatcher_uid = g_timeout_add(period,
-			lingot_mainframe_callback_error_dispatcher, frame);
+			lingot_gui_mainframe_callback_error_dispatcher, frame);
 
 	return 0;
 }
 
-void lingot_mainframe_color(GdkColor* color, int red, int green, int blue) {
+void lingot_gui_mainframe_color(GdkColor* color, int red, int green, int blue) {
 	color->red = red;
 	color->green = green;
 	color->blue = blue;
 }
 
-void lingot_mainframe_create(int argc, char *argv[]) {
+void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	GtkWidget* vertical_box;
 	GtkWidget* horizontal_box;
 	GtkWidget* file_menu;
@@ -359,16 +360,16 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gtk_window_add_accel_group(GTK_WINDOW(frame->win), accel_group);
 
 	gtk_signal_connect(GTK_OBJECT(preferences_item), "activate",
-			GTK_SIGNAL_FUNC(lingot_mainframe_callback_config_dialog), frame);
+			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_config_dialog), frame);
 
 	gtk_signal_connect(GTK_OBJECT(quit_item), "activate", GTK_SIGNAL_FUNC(
-					lingot_mainframe_callback_destroy), frame);
+					lingot_gui_mainframe_callback_destroy), frame);
 
 	gtk_signal_connect(GTK_OBJECT(about_item), "activate", GTK_SIGNAL_FUNC(
-					lingot_mainframe_callback_about), frame);
+					lingot_gui_mainframe_callback_about), frame);
 
 	gtk_signal_connect(GTK_OBJECT(view_spectrum_item), "activate",
-			GTK_SIGNAL_FUNC(lingot_mainframe_callback_view_spectrum), frame);
+			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_view_spectrum), frame);
 
 	menu_bar = gtk_menu_bar_new();
 	gtk_widget_show(menu_bar);
@@ -484,35 +485,37 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 
 	// GTK signals
 	gtk_signal_connect(GTK_OBJECT(frame->gauge_area), "expose_event",
-			GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
+			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_redraw), frame);
 	gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
-			GTK_SIGNAL_FUNC(lingot_mainframe_callback_redraw), frame);
+			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_redraw), frame);
 	gtk_signal_connect(GTK_OBJECT(frame->win), "destroy", GTK_SIGNAL_FUNC(
-					lingot_mainframe_callback_destroy), frame);
+					lingot_gui_mainframe_callback_destroy), frame);
 
 	period = 1000 / conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_visualization, frame);
+			lingot_gui_mainframe_callback_tout_visualization, frame);
 
 	period = 1000 / conf->calculation_rate;
 	frame->freq_computation_timer_uid = g_timeout_add(period,
-			lingot_mainframe_callback_tout_spectrum_computation_display, frame);
+			lingot_gui_mainframe_callback_tout_spectrum_computation_display,
+			frame);
 
 	period = 1000 / GAUGE_RATE;
 	frame->gauge_computation_uid = g_timeout_add(period,
-			lingot_mainframe_callback_gauge_computation, frame);
+			lingot_gui_mainframe_callback_gauge_computation, frame);
 
 	period = 1000 / ERROR_DISPATCH_RATE;
 	frame->error_dispatcher_uid = g_timeout_add(period,
-			lingot_mainframe_callback_error_dispatcher, frame);
+			lingot_gui_mainframe_callback_error_dispatcher, frame);
 
-	lingot_mainframe_color(&gauge_color, 0xC000, 0x0000, 0x2000);
-	lingot_mainframe_color(&spectrum_background_color, 0x1111, 0x3333, 0x1111);
-	lingot_mainframe_color(&spectrum_color, 0x2222, 0xEEEE, 0x2222);
-	lingot_mainframe_color(&noise_threshold_color, 0x8888, 0x8888, 0x2222);
-	lingot_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
-	lingot_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
-	lingot_mainframe_color(&cents_color, 0x3000, 0x3000, 0x3000);
+	lingot_gui_mainframe_color(&gauge_color, 0xC000, 0x0000, 0x2000);
+	lingot_gui_mainframe_color(&spectrum_background_color, 0x1111, 0x3333,
+			0x1111);
+	lingot_gui_mainframe_color(&spectrum_color, 0x2222, 0xEEEE, 0x2222);
+	lingot_gui_mainframe_color(&noise_threshold_color, 0x8888, 0x8888, 0x2222);
+	lingot_gui_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
+	lingot_gui_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
+	lingot_gui_mainframe_color(&cents_color, 0x3000, 0x3000, 0x3000);
 
 	gdk_color_alloc(gdk_colormap_get_system(), &gauge_color);
 	gdk_color_alloc(gdk_colormap_get_system(), &spectrum_color);
@@ -534,7 +537,7 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	gtk_main();
 }
 
-void lingot_mainframe_destroy(LingotMainFrame* frame) {
+void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
 	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
@@ -543,7 +546,7 @@ void lingot_mainframe_destroy(LingotMainFrame* frame) {
 	lingot_filter_destroy(frame->freq_filter);
 	lingot_config_destroy(frame->conf);
 	if (frame->config_dialog)
-		lingot_config_dialog_destroy(frame->config_dialog);
+		lingot_gui_config_dialog_destroy(frame->config_dialog);
 
 	// pango_font_description_free(spectrum_legend_font_desc);
 	// gtk_widget_destroy(frame->freq_label);
@@ -563,14 +566,14 @@ void lingot_mainframe_destroy(LingotMainFrame* frame) {
 
 // ---------------------------------------------------------------------------
 
-void lingot_mainframe_redraw(LingotMainFrame* frame) {
-	lingot_mainframe_draw_gauge_and_labels(frame);
-	lingot_mainframe_draw_spectrum(frame);
+void lingot_gui_mainframe_redraw(LingotMainFrame* frame) {
+	lingot_gui_mainframe_draw_gauge_and_labels(frame);
+	lingot_gui_mainframe_draw_spectrum(frame);
 }
 
 // ---------------------------------------------------------------------------
 
-void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
 	GdkGC* gc = frame->gauge_area->style->fg_gc[frame->gauge_area->state];
 	GdkWindow* w = frame->gauge_area->window;
 	GdkGCValues gv;
@@ -623,7 +626,7 @@ void lingot_mainframe_draw_gauge_and_labels(LingotMainFrame* frame) {
 	gdk_flush();
 }
 
-void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	char* current_tone;
 	GtkWidget* widget = NULL;
 
@@ -854,9 +857,9 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		//lingot_gauge_compute(frame->gauge, frame->conf->vr);
 	} else {
 		FLT error_cents; // do not use, unfiltered
-		note_index = lingot_mainframe_get_closest_note_index(frame->core->freq,
-				frame->conf->scale, frame->conf->root_frequency_error,
-				&error_cents);
+		note_index = lingot_gui_mainframe_get_closest_note_index(
+				frame->core->freq, frame->conf->scale,
+				frame->conf->root_frequency_error, &error_cents);
 		if (note_index == frame->conf->scale->notes) {
 			note_index = 0;
 		}
@@ -876,7 +879,8 @@ void lingot_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	g_free(markup);
 }
 
-void lingot_mainframe_change_config(LingotMainFrame* frame, LingotConfig* conf) {
+void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
+		LingotConfig* conf) {
 	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
 

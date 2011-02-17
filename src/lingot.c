@@ -31,7 +31,7 @@
 
 #include "lingot-defs.h"
 #include "lingot-config.h"
-#include "lingot-mainframe.h"
+#include "lingot-gui-mainframe.h"
 #include "lingot-i18n.h"
 
 #include <gtk/gtk.h>
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 	//		argv2[i] = strdup(argv[i]);
 	//	argv2[argc] = "--g-fatal-warnings";
 	//	lingot_mainframe_create(argc + 1, argv2);
-	lingot_mainframe_create(argc, argv);
+	lingot_gui_mainframe_create(argc, argv);
 
 	return 0;
 }

@@ -20,62 +20,60 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_MAIN_FRAME_H__
-#define __LINGOT_MAIN_FRAME_H__
+#ifndef __LINGOT_GUI_MAIN_FRAME_H__
+#define __LINGOT_GUI_MAIN_FRAME_H__
 
 #include "lingot-defs.h"
 #include "lingot-core.h"
 #include "lingot-gauge.h"
 #include "lingot-config.h"
-#include "lingot-config-dialog.h"
 #include "lingot-filter.h"
+#include "lingot-gui-config-dialog.h"
 
 #include <gtk/gtk.h>
 
 // Window that contains all controls, graphics, etc. of the tuner.
 
-//typedef struct _LingotMainFrame LingotMainFrame;
 
-struct _LingotMainFrame
-  {
+struct _LingotMainFrame {
 
-    // gtk widgets
-    GtkWidget* gauge_area;
-    GtkWidget* spectrum_area;
-    GtkWidget* tone_label;
+	// gtk widgets
+	GtkWidget* gauge_area;
+	GtkWidget* spectrum_area;
+	GtkWidget* tone_label;
 
-    GtkWidget* freq_label;
-    GtkWidget* error_label;
+	GtkWidget* freq_label;
+	GtkWidget* error_label;
 
-    GdkPixmap* pix_spectrum;
-    GdkPixmap* pix_stick;
+	GdkPixmap* pix_spectrum;
+	GdkPixmap* pix_stick;
 
-    GtkScrolledWindow* spectrum_scroll;
+	GtkScrolledWindow* spectrum_scroll;
 
-    LingotFilter* freq_filter;
+	LingotFilter* freq_filter;
 
-    LingotGauge* gauge;
+	LingotGauge* gauge;
 
-    LingotCore* core;
+	LingotCore* core;
 
-    GtkWidget* win;
+	GtkWidget* win;
 
-    GdkColor gauge_color;
-    GdkColor spectrum_color;
+	GdkColor gauge_color;
+	GdkColor spectrum_color;
 
-    LingotConfigDialog* config_dialog;
-    LingotConfig* conf;
+	LingotConfigDialog* config_dialog;
+	LingotConfig* conf;
 
-    // timer uids
-    guint visualization_timer_uid;
-    guint freq_computation_timer_uid;
-    guint gauge_computation_uid;
-    guint error_dispatcher_uid;
-  };
+	// timer uids
+	guint visualization_timer_uid;
+	guint freq_computation_timer_uid;
+	guint gauge_computation_uid;
+	guint error_dispatcher_uid;
+};
 
-void lingot_mainframe_create(int argc, char *argv[]);
-void lingot_mainframe_destroy(LingotMainFrame*);
+void lingot_gui_mainframe_create(int argc, char *argv[]);
+void lingot_gui_mainframe_destroy(LingotMainFrame*);
 
-void lingot_mainframe_change_config(LingotMainFrame*, LingotConfig*);
+void lingot_gui_mainframe_change_config(LingotMainFrame*, LingotConfig*);
 
-#endif //__LINGOT_MAIN_FRAME_H__
+#endif //__LINGOT_GUI_MAIN_FRAME_H__
