@@ -154,7 +154,7 @@ void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
 	}
 }
 
-double lingot_config_scale_parse_pitch(char* char_buffer) {
+double lingot_config_scale_parse_shift(char* char_buffer) {
 	const static char* delim = "/";
 	float result = 0.0;
 	float n1, n2;
@@ -230,7 +230,7 @@ int lingot_config_scale_load(LingotScale* scale, char* filename) {
 
 		char_buffer_pointer1 = strtok(char_buffer, delim);
 
-		scale->offset_cents[i] = lingot_config_scale_parse_pitch(
+		scale->offset_cents[i] = lingot_config_scale_parse_shift(
 				char_buffer_pointer1);
 		//scale->note_freq_ratio[i] = pow(2.0, scale->offset_cents[i] / 1200.0);
 		//		if (strstr(char_buffer_pointer1, "/") != NULL) {
