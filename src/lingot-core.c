@@ -89,7 +89,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 					buff,
 					_("The requested sample rate is not available, the real sample rate has been set to %d Hz"),
 					core->audio->real_sample_rate);
-			lingot_error_queue_push(buff);
+			lingot_error_queue_push_error(buff);
 		}
 
 		if (conf->temporal_buffer_size < conf->fft_size) {
@@ -102,7 +102,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 					_(
 							"The temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 					conf->temporal_window);
-			lingot_error_queue_push(buff);
+			lingot_error_queue_push_error(buff);
 		}
 
 		// since the SPD is simmetrical, we only store the 1st half.

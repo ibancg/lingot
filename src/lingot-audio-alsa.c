@@ -127,14 +127,14 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 			snd_pcm_close(audio->capture_handle);
 		free(audio);
 		audio = NULL;
-		lingot_error_queue_push(exception);
+		lingot_error_queue_push_error(exception);
 	}
 
 	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
 
 #	else
-	lingot_error_queue_push(
+	lingot_error_queue_push_error(
 			_("The application has not been built with ALSA support"));
 #	endif
 
@@ -166,7 +166,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 		sprintf(buff, "read from audio interface failed (%s)", snd_strerror(
 				temp_sret));
 		printf("%s", buff);
-		lingot_error_queue_push(buff);
+		lingot_error_queue_push_error(buff);
 
 		return -1;
 	}

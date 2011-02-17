@@ -79,9 +79,8 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 			return;
 
 		if (ipath == 0) {
-			lingot_error_queue_push(
+			lingot_error_queue_push_warning(
 					"You cannot insert before the reference note.");
-			//		g_free(path_str);
 			return;
 		}
 
@@ -219,14 +218,14 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		// TODO: validacion integral
 
 		if ((ipath == 0) && (fabs(shift_cents - 0.0) > 1e-10)) {
-			//			lingot_error_queue_push(
-			//					"You cannot change the first shift, it must be 1/1.");
-			// TODO
+			lingot_error_queue_push_warning(
+					"You cannot change the first shift, it must be 1/1.");
 			break;
 		}
 
-		if ((shift_cents <= 0.0 - 1e-10) || (shift_cents > 1200.0)) {
-			lingot_error_queue_push(
+		if (isnan(shift_cents) || (shift_cents <= 0.0 - 1e-10) || (shift_cents
+				> 1200.0)) {
+			lingot_error_queue_push_warning(
 					"The shift must be between 0 and 1200 cents, or between 1/1 and 2/1.");
 			break;
 		}
@@ -413,13 +412,14 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		//		}
 
 		if (shift < last_shift) {
-			lingot_error_queue_push(
+			lingot_error_queue_push_error(
 					"There are invalid values in the scale: the notes should be ordered by frequency / shift");
+			// TODO: select the conflictive line
 			return 0;
 		}
 
 		if (shift >= 1200.0) {
-			lingot_error_queue_push(
+			lingot_error_queue_push_error(
 					"There are invalid values in the scale: all the notes should be in the same octave");
 			return 0;
 		}
@@ -513,7 +513,7 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		// TODO
 		LingotScale* scale = lingot_config_scale_new();
 		if (!lingot_config_scale_load(scale, filename)) {
-			lingot_error_queue_push(
+			lingot_error_queue_push_error(
 					"The scale cannot be imported: file format error");
 			lingot_config_scale_destroy(scale);
 			free(scale);

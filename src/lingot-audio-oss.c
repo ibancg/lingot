@@ -98,7 +98,7 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		close(audio->dsp);
 		free(audio);
 		audio = NULL;
-		lingot_error_queue_push(exception);
+		lingot_error_queue_push_error(exception);
 	}
 
 	return audio;
@@ -125,7 +125,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 		char buff[100];
 		sprintf(buff, "read from audio interface failed (%s)", strerror(errno));
 		printf("%s", buff);
-		lingot_error_queue_push(buff);
+		lingot_error_queue_push_error(buff);
 		return -1;
 	}
 

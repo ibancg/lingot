@@ -229,25 +229,32 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
 	char* error_message = NULL;
+	message_type_t message_type;
+	int more_messages;
+
 	do {
-		error_message = lingot_error_queue_pop();
+		more_messages = lingot_error_queue_pop(&error_message, &message_type);
 
-		if (error_message != NULL) {
-
+		if (more_messages) {
 			message_dialog
 					= gtk_message_dialog_new(
 							GTK_WINDOW((frame->config_dialog
 											!= NULL) ? frame->config_dialog->win : frame->win),
-							GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
+							GTK_DIALOG_DESTROY_WITH_PARENT,
+							(message_type == ERROR) ? GTK_MESSAGE_ERROR
+									: ((message_type == WARNING) ? GTK_MESSAGE_WARNING
+											: GTK_MESSAGE_INFO),
 							GTK_BUTTONS_CLOSE, error_message);
-			gtk_window_set_title(GTK_WINDOW(message_dialog), _("Error"));
+			gtk_window_set_title(GTK_WINDOW(message_dialog), (message_type == ERROR) ? _("Error")
+					: ((message_type == WARNING) ? _("Warning")
+							: _("Info")));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
 					gtk_window_get_icon(GTK_WINDOW(frame->win)));
 			gtk_dialog_run(GTK_DIALOG(message_dialog));
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 		}
-	} while (error_message != NULL);
+	} while (more_messages);
 
 	period = 1000 / ERROR_DISPATCH_RATE;
 	frame->error_dispatcher_uid = g_timeout_add(period,
