@@ -29,13 +29,15 @@
 #define ERROR_QUEUE_SIZE 10
 
 char message[ERROR_QUEUE_SIZE][1000];
+message_type_t message_type[ERROR_QUEUE_SIZE];
+
 int top = 0;
 
 pthread_mutex_t error_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // TODO: implement a queue, not a stack
 
-void lingot_error_queue_push(const char* msg) {
+void lingot_error_queue_push(const char* msg, message_type_t type) {
 
 	if (top < ERROR_QUEUE_SIZE) {
 		// search if the message is already in the queue
@@ -43,25 +45,44 @@ void lingot_error_queue_push(const char* msg) {
 
 		int i;
 		for (i = 0; i < top; i++) {
+			// check if the message is already in the buffer
 			if (!strcmp(message[i], msg)) {
 				pthread_mutex_unlock(&error_queue_mutex);
 				return;
 			}
 		}
 
-		strcpy(message[top++], msg);
+		strcpy(message[top], msg);
+		message_type[top] = type;
+		top++;
 		pthread_mutex_unlock(&error_queue_mutex);
 	} else {
 		printf("WARNING: the queue is full!\n");
 	}
 }
 
-char* lingot_error_queue_pop() {
-	char* result = NULL;
+void lingot_error_queue_push_error(const char* msg) {
+	lingot_error_queue_push(msg, ERROR);
+}
+
+void lingot_error_queue_push_warning(const char* msg) {
+	lingot_error_queue_push(msg, WARNING);
+}
+
+void lingot_error_queue_push_info(const char* msg) {
+	lingot_error_queue_push(msg, INFO);
+}
+
+int lingot_error_queue_pop(char** msg, message_type_t* type) {
+	int result = 0;
+	*msg = NULL;
 
 	if (top != 0) {
 		pthread_mutex_lock(&error_queue_mutex);
-		result = strdup(message[--top]);
+		result = 1;
+		top--;
+		*msg = strdup(message[top]);
+		*type = message_type[top];
 		pthread_mutex_unlock(&error_queue_mutex);
 	}
 

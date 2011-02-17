@@ -23,7 +23,16 @@
 #ifndef __LINGOT_ERROR_H__
 #define __LINGOT_ERROR_H__
 
-void lingot_error_queue_push(const char* message);
-char* lingot_error_queue_pop();
+typedef enum message_type_t {
+	ERROR = 0, WARNING = 1, INFO = 2
+} message_type_t;
+
+void lingot_error_queue_push(const char* message, message_type_t type);
+void lingot_error_queue_push_error(const char* message);
+void lingot_error_queue_push_warning(const char* message);
+void lingot_error_queue_push_info(const char* message);
+
+// pops a message from the queue, it returns 0 if no messages are available
+int lingot_error_queue_pop(char** msg, message_type_t* type);
 
 #endif

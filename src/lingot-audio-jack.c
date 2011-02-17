@@ -55,7 +55,7 @@ int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
  */
 void lingot_audio_jack_shutdown(void* param) {
 	LingotAudioHandler* audio = param;
-	lingot_error_queue_push(_("Missing connection with JACK audio server"));
+	lingot_error_queue_push_error(_("Missing connection with JACK audio server"));
 	pthread_mutex_lock(&stop_mutex);
 	// cleans the read buffer
 	memset(audio->flt_read_buffer, 0, audio->read_buffer_size * sizeof(FLT));
@@ -131,7 +131,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 	} catch {
 		free(audio);
 		audio = NULL;
-		lingot_error_queue_push(exception);
+		lingot_error_queue_push_error(exception);
 	}
 
 	if (ports != NULL)
@@ -142,7 +142,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 	}
 
 #	else
-	lingot_error_queue_push(
+	lingot_error_queue_push_error(
 			_("The application has not been built with JACK support"));
 #	endif
 	return audio;
@@ -216,7 +216,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 		}
 	} catch {
-		lingot_error_queue_push(exception);
+		lingot_error_queue_push_error(exception);
 	}
 
 	properties->forced_sample_rate = 1;
@@ -255,7 +255,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		jack_client_close(jack_client);
 
 #	else
-	lingot_error_queue_push(
+	lingot_error_queue_push_error(
 			_("The application has not been built with JACK support"));
 #	endif
 
@@ -291,7 +291,7 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 		audio->running = 1;
 
 	} catch {
-		lingot_error_queue_push(exception);
+		lingot_error_queue_push_error(exception);
 		result = -1;
 	}
 
