@@ -494,6 +494,23 @@ void lingot_config_dialog_import_scl(gpointer data,
 	//g_free(filefilter);
 }
 
+gint lingot_config_dialog_scale_key_press_cb(GtkWidget *widget,
+		GdkEventKey *kevent, gpointer data) {
+
+	LingotConfigDialog* dialog = (LingotConfigDialog*) data;
+	if (kevent->type == GDK_KEY_PRESS) {
+		if (kevent->keyval == 0xffff) {
+			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_del),
+					"clicked", NULL);
+		} else if (kevent->keyval == 0xff63) {
+			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_add),
+					"clicked", NULL);
+		}
+	}
+
+	return TRUE;
+}
+
 void lingot_config_dialog_scale_show(LingotConfigDialog* dialog,
 		GladeXML* _gladeXML) {
 
@@ -520,16 +537,18 @@ void lingot_config_dialog_scale_show(LingotConfigDialog* dialog,
 	g_object_unref(G_OBJECT(model));
 	gtk_container_add(GTK_CONTAINER(scroll), GTK_WIDGET(dialog->scale_treeview));
 
-	GtkButton* button_del = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
+	dialog->button_scale_del = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
 					"button_scale_del"));
-	GtkButton* button_add = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
+	dialog->button_scale_add = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
 					"button_scale_add"));
 	GtkButton* button_import = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
 					"button_scale_import"));
 
-	g_signal_connect(G_OBJECT(button_add), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_add_row_tree),
+	g_signal_connect(G_OBJECT(dialog->scale_treeview), "key_press_event", G_CALLBACK(lingot_config_dialog_scale_key_press_cb), dialog);
+
+	g_signal_connect(G_OBJECT(dialog->button_scale_add ), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_add_row_tree),
 			dialog->scale_treeview);
-	g_signal_connect(G_OBJECT(button_del), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_remove_selected_items),
+	g_signal_connect(G_OBJECT(dialog->button_scale_del), "clicked", G_CALLBACK(lingot_config_dialog_scale_tree_remove_selected_items),
 			dialog->scale_treeview);
 	g_signal_connect(G_OBJECT(button_import), "clicked", G_CALLBACK(lingot_config_dialog_import_scl),
 			dialog);
