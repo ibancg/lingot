@@ -91,7 +91,7 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 	gtk_tree_model_get_iter_first(model, &iter1);
 	gtk_tree_model_get(model, &iter1, COLUMN_FREQUENCY, &freq, -1);
 
-	gtk_tree_store_set(model_store, &iter2, COLUMN_NAME, "", COLUMN_SHIFT,
+	gtk_tree_store_set(model_store, &iter2, COLUMN_NAME, "?", COLUMN_SHIFT,
 			"1/1", COLUMN_FREQUENCY, freq, -1);
 }
 
@@ -388,28 +388,52 @@ void lingot_gui_config_dialog_scale_tree_add_column(
 int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		LingotScale* scale) {
 
-	GtkTreeIter iter;
+	GtkTreeIter iter, iter2;
 	GtkTreeModel* model = gtk_tree_view_get_model(dialog->scale_treeview);
 
+	char* name;
+	char* name2;
+	char* str1;
+	char* str2;
 	char* shift_char;
 	gdouble shift, last_shift;
+	int empty_names = 0;
 
 	gtk_tree_model_get_iter_first(model, &iter);
 
 	last_shift = -1.0;
 
+	// TODO: validacion integral
+
+	int row1 = 0;
+
 	do {
-		gtk_tree_model_get(model, &iter, COLUMN_SHIFT, &shift_char, -1);
+		gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT,
+				&shift_char, -1);
 		lingot_config_scale_parse_shift(shift_char, &shift, NULL, NULL);
 		free(shift_char);
-		//
-		//		gtk_tree_model_get(model, &iter, COLUMN_SHIFT, &shift, -1);
 
-		//		if (shift < 0.0) {
-		//			lingot_error_queue_push(
-		//					"There are invalid shifts in the scale: negative shifts not allowed");
-		//			return;
-		//		}
+		if (!strcmp(name, "") || !strcmp(name, "?")) {
+			empty_names = 1;
+		}
+
+		gtk_tree_model_get_iter_first(model, &iter2);
+		int row2 = 0;
+		do {
+			gtk_tree_model_get(model, &iter2, COLUMN_NAME, &name2, -1);
+			if ((row1 != row2) && !strcmp(name, name2)) {
+				lingot_error_queue_push_error(
+						"There are notes with the same name");
+				// TODO: select the conflictive line
+				free(name);
+				free(name2);
+				return 0;
+			}
+			free(name2);
+			row2++;
+		} while (gtk_tree_model_iter_next(model, &iter2));
+
+		free(name);
 
 		if (shift < last_shift) {
 			lingot_error_queue_push_error(
@@ -425,7 +449,13 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		}
 
 		last_shift = shift;
+		row1++;
 	} while (gtk_tree_model_iter_next(model, &iter));
+
+	if (empty_names) {
+		lingot_error_queue_push_warning("There are notes without name");
+		return 0;
+	}
 
 	return 1;
 }
