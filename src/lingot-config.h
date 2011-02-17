@@ -156,6 +156,6 @@ void lingot_config_load(LingotConfig*, char* filename);
 LingotScale* lingot_config_scale_new();
 void lingot_config_scale_destroy(LingotScale* scale);
 int lingot_config_scale_load(LingotScale* scale, char* filename);
-double lingot_config_scale_parse_pitch(char*);
+double lingot_config_scale_parse_shift(char*);
 
 #endif // __LINGOT_CONFIG_H__

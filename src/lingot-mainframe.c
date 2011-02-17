@@ -416,6 +416,9 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 
 	// for gauge drawing
 	frame->gauge_area = gtk_drawing_area_new();
+	gtk_widget_set_tooltip_text(
+			GTK_WIDGET(frame->gauge_area),
+			"Show the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge).");
 	gtk_widget_set_size_request(GTK_WIDGET(frame->gauge_area), gauge_size_x,
 			gauge_size_y);
 	gtk_container_add(GTK_CONTAINER(frame1), frame->gauge_area);
@@ -427,6 +430,9 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(
 					GTK_ADJUSTMENT(adjust), NULL));
 	frame->spectrum_area = gtk_drawing_area_new();
+	gtk_widget_set_tooltip_text(
+			GTK_WIDGET(frame->spectrum_area),
+			"This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.");
 
 	int x = ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256) + 2
 			* spectrum_x_margin;
@@ -451,13 +457,21 @@ void lingot_mainframe_create(int argc, char *argv[]) {
 
 	frame->freq_label = gtk_label_new(_("freq"));
 	gtk_box_pack_start_defaults(GTK_BOX(vbinfo), frame->freq_label);
+	gtk_widget_set_tooltip_text(GTK_WIDGET(frame->freq_label),
+			"Estimated fundamental frequency in hertzs.");
 
 	frame->error_label = gtk_label_new(_("err"));
 	gtk_box_pack_end_defaults(GTK_BOX(vbinfo), frame->error_label);
+	gtk_widget_set_tooltip_text(
+			GTK_WIDGET(frame->error_label),
+			"Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.");
 
 	frame->tone_label = gtk_label_new("");
 	gtk_widget_set_name(frame->tone_label, "label_nota");
 	gtk_box_pack_end_defaults(GTK_BOX(vbinfo), frame->tone_label);
+	gtk_widget_set_tooltip_text(
+			GTK_WIDGET(frame->tone_label),
+			"Closest note to the estimated frequency, according to the scale defined in the Lingot settings.");
 
 	// show all
 	gtk_widget_show_all(frame->win);

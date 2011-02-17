@@ -154,7 +154,7 @@ JACK</property>
             <child>
               <widget class="GtkLabel" id="input">
                 <property name="visible">True</property>
-                <property name="tooltip" translatable="yes">Audio input settings.</property>
+                <property name="tooltip" translatable="yes">Audio input settings. Set here the source and hardware settings.</property>
                 <property name="label" translatable="yes">Capture</property>
               </widget>
               <packing>
@@ -432,7 +432,7 @@ JACK</property>
                     <child>
                       <widget class="GtkLabel" id="label_sample_rate2">
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Effective sampling frequency. The lower this parameter is, the more accuracy the FFT will be, and hence the better is the hooking up to the correct peak. Remember, however,  that your temporal window will increase, and the fact that you won't be able to tune frequencies above the half of this frequency (Nyquist-Shannon sampling theorem).</property>
+                        <property name="tooltip" translatable="yes">Effective sampling frequency. The lower this parameter is, the more accurate the FFT will be, and hence the better is the hooking up to the correct peak. Remember, however,  that your temporal window will increase, and the fact that you won't be able to tune frequencies above the half of this frequency (Nyquist-Shannon sampling theorem).</property>
                         <property name="label"> = 2000</property>
                       </widget>
                       <packing>
@@ -532,7 +532,7 @@ JACK</property>
                   <widget class="GtkSpinButton" id="minimum_frequency">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">Lingot only considers frequencies above this frequency</property>
+                    <property name="tooltip" translatable="yes">Lingot only considers frequencies above this one.</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="xalign">1</property>
                     <property name="adjustment">0 0 22050 1 0 0</property>
@@ -567,7 +567,7 @@ JACK</property>
             <child>
               <widget class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="tooltip" translatable="yes">Basic settings on the frequency finding algorithm.</property>
+                <property name="tooltip" translatable="yes">Basic settings on the frequency finding algorithm. Come here to get better accuracy, frequency range or CPU usage. </property>
                 <property name="label" translatable="yes">Basic</property>
               </widget>
               <packing>
@@ -667,7 +667,7 @@ JACK</property>
                   <widget class="GtkSpinButton" id="peak_halfwidth">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">Number of samples needed by a peak at each side, lower in amplitude than the sample at the center, to be considered as a peak.</property>
+                    <property name="tooltip" translatable="yes">Number of samples needed by a peak at each side, lower in amplitude than the sample at the center, to be considered as a peak. You should not consider more than 1 or 2 samples, unless you have a really big FFT buffer.</property>
                     <property name="xalign">1</property>
                     <property name="adjustment">1 1 5 1 10 0</property>
                   </widget>
@@ -683,7 +683,7 @@ JACK</property>
                   <widget class="GtkSpinButton" id="peak_number">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">Number of main peaks considered over the FFT. Remember that sometimes the first harmonics can have a higher amplitude than the fundamental component.</property>
+                    <property name="tooltip" translatable="yes">Number of main peaks considered over the FFT. Remember that sometimes the first harmonics can have a higher amplitude than the fundamental component, depending on your instrument.</property>
                     <property name="xalign">1</property>
                     <property name="adjustment">1 1 10 1 10 0</property>
                   </widget>
@@ -790,7 +790,7 @@ JACK</property>
             <child>
               <widget class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="tooltip" translatable="yes">Advanced settings on the frequency finding algorithm.</property>
+                <property name="tooltip" translatable="yes">Advanced settings on the frequency finding algorithm. You should not modify these parameters unless you really need it and you have a good understanding of the algorithm (use the 'Default' button if you get lost, and use those default parameters as your reference).</property>
                 <property name="label" translatable="yes">Advanced</property>
               </widget>
               <packing>
@@ -869,7 +869,7 @@ JACK</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="tooltip" translatable="yes">Adds a new pitch to the list, just above the selected line, or appends it to the end if no line is selected.</property>
+                                <property name="tooltip" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -883,7 +883,7 @@ JACK</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="tooltip" translatable="yes">Deletes the selected lines.</property>
+                                <property name="tooltip" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -945,6 +945,7 @@ JACK</property>
                           <widget class="GtkSpinButton" id="root_frequency_error">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Applies a shift in frequency to all the notes defined in the table above.</property>
                             <property name="invisible_char">&#x25CF;</property>
                             <property name="xalign">1</property>
                             <property name="adjustment">0 -500 500 1 10 0</property>
