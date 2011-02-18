@@ -25,7 +25,7 @@
 #include "lingot-defs.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
-#include "lingot-error.h"
+#include "lingot-msg.h"
 
 LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
@@ -53,8 +53,8 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 	try {
 		if ((err = snd_pcm_open(&audio->capture_handle, device,
 				SND_PCM_STREAM_CAPTURE, 0)) < 0) {
-			sprintf(error_message, "cannot open audio device %s (%s)\n",
-					device, snd_strerror(err));
+			sprintf(error_message, "Cannot open audio device %s.\n%s.", device,
+					snd_strerror(err));
 			throw(error_message);
 		}
 
@@ -62,28 +62,28 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 		if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
 			sprintf(error_message,
-					"cannot allocate hardware parameter structure (%s)\n",
+					"Cannot allocate hardware parameter structure.\n%s.",
 					snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params_any(audio->capture_handle, hw_params)) < 0) {
 			sprintf(error_message,
-					"cannot initialize hardware parameter structure (%s)\n",
+					"Cannot initialize hardware parameter structure.\n%s.",
 					snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params_set_access(audio->capture_handle,
 				hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
-			sprintf(error_message, "cannot set access type (%s)\n",
-					snd_strerror(err));
+			sprintf(error_message, "Cannot set access type.\n%s", snd_strerror(
+					err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params_set_format(audio->capture_handle,
 				hw_params, SND_PCM_FORMAT_S16_LE)) < 0) {
-			sprintf(error_message, "cannot set sample format (%s)\n",
+			sprintf(error_message, "Cannot set sample format.\n%s.",
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -92,8 +92,8 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
 				hw_params, &rate, 0)) < 0) {
-			sprintf(error_message, "cannot set sample rate (%s)\n",
-					snd_strerror(err));
+			sprintf(error_message, "Cannot set sample rate.\n%s.", snd_strerror(
+					err));
 			throw(error_message);
 		}
 
@@ -101,20 +101,20 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 		if ((err = snd_pcm_hw_params_set_channels(audio->capture_handle,
 				hw_params, channels)) < 0) {
-			sprintf(error_message, "cannot set channel count (%s)\n",
+			sprintf(error_message, "Cannot set channel count.\n%s.",
 					snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
-			sprintf(error_message, "cannot set parameters (%s)\n",
-					snd_strerror(err));
+			sprintf(error_message, "Cannot set parameters.\n%s.", snd_strerror(
+					err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_prepare(audio->capture_handle)) < 0) {
 			sprintf(error_message,
-					"cannot prepare audio interface for use (%s)\n",
+					"Cannot prepare audio interface for use.\n%s.",
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -128,14 +128,14 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 			snd_pcm_close(audio->capture_handle);
 		free(audio);
 		audio = NULL;
-		lingot_error_queue_push_error(exception);
+		lingot_msg_add_error(exception);
 	}
 
 	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
 
 #	else
-	lingot_error_queue_push_error(
+	lingot_msg_add_error(
 			_("The application has not been built with ALSA support"));
 #	endif
 
@@ -164,9 +164,9 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 
 	if (temp_sret != audio->read_buffer_size) {
 		char buff[100];
-		sprintf(buff, "read from audio interface failed (%s)", snd_strerror(
+		sprintf(buff, "Read from audio interface failed.\n%s.", snd_strerror(
 				temp_sret));
-		lingot_error_queue_push_error(buff);
+		lingot_msg_add_error(buff);
 		return -1;
 	}
 

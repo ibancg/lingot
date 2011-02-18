@@ -27,7 +27,7 @@
 
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gui-config-dialog-scale.h"
-#include "lingot-error.h"
+#include "lingot-msg.h"
 
 enum {
 	COLUMN_NAME = 0, COLUMN_SHIFT = 1, COLUMN_FREQUENCY = 2, NUM_COLUMNS = 3
@@ -79,7 +79,7 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 			return;
 
 		if (ipath == 0) {
-			lingot_error_queue_push_warning(
+			lingot_msg_add_warning(
 					"You cannot insert before the reference note.");
 			return;
 		}
@@ -218,14 +218,14 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		// TODO: validacion integral
 
 		if ((ipath == 0) && (fabs(shift_cents - 0.0) > 1e-10)) {
-			lingot_error_queue_push_warning(
+			lingot_msg_add_warning(
 					"You cannot change the first shift, it must be 1/1.");
 			break;
 		}
 
 		if (isnan(shift_cents) || (shift_cents <= 0.0 - 1e-10) || (shift_cents
 				> 1200.0)) {
-			lingot_error_queue_push_warning(
+			lingot_msg_add_warning(
 					"The shift must be between 0 and 1200 cents, or between 1/1 and 2/1.");
 			break;
 		}
@@ -420,7 +420,7 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		do {
 			gtk_tree_model_get(model, &iter2, COLUMN_NAME, &name2, -1);
 			if ((row1 != row2) && !strcmp(name, name2)) {
-				lingot_error_queue_push_error(
+				lingot_msg_add_error(
 						"There are notes with the same name");
 				// TODO: select the conflictive line
 				free(name);
@@ -434,14 +434,14 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 		free(name);
 
 		if (shift < last_shift) {
-			lingot_error_queue_push_error(
+			lingot_msg_add_error(
 					"There are invalid values in the scale: the notes should be ordered by frequency / shift");
 			// TODO: select the conflictive line
 			return 0;
 		}
 
 		if (shift >= 1200.0) {
-			lingot_error_queue_push_error(
+			lingot_msg_add_error(
 					"There are invalid values in the scale: all the notes should be in the same octave");
 			return 0;
 		}
@@ -451,7 +451,7 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 	} while (gtk_tree_model_iter_next(model, &iter));
 
 	if (empty_names) {
-		lingot_error_queue_push_warning("There are notes without name");
+		lingot_msg_add_warning("There are notes without name");
 		return 0;
 	}
 
@@ -541,7 +541,7 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		// TODO
 		LingotScale* scale = lingot_config_scale_new();
 		if (!lingot_config_scale_load(scale, filename)) {
-			lingot_error_queue_push_error(
+			lingot_msg_add_error(
 					"The scale cannot be imported: file format error");
 			lingot_config_scale_destroy(scale);
 			free(scale);

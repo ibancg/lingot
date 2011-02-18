@@ -30,8 +30,8 @@ lingot_SOURCES = \
 	lingot-core.c\
 	lingot-core.h\
 	lingot-defs.h\
-	lingot-error.h\
-	lingot-error.c\
+	lingot-msg.h\
+	lingot-msg.c\
 	lingot-gui-config-dialog.c\
 	lingot-gui-config-dialog.h\
 	lingot-gui-config-dialog-scale.c\
