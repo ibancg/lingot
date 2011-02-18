@@ -30,13 +30,14 @@
 #ifdef JACK
 #include <jack/jack.h>
 
+// persistent JACK client to obtain hardware parameters
 jack_client_t* client = NULL;
-
 pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define N_LAST_PORTS 10
 
-// this array allows us to reconnect the client to the last ports
+// this array allows us to reconnect the client to the last ports it was
+// connected in a previous session
 char last_ports[N_LAST_PORTS][80];
 
 int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
@@ -54,10 +55,8 @@ int lingot_audio_jack_process(jack_nframes_t nframes, void* param) {
 	return 0;
 }
 
-/**
- * JACK calls this shutdown_callback if the server ever shuts down or
- * decides to disconnect the client.
- */
+// JACK calls this shutdown_callback if the server ever shuts down or
+// decides to disconnect the client.
 void lingot_audio_jack_shutdown(void* param) {
 	LingotAudioHandler* audio = param;
 	lingot_error_queue_push_error(
@@ -72,7 +71,6 @@ void lingot_audio_jack_shutdown(void* param) {
 }
 #endif
 
-// TODO: quitar core
 LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 		LingotAudioProcessCallback process_callback,
 		void *process_callback_arg,
@@ -80,10 +78,9 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 		void* shutdown_callback_arg) {
 
 	LingotAudioHandler* audio = NULL;
-	const char* exception;
 
-	//LingotCore* core = (LingotCore*) p;
 #	ifdef JACK
+	const char* exception;
 	const char **ports = NULL;
 	const char *client_name = "lingot";
 	const char *server_name = NULL;
@@ -194,13 +191,12 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 	const char **ports = NULL;
 	const char* exception;
 
-	// TODO: cambiar
 	unsigned long int flags = JackPortIsActive | JackPortIsOutput;
 
 	try {
 		if (client != NULL) {
 			sample_rate = jack_get_sample_rate(client);
-			ports = jack_get_ports(client, NULL, NULL, flags); // TODO: ???
+			ports = jack_get_ports(client, NULL, NULL, flags);
 		} else {
 			jack_client = jack_client_open(client_name, options, &status,
 					server_name);
@@ -217,7 +213,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 			sample_rate = jack_get_sample_rate(jack_client);
 
-			ports = jack_get_ports(jack_client, NULL, NULL, flags); // TODO: ???
+			ports = jack_get_ports(jack_client, NULL, NULL, flags);
 		}
 	} catch {
 		lingot_error_queue_push_error(exception);
@@ -268,10 +264,11 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 int lingot_audio_jack_start(LingotAudioHandler* audio) {
 	int result = 0;
+
+#   ifdef JACK
 	int index = 0;
 	const char **ports = NULL;
 	const char* exception;
-
 	jack_set_process_callback(audio->jack_client, lingot_audio_jack_process,
 			audio);
 
@@ -326,11 +323,16 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 	}
 
 	free(ports);
+#	else
+	lingot_error_queue_push_error(
+			_("The application has not been built with JACK support"));
+#	endif
 
 	return result;
 }
 
 void lingot_audio_jack_stop(LingotAudioHandler* audio) {
+#	ifdef JACK
 	//jack_cycle_wait(audio->jack_client);
 	const char** ports = jack_get_ports(audio->jack_client, NULL, NULL,
 			JackPortIsActive | JackPortIsOutput);
@@ -349,4 +351,8 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 	pthread_mutex_lock(&stop_mutex);
 	jack_deactivate(audio->jack_client);
 	pthread_mutex_unlock(&stop_mutex);
+#	else
+	lingot_error_queue_push_error(
+			_("The application has not been built with JACK support"));
+#	endif
 }

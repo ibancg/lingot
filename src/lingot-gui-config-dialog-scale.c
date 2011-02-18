@@ -393,8 +393,6 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 
 	char* name;
 	char* name2;
-	char* str1;
-	char* str2;
 	char* shift_char;
 	gdouble shift, last_shift;
 	int empty_names = 0;

@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdlib.h>
+
 #include "lingot-defs.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
@@ -28,9 +30,9 @@
 LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
-	const char* exception;
 
 #	ifdef ALSA
+	const char* exception;
 	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
 	char error_message[1000];
@@ -151,10 +153,10 @@ void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 }
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
+#	ifdef ALSA
 	int temp_sret;
 	int i;
 
-#	ifdef ALSA
 	temp_sret = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
 			audio->read_buffer_size);
 
