@@ -46,9 +46,8 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(device, O_RDONLY);
-	audio->read_buffer_size = 128; // TODO: review
+	audio->read_buffer_size = 128; // TODO: size up
 	strcpy(audio->device, device);
-	audio->running = 0;
 
 	try {
 
@@ -124,13 +123,12 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	read_size = read(audio->dsp, audio->read_buffer, audio->read_buffer_size
 			* sizeof(SAMPLE_TYPE));
 
-	//	if (rand() < 0.001*RAND_MAX)
+	//	if (rand() < 0.001 * RAND_MAX)
 	//		read_size = 0;
 
 	if (read_size != audio->read_buffer_size * sizeof(SAMPLE_TYPE)) {
 		char buff[100];
 		sprintf(buff, "read from audio interface failed (%s)", strerror(errno));
-		printf("%s", buff);
 		lingot_error_queue_push_error(buff);
 		return -1;
 	}

@@ -62,20 +62,12 @@ void lingot_audio_jack_shutdown(void* param) {
 	lingot_error_queue_push_error(
 			_("Missing connection with JACK audio server"));
 	pthread_mutex_lock(&stop_mutex);
-	// cleans the read buffer
-	memset(audio->flt_read_buffer, 0, audio->read_buffer_size * sizeof(FLT));
-	audio->process_callback(audio->flt_read_buffer, audio->read_buffer_size,
-			audio->process_callback_arg);
+	audio->interrupted = 1;
 	pthread_mutex_unlock(&stop_mutex);
-	audio->shutdown_callback(audio->shutdown_callback_arg);
 }
 #endif
 
-LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
-		LingotAudioProcessCallback process_callback,
-		void *process_callback_arg,
-		LingotAudioShutdownCallback shutdown_callback,
-		void* shutdown_callback_arg) {
+LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
 
@@ -94,7 +86,6 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 	audio->audio_system = AUDIO_SYSTEM_JACK;
 	audio->jack_client = jack_client_open(client_name, options, &status,
 			server_name);
-	audio->running = 0;
 
 	try {
 		if (audio->jack_client == NULL) {
@@ -108,9 +99,6 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate,
 			client_name = jack_get_client_name(audio->jack_client);
 			fprintf(stderr, "unique name `%s' assigned\n", client_name);
 		}
-
-		audio->process_callback = process_callback;
-		audio->process_callback_arg = process_callback_arg;
 
 		jack_on_shutdown(audio->jack_client, lingot_audio_jack_shutdown, audio);
 
@@ -315,8 +303,6 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 			}
 		}
 
-		audio->running = 1;
-
 	} catch {
 		lingot_error_queue_push_error(exception);
 		result = -1;
@@ -336,15 +322,19 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 	//jack_cycle_wait(audio->jack_client);
 	const char** ports = jack_get_ports(audio->jack_client, NULL, NULL,
 			JackPortIsActive | JackPortIsOutput);
-	int i, j = 0;
 
-	for (i = 0; i < N_LAST_PORTS; i++) {
-		strcpy(last_ports[i], "");
-	}
+	if (ports != NULL) {
+		int i, j = 0;
 
-	for (i = 0; ports[i]; i++) {
-		if (jack_port_connected(jack_port_by_name(audio->jack_client, ports[i]))) {
-			strcpy(last_ports[j++], ports[i]);
+		for (i = 0; i < N_LAST_PORTS; i++) {
+			strcpy(last_ports[i], "");
+		}
+
+		for (i = 0; ports[i]; i++) {
+			if (jack_port_connected(jack_port_by_name(audio->jack_client,
+					ports[i]))) {
+				strcpy(last_ports[j++], ports[i]);
+			}
 		}
 	}
 
