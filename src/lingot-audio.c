@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "lingot-defs.h"
 #include "lingot-audio.h"
 
@@ -154,16 +158,17 @@ void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
 		// process new data block.
 		read_status = lingot_audio_read(audio);
 
-		if (read_status != 0) {
-			break;
+		if (read_status == 0) {
+			audio->process_callback(audio->flt_read_buffer,
+					audio->read_buffer_size, audio->process_callback_arg);
+		} else {
+			audio->running = 0;
 		}
-
-		audio->process_callback(audio->flt_read_buffer,
-				audio->read_buffer_size, audio->process_callback_arg);
 	}
 
-	audio->running = 0;
-	audio->shutdown_callback(audio->shutdown_callback_arg);
+	if (read_status != 0) {
+		audio->shutdown_callback(audio->shutdown_callback_arg);
+	}
 }
 
 int lingot_audio_start(LingotAudioHandler* audio) {

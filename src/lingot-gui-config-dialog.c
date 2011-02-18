@@ -125,32 +125,40 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 	LingotAudioSystemProperties* properties =
 			lingot_audio_get_audio_system_properties(audio_system);
 
-	if ((properties->forced_sample_rate) && (properties->n_sample_rates > 0)) {
-		sprintf(buff, "%d", properties->sample_rates[0]);
-		gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child), buff);
+	if (properties != NULL) {
+		if ((properties->forced_sample_rate)
+				&& (properties->n_sample_rates > 0)) {
+			sprintf(buff, "%d", properties->sample_rates[0]);
+			gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child),
+					buff);
+		}
+
+		gtk_widget_set_sensitive(GTK_WIDGET(dialog->sample_rate),
+				(gboolean) !properties->forced_sample_rate);
+
+		GtkListStore* model = GTK_LIST_STORE(gtk_combo_box_get_model(
+						GTK_COMBO_BOX(dialog->sample_rate)));
+		gtk_list_store_clear(model);
+
+		int i;
+		for (i = 0; i < properties->n_sample_rates; i++) {
+			sprintf(buff, "%d", properties->sample_rates[i]);
+			gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->sample_rate), buff);
+		}
+
+		// TODO: devices
+
+		gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->input_dev)->child),
+				dialog->conf->audio_dev[audio_system]);
+		gtk_widget_set_sensitive(GTK_WIDGET(dialog->input_dev),
+				(gboolean) (audio_system != AUDIO_SYSTEM_JACK));
+
+		lingot_audio_audio_system_properties_destroy(properties);
+	} else {
+		gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->input_dev)->child), "");
+		gtk_widget_set_sensitive(GTK_WIDGET(dialog->input_dev), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(dialog->sample_rate), FALSE);
 	}
-
-	gtk_widget_set_sensitive(GTK_WIDGET(dialog->sample_rate),
-			(gboolean) !properties->forced_sample_rate);
-
-	GtkListStore* model = GTK_LIST_STORE(gtk_combo_box_get_model(
-					GTK_COMBO_BOX(dialog->sample_rate)));
-	gtk_list_store_clear(model);
-
-	int i;
-	for (i = 0; i < properties->n_sample_rates; i++) {
-		sprintf(buff, "%d", properties->sample_rates[i]);
-		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->sample_rate), buff);
-	}
-
-	// TODO: devices
-
-	gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->input_dev)->child),
-			dialog->conf->audio_dev[audio_system]);
-	gtk_widget_set_sensitive(GTK_WIDGET(dialog->input_dev),
-			(gboolean) (audio_system != AUDIO_SYSTEM_JACK));
-
-	lingot_audio_audio_system_properties_destroy(properties);
 }
 
 void lingot_gui_config_dialog_callback_change_deviation(GtkWidget *widget,
