@@ -40,8 +40,6 @@
 
 int
 lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg);
-int
-lingot_core_audio_shutdown_callback(void *arg);
 
 void lingot_core_run_reading_thread(LingotCore* core);
 void lingot_core_run_computation_thread(LingotCore* core);
@@ -76,9 +74,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 	core->audio = lingot_audio_new(conf->audio_system,
 			conf->audio_dev[conf->audio_system], conf->sample_rate,
-			(LingotAudioProcessCallback) lingot_core_read_callback, core,
-			(LingotAudioShutdownCallback) lingot_core_audio_shutdown_callback,
-			core);
+			(LingotAudioProcessCallback) lingot_core_read_callback, core);
 
 	if (core->audio != NULL) {
 
@@ -238,22 +234,6 @@ void lingot_core_destroy(LingotCore* core) {
 }
 
 // -----------------------------------------------------------------------
-
-int lingot_core_audio_shutdown_callback(void *arg) {
-
-	LingotCore* core = arg;
-
-	// TODO: thread sync
-	memset(core->temporal_buffer, 0, core->conf->temporal_buffer_size
-			* sizeof(FLT));
-
-	lingot_core_stop(core);
-
-	//	lingot_error_queue_push(_("Missing connection with audio server"));
-
-	//printf("Missing connection with audio server\m");
-	return 0;
-}
 
 // reads a new piece of signal from audio source, apply filtering and
 // decimation and appends it to the buffer
@@ -515,7 +495,6 @@ void lingot_core_stop(LingotCore* core) {
 
 		pthread_attr_destroy(&core->thread_computation_attr);
 
-		// TODO
 		memset(core->X, 0,
 				((core->conf->fft_size > 256) ? (core->conf->fft_size >> 1)
 						: core->conf->fft_size) * sizeof(FLT));
@@ -542,5 +521,19 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 		tspec.tv_nsec = 1000 * tout.tv_usec;
 		pthread_cond_timedwait(&core->thread_computation_cond,
 				&core->thread_computation_mutex, &tspec);
+
+		if (core->audio != NULL) {
+			if (core->audio->interrupted) {
+				printf(
+						"The audio thread was interrupted by the server, exiting core thread\n");
+				memset(core->X, 0,
+						((core->conf->fft_size > 256) ? (core->conf->fft_size
+								>> 1) : core->conf->fft_size) * sizeof(FLT));
+				core->freq = 0.0;
+				core->running = 0;
+			}
+		}
 	}
+
+	printf("Exiting core thread\n");
 }

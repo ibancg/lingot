@@ -34,9 +34,7 @@
 
 LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
-		void *process_callback_arg,
-		LingotAudioShutdownCallback shutdown_callback,
-		void* shutdown_callback_arg) {
+		void *process_callback_arg) {
 
 	LingotAudioHandler* result = NULL;
 
@@ -48,8 +46,7 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		result = lingot_audio_alsa_new(device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_new(device, sample_rate, process_callback,
-				process_callback_arg, shutdown_callback, shutdown_callback_arg);
+		result = lingot_audio_jack_new(device, sample_rate);
 		break;
 	}
 
@@ -61,8 +58,8 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 				* sizeof(FLT));
 		result->process_callback = process_callback;
 		result->process_callback_arg = process_callback_arg;
-		result->shutdown_callback = shutdown_callback;
-		result->shutdown_callback_arg = shutdown_callback_arg;
+		result->interrupted = 0;
+		result->running = 0;
 	}
 
 	return result;
@@ -153,7 +150,6 @@ void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
 
 	int read_status = 0;
 
-	// TODO: condition?
 	while (audio->running) {
 		// process new data block.
 		read_status = lingot_audio_read(audio);
@@ -163,11 +159,8 @@ void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
 					audio->read_buffer_size, audio->process_callback_arg);
 		} else {
 			audio->running = 0;
+			audio->interrupted = 1;
 		}
-	}
-
-	if (read_status != 0) {
-		audio->shutdown_callback(audio->shutdown_callback_arg);
 	}
 }
 
@@ -199,7 +192,7 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 
 	if (audio->running == 1) {
 		audio->running = 0;
-		// threads cancelation
+		// thread cancellation
 		if (audio->audio_system != AUDIO_SYSTEM_JACK) {
 			pthread_cancel(audio->thread_input_read);
 			pthread_join(audio->thread_input_read, &thread_result);

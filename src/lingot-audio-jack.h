@@ -25,13 +25,7 @@
 
 #include "lingot-audio.h"
 
-// TODO: quitar core
-LingotAudioHandler*
-lingot_audio_jack_new(char* device, int sample_rate,
-		LingotAudioProcessCallback process_callback,
-		void *process_callback_arg,
-		LingotAudioShutdownCallback shutdown_callback,
-		void* shutdown_callback_arg);
+LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate);
 void lingot_audio_jack_destroy(LingotAudioHandler*);
 int lingot_audio_jack_read(LingotAudioHandler*);
 LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
