@@ -34,7 +34,7 @@
 #include "lingot-gauge.h"
 #include "lingot-i18n.h"
 
-#include "lingot-error.h"
+#include "lingot-msg.h"
 
 #include "lingot-background.xpm"
 #include "lingot-logo.xpm"
@@ -233,7 +233,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 	int more_messages;
 
 	do {
-		more_messages = lingot_error_queue_pop(&error_message, &message_type);
+		more_messages = lingot_msg_get(&error_message, &message_type);
 
 		if (more_messages) {
 			message_dialog
