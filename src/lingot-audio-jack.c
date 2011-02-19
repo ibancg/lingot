@@ -202,7 +202,9 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 			ports = jack_get_ports(jack_client, NULL, NULL, flags);
 		}
 	} catch {
-		lingot_msg_add_error(exception);
+		// here I throw a warning message because we are only ontaining the
+		// audio properties
+		lingot_msg_add_warning(exception);
 	}
 
 	properties->forced_sample_rate = 1;
