@@ -131,9 +131,6 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	// derived parameters.
 	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
 			* config->sample_rate / config->oversampling);
-	//	config->read_buffer_size = (unsigned int) ceil(config->sample_rate
-	//			/ config->calculation_rate);
-	//	config->read_buffer_size = 128; // TODO
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
@@ -152,7 +149,7 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 		scale->max_offset_rounded = max_offset;
 	}
 
-	config->vr = -0.45 * scale->max_offset_rounded;
+	config->gauge_rest_value = -0.45 * scale->max_offset_rounded;
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "");
 }
 
@@ -349,20 +346,6 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 							&config->scale->offset_cents[i],
 							&config->scale->offset_ratios[0][i],
 							&config->scale->offset_ratios[1][i]);
-					//					nl = strrchr(char_buffer, '\r');
-					//					if (nl)
-					//						*nl = '\0';
-					//					nl = strrchr(char_buffer, '\n');
-					//					if (nl)
-					//						*nl = '\0';
-					//					config->scale->note_name[i] = strdup(char_buffer);
-					//					line++;
-					//					if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
-					//						break;
-					//					sscanf(char_buffer_pointer, "%lg",
-					//							&config->scale->offset_cents[i]);
-					//					config->scale->offset_ratios[0][i] = -1; // TODO
-					//					config->scale->offset_ratios[1][i] = -1;
 				}
 				line++;
 				if (!fgets(char_buffer, MAX_LINE_SIZE, fp))

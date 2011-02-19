@@ -41,6 +41,8 @@ struct _LingotMainFrame {
 	GtkWidget* gauge_area;
 	GtkWidget* spectrum_area;
 	GtkWidget* tone_label;
+	GtkWidget* view_spectrum_item;
+	GtkWidget* spectrum_frame;
 
 	GtkWidget* freq_label;
 	GtkWidget* error_label;
