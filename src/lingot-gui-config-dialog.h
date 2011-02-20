@@ -68,6 +68,6 @@ struct _LingotConfigDialog {
 
 //LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
 void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
-void lingot_gui_config_dialog_show(LingotMainFrame* frame);
+void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
 
 #endif // __LINGOT_GUI_CONFIG_DIALOG_H__

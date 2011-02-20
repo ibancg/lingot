@@ -72,7 +72,6 @@ LingotConfig* lingot_config_new() {
 
 	LingotConfig* config = malloc(sizeof(LingotConfig));
 
-	// TODO: remove parameters from config struct
 	config->max_nr_iter = 10; // iterations
 	config->window_type = HAMMING;
 	config->scale = lingot_config_scale_new();
@@ -288,8 +287,6 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
 			break;;
 
-		//    printf("line %d: %s\n", line, s1);
-
 		if (char_buffer[0] == '#')
 			continue;
 
@@ -309,7 +306,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		if (reading_scale) {
 
 			if (!strcmp(char_buffer_pointer, "NAME")) {
-				char_buffer_pointer += 7; // TODO
+				char_buffer_pointer += 4;
+				while (1) {
+					nl = strchr(delim, *char_buffer_pointer);
+					if (!nl)
+						break;
+					char_buffer_pointer++;
+				}
 				nl = strrchr(char_buffer_pointer, '\r');
 				if (nl)
 					*nl = '\0';
@@ -332,6 +335,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 						config->scale->notes);
 				continue;
 			}
+
 			if (!strcmp(char_buffer_pointer, "NOTES")) {
 				int i = 0;
 				for (i = 0; i < config->scale->notes; i++) {
@@ -417,18 +421,6 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 							"warning: parse error at line %i: unrecognized audio system '%s', assuming default audio system.\n",
 							line, char_buffer_pointer);
 				}
-				//			} else if (!strcmp("ROOT_FREQUENCY_REFERENCE_NOTE", option)) {
-				//				*((root_frequency_reference_note_t*) param)
-				//						= str_to_root_frequency_reference_note_t(
-				//								char_buffer_pointer);
-				//				if (*((root_frequency_reference_note_t*) param)
-				//						== (root_frequency_reference_note_t) - 1) {
-				//					*((root_frequency_reference_note_t*) param) = MIDDLE_A;
-				//					fprintf(
-				//							stderr,
-				//							"warning: parse error at line %i: unrecognized root frequency reference note '%s', assuming default value.\n",
-				//							line, char_buffer_pointer);
-				//				}
 			}
 			break;
 		}

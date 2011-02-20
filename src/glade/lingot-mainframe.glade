@@ -25,17 +25,19 @@
                   <widget class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem2">
+                      <widget class="GtkImageMenuItem" id="open_config_item">
                         <property name="label">gtk-open</property>
                         <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Opens an external configuration file.</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem4">
+                      <widget class="GtkImageMenuItem" id="save_config_item">
                         <property name="label">gtk-save-as</property>
                         <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Saves the running configuration to an external file.</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>

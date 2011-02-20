@@ -162,7 +162,7 @@ void lingot_config_scale_format_shift(char* char_buffer, double cents,
 	}
 }
 
-int lingot_config_scale_load(LingotScale* scale, char* filename) {
+int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	FILE* fp;
 	int i;
 	char* char_buffer_pointer1;
@@ -218,13 +218,6 @@ int lingot_config_scale_load(LingotScale* scale, char* filename) {
 		lingot_config_scale_parse_shift(char_buffer_pointer1,
 				&scale->offset_cents[i], &scale->offset_ratios[0][i],
 				&scale->offset_ratios[1][i]);
-		//scale->note_freq_ratio[i] = pow(2.0, scale->offset_cents[i] / 1200.0);
-		//		if (strstr(char_buffer_pointer1, "/") != NULL) {
-		//			scale->note_freq_ratio_str[i] = strdup(char_buffer_pointer1);
-		//		} else {
-		//			sprintf(char_buffer, "%f", scale->note_freq_ratio[i]);
-		//			scale->note_freq_ratio_str[i] = strdup(char_buffer);
-		//		}
 
 		sprintf(char_buffer, "%d", i + 1);
 		scale->note_name[i] = strdup(char_buffer);

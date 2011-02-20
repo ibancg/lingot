@@ -314,7 +314,7 @@ void lingot_gui_config_dialog_close(LingotConfigDialog* dialog) {
 	gtk_widget_destroy(dialog->win);
 }
 
-void lingot_gui_config_dialog_show(LingotMainFrame* frame) {
+void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config) {
 	GladeXML* _gladeXML = NULL;
 
 	if (frame->config_dialog == NULL) {
@@ -326,21 +326,21 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame) {
 		dialog->conf_old = lingot_config_new();
 
 		// config copy
-		lingot_config_copy(dialog->conf, frame->conf);
+		lingot_config_copy(dialog->conf, (config == NULL) ? frame->conf
+				: config);
 		lingot_config_copy(dialog->conf_old, frame->conf);
 
 		// TODO: obtain glade files installation dir by other way
-
-		FILE* fd = fopen("src/glade/lingot-config-dialog.glade", "r");
+#	    define FILE_NAME "lingot-config-dialog.glade"
+		FILE* fd = fopen("src/glade/" FILE_NAME, "r");
 		if (fd != NULL) {
 			fclose(fd);
-			_gladeXML = glade_xml_new("src/glade/lingot-config-dialog.glade",
-					"dialog1", NULL);
+			_gladeXML = glade_xml_new("src/glade/" FILE_NAME, "dialog1", NULL);
 		} else {
-			_gladeXML = glade_xml_new(
-					LINGOT_GLADEDIR "lingot-config-dialog.glade", "dialog1",
+			_gladeXML = glade_xml_new(LINGOT_GLADEDIR FILE_NAME, "dialog1",
 					NULL);
 		}
+#		undef FILE_NAME
 
 		dialog->win = glade_xml_get_widget(_gladeXML, "dialog1");
 
@@ -413,9 +413,17 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame) {
 		gtk_widget_show(dialog->win);
 		GtkWidget* scroll = glade_xml_get_widget(_gladeXML, "scrolledwindow1");
 		gtk_widget_show_all(scroll);
-
 		g_object_unref(_gladeXML);
 	} else {
+		if (config != NULL) {
+			lingot_config_copy(frame->config_dialog->conf, config);
+			lingot_gui_config_dialog_rewrite(frame->config_dialog);
+		}
+
 		gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
+	}
+
+	if (config != NULL) {
+		lingot_config_destroy(config);
 	}
 }
