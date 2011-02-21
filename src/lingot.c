@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
 
 		// new configuration with default values.
 		LingotConfig* new_conf = lingot_config_new();
+		lingot_config_restore_default_values(new_conf);
 		lingot_config_save(new_conf, CONFIG_FILE_NAME);
 		lingot_config_destroy(new_conf);
 
@@ -106,12 +107,6 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
-	//	int i;
-	//	char** argv2 = malloc((argc + 1) * sizeof(char*));
-	//	for (i = 0; i < argc; i++)
-	//		argv2[i] = strdup(argv[i]);
-	//	argv2[argc] = "--g-fatal-warnings";
-	//	lingot_mainframe_create(argc + 1, argv2);
 	lingot_gui_mainframe_create(argc, argv);
 
 	return 0;
