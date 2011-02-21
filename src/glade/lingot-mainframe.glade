@@ -19,7 +19,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Archivo</property>
+                <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu1">
@@ -62,7 +62,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Editar</property>
+                <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu2">
@@ -82,7 +82,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Ver</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu3">
@@ -100,7 +100,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Ay_uda</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu4">
@@ -138,7 +138,7 @@
                     <property name="width_request">160</property>
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
-                    <property name="tooltip" translatable="yes">Show the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge),</property>
+                    <property name="tooltip" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge),</property>
                   </widget>
                 </child>
                 <child>

@@ -432,7 +432,7 @@ JACK</property>
                     <child>
                       <widget class="GtkLabel" id="label_sample_rate2">
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Effective sampling frequency. The lower this parameter is, the more accurate the FFT will be, and hence the better is the hooking up to the correct peak. Remember, however,  that your temporal window will increase, and the fact that you won't be able to tune frequencies above the half of this frequency (Nyquist-Shannon sampling theorem).</property>
+                        <property name="tooltip" translatable="yes">Effective sampling frequency. The lower this parameter is, the more accurate the FFT will be, and hence the better is the hooking up to the correct peak. Remember, however, that your temporal window will increase, and the fact that you won't be able to tune frequencies above the half of this frequency (Nyquist-Shannon sampling theorem).</property>
                         <property name="label"> = 2000</property>
                       </widget>
                       <packing>
@@ -790,7 +790,7 @@ JACK</property>
             <child>
               <widget class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="tooltip" translatable="yes">Advanced settings on the frequency finding algorithm. You should not modify these parameters unless you really need it and you have a good understanding of the algorithm (use the 'Default' button if you get lost, and use those default parameters as your reference).</property>
+                <property name="tooltip" translatable="yes">Advanced settings on the frequency finding algorithm. You should not modify these parameters unless you really need it and you have a good understanding of the algorithm. Use the 'Default' button if you get lost, and use those default parameters as your reference.</property>
                 <property name="label" translatable="yes">Advanced</property>
               </widget>
               <packing>
