@@ -1,4 +1,14 @@
 
+2011-02-21 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed bug #31532.
+	* Added configuration file importation/exportation options from the GUI.
+	* Improved messages to the user.
+	* Added tooltips.
+	* Applied a blur effect over the gauge background image.
+	* Released Lingot 0.9.0
+			
+	
 2010-10-20 Ibán Cereijo <ibancg@gmail.com>
 
 	* Added sync between computation and read threads over the temporal buffer.
@@ -8,10 +18,11 @@
 	
 2010-10-18 Ibán Cereijo <ibancg@gmail.com>
 
-	* Fixed bug #31369 )https://savannah.nongnu.org/bugs/?31369
+	* Fixed bug #31369
 	* Audio API is now transparent, providing the read thread.
 	* Improved error messages from audio device issues.
 	* Released Lingot 0.8.2b2
+
 
 2010-10-12 Ibán Cereijo <ibancg@gmail.com>
 
@@ -27,7 +38,7 @@
 	* Minor changes in the capture tab in the config dialog.
 	* lingot-error now supports multiple messages in the queue.
 	* Added some macros to simulate try/catch. Used in audio handling.
-	* The error dispatcher runs now under his own timer.
+	* The error dispatcher runs now under its own timer.
 	* Released Lingot 0.8.2b1
 
 
