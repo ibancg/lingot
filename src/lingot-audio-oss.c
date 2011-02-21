@@ -34,6 +34,7 @@
 #include "lingot-msg.h"
 #include "lingot-defs.h"
 #include "lingot-audio-oss.h"
+#include "lingot-i18n.h"
 
 LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
@@ -52,14 +53,14 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 	try {
 
 		if (audio->dsp < 0) {
-			sprintf(error_message, "Unable to open audio device %s.\n%s.",
+			sprintf(error_message, _("Unable to open audio device %s.\n%s."),
 					device, strerror(errno));
 			throw(error_message);
 		}
 
 		//if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
 		if (ioctl(audio->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0) {
-			sprintf(error_message, "Error setting number of channels.\n%s.",
+			sprintf(error_message, _("Error setting number of channels.\n%s."),
 					strerror(errno));
 			throw(error_message);
 		}
@@ -67,7 +68,7 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		// sample size
 		//if (ioctl(audio->dsp, SOUND_PCM_SETFMT, &format) < 0)
 		if (ioctl(audio->dsp, SNDCTL_DSP_SETFMT, &format) < 0) {
-			sprintf(error_message, "Error setting bits per sample.\n%s.",
+			sprintf(error_message, _("Error setting bits per sample.\n%s."),
 					strerror(errno));
 			throw(error_message);
 		}
@@ -82,14 +83,14 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		param |= 0x00ff0000;
 
 		if (ioctl(audio->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0) {
-			sprintf(error_message, "Error setting DMA buffer size.\n%s.",
+			sprintf(error_message, _("Error setting DMA buffer size.\n%s."),
 					strerror(errno));
 			throw(error_message);
 		}
 
 		if (ioctl(audio->dsp, SNDCTL_DSP_SPEED, &sample_rate) < 0) {
-			sprintf(error_message, "Error setting sample rate.\n%s.", strerror(
-					errno));
+			sprintf(error_message, _("Error setting sample rate.\n%s."),
+					strerror(errno));
 			throw(error_message);
 		}
 
@@ -128,7 +129,8 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 
 	if (read_size != audio->read_buffer_size * sizeof(SAMPLE_TYPE)) {
 		char buff[100];
-		sprintf(buff, "Read from audio interface failed.\n%s.", strerror(errno));
+		sprintf(buff, _("Read from audio interface failed.\n%s."), strerror(
+				errno));
 		lingot_msg_add_error(buff);
 		return -1;
 	}

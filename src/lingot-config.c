@@ -29,6 +29,8 @@
 #include "lingot-defs.h"
 #include "lingot-config.h"
 #include "lingot-config-scale.h"
+#include "lingot-msg.h"
+#include "lingot-i18n.h"
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -260,6 +262,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	char* option = NULL;
 	int reading_scale = 0;
 	char* nl;
+	int parse_errors = 0;
+	int command_count = 0;
 
 	// restore default values for non specified parameters
 	lingot_config_restore_default_values(config);
@@ -300,6 +304,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		if (!strcmp(char_buffer_pointer, "SCALE")) {
 			reading_scale = 1;
 			config->scale = lingot_config_scale_new();
+			command_count++;
 			continue;
 		}
 
@@ -346,10 +351,12 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					char_buffer_pointer = strtok(char_buffer, delim2);
 					config->scale->note_name[i] = strdup(char_buffer_pointer);
 					char_buffer_pointer = strtok(NULL, delim2);
-					lingot_config_scale_parse_shift(char_buffer_pointer,
+					if (!lingot_config_scale_parse_shift(char_buffer_pointer,
 							&config->scale->offset_cents[i],
 							&config->scale->offset_ratios[0][i],
-							&config->scale->offset_ratios[1][i]);
+							&config->scale->offset_ratios[1][i])) {
+						parse_errors = 1;
+					}
 				}
 				line++;
 				if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
@@ -381,6 +388,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			fprintf(stderr,
 					"warning: parse error at line %i: unknown keyword %s\n",
 					line, char_buffer_pointer);
+			parse_errors = 1;
 			continue;
 		}
 
@@ -395,6 +403,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		if (!char_buffer_pointer) {
 			fprintf(stderr,
 					"warning: parse error at line %i: value expected\n", line);
+			parse_errors = 1;
 			continue;
 		}
 
@@ -402,24 +411,33 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		switch (option_formats[option_index]) {
 		case 's':
 			sprintf(((char*) param), "%s", char_buffer_pointer);
+			command_count++;
 			break;
 		case 'd':
 			sscanf(char_buffer_pointer, "%d", (unsigned int*) param);
+			command_count++;
 			break;
 		case 'f':
 			sscanf(char_buffer_pointer, "%f", &aux);
 			*((FLT*) param) = aux;
+			command_count++;
 			break;
 		case 'm':
 			if (!strcmp("AUDIO_SYSTEM", option)) {
+				command_count++;
 				*((audio_system_t*) param) = str_to_audio_system_t(
 						char_buffer_pointer);
 				if (*((audio_system_t*) param) == (audio_system_t) -1) {
 					*((audio_system_t*) param) = AUDIO_SYSTEM_ALSA;
-					fprintf(
-							stderr,
-							"warning: parse error at line %i: unrecognized audio system '%s', assuming default audio system.\n",
+					char buff[1000];
+					sprintf(
+							buff,
+							_(
+									"Error parsing the configuration file, line %i: unrecognized audio system '%s', assuming default audio system.\n"),
 							line, char_buffer_pointer);
+
+					lingot_msg_add_warning(buff);
+					parse_errors = 1;
 				}
 			}
 			break;
@@ -427,6 +445,12 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	}
 
 	fclose(fp);
+
+	if (parse_errors) {
+		lingot_msg_add_warning(
+				_(
+						"The configuration file contains errors, and hence some default values have been chosen. Consider checking the settings and fixing the problem using the configuration dialog."));
+	}
 
 	lingot_config_update_internal_params(config);
 

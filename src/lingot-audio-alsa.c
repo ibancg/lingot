@@ -92,8 +92,8 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
 				hw_params, &rate, 0)) < 0) {
-			sprintf(error_message, "Cannot set sample rate.\n%s.", snd_strerror(
-					err));
+			sprintf(error_message, "Cannot set sample rate.\n%s.",
+					snd_strerror(err));
 			throw(error_message);
 		}
 
@@ -164,8 +164,8 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 
 	if (temp_sret != audio->read_buffer_size) {
 		char buff[100];
-		sprintf(buff, "Read from audio interface failed.\n%s.", snd_strerror(
-				temp_sret));
+		sprintf(buff, _("Read from audio interface failed.\n%s."),
+				snd_strerror(temp_sret));
 		lingot_msg_add_error(buff);
 		return -1;
 	}

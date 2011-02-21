@@ -263,16 +263,16 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
 void lingot_gui_mainframe_callback_open_config(gpointer data,
 		LingotMainFrame* frame) {
-	GtkWidget * dialog = gtk_file_chooser_dialog_new("Open Configuration File",
-			GTK_WINDOW(frame->win), GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
-			GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget * dialog = gtk_file_chooser_dialog_new(
+			_("Open Configuration File"), GTK_WINDOW(frame->win),
+			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL,
+			GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
 	LingotConfig* config = NULL;
 	filefilter = gtk_file_filter_new();
 
 	gtk_file_filter_set_name(filefilter,
-			(const gchar *) "Lingot configuration files");
+			(const gchar *) _("Lingot configuration files"));
 	gtk_file_filter_add_pattern(filefilter, "*.conf");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
@@ -303,10 +303,10 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 
 void lingot_gui_mainframe_callback_save_config(gpointer data,
 		LingotMainFrame* frame) {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new("Save File",
-			GTK_WINDOW(frame->win), GTK_FILE_CHOOSER_ACTION_SAVE,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE,
-			GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+			_("Save Configuration File"), GTK_WINDOW(frame->win),
+			GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL,
+			GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER (dialog),
 			TRUE);
 
@@ -315,7 +315,7 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 	GtkFileFilter* filefilter = gtk_file_filter_new();
 
 	gtk_file_filter_set_name(filefilter,
-			(const gchar *) "Lingot configuration files");
+			(const gchar *) _("Lingot configuration files"));
 	gtk_file_filter_add_pattern(filefilter, "*.conf");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
