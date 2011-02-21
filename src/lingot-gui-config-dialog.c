@@ -36,6 +36,7 @@
 #include "lingot-i18n.h"
 #include "lingot-config.h"
 #include "lingot-gui-config-dialog-scale.h"
+#include "lingot-msg.h"
 
 int lingot_gui_config_dialog_apply(LingotConfigDialog*);
 void lingot_gui_config_dialog_close(LingotConfigDialog*);
