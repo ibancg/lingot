@@ -6,32 +6,21 @@
 
 # Source files
 src/glade/lingot-config-dialog.glade
+src/glade/lingot-mainframe.glade
 src/lingot-fft.c
-src/lingot-fft.h
 src/lingot-audio.c
-src/lingot-audio.h
 src/lingot-audio-oss.c
-src/lingot-audio-oss.h
 src/lingot-audio-alsa.c
-src/lingot-audio-alsa.h
 src/lingot-audio-jack.c
-src/lingot-audio-jack.h
 src/lingot-config.c
-src/lingot-config.h
+src/lingot-config-scale.c
 src/lingot-core.c
-src/lingot-core.h
-src/lingot-defs.h
-src/lingot-error.h
-src/lingot-config-dialog.c
-src/lingot-config-dialog.h
 src/lingot-gauge.c
-src/lingot-gauge.h
-src/lingot-mainframe.c
-src/lingot-mainframe.h
+src/lingot-gui-mainframe.c
+src/lingot-gui-config-dialog.c
+src/lingot-gui-config-dialog-scale.c
 src/lingot-filter.c
-src/lingot-filter.h
 src/lingot-signal.c
 src/lingot.c
-src/lingot-i18n.h
 
 
