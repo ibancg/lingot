@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 04:46+0100\n"
+"POT-Creation-Date: 2011-02-21 17:10+0000\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -102,7 +102,6 @@ msgstr ""
 "fichero de configuración."
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
-#, fuzzy
 msgid "Audio device"
 msgstr "Dispositivo audio"
 
@@ -201,7 +200,7 @@ msgstr "Desviación"
 
 #: ../src/glade/lingot-config-dialog.glade.h:28
 msgid "Effective sample rate"
-msgstr "Tasa muestreo efectiva"
+msgstr "Tasa de muestreo efectiva"
 
 #: ../src/glade/lingot-config-dialog.glade.h:29
 msgid ""
@@ -266,12 +265,11 @@ msgid "Lingot only considers frequencies above this one."
 msgstr "Lingot sólo considera frecuencias por encima de ésta."
 
 #: ../src/glade/lingot-config-dialog.glade.h:40
-#, fuzzy
 msgid "Minimum frequency"
 msgstr "Frecuencia mínima"
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
-#: ../src/lingot-gui-config-dialog-scale.c:342
+#: ../src/lingot-gui-config-dialog-scale.c:322
 msgid "Name"
 msgstr "Nombre"
 
@@ -281,7 +279,7 @@ msgstr "Umbral de ruido"
 
 #: ../src/glade/lingot-config-dialog.glade.h:43
 msgid "Number of calculations of the fundamental frequency per second."
-msgstr "Número de cómputos por segundo de la frecuencia fundamental."
+msgstr "Número de clalculos por segundo de la frecuencia fundamental."
 
 #: ../src/glade/lingot-config-dialog.glade.h:44
 msgid ""
@@ -428,7 +426,7 @@ msgid ""
 "Closest note to the estimated frequency, according to the scale defined in "
 "the Lingot settings."
 msgstr ""
-"Nota más cercada a la frecuencia estimada, de acuerdo a la escala definida "
+"Nota más cercana a la frecuencia estimada, de acuerdo a la escala definida "
 "en la configuración."
 
 #: ../src/glade/lingot-mainframe.glade.h:4
@@ -452,7 +450,6 @@ msgid "Saves the running configuration to an external file."
 msgstr "Guarda la configuración en ejecución en un fichero externo."
 
 #: ../src/glade/lingot-mainframe.glade.h:8
-#, fuzzy
 msgid "Show spectrum"
 msgstr "Espectro"
 
@@ -492,7 +489,6 @@ msgid "Tone"
 msgstr "Tono"
 
 #: ../src/glade/lingot-mainframe.glade.h:13
-#, fuzzy
 msgid "_Edit"
 msgstr "_Editar"
 
@@ -557,7 +553,7 @@ msgstr ""
 "%s."
 
 #: ../src/lingot-audio-oss.c:92
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error setting sample rate.\n"
 "%s."
@@ -575,7 +571,6 @@ msgstr ""
 "%s."
 
 #: ../src/lingot-audio-alsa.c:139
-#, fuzzy
 msgid "The application has not been built with ALSA support"
 msgstr "La aplicación no ha sido construída con soporte para ALSA"
 
@@ -601,17 +596,14 @@ msgid "Cannot activate client"
 msgstr "No es posible activar el cliente"
 
 #: ../src/lingot-audio-jack.c:271
-#, fuzzy
 msgid "No active capture ports"
 msgstr "No hay puertos físicos de captura"
 
 #: ../src/lingot-audio-jack.c:282 ../src/lingot-audio-jack.c:302
-#, fuzzy
 msgid "Cannot connect input ports"
 msgstr "No es posible conectar los puertos de entrada"
 
 #: ../src/lingot-audio-jack.c:297
-#, fuzzy
 msgid "No physical capture ports"
 msgstr "No hay puertos físicos de captura"
 
@@ -621,7 +613,7 @@ msgid ""
 "Error parsing the configuration file, line %i: unrecognized audio system "
 "'%s', assuming default audio system.\n"
 msgstr ""
-"Error leyendo el archivode configuración, línea %i: sistema de audio "
+"Error leyendo el archivo de configuración, línea %i: sistema de audio "
 "desconocido '%s', asumiendo valor por defecto.\n"
 
 #: ../src/lingot-config.c:452
@@ -673,19 +665,28 @@ msgid "Info"
 msgstr "Información"
 
 #: ../src/lingot-gui-mainframe.c:267
-#, fuzzy
 msgid "Open Configuration File"
-msgstr "configuración de lingot"
+msgstr "Abrir archivo de configuración"
 
 #: ../src/lingot-gui-mainframe.c:275 ../src/lingot-gui-mainframe.c:318
-#, fuzzy
 msgid "Lingot configuration files"
-msgstr "configuración de lingot"
+msgstr "Archivos de configuración de lingot"
 
 #: ../src/lingot-gui-mainframe.c:307
-#, fuzzy
 msgid "Save Configuration File"
-msgstr "configuración de lingot"
+msgstr "Guardar archivo de configuración"
+
+#: ../src/lingot-gui-config-dialog.c:311
+msgid ""
+"The provided scale contains wide gaps in frequency that increase the gauge "
+"range and produce a loss of visual accuracy. Consider providing scales with "
+"at least 12 tones, or with a maximum distance between adjacent notes below "
+"200 cents."
+msgstr ""
+"La escala suministrada contiene grandes huecos en frecuencia que incrementan "
+"el rango de la aguja y provocan una pérdida de precisión visual. Considere "
+"proveer escalas con al menos 12 tonos, o con una distancia máxima entre "
+"notas adyacentes no superior a 200 cents."
 
 #: ../src/lingot-gui-config-dialog-scale.c:84
 msgid "You cannot insert before the reference note."
@@ -711,27 +712,27 @@ msgstr ""
 "El desplazamiento en frecuencia debe estar entre 0 y 1200 cents, o entre 1/1 "
 "y 2/1."
 
-#: ../src/lingot-gui-config-dialog-scale.c:359
+#: ../src/lingot-gui-config-dialog-scale.c:339
 msgid "Shift"
 msgstr "Desplazamiento"
 
-#: ../src/lingot-gui-config-dialog-scale.c:380
+#: ../src/lingot-gui-config-dialog-scale.c:360
 msgid "Frequency [Hz]"
 msgstr "Frecuencia [Hz]"
 
-#: ../src/lingot-gui-config-dialog-scale.c:437
+#: ../src/lingot-gui-config-dialog-scale.c:417
 msgid "There are notes with the same name"
 msgstr "Hay notas con el mismo nombre"
 
-#: ../src/lingot-gui-config-dialog-scale.c:451
+#: ../src/lingot-gui-config-dialog-scale.c:431
 msgid ""
 "There are invalid values in the scale: the notes should be ordered by "
 "frequency / shift"
 msgstr ""
-"Hay valores inválidos en la escala: las notas debería estar ordenadas por "
+"Hay valores inválidos en la escala: las notas deberían estar ordenadas por "
 "frecuencia / desplazamiento"
 
-#: ../src/lingot-gui-config-dialog-scale.c:458
+#: ../src/lingot-gui-config-dialog-scale.c:438
 msgid ""
 "There are invalid values in the scale: all the notes should be in the same "
 "octave"
@@ -739,24 +740,24 @@ msgstr ""
 "Hay valores inválidos en la escala: todas las notas deben estar en la misma "
 "octava"
 
-#: ../src/lingot-gui-config-dialog-scale.c:467
+#: ../src/lingot-gui-config-dialog-scale.c:447
 msgid "There are notes without name"
 msgstr "Hay notas sin nombre"
 
-#: ../src/lingot-gui-config-dialog-scale.c:531
+#: ../src/lingot-gui-config-dialog-scale.c:511
 msgid "Open Scale File"
 msgstr "Abrir archivo de escala"
 
-#: ../src/lingot-gui-config-dialog-scale.c:539
+#: ../src/lingot-gui-config-dialog-scale.c:519
 msgid "Scala files"
 msgstr "Ficheros de Scala"
 
-#: ../src/lingot-gui-config-dialog-scale.c:559
+#: ../src/lingot-gui-config-dialog-scale.c:539
 msgid "The scale cannot be imported: file format error"
 msgstr ""
 "La escala no puede ser importada: el fichero contiene errores de formato"
 
-#: ../src/lingot-gui-config-dialog-scale.c:625
+#: ../src/lingot-gui-config-dialog-scale.c:605
 msgid ""
 "Note identifier, free text that will be displayed in the main window when "
 "tuning close to the given note. Don't use space characters here."
@@ -765,7 +766,7 @@ msgstr ""
 "principal cuando se encuentre afinando cerca de la nota dada. No use "
 "caracteres en blanco aquí."
 
-#: ../src/lingot-gui-config-dialog-scale.c:630
+#: ../src/lingot-gui-config-dialog-scale.c:610
 msgid ""
 "Shift. You can define it as a deviation in cents from the reference note "
 "(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
@@ -778,7 +779,7 @@ msgstr ""
 "1200 cents, o entre 1/1 y 2/1 (es decir, todas las notas deben estar en la "
 "misma octava), y deben estar todos ellos bien ordenados."
 
-#: ../src/lingot-gui-config-dialog-scale.c:635
+#: ../src/lingot-gui-config-dialog-scale.c:615
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
 "reference, and all the other frequencies will shift according to the "
@@ -788,17 +789,5 @@ msgstr ""
 "Frecuencia. Puede definir aquí la frecuencia absoluta de una nota concreta "
 "como referencia, y el resto de frecuencias se establecerán en base a este "
 "valor y el desplazamiento en frecuencia de cada nota (definido en la columna "
-"Desplazamiento'). Puede usar tanto un valor numérico, o las palabras clave "
+"'Desplazamiento'). Puede usar tanto un valor numérico, o las palabras clave "
 "'mid-C' (261.625565 Hz) y 'mid-A' (440 Hz)."
-
-#~ msgid "Root frequency"
-#~ msgstr "Frecuencia base"
-
-#~ msgid "freq"
-#~ msgstr "frec"
-
-#~ msgid "err"
-#~ msgstr "err"
-
-#~ msgid "Deviation in cents from the root frequency"
-#~ msgstr "Desviación en cents desde la frecuencia base"
