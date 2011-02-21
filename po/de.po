@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 04:46+0100\n"
+"POT-Creation-Date: 2011-02-21 17:10+0000\n"
 "PO-Revision-Date: 2008-01-12 17:23:00+0100\n"
 "Last-Translator: Roland Stigge <stigge@antcom.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -221,7 +221,7 @@ msgid "Minimum frequency"
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
-#: ../src/lingot-gui-config-dialog-scale.c:342
+#: ../src/lingot-gui-config-dialog-scale.c:322
 msgid "Name"
 msgstr ""
 
@@ -579,6 +579,14 @@ msgstr "Lingot-Konfiguration"
 msgid "Save Configuration File"
 msgstr "Lingot-Konfiguration"
 
+#: ../src/lingot-gui-config-dialog.c:311
+msgid ""
+"The provided scale contains wide gaps in frequency that increase the gauge "
+"range and produce a loss of visual accuracy. Consider providing scales with "
+"at least 12 tones, or with a maximum distance between adjacent notes below "
+"200 cents."
+msgstr ""
+
 #: ../src/lingot-gui-config-dialog-scale.c:84
 msgid "You cannot insert before the reference note."
 msgstr ""
@@ -599,53 +607,53 @@ msgstr ""
 msgid "The shift must be between 0 and 1200 cents, or between 1/1 and 2/1."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:359
+#: ../src/lingot-gui-config-dialog-scale.c:339
 msgid "Shift"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:380
+#: ../src/lingot-gui-config-dialog-scale.c:360
 msgid "Frequency [Hz]"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:437
+#: ../src/lingot-gui-config-dialog-scale.c:417
 msgid "There are notes with the same name"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:451
+#: ../src/lingot-gui-config-dialog-scale.c:431
 msgid ""
 "There are invalid values in the scale: the notes should be ordered by "
 "frequency / shift"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:458
+#: ../src/lingot-gui-config-dialog-scale.c:438
 msgid ""
 "There are invalid values in the scale: all the notes should be in the same "
 "octave"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:467
+#: ../src/lingot-gui-config-dialog-scale.c:447
 msgid "There are notes without name"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:531
+#: ../src/lingot-gui-config-dialog-scale.c:511
 msgid "Open Scale File"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:539
+#: ../src/lingot-gui-config-dialog-scale.c:519
 msgid "Scala files"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:559
+#: ../src/lingot-gui-config-dialog-scale.c:539
 msgid "The scale cannot be imported: file format error"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:625
+#: ../src/lingot-gui-config-dialog-scale.c:605
 msgid ""
 "Note identifier, free text that will be displayed in the main window when "
 "tuning close to the given note. Don't use space characters here."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:630
+#: ../src/lingot-gui-config-dialog-scale.c:610
 msgid ""
 "Shift. You can define it as a deviation in cents from the reference note "
 "(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
@@ -653,7 +661,7 @@ msgid ""
 "the notes must be in the same octave), and they must be well ordered."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:635
+#: ../src/lingot-gui-config-dialog-scale.c:615
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
 "reference, and all the other frequencies will shift according to the "
