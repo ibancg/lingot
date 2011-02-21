@@ -223,7 +223,7 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		lingot_config_scale_parse_shift(new_text, &shift_cents,
 				&shift_numerator, &shift_denominator);
 
-		// TODO: validacion integral
+		// TODO: full validation
 
 		if ((ipath == 0) && (fabs(shift_cents - 0.0) > 1e-10)) {
 			lingot_msg_add_warning(
@@ -311,26 +311,6 @@ void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
 	}
 }
 
-//void lingot_config_dialog_scale_tree_shift_cell_data_function(
-//		GtkTreeViewColumn *col, GtkCellRenderer *renderer, GtkTreeModel *model,
-//		GtkTreeIter *iter, gpointer user_data) {
-//	char* shift_char;
-//	gdouble shift;
-//	gchar buf[20];
-//
-//	gtk_tree_model_get(model, iter, COLUMN_SHIFT, &shift_char, -1);
-//	lingot_config_scale_parse_shift(shift_char, &shift, NULL, NULL);
-//	free(shift_char);
-//
-//	if (fabs(shift - 0.0) < 1e-10) {
-//		g_object_set(renderer, "text", "1/1", NULL);
-//		// TODO: more
-//	} else {
-//		g_snprintf(buf, sizeof(buf), "%.4f", shift);
-//		g_object_set(renderer, "text", buf, NULL);
-//	}
-//}
-
 void lingot_gui_config_dialog_scale_tree_add_column(
 		LingotConfigDialog* config_dialog) {
 	GtkCellRenderer *renderer;
@@ -415,7 +395,7 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 
 	last_shift = -1.0;
 
-	// TODO: validacion integral
+	// TODO: full validation
 
 	int row1 = 0;
 

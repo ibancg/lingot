@@ -306,6 +306,11 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	lingot_config_update_internal_params(conf);
 	lingot_gui_mainframe_change_config(dialog->mainframe, conf);
 
+	if (scale->max_offset_rounded > 200) {
+		lingot_msg_add_warning(
+				_("The provided scale contains wide gaps in frequency that increase the gauge range and produce a loss of visual accuracy. Consider providing scales with at least 12 tones, or with a maximum distance between adjacent notes below 200 cents."));
+	}
+
 	return 1;
 }
 
