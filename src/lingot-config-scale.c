@@ -123,12 +123,13 @@ void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
 	}
 }
 
-void lingot_config_scale_parse_shift(char* char_buffer, double* cents,
+int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 		short int* numerator, short int* denominator) {
 	const static char* delim = "/";
 	char* char_buffer_pointer1 = strtok(char_buffer, delim);
 	char* char_buffer_pointer2 = strtok(NULL, delim);
 	short int num, den;
+	int result = 1;
 
 	if (numerator != NULL) {
 		*numerator = -1;
@@ -138,19 +139,39 @@ void lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 		*denominator = -1;
 	}
 
+	int n = 0;
 	if (!char_buffer_pointer2) {
-		sscanf(char_buffer_pointer1, "%lf", cents);
-	} else {
-		sscanf(char_buffer_pointer1, "%hd", &num);
-		sscanf(char_buffer_pointer2, "%hd", &den);
-		*cents = 1200.0 * log2(1.0 * num / den);
-		if (numerator != NULL) {
-			*numerator = num;
+		n = sscanf(char_buffer_pointer1, "%lf", cents);
+		if (!n) {
+			result = 0;
 		}
-		if (denominator != NULL) {
-			*denominator = den;
+	} else {
+		n = sscanf(char_buffer_pointer1, "%hd", &num);
+		if (!n) {
+			result = 0;
+		} else {
+			n = sscanf(char_buffer_pointer2, "%hd", &den);
+			if (!n) {
+				result = 0;
+			} else {
+				*cents = 1200.0 * log2(1.0 * num / den);
+				if (numerator != NULL) {
+					*numerator = num;
+				}
+				if (denominator != NULL) {
+					*denominator = den;
+				}
+			}
 		}
 	}
+
+	if (!result) {
+		*numerator = 1;
+		*denominator = 1;
+		*cents = 0.0;
+	}
+
+	return result;
 }
 
 void lingot_config_scale_format_shift(char* char_buffer, double cents,
@@ -168,6 +189,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	char* char_buffer_pointer1;
 	char* nl;
 	const static char* delim = " \t\n";
+	int result = 1;
 
 #   define MAX_LINE_SIZE 1000
 
@@ -215,9 +237,12 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
 		char_buffer_pointer1 = strtok(char_buffer, delim);
 
-		lingot_config_scale_parse_shift(char_buffer_pointer1,
+		int r = lingot_config_scale_parse_shift(char_buffer_pointer1,
 				&scale->offset_cents[i], &scale->offset_ratios[0][i],
 				&scale->offset_ratios[1][i]);
+		if (!r) {
+			result = 0;
+		}
 
 		sprintf(char_buffer, "%d", i + 1);
 		scale->note_name[i] = strdup(char_buffer);
@@ -226,5 +251,5 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	fclose(fp);
 
 #   undef MAX_LINE_SIZE
-	return 1;
+	return result;
 }

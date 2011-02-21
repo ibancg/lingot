@@ -99,7 +99,7 @@ void lingot_gui_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		sr = atoi(text);
 	} else {
 		sr = 44100;
-		g_print("WARNING: cannot get sample rate, assuming 44100\n");
+		//g_print("WARNING: cannot get sample rate, assuming 44100\n");
 	}
 
 	char buff1[20];
