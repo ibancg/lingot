@@ -67,3 +67,5 @@ syntax: regexp
 ^ltmain\.sh$
 syntax: regexp
 ^src/\.deps$
+syntax: regexp
+^Makefile\.in$
