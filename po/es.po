@@ -1,7 +1,8 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Spanish translations for Lingot.
+# Copyright (C) 2004-2011 Ibán Cereijo Graña, 2004-2011 Jairo Chapela Martínez
+# This file is distributed under the same license as the lingot package.
 # Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+# Ibán Cereijo Graña <ibancg@gmail.com>, 2007-2011.
 #
 msgid ""
 msgstr ""

@@ -36,6 +36,8 @@ gnomemenu_DATA = lingot.desktop
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:
+	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
+	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
 	for specfile in *.spec; do \
 		if test -f $$specfile; then \
 			cp -p $$specfile $(distdir); \
