@@ -177,7 +177,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 	const char **ports = NULL;
 	const char* exception;
 
-	unsigned long int flags = JackPortIsActive | JackPortIsOutput;
+	unsigned long int flags = JackPortIsOutput;
 
 	try {
 		if (client != NULL) {
@@ -265,8 +265,9 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 			throw(_("Cannot activate client"));
 		}
 
-		ports = jack_get_ports(audio->jack_client, NULL, NULL, JackPortIsActive
-				| JackPortIsOutput);
+		ports
+				= jack_get_ports(audio->jack_client, NULL, NULL,
+						JackPortIsOutput);
 		if (ports == NULL) {
 			throw(_("No active capture ports"));
 		}
@@ -321,7 +322,7 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 #	ifdef JACK
 	//jack_cycle_wait(audio->jack_client);
 	const char** ports = jack_get_ports(audio->jack_client, NULL, NULL,
-			JackPortIsActive | JackPortIsOutput);
+			JackPortIsOutput);
 
 	if (ports != NULL) {
 		int i, j = 0;
