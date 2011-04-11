@@ -524,8 +524,6 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 
 		if (core->audio != NULL) {
 			if (core->audio->interrupted) {
-				printf(
-						"The audio thread was interrupted by the server, exiting core thread\n");
 				memset(core->X, 0,
 						((core->conf->fft_size > 256) ? (core->conf->fft_size
 								>> 1) : core->conf->fft_size) * sizeof(FLT));
@@ -534,6 +532,4 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 			}
 		}
 	}
-
-	printf("Exiting core thread\n");
 }
