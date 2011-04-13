@@ -192,12 +192,13 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 	result->n_devices = 0;
 	result->devices = NULL;
 
-	result->n_sample_rates = 4;
+	result->n_sample_rates = 5;
 	result->sample_rates = malloc(result->n_sample_rates * sizeof(int));
 	result->sample_rates[0] = 8000;
 	result->sample_rates[1] = 11025;
 	result->sample_rates[2] = 22050;
 	result->sample_rates[3] = 44100;
+	result->sample_rates[4] = 48000;
 
 	return result;
 }
