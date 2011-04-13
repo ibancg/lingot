@@ -1,0 +1,71 @@
+
+syntax: regexp
+^autom4te\.cache/output\.0$
+syntax: regexp
+
+syntax: regexp
+^autom4te\.cache/output\.1$
+syntax: regexp
+^autom4te\.cache/requests$
+syntax: regexp
+^autom4te\.cache/traces\.0$
+syntax: regexp
+^autom4te\.cache/traces\.1$
+syntax: regexp
+^pixmaps/Makefile$
+syntax: regexp
+^pixmaps/Makefile\.in$
+syntax: regexp
+\.gmo$
+syntax: regexp
+\.gmo$
+syntax: regexp
+^po/Makefile$
+syntax: regexp
+^po/Makefile\.in$
+syntax: regexp
+^po/Makefile\.in\.in$
+syntax: regexp
+^po/POTFILES$
+syntax: regexp
+^po/stamp-it$
+syntax: regexp
+^src/glade/Makefile$
+syntax: regexp
+^src/glade/Makefile\.in$
+syntax: regexp
+^src/lingot$
+syntax: regexp
+^src/Makefile$
+syntax: regexp
+^src/Makefile\.in$
+syntax: regexp
+^config\.h$
+syntax: regexp
+^aclocal\.m4$
+syntax: regexp
+^config\.h\.in$
+syntax: regexp
+^config\.status$
+syntax: regexp
+^configure$
+syntax: regexp
+^intltool-extract\.in$
+syntax: regexp
+^intltool-merge\.in$
+syntax: regexp
+^intltool-update\.in$
+syntax: regexp
+^libtool$
+syntax: regexp
+^lingot\.desktop$
+syntax: regexp
+^Makefile$
+syntax: regexp
+^stamp-h1$
+syntax: regexp
+^ltmain\.sh$
+syntax: regexp
+^src/\.deps$
+syntax: regexp
+^Makefile\.in$
