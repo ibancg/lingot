@@ -69,3 +69,5 @@ syntax: regexp
 ^src/\.deps$
 syntax: regexp
 ^Makefile\.in$
+syntax: regexp
+^mkinstalldirs$
