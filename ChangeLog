@@ -2,6 +2,7 @@
 2011-03-11 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #33046 (#622038 in debian).
+	* Added 48K sample rate to OSS and ALSA.
 
 2011-02-21 Ibán Cereijo <ibancg@gmail.com>
 
