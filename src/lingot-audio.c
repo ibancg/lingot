@@ -82,6 +82,7 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 			break;
 		default:
 			perror("unknown audio system\n");
+			break;
 		}
 
 		free(audio);
@@ -105,6 +106,7 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 		default:
 			perror("unknown audio system\n");
 			result = -1;
+			break;
 		}
 
 	return result;
@@ -127,6 +129,7 @@ LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
 	default:
 		perror("unknown audio system\n");
 		result = NULL;
+		break;
 	}
 
 	return result;
