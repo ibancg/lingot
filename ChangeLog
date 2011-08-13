@@ -1,4 +1,8 @@
 
+2011-08-13 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed bug #34007 (#637610 in debian).
+
 2011-03-11 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #33046 (#622038 in debian).
