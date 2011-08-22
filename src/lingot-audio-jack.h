@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -23,14 +23,14 @@
 #ifndef __LINGOT_AUDIO_JACK_H__
 #define __LINGOT_AUDIO_JACK_H__
 
-#include "lingot-core.h"
 #include "lingot-audio.h"
 
-LingotAudioHandler* lingot_audio_jack_new(LingotCore*);
+LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate);
 void lingot_audio_jack_destroy(LingotAudioHandler*);
-int lingot_audio_jack_read(LingotAudioHandler*, LingotCore*);
-//int lingot_audio_jack_get_sample_rate();
+int lingot_audio_jack_read(LingotAudioHandler*);
 LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		audio_system_t);
+int lingot_audio_jack_start(LingotAudioHandler*);
+void lingot_audio_jack_stop(LingotAudioHandler*);
 
 #endif

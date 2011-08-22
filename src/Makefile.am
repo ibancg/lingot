@@ -25,17 +25,21 @@ lingot_SOURCES = \
 	lingot-complex.c\
 	lingot-config.c\
 	lingot-config.h\
+	lingot-config-scale.c\
+	lingot-config-scale.h\
 	lingot-core.c\
 	lingot-core.h\
 	lingot-defs.h\
-	lingot-error.h\
-	lingot-error.c\
-	lingot-config-dialog.c\
-	lingot-config-dialog.h\
+	lingot-msg.h\
+	lingot-msg.c\
+	lingot-gui-config-dialog.c\
+	lingot-gui-config-dialog.h\
+	lingot-gui-config-dialog-scale.c\
+	lingot-gui-config-dialog-scale.h\
+	lingot-gui-mainframe.c\
+	lingot-gui-mainframe.h\
 	lingot-gauge.c\
 	lingot-gauge.h\
-	lingot-mainframe.c\
-	lingot-mainframe.h\
 	lingot-filter.c\
 	lingot-filter.h\
 	lingot-signal.c\

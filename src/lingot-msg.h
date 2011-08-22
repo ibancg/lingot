@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -20,10 +20,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_ERROR_H__
-#define __LINGOT_ERROR_H__
+#ifndef __LINGOT_MESSAGES_H__
+#define __LINGOT_MESSAGES_H__
 
-void lingot_error_queue_push(const char* message);
-char* lingot_error_queue_pop();
+// asynchronous message handling
+
+// message types
+typedef enum message_type_t {
+	ERROR = 0, WARNING = 1, INFO = 2
+} message_type_t;
+
+// add messages to the queue
+void lingot_msg_add(const char* message, message_type_t type);
+void lingot_msg_add_error(const char* message);
+void lingot_msg_add_warning(const char* message);
+void lingot_msg_add_info(const char* message);
+
+// gets a message from the queue, it returns 0 if no messages are available
+int lingot_msg_get(char** msg, message_type_t* type);
 
 #endif

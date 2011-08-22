@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -29,10 +28,9 @@
  peak identification functions.
  */
 
-FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w)
-{
+FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w) {
 	//return 0.5*(1.0 - 0.9*w/M_PI);
-	return pow(10.0, (conf->noise_threshold_db*(1.0 - 0.9*w/M_PI))/10.0);
+	return pow(10.0, (conf->noise_threshold_db * (1.0 - 0.9 * w / M_PI)) / 10.0);
 	//return conf->noise_threshold_un;
 }
 
@@ -86,8 +84,8 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 	for (i = 0; i < conf->peak_number; i++)
 		p_index[i] = -1;
 
-	unsigned int lowest_index = (unsigned int)ceil(conf->min_frequency*(1.0
-			*conf->oversampling/conf->sample_rate)*conf->fft_size);
+	unsigned int lowest_index = (unsigned int) ceil(conf->min_frequency * (1.0
+			* conf->oversampling / conf->sample_rate) * conf->fft_size);
 
 	if (lowest_index < conf->peak_half_width)
 		lowest_index = conf->peak_half_width;
@@ -130,8 +128,8 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 
 	// all peaks much lower than maximum are deleted.
 	for (i = 0; i < conf->peak_number; i++)
-		if ((p_index[i] == -1) ||(conf->peak_rejection_relation_nu
-				*x[p_index[i]] < maximum))
+		if ((p_index[i] == -1) || (conf->peak_rejection_relation_nu
+				* x[p_index[i]] < maximum))
 			p_index[i] = N; // there are available places in the buffer.
 
 	// search the lowest maximum index.
@@ -146,8 +144,22 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 //---------------------------------------------------------------------------
 
 // generates a Hamming window of N samples
-void lingot_signal_hamming_window(int N, FLT* out) {
+void lingot_signal_window(int N, FLT* out, window_type_t window_type) {
 	register int i;
-	for (i = 0; i < N; i++)
-		out[i] = 0.53836 - 0.46164*cos((2.0*M_PI*i)/(N-1));
+	switch (window_type) {
+	case RECTANGULAR:
+		for (i = 0; i < N; i++)
+			out[i] = 1.0;
+		break;
+	case HANNING:
+		for (i = 0; i < N; i++)
+			out[i] = 0.5 * (1 - cos((2.0 * M_PI * i) / (N - 1)));
+		break;
+	case HAMMING:
+		for (i = 0; i < N; i++)
+			out[i] = 0.53836 - 0.46164 * cos((2.0 * M_PI * i) / (N - 1));
+		break;
+	default:
+		break;
+	}
 }

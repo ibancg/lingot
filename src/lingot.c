@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -31,7 +31,7 @@
 
 #include "lingot-defs.h"
 #include "lingot-config.h"
-#include "lingot-mainframe.h"
+#include "lingot-gui-mainframe.h"
 #include "lingot-i18n.h"
 
 #include <gtk/gtk.h>
@@ -39,6 +39,39 @@
 #include <glib.h>
 
 char CONFIG_FILE_NAME[100];
+
+//void print_card_list(void) {
+//   int status;
+//   int card = -1;  // use -1 to prime the pump of iterating through card list
+//   char* longname  = NULL;
+//   char* shortname = NULL;
+//
+//   if ((status = snd_card_next(&card)) < 0) {
+//      error("cannot determine card number: %s", snd_strerror(status));
+//      return;
+//   }
+//   if (card < 0) {
+//      error("no sound cards found");
+//      return;
+//   }
+//   while (card >= 0) {
+//      printf("Card %d:", card);
+//      if ((status = snd_card_get_name(card, &shortname)) < 0) {
+//         error("cannot determine card shortname: %s", snd_strerror(status));
+//         break;
+//      }
+//      if ((status = snd_card_get_longname(card, &longname)) < 0) {
+//         error("cannot determine card longname: %s", snd_strerror(status));
+//         break;
+//      }
+//      printf("\tLONG NAME:  %s\n", longname);
+//      printf("\tSHORT NAME: %s\n", shortname);
+//      if ((status = snd_card_next(&card)) < 0) {
+//         error("cannot determine card number: %s", snd_strerror(status));
+//         break;
+//      }
+//   }
+//}
 
 int main(int argc, char *argv[]) {
 
@@ -82,6 +115,7 @@ int main(int argc, char *argv[]) {
 
 			default:
 				printf("?? getopt returned character code 0%o ??\n", c);
+				break;
 			}
 		}
 	}
@@ -98,6 +132,7 @@ int main(int argc, char *argv[]) {
 
 		// new configuration with default values.
 		LingotConfig* new_conf = lingot_config_new();
+		lingot_config_restore_default_values(new_conf);
 		lingot_config_save(new_conf, CONFIG_FILE_NAME);
 		lingot_config_destroy(new_conf);
 
@@ -106,13 +141,9 @@ int main(int argc, char *argv[]) {
 	} else
 		fclose(fp);
 
-	//	int i;
-	//	char** argv2 = malloc((argc + 1) * sizeof(char*));
-	//	for (i = 0; i < argc; i++)
-	//		argv2[i] = strdup(argv[i]);
-	//	argv2[argc] = "--g-fatal-warnings";
-	//	lingot_mainframe_create(argc + 1, argv2);
-	lingot_mainframe_create(argc, argv);
+//	print_card_list();
+
+	lingot_gui_mainframe_create(argc, argv);
 
 	return 0;
 }

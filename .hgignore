@@ -63,3 +63,11 @@ syntax: regexp
 ^Makefile$
 syntax: regexp
 ^stamp-h1$
+syntax: regexp
+^ltmain\.sh$
+syntax: regexp
+^src/\.deps$
+syntax: regexp
+^Makefile\.in$
+syntax: regexp
+^mkinstalldirs$

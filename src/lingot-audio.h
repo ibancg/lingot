@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -33,6 +33,9 @@
 
 #include "lingot-config.h"
 
+typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
+		int read_buffer_size, void *arg);
+
 typedef struct _LingotAudioHandler LingotAudioHandler;
 
 struct _LingotAudioHandler {
@@ -40,12 +43,17 @@ struct _LingotAudioHandler {
 	int audio_system;
 	char device[100];
 
+	LingotAudioProcessCallback process_callback;
+	void* process_callback_arg;
+
 #ifdef ALSA
 	snd_pcm_t *capture_handle;
 #endif
 
 	int dsp; // file handler.
+	int read_buffer_size;
 	SAMPLE_TYPE* read_buffer;
+	FLT* flt_read_buffer;
 
 #	ifdef JACK
 	jack_port_t *jack_input_port;
@@ -53,8 +61,19 @@ struct _LingotAudioHandler {
 	int nframes;
 #	endif
 
-	char error_message[100];
+	//	char error_message[100];
 	unsigned int real_sample_rate;
+
+	// pthread-related  member variables
+	pthread_t thread_input_read;
+	pthread_attr_t thread_input_read_attr;
+
+	// indicates whether the audio thread is running
+	int running;
+
+	// indicates whether the thread was interrupted (by the audio server, not
+	// by the user)
+	int interrupted;
 };
 
 typedef struct _LingotAudioSystemProperties LingotAudioSystemProperties;
@@ -75,12 +94,16 @@ LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
 void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
 
 // creates an audio handler
-LingotAudioHandler* lingot_audio_new(void*);
+LingotAudioHandler
+		*
+		lingot_audio_new(audio_system_t audio_system, char* device,
+				int sample_rate, LingotAudioProcessCallback process_callback,
+				void *process_callback_arg);
 
 // destroys an audio handler
-void lingot_audio_destroy(LingotAudioHandler*, void*);
+void lingot_audio_destroy(LingotAudioHandler*);
 
-// reads a new piece of signal
-int lingot_audio_read(LingotAudioHandler*, void*);
+int lingot_audio_start(LingotAudioHandler*);
+void lingot_audio_stop(LingotAudioHandler*);
 
 #endif
