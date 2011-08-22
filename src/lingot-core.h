@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -68,14 +67,13 @@ struct _LingotCore {
 
 	LingotConfig* conf; // configuration structure
 
-	// pthread-related  member variables
-	pthread_t thread_input_read;
-	pthread_attr_t thread_input_read_attr;
-
 	pthread_t thread_computation;
 	pthread_attr_t thread_computation_attr;
 	pthread_cond_t thread_computation_cond;
 	pthread_mutex_t thread_computation_mutex;
+
+	pthread_mutex_t temporal_buffer_mutex;
+
 };
 
 //----------------------------------------------------------------
@@ -89,6 +87,6 @@ void lingot_core_start(LingotCore*);
 // stop process
 void lingot_core_stop(LingotCore*);
 
-int lingot_core_read(LingotCore* core);
+//int lingot_core_read(LingotCore* core);
 
 #endif //__LINGOT_CORE_H__

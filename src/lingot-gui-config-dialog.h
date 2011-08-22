@@ -1,8 +1,7 @@
-//-*- C++ -*-
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2010  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -21,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_CONFIG_DIALOG_H__
-#define __LINGOT_CONFIG_DIALOG_H__
+#ifndef __LINGOT_GUI_CONFIG_DIALOG_H__
+#define __LINGOT_GUI_CONFIG_DIALOG_H__
 
 #include <gtk/gtk.h>
 
@@ -34,8 +33,6 @@ struct _LingotConfigDialog {
 
 	// widgets that contains configuration information.
 	GtkComboBox* input_system;
-	//	GtkEntry* oss_input_dev;
-	//	GtkEntry* alsa_input_dev;
 	GtkComboBoxEntry* input_dev;
 	GtkComboBoxEntry* sample_rate;
 	GtkHScale* calculation_rate;
@@ -54,17 +51,9 @@ struct _LingotConfigDialog {
 	GtkHScale* rejection_peak_relation;
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
-	// GtkLabel* label_root_frequency;
-	// GtkComboBox* combo_root_frequency_reference_note;
-	// GtkLabel* jack_label_sample_rate0;
-	// GtkLabel* jack_label_sample_rate1;
-	// GtkLabel* jack_label_sample_rate2;
-	//	GtkLabel* oss_alsa_label_sample_rate0;
-	//	GtkLabel* oss_alsa_label_sample_rate2;
-	//	GtkLabel* oss_label_input_dev0;
-	//	GtkLabel* oss_label_input_dev2;
-	//	GtkLabel* alsa_label_input_dev0;
-	//	GtkLabel* alsa_label_input_dev2;
+
+	GtkButton* button_scale_add;
+	GtkButton* button_scale_del;
 
 	GtkEntry* scale_name;
 	GtkTreeView* scale_treeview;
@@ -78,7 +67,7 @@ struct _LingotConfigDialog {
 };
 
 //LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
-void lingot_config_dialog_destroy(LingotConfigDialog*);
-void lingot_config_dialog_show(LingotMainFrame* frame);
+void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
+void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
 
-#endif // __LINGOT_CONFIG_DIALOG_H__
+#endif // __LINGOT_GUI_CONFIG_DIALOG_H__
