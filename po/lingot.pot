@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-22 16:20+0000\n"
+"POT-Creation-Date: 2011-08-22 16:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -494,7 +494,7 @@ msgid "No more JACK ports available"
 msgstr ""
 
 #: ../src/lingot-audio-jack.c:133 ../src/lingot-audio-jack.c:247
-#: ../src/lingot-audio-jack.c:314 ../src/lingot-audio-jack.c:346
+#: ../src/lingot-audio-jack.c:315 ../src/lingot-audio-jack.c:347
 msgid "The application has not been built with JACK support"
 msgstr ""
 
@@ -502,15 +502,15 @@ msgstr ""
 msgid "Cannot activate client"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:271
+#: ../src/lingot-audio-jack.c:272
 msgid "No active capture ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:282 ../src/lingot-audio-jack.c:302
+#: ../src/lingot-audio-jack.c:283 ../src/lingot-audio-jack.c:303
 msgid "Cannot connect input ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:297
+#: ../src/lingot-audio-jack.c:298
 msgid "No physical capture ports"
 msgstr ""
 
