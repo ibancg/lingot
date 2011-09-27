@@ -201,7 +201,6 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 	unsigned int period;
 	double error_cents;
 	LingotMainFrame* frame = (LingotMainFrame*) data;
-	unsigned short note_index;
 
 	period = 1000 / GAUGE_RATE;
 	frame->gauge_computation_uid = g_timeout_add(period,
@@ -211,7 +210,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 			< 10.0)) {
 		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
 	} else {
-		note_index = lingot_gui_mainframe_get_closest_note_index(
+		lingot_gui_mainframe_get_closest_note_index(
 				frame->core->freq, frame->conf->scale,
 				frame->conf->root_frequency_error, &error_cents);
 		lingot_gauge_compute(frame->gauge, error_cents);
@@ -242,7 +241,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 							(message_type == ERROR) ? GTK_MESSAGE_ERROR
 									: ((message_type == WARNING) ? GTK_MESSAGE_WARNING
 											: GTK_MESSAGE_INFO),
-							GTK_BUTTONS_CLOSE, error_message);
+							GTK_BUTTONS_CLOSE, "%s", error_message);
 			gtk_window_set_title(GTK_WINDOW(message_dialog), (message_type
 					== ERROR) ? _("Error")
 					: ((message_type == WARNING) ? _("Warning") : _("Info")));
