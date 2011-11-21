@@ -41,7 +41,6 @@
 int
 lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg);
 
-void lingot_core_run_reading_thread(LingotCore* core);
 void lingot_core_run_computation_thread(LingotCore* core);
 
 int decimation_input_index = 0;
