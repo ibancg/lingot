@@ -48,14 +48,17 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 	case AUDIO_SYSTEM_JACK:
 		result = lingot_audio_jack_new(device, sample_rate);
 		break;
+	case AUDIO_SYSTEM_PULSEAUDIO:
+		result = lingot_audio_pulseaudio_new(device, sample_rate);
+		break;
 	}
 
 	if (result != NULL) {
 		// audio source read in floating point format.
-		result->flt_read_buffer
-				= malloc(result->read_buffer_size * sizeof(FLT));
-		memset(result->flt_read_buffer, 0, result->read_buffer_size
-				* sizeof(FLT));
+		result->flt_read_buffer = malloc(
+				result->read_buffer_size * sizeof(FLT));
+		memset(result->flt_read_buffer, 0,
+				result->read_buffer_size * sizeof(FLT));
 		result->process_callback = process_callback;
 		result->process_callback_arg = process_callback_arg;
 		result->interrupted = 0;
@@ -80,6 +83,9 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 		case AUDIO_SYSTEM_JACK:
 			lingot_audio_jack_destroy(audio);
 			break;
+		case AUDIO_SYSTEM_PULSEAUDIO:
+			lingot_audio_pulseaudio_destroy(audio);
+			break;
 		default:
 			perror("unknown audio system\n");
 			break;
@@ -103,6 +109,9 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 			//		case AUDIO_SYSTEM_JACK:
 			//			result = lingot_audio_jack_read(audio);
 			//			break;
+		case AUDIO_SYSTEM_PULSEAUDIO:
+			result = lingot_audio_pulseaudio_read(audio);
+			break;
 		default:
 			perror("unknown audio system\n");
 			result = -1;
@@ -126,6 +135,10 @@ LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
 	case AUDIO_SYSTEM_JACK:
 		result = lingot_audio_jack_get_audio_system_properties(audio_system);
 		break;
+	case AUDIO_SYSTEM_PULSEAUDIO:
+		result = lingot_audio_pulseaudio_get_audio_system_properties(
+				audio_system);
+		break;
 	default:
 		perror("unknown audio system\n");
 		result = NULL;
@@ -139,8 +152,12 @@ void lingot_audio_audio_system_properties_destroy(
 		LingotAudioSystemProperties* properties) {
 
 	int i;
-	for (i = 0; i < properties->n_devices; i++) {
-		free(properties->devices[i]);
+	if (properties->devices != NULL) {
+		for (i = 0; i < properties->n_devices; i++) {
+			if (properties->devices[i] != NULL) {
+				free(properties->devices[i]);
+			}
+		}
 	}
 
 	if (properties->sample_rates != NULL)

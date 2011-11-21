@@ -50,10 +50,10 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_lingot_OBJECTS = lingot-fft.$(OBJEXT) lingot-audio.$(OBJEXT) \
 	lingot-audio-oss.$(OBJEXT) lingot-audio-alsa.$(OBJEXT) \
-	lingot-audio-jack.$(OBJEXT) lingot-complex.$(OBJEXT) \
-	lingot-config.$(OBJEXT) lingot-config-scale.$(OBJEXT) \
-	lingot-core.$(OBJEXT) lingot-msg.$(OBJEXT) \
-	lingot-gui-config-dialog.$(OBJEXT) \
+	lingot-audio-jack.$(OBJEXT) lingot-audio-pulseaudio.$(OBJEXT) \
+	lingot-complex.$(OBJEXT) lingot-config.$(OBJEXT) \
+	lingot-config-scale.$(OBJEXT) lingot-core.$(OBJEXT) \
+	lingot-msg.$(OBJEXT) lingot-gui-config-dialog.$(OBJEXT) \
 	lingot-gui-config-dialog-scale.$(OBJEXT) \
 	lingot-gui-mainframe.$(OBJEXT) lingot-gauge.$(OBJEXT) \
 	lingot-filter.$(OBJEXT) lingot-signal.$(OBJEXT) \
@@ -299,6 +299,8 @@ lingot_SOURCES = \
 	lingot-audio-alsa.h\
 	lingot-audio-jack.c\
 	lingot-audio-jack.h\
+	lingot-audio-pulseaudio.c\
+	lingot-audio-pulseaudio.h\
 	lingot-complex.h\
 	lingot-complex.c\
 	lingot-config.c\
@@ -420,6 +422,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-audio-alsa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-audio-jack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-audio-oss.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-audio-pulseaudio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-audio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-complex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lingot-config-scale.Po@am__quote@

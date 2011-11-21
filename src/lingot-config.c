@@ -48,19 +48,19 @@ char* options[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "AUDIO_DEV_ALSA",
 // print/scan param formats.
 const char* option_formats = "mssddffdffffddfddf|d";
 
+const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio", NULL };
+
 // converts an audio_system_t to a string
 const char* audio_system_t_to_str(audio_system_t audio_system) {
-	const char* values[] = { "OSS", "ALSA", "JACK" };
-	return values[audio_system];
+	return audio_systems[audio_system];
 }
 
 // converts a string to an audio_system_t
 audio_system_t str_to_audio_system_t(char* audio_system) {
 	audio_system_t result = -1;
-	const char* values[] = { "OSS", "ALSA", "JACK", NULL };
 	int i;
-	for (i = 0; values[i] != NULL; i++) {
-		if (!strcmp(audio_system, values[i])) {
+	for (i = 0; audio_systems[i] != NULL; i++) {
+		if (!strcmp(audio_system, audio_systems[i])) {
 			result = i;
 			break;
 		}
@@ -130,8 +130,9 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 void lingot_config_update_internal_params(LingotConfig* config) {
 
 	// derived parameters.
-	config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window
-			* config->sample_rate / config->oversampling);
+	config->temporal_buffer_size = (unsigned int) ceil(
+			config->temporal_window * config->sample_rate
+					/ config->oversampling);
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
@@ -152,6 +153,7 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 
 	config->gauge_rest_value = -0.45 * scale->max_offset_rounded;
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "");
 }
 
 //----------------------------------------------------------------------------
@@ -162,12 +164,12 @@ void lingot_map_parameters(LingotConfig* config, void* params[]) {
 			&config->audio_dev[AUDIO_SYSTEM_OSS],
 			&config->audio_dev[AUDIO_SYSTEM_ALSA], &config->sample_rate,
 			&config->oversampling, &config->root_frequency_error,
-			&config->min_frequency, &config->fft_size,
-			&config->temporal_window, &config->noise_threshold_db,
-			&config->calculation_rate, &config->visualization_rate,
-			&config->peak_number, &config->peak_half_width,
-			&config->peak_rejection_relation_db, &config->dft_number,
-			&config->dft_size, &config->gain, NULL, &config->peak_half_width };
+			&config->min_frequency, &config->fft_size, &config->temporal_window,
+			&config->noise_threshold_db, &config->calculation_rate,
+			&config->visualization_rate, &config->peak_number,
+			&config->peak_half_width, &config->peak_rejection_relation_db,
+			&config->dft_number, &config->dft_size, &config->gain, NULL,
+			&config->peak_half_width };
 
 	memcpy(params, c_params, N_OPTIONS * sizeof(void*));
 }
@@ -196,7 +198,8 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 		return;
 	}
 
-	fprintf(fp, "# Config file automatically created by lingot %s\n\n", VERSION);
+	fprintf(fp, "# Config file automatically created by lingot %s\n\n",
+			VERSION);
 
 	for (i = 0; strcmp(options[i], "|"); i++) {
 
@@ -215,8 +218,8 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 			break;
 		case 'm':
 			if (!strcmp("AUDIO_SYSTEM", option)) {
-				fprintf(fp, "%s = %s\n", option, audio_system_t_to_str(
-						*((audio_system_t*) param)));
+				fprintf(fp, "%s = %s\n", option,
+						audio_system_t_to_str(*((audio_system_t*) param)));
 			}
 			break;
 		}
@@ -299,7 +302,6 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		if (!char_buffer_pointer)
 			continue; // blank line.
-
 
 		if (!strcmp(char_buffer_pointer, "SCALE")) {
 			reading_scale = 1;
@@ -401,8 +403,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		char_buffer_pointer = strtok(NULL, delim);
 
 		if (!char_buffer_pointer) {
-			fprintf(stderr,
-					"warning: parse error at line %i: value expected\n", line);
+			fprintf(stderr, "warning: parse error at line %i: value expected\n",
+					line);
 			parse_errors = 1;
 			continue;
 		}

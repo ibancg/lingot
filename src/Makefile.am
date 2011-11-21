@@ -21,6 +21,8 @@ lingot_SOURCES = \
 	lingot-audio-alsa.h\
 	lingot-audio-jack.c\
 	lingot-audio-jack.h\
+	lingot-audio-pulseaudio.c\
+	lingot-audio-pulseaudio.h\
 	lingot-complex.h\
 	lingot-complex.c\
 	lingot-config.c\
