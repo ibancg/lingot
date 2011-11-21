@@ -1,4 +1,9 @@
 
+2011-11-21 Ibán Cereijo <ibancg@gmail.com>
+
+	* Implemented task #11284: audio devices autodetection.
+	* Avoided flickering during gauge and spectrum drawing.
+
 2011-09-27 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #643435 in debian
