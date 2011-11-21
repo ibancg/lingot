@@ -27,13 +27,15 @@
 #include "lingot-config-scale.h"
 
 typedef enum audio_system_t {
-	AUDIO_SYSTEM_OSS = 0, AUDIO_SYSTEM_ALSA = 1, AUDIO_SYSTEM_JACK = 2
+	AUDIO_SYSTEM_OSS = 0,
+	AUDIO_SYSTEM_ALSA = 1,
+	AUDIO_SYSTEM_JACK = 2,
+	AUDIO_SYSTEM_PULSEAUDIO = 3
 } audio_system_t;
 
 typedef enum window_type_t {
 	NONE = 0, RECTANGULAR = 1, HANNING = 2, HAMMING = 3
 } window_type_t;
-
 
 typedef struct _LingotConfig LingotConfig;
 
@@ -43,7 +45,7 @@ struct _LingotConfig {
 
 	audio_system_t audio_system;
 
-	char audio_dev[3][80];
+	char audio_dev[4][80];
 	int sample_rate; // soundcard sample rate.
 	unsigned int oversampling; // oversampling factor.
 
@@ -78,8 +80,7 @@ struct _LingotConfig {
 	/* maximum amplitude relation between principal and secondary peaks.
 	 The max peak doesn't has to be the fundamental frequency carrier if it
 	 has an amplitude relation with the fundamental considered peak lower than
-	 this parameter. */
-	FLT peak_rejection_relation_db; // dBs
+	 this parameter. */FLT peak_rejection_relation_db; // dBs
 	FLT peak_rejection_relation_nu; // natural units (internal)
 
 	FLT gain; // dBs

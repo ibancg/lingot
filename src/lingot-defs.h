@@ -59,9 +59,12 @@ typedef struct _LingotMainFrame LingotMainFrame;
 #define catch while (0); if (exception != 0)
 
 // this option allows us to throw exception from loops, it contains a goto
-// statement, but totally controlled, and it fails to indent the code.
+// statement, but totally controlled. It fails when trying to indent code.
 //#define try exception = 0;do
 //#define throw(a) {exception = a;goto catch_label;}
 //#define catch while (0);catch_label: if (exception != 0)
+
+// TODO: remove from here
+//#define PULSEAUDIO
 
 #endif

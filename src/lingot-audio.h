@@ -31,6 +31,10 @@
 #include <jack/jack.h>
 #endif
 
+#ifdef PULSEAUDIO
+#include <pulse/simple.h>
+#endif
+
 #include "lingot-config.h"
 
 typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
@@ -46,20 +50,22 @@ struct _LingotAudioHandler {
 	LingotAudioProcessCallback process_callback;
 	void* process_callback_arg;
 
-#ifdef ALSA
+#	ifdef ALSA
 	snd_pcm_t *capture_handle;
-#endif
-
-	int dsp; // file handler.
-	int read_buffer_size;
-	SAMPLE_TYPE* read_buffer;
-	FLT* flt_read_buffer;
-
+#	endif
 #	ifdef JACK
 	jack_port_t *jack_input_port;
 	jack_client_t *jack_client;
 	int nframes;
 #	endif
+#	ifdef PULSEAUDIO
+	pa_simple *pa_client;
+#	endif
+
+	int dsp; // file handler.
+	int read_buffer_size;
+	SAMPLE_TYPE* read_buffer;
+	FLT* flt_read_buffer;
 
 	//	char error_message[100];
 	unsigned int real_sample_rate;
@@ -97,8 +103,8 @@ void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
 LingotAudioHandler
 		*
 		lingot_audio_new(audio_system_t audio_system, char* device,
-				int sample_rate, LingotAudioProcessCallback process_callback,
-				void *process_callback_arg);
+				int sample_rate,
+		LingotAudioProcessCallback process_callback, void *process_callback_arg);
 
 // destroys an audio handler
 void lingot_audio_destroy(LingotAudioHandler*);
