@@ -36,6 +36,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	LingotAudioHandler* audio = NULL;
 
 #	ifdef PULSEAUDIO
+
 	audio = malloc(sizeof(LingotAudioHandler));
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
@@ -44,6 +45,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	audio->read_buffer_size = 128; // TODO: size up
 
 	pa_sample_spec ss;
+	int error;
 
 	ss.format = PA_SAMPLE_S16LE;
 	ss.channels = 1;
@@ -52,12 +54,27 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	audio->pa_client = pa_simple_new(NULL, // Use the default server.
 			"Lingot", // Our application's name.
 			PA_STREAM_RECORD, NULL, // Use the default device.
-			"Music", // Description of our stream.
+			"record", // Description of our stream.
 			&ss, // Our sample format.
 			NULL, // Use default channel map
 			NULL, // Use default buffering attributes.
-			NULL // Ignore error code.
+			&error // Ignore error code.
 			);
+
+	if (!audio->pa_client) {
+		char buff[100];
+		sprintf(buff, _("Error creating PulseAudio client.\n%s."),
+				pa_strerror(error));
+		lingot_msg_add_error(buff);
+		free(audio);
+		audio = NULL;
+	} else {
+		audio->real_sample_rate = sample_rate;
+		audio->read_buffer = malloc(
+				ss.channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+		memset(audio->read_buffer, 0,
+				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+	}
 
 #	else
 	lingot_msg_add_error(
@@ -80,13 +97,11 @@ void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
 int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
 #	ifdef PULSEAUDIO
-	int temp_sret;
 	int error;
+	int i;
 
-	temp_sret = pa_simple_read(audio->pa_client, audio->read_buffer,
-			audio->read_buffer_size, &error);
-
-	if (error != 0) {
+	if (pa_simple_read(audio->pa_client, audio->read_buffer,
+			audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error) < 0) {
 		char buff[100];
 		sprintf(buff, _("Read from audio interface failed.\n%s."),
 				pa_strerror(error));
@@ -94,14 +109,10 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 		return -1;
 	}
 
-	if (temp_sret != audio->read_buffer_size) {
-		char buff[100];
-		sprintf(buff, _("Read from audio interface failed.\n%s."), "");
-		lingot_msg_add_error(buff);
-		return -1;
+	for (i = 0; i < audio->read_buffer_size; i++) {
+		audio->flt_read_buffer[i] = audio->read_buffer[i];
 	}
 
-	printf("temp_sret = %i, error = %i\n", temp_sret, error);
 #	endif
 
 	return 0;
