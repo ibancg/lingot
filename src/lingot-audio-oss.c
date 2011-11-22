@@ -95,12 +95,12 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		}
 
 		audio->real_sample_rate = sample_rate;
-		audio->read_buffer = malloc(audio->read_buffer_size
-				* sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0, audio->read_buffer_size
-				* sizeof(SAMPLE_TYPE));
+		audio->read_buffer = malloc(
+				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+		memset(audio->read_buffer, 0,
+				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 
-	} catch {
+	}catch {
 		close(audio->dsp);
 		free(audio);
 		audio = NULL;
@@ -118,37 +118,34 @@ void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
 }
 
 int lingot_audio_oss_read(LingotAudioHandler* audio) {
-	int i;
-	int read_size;
+	int samples_read = -1;
 
-	read_size = read(audio->dsp, audio->read_buffer, audio->read_buffer_size
-			* sizeof(SAMPLE_TYPE));
+	int bytes_read = read(audio->dsp, audio->read_buffer,
+			audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 
-	//	if (rand() < 0.001 * RAND_MAX)
-	//		read_size = 0;
-
-	if (read_size != audio->read_buffer_size * sizeof(SAMPLE_TYPE)) {
+	if (bytes_read < 0) {
 		char buff[100];
-		sprintf(buff, _("Read from audio interface failed.\n%s."), strerror(
-				errno));
+		sprintf(buff, _("Read from audio interface failed.\n%s."),
+				strerror(errno));
 		lingot_msg_add_error(buff);
-		return -1;
+	} else {
+
+		samples_read = bytes_read / sizeof(SAMPLE_TYPE);
+		// float point conversion
+		int i;
+		for (i = 0; i < samples_read; i++) {
+			audio->flt_read_buffer[i] = audio->read_buffer[i];
+		}
 	}
 
-	// float point conversion
-	for (i = 0; i < audio->read_buffer_size; i++) {
-		audio->flt_read_buffer[i] = audio->read_buffer[i];
-	}
-
-	return 0;
+	return samples_read;
 }
 
 LingotAudioSystemProperties* lingot_audio_oss_get_audio_system_properties(
 		audio_system_t audio_system) {
 
-	LingotAudioSystemProperties* result =
-			(LingotAudioSystemProperties*) malloc(1
-					* sizeof(LingotAudioSystemProperties));
+	LingotAudioSystemProperties* result = (LingotAudioSystemProperties*) malloc(
+			1 * sizeof(LingotAudioSystemProperties));
 
 	// TODO
 	result->forced_sample_rate = 0;

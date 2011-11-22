@@ -109,9 +109,9 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 			//		case AUDIO_SYSTEM_JACK:
 			//			result = lingot_audio_jack_read(audio);
 			//			break;
-		case AUDIO_SYSTEM_PULSEAUDIO:
-			result = lingot_audio_pulseaudio_read(audio);
-			break;
+//		case AUDIO_SYSTEM_PULSEAUDIO:
+//			result = lingot_audio_pulseaudio_read(audio);
+//			break;
 		default:
 			perror("unknown audio system\n");
 			result = -1;
@@ -168,18 +168,18 @@ void lingot_audio_audio_system_properties_destroy(
 
 void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
 
-	int read_status = 0;
+	int samples_read = 0;
 
 	while (audio->running) {
 		// process new data block.
-		read_status = lingot_audio_read(audio);
+		samples_read = lingot_audio_read(audio);
 
-		if (read_status == 0) {
-			audio->process_callback(audio->flt_read_buffer,
-					audio->read_buffer_size, audio->process_callback_arg);
-		} else {
+		if (samples_read < 0) {
 			audio->running = 0;
 			audio->interrupted = 1;
+		} else {
+			audio->process_callback(audio->flt_read_buffer, samples_read,
+					audio->process_callback_arg);
 		}
 	}
 }
@@ -188,7 +188,14 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 
 	int result = 0;
 
-	if (audio->audio_system != AUDIO_SYSTEM_JACK) {
+	switch (audio->audio_system) {
+	case AUDIO_SYSTEM_JACK:
+		result = lingot_audio_jack_start(audio);
+		break;
+	case AUDIO_SYSTEM_PULSEAUDIO:
+		result = lingot_audio_pulseaudio_start(audio);
+		break;
+	default:
 		pthread_attr_init(&audio->thread_input_read_attr);
 
 		// detached thread.
@@ -196,8 +203,7 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 		pthread_create(&audio->thread_input_read,
 				&audio->thread_input_read_attr,
 				(void* (*)(void*)) lingot_audio_run_reading_thread, audio);
-	} else {
-		result = lingot_audio_jack_start(audio);
+		break;
 	}
 
 	if (result == 0) {
@@ -212,13 +218,18 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 
 	if (audio->running == 1) {
 		audio->running = 0;
-		// thread cancellation
-		if (audio->audio_system != AUDIO_SYSTEM_JACK) {
+		switch (audio->audio_system) {
+		case AUDIO_SYSTEM_JACK:
+			lingot_audio_jack_stop(audio);
+			break;
+		case AUDIO_SYSTEM_PULSEAUDIO:
+			lingot_audio_pulseaudio_stop(audio);
+			break;
+		default:
 			pthread_cancel(audio->thread_input_read);
 			pthread_join(audio->thread_input_read, &thread_result);
 			pthread_attr_destroy(&audio->thread_input_read_attr);
-		} else {
-			lingot_audio_jack_stop(audio);
+			break;
 		}
 	}
 }
