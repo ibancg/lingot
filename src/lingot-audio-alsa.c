@@ -154,31 +154,25 @@ void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 #	ifdef ALSA
-	int temp_sret;
-	int i;
-
-	temp_sret = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
+	int samples_read = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
 			audio->read_buffer_size);
 
-	//	if (rand() < 0.001 * RAND_MAX)
-	//		temp_sret = 0;
-
-	if (temp_sret != audio->read_buffer_size) {
+	if (samples_read < 0) {
 		char buff[100];
 		sprintf(buff, _("Read from audio interface failed.\n%s."),
-				snd_strerror(temp_sret));
+				snd_strerror(samples_read));
 		lingot_msg_add_error(buff);
-		return -1;
-	}
-
-	// float point conversion
-	for (i = 0; i < audio->read_buffer_size; i++) {
-		audio->flt_read_buffer[i] = audio->read_buffer[i];
+	} else {
+		int i;
+		// float point conversion
+		for (i = 0; i < samples_read; i++) {
+			audio->flt_read_buffer[i] = audio->read_buffer[i];
+		}
 	}
 
 #	endif
 
-	return 0;
+	return samples_read;
 }
 
 LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
