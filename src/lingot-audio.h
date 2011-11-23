@@ -73,6 +73,8 @@ struct _LingotAudioHandler {
 	// pthread-related  member variables
 	pthread_t thread_input_read;
 	pthread_attr_t thread_input_read_attr;
+	pthread_cond_t thread_input_read_cond;
+	pthread_mutex_t thread_input_read_mutex;
 
 	// indicates whether the audio thread is running
 	int running;
