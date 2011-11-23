@@ -31,6 +31,7 @@
 #include "lingot-audio-oss.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-jack.h"
+#include "lingot-audio-pulseaudio.h"
 
 LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
@@ -106,12 +107,9 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 		case AUDIO_SYSTEM_ALSA:
 			result = lingot_audio_alsa_read(audio);
 			break;
-			//		case AUDIO_SYSTEM_JACK:
-			//			result = lingot_audio_jack_read(audio);
-			//			break;
-//		case AUDIO_SYSTEM_PULSEAUDIO:
-//			result = lingot_audio_pulseaudio_read(audio);
-//			break;
+		case AUDIO_SYSTEM_PULSEAUDIO:
+			result = lingot_audio_pulseaudio_read(audio);
+			break;
 		default:
 			perror("unknown audio system\n");
 			result = -1;
@@ -182,6 +180,11 @@ void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
 					audio->process_callback_arg);
 		}
 	}
+
+	pthread_mutex_lock(&audio->thread_input_read_mutex);
+	pthread_cond_broadcast(&audio->thread_input_read_cond);
+	pthread_mutex_unlock(&audio->thread_input_read_mutex);
+
 }
 
 int lingot_audio_start(LingotAudioHandler* audio) {
@@ -192,14 +195,14 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 	case AUDIO_SYSTEM_JACK:
 		result = lingot_audio_jack_start(audio);
 		break;
-	case AUDIO_SYSTEM_PULSEAUDIO:
-		result = lingot_audio_pulseaudio_start(audio);
-		break;
 	default:
 		pthread_attr_init(&audio->thread_input_read_attr);
 
 		// detached thread.
 		//  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+		pthread_mutex_init(&audio->thread_input_read_mutex, NULL);
+		pthread_cond_init(&audio->thread_input_read_cond, NULL);
+		pthread_attr_init(&audio->thread_input_read_attr);
 		pthread_create(&audio->thread_input_read,
 				&audio->thread_input_read_attr,
 				(void* (*)(void*)) lingot_audio_run_reading_thread, audio);
@@ -213,8 +216,25 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 	return result;
 }
 
+void lingot_audio_cancel(LingotAudioHandler* audio) {
+	fprintf(stderr, "warning: cancelling thread\n");
+	switch (audio->audio_system) {
+	case AUDIO_SYSTEM_PULSEAUDIO:
+		lingot_audio_pulseaudio_cancel(audio);
+		break;
+	}
+}
+
 void lingot_audio_stop(LingotAudioHandler* audio) {
 	void* thread_result;
+
+	int result;
+	struct timeval tout, tout_abs;
+	struct timespec tout_tspec;
+
+	gettimeofday(&tout_abs, NULL);
+	tout.tv_sec = 0;
+	tout.tv_usec = 500000;
 
 	if (audio->running == 1) {
 		audio->running = 0;
@@ -223,12 +243,31 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 			lingot_audio_jack_stop(audio);
 			break;
 		case AUDIO_SYSTEM_PULSEAUDIO:
-			lingot_audio_pulseaudio_stop(audio);
-			break;
-		default:
-			pthread_cancel(audio->thread_input_read);
 			pthread_join(audio->thread_input_read, &thread_result);
 			pthread_attr_destroy(&audio->thread_input_read_attr);
+			pthread_mutex_destroy(&audio->thread_input_read_mutex);
+			pthread_cond_destroy(&audio->thread_input_read_cond);
+			break;
+		default:
+			timeradd(&tout, &tout_abs, &tout_abs);
+			tout_tspec.tv_sec = tout_abs.tv_sec;
+			tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
+
+			// watchdog timer
+			pthread_mutex_lock(&audio->thread_input_read_mutex);
+			result = pthread_cond_timedwait(&audio->thread_input_read_cond,
+					&audio->thread_input_read_mutex, &tout_tspec);
+			pthread_mutex_unlock(&audio->thread_input_read_mutex);
+
+			if (result == ETIMEDOUT) {
+				fprintf(stderr, "warning: cancelling audio thread\n");
+				pthread_cancel(audio->thread_input_read);
+			} else {
+				pthread_join(audio->thread_input_read, &thread_result);
+			}
+			pthread_attr_destroy(&audio->thread_input_read_attr);
+			pthread_mutex_destroy(&audio->thread_input_read_mutex);
+			pthread_cond_destroy(&audio->thread_input_read_cond);
 			break;
 		}
 	}

@@ -154,6 +154,7 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	config->gauge_rest_value = -0.45 * scale->max_offset_rounded;
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "");
 	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "");
 }
 
 //----------------------------------------------------------------------------
