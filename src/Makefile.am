@@ -52,6 +52,6 @@ lingot_SOURCES = \
 lingot_LDFLAGS =
 
 lingot_LDADD =  \
-	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(GLADE_LIBS)\
+	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(PULSEAUDIO_LIBS) $(GLADE_LIBS)\
 	 -lpthread
 
