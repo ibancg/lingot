@@ -29,7 +29,6 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device,
 		int sample_rate);
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler*);
 int lingot_audio_pulseaudio_read(LingotAudioHandler*);
-void lingot_audio_pulseaudio_cancel(LingotAudioHandler*);
 LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties(
 		audio_system_t);
 

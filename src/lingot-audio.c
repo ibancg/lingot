@@ -216,15 +216,6 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 	return result;
 }
 
-void lingot_audio_cancel(LingotAudioHandler* audio) {
-	fprintf(stderr, "warning: cancelling thread\n");
-	switch (audio->audio_system) {
-	case AUDIO_SYSTEM_PULSEAUDIO:
-		lingot_audio_pulseaudio_cancel(audio);
-		break;
-	}
-}
-
 void lingot_audio_stop(LingotAudioHandler* audio) {
 	void* thread_result;
 
@@ -234,7 +225,7 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 
 	gettimeofday(&tout_abs, NULL);
 	tout.tv_sec = 0;
-	tout.tv_usec = 500000;
+	tout.tv_usec = 100000;
 
 	if (audio->running == 1) {
 		audio->running = 0;

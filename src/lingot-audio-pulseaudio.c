@@ -31,8 +31,7 @@
 #include <pulse/pulseaudio.h>
 #endif
 
-LingotAudioHandler* lingot_audio_pulseaudio_new(char* device,
-		int sample_rate) {
+LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
 
@@ -129,10 +128,6 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 #	endif
 
 	return samples_read;
-}
-
-void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio) {
-	lingot_audio_pulseaudio_destroy(audio);
 }
 
 LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties(
