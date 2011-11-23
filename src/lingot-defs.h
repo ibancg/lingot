@@ -64,7 +64,4 @@ typedef struct _LingotMainFrame LingotMainFrame;
 //#define throw(a) {exception = a;goto catch_label;}
 //#define catch while (0);catch_label: if (exception != 0)
 
-// TODO: remove from here
-#define PULSEAUDIO
-
 #endif
