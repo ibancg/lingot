@@ -1,8 +1,13 @@
 
+2011-11-23 Ibán Cereijo <ibancg@gmail.com>
+
+	* Added PulseAudio support.
+	* Fixed potential error when reading from OSS and ALSA.
+
 2011-11-21 Ibán Cereijo <ibancg@gmail.com>
 
 	* Implemented task #11284: audio devices autodetection.
-	* Avoided flickering during gauge and spectrum drawing.
+	* Fixed flickering problem during gauge and spectrum drawing.
 
 2011-09-27 Ibán Cereijo <ibancg@gmail.com>
 
