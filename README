@@ -20,22 +20,34 @@ certain note, found automatically as the closest note to the estimated frequency
 Requisites
 ==========
 
-    * Sound card.
-    * Linux kernel with audio support (OSS, ALSA, JACK).
-    * GTK+ library, version 2.0.
+* Sound card.
+* Linux kernel with audio support (OSS, ALSA, JACK or PulseAudio).
+* GTK+ library, version 2.0.
     
 Installation
 ============
 
-    Type:
-    
-     > configure
-     > make install
-    
-    If you don't want ALSA or JACK support, use the options --enable-alsa=no and
-    --enable-jack=no in the configure script.
-    
-    Please, see the INSTALL file.
+Type:
+
+ > configure
+ > make install
+
+Lingot supports the following audio systems/servers:
+
+  OSS
+  ALSA
+  JACK
+  PulseAudio
+  
+You can enable/disable each of them with the following options passed to the
+configure script, all of them enabled by default:
+
+  --enable-oss=<yes|no>
+  --enable-alsa=<yes|no>
+  --enable-jack=<yes|no>
+  --enable-pulseaudio=<yes|no>
+
+Please, see the INSTALL file.
     
 Synopsis
 ========
@@ -49,13 +61,14 @@ folder. For example:
 
 will take the configuration file ~/.lingot/bass.conf. This is useful for
 maintaining different configurations for different instruments. It's also
-possible to load and save configuration files from the GUI.
+possible to load and save configuration files from the GUI. The default
+configuration file is ~/.lingot/lingot.conf.
 
 Configuration file
 ==================
 
-When lingot is launched, the configuration file ~/.lingot/lingot.conf will be
-created.
+When lingot is launched for the first time, the default configuration file
+~/.lingot/lingot.conf will be created.
 
 The default values are optimized for electric guitar tuning, for other musical
 instruments these values must be slightly changed (a good practice would be
@@ -63,13 +76,13 @@ to have a configuration file for each instrument). The options must be changed
 via GUI.
 
 There is a wide range of options, with the purpose of keeping the maximum
-configurability, and signal processing knowledge is needed for a good
+configurability. Some background in signal processing is needed for a good
 understanding of their effects.
 
-Next, we detail the main options that make up this file, and we recommend to
-make changes regarding the desired tuning precision and the demanded CPU time.
-If you don't understand the effects of any option, then just try different
-values or, even better, don't change it.
+We detail the main options that make up this file, and we recommend to make
+changes regarding the desired tuning precision and the demanded CPU time. If you
+don't understand the effects of any option, then just try different values or,
+even better, don't change it.
 
 
  AUDIO_SYSTEM
@@ -79,6 +92,7 @@ values or, even better, don't change it.
     OSS
     ALSA *
     JACK
+    PulseAudio
     
     * default value
 
@@ -104,7 +118,8 @@ values or, even better, don't change it.
       8000 Hz
      11025 Hz
      22050 Hz
-     44100 Hz *
+     44100 Hz
+     48000 Hz *
 
     We will be able to find an effective sampling rate submultiple of this by
     means of an oversampling factor.

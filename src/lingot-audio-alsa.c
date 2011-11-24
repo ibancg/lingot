@@ -125,14 +125,16 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 		memset(audio->read_buffer, 0,
 				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 	}catch {
-		if (audio->capture_handle != NULL)
+		if (audio->capture_handle != NULL
+		)
 			snd_pcm_close(audio->capture_handle);
 		free(audio);
 		audio = NULL;
 		lingot_msg_add_error(exception);
 	}
 
-	if (hw_params != NULL)
+	if (hw_params != NULL
+	)
 		snd_pcm_hw_params_free(hw_params);
 
 #	else
@@ -214,12 +216,18 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 		struct device_name_node_t* next;
 	};
 
-	struct device_name_node_t* device_names_first = NULL;
-	struct device_name_node_t* device_names_last = NULL;
+	struct device_name_node_t* device_names_first =
+			(struct device_name_node_t*) malloc(
+					sizeof(struct device_name_node_t));
+	struct device_name_node_t* device_names_last = device_names_first;
+
+	// the first record is the default device
+	device_names_first->name = strdup("Default Device <default>");
+	device_names_first->next = NULL;
 
 	try
 	{
-		result->n_devices = 0;
+		result->n_devices = 1;
 		try {
 			for (;;) {
 
@@ -284,12 +292,11 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 						snd_pcm_info_set_subdevice(pcm_info, subdevice_index);
 						if ((status = snd_ctl_pcm_info(card_handler, pcm_info))
 								< 0) {
-							sprintf(
-									error_message,
+							fprintf(
+									stderr,
 									"warning: can't get info for subdevice hw:%i,%i,%i: %s\n",
 									card_index, device_index, subdevice_index,
 									snd_strerror(status));
-							perror(error_message);
 							continue;
 						}
 
@@ -328,7 +335,7 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 				snd_ctl_close(card_handler);
 			}
 		}catch {
-			result->devices = 0;
+			result->devices = 1;
 			throw(exception);
 		}
 
@@ -342,14 +349,13 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 		}
 
 	}catch {
-		perror(exception);
+		fprintf(stderr, exception);
 	}
 
 	// dispose the device names list
-	struct device_name_node_t* name_node_current = device_names_first;
-	struct device_name_node_t* name_node_previous = NULL;
-	for (device_index = 0; device_index < result->n_devices; device_index++) {
-		name_node_previous = name_node_current;
+	struct device_name_node_t* name_node_current;
+	for (name_node_current = device_names_first; name_node_current != NULL;) {
+		struct device_name_node_t* name_node_previous = name_node_current;
 		name_node_current = name_node_current->next;
 		free(name_node_previous);
 	}

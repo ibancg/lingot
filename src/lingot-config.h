@@ -45,7 +45,7 @@ struct _LingotConfig {
 
 	audio_system_t audio_system;
 
-	char audio_dev[4][80];
+	char audio_dev[4][512];
 	int sample_rate; // soundcard sample rate.
 	unsigned int oversampling; // oversampling factor.
 

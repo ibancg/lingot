@@ -34,19 +34,24 @@
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-#define N_OPTIONS 20
+#define N_OPTIONS 22
 
 // the following tokens will appear in the config file. The options after | are deprecated options.
-char* options[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "AUDIO_DEV_ALSA",
-		"SAMPLE_RATE", "OVERSAMPLING", "ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY",
-		"FFT_SIZE", "TEMPORAL_WINDOW", "NOISE_THRESHOLD", "CALCULATION_RATE",
-		"VISUALIZATION_RATE", "PEAK_NUMBER", "PEAK_HALF_WIDTH",
-		"PEAK_REJECTION_RELATION", "DFT_NUMBER", "DFT_SIZE", "GAIN", "|",
-		"PEAK_ORDER", NULL // NULL terminated array
+const char* options[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "AUDIO_DEV_ALSA",
+		"AUDIO_DEV_JACK", "AUDIO_DEV_PULSEAUDIO", "SAMPLE_RATE", "OVERSAMPLING",
+		"ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY", "FFT_SIZE", "TEMPORAL_WINDOW",
+		"NOISE_THRESHOLD", "CALCULATION_RATE", "VISUALIZATION_RATE",
+		"PEAK_NUMBER", "PEAK_HALF_WIDTH", "PEAK_REJECTION_RELATION",
+		"DFT_NUMBER", "DFT_SIZE", "GAIN", "|", "PEAK_ORDER", NULL // NULL terminated array
 		};
 
+// units, in order to have a more human-readable config file
+const char* units[] = { NULL, NULL, NULL, NULL, NULL, "Hz", NULL, "cents", "Hz",
+		"samples", "seconds", "dB", "Hz", "Hz", "peaks", "samples", "dB",
+		"DFTs", "samples", NULL, NULL, NULL };
+
 // print/scan param formats.
-const char* option_formats = "mssddffdffffddfddf|d";
+const char* option_formats = "mssssddffdffffddfddf|d";
 
 const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio", NULL };
 
@@ -99,7 +104,9 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 
 	config->audio_system = AUDIO_SYSTEM_ALSA;
 	sprintf(config->audio_dev[AUDIO_SYSTEM_OSS], "%s", "/dev/dsp");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_ALSA], "%s", "plughw:0");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_ALSA], "%s", "default");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "default");
 
 	config->sample_rate = 44100; // Hz
 	config->oversampling = 25;
@@ -152,18 +159,18 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	}
 
 	config->gauge_rest_value = -0.45 * scale->max_offset_rounded;
-	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "");
+	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
 }
 
 //----------------------------------------------------------------------------
 
 // internal parameters mapped to each token in the config file.
-void lingot_map_parameters(LingotConfig* config, void* params[]) {
+static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 	void* c_params[] = { &config->audio_system,
 			&config->audio_dev[AUDIO_SYSTEM_OSS],
-			&config->audio_dev[AUDIO_SYSTEM_ALSA], &config->sample_rate,
+			&config->audio_dev[AUDIO_SYSTEM_ALSA],
+			&config->audio_dev[AUDIO_SYSTEM_JACK],
+			&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], &config->sample_rate,
 			&config->oversampling, &config->root_frequency_error,
 			&config->min_frequency, &config->fft_size, &config->temporal_window,
 			&config->noise_threshold_db, &config->calculation_rate,
@@ -181,10 +188,10 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	char* lc_all;
 	void* params[N_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	char* option = NULL;
+	const char* option = NULL;
 	char buff[80];
 
-	lingot_map_parameters(config, params);
+	lingot_config_map_parameters(config, params);
 
 	lc_all = setlocale(LC_ALL, NULL);
 	// duplicate the string, as the next call to setlocale will destroy it
@@ -209,21 +216,27 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 
 		switch (option_formats[i]) {
 		case 's':
-			fprintf(fp, "%s = %s\n", option, (char*) param);
+			fprintf(fp, "%s = %s", option, (char*) param);
 			break;
 		case 'd':
-			fprintf(fp, "%s = %d\n", option, *((unsigned int*) param));
+			fprintf(fp, "%s = %d", option, *((unsigned int*) param));
 			break;
 		case 'f':
-			fprintf(fp, "%s = %0.3f\n", option, *((FLT*) param));
+			fprintf(fp, "%s = %0.3f", option, *((FLT*) param));
 			break;
 		case 'm':
 			if (!strcmp("AUDIO_SYSTEM", option)) {
-				fprintf(fp, "%s = %s\n", option,
+				fprintf(fp, "%s = %s", option,
 						audio_system_t_to_str(*((audio_system_t*) param)));
 			}
 			break;
 		}
+
+		if (units[i] != NULL) {
+			fprintf(fp, " # %s", units[i]);
+		}
+
+		fprintf(fp, "\n");
 	}
 
 	fprintf(fp, "\n");
@@ -263,7 +276,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	const static char* delim2 = " \t\n";
 	void* params[N_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	char* option = NULL;
+	const char* option = NULL;
 	int reading_scale = 0;
 	char* nl;
 	int parse_errors = 0;
@@ -272,11 +285,10 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	// restore default values for non specified parameters
 	lingot_config_restore_default_values(config);
 
-	lingot_map_parameters(config, params);
+	lingot_config_map_parameters(config, params);
 
-#   define MAX_LINE_SIZE 100
-
-	char char_buffer[MAX_LINE_SIZE];
+	static const unsigned int max_line_size = 512;
+	char char_buffer[max_line_size];
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		sprintf(char_buffer,
@@ -292,7 +304,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		line++;
 
-		if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+		if (!fgets(char_buffer, max_line_size, fp))
 			break;;
 
 		if (char_buffer[0] == '#')
@@ -348,7 +360,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				int i = 0;
 				for (i = 0; i < config->scale->notes; i++) {
 					line++;
-					if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+					if (!fgets(char_buffer, max_line_size, fp))
 						break;
 					// tokens into the line.
 					char_buffer_pointer = strtok(char_buffer, delim2);
@@ -362,7 +374,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					}
 				}
 				line++;
-				if (!fgets(char_buffer, MAX_LINE_SIZE, fp))
+				if (!fgets(char_buffer, max_line_size, fp))
 					break; // }
 
 				continue;
@@ -456,6 +468,4 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	}
 
 	lingot_config_update_internal_params(config);
-
-#   undef MAX_LINE_SIZE
 }
