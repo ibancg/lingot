@@ -32,6 +32,10 @@
 
 #include "lingot-audio.h"
 
+#ifdef LIBFFTW
+# include <fftw3.h>
+#endif
+
 typedef struct _LingotCore LingotCore;
 
 struct _LingotCore {
@@ -59,7 +63,12 @@ struct _LingotCore {
 	FLT* spd_dft;
 	FLT* diff2_spd_fft;
 
+# ifdef LIBFFTW
+	fftw_complex* fftw_out; // complex signal in freq.
+	fftw_plan fftwplan;
+# else
 	LingotComplex* fft_out; // complex signal in freq.
+# endif
 
 	LingotFilter* antialiasing_filter; // antialiasing filter for decimation.
 

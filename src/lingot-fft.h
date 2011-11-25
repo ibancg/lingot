@@ -29,7 +29,7 @@
 
 #include "lingot-defs.h"
 
-#ifndef LIB_FFTW
+#ifndef LIBFFTW
 
 #  include "lingot-complex.h"
 #  include "lingot-config.h"
@@ -40,7 +40,7 @@ void lingot_fft_destroy_phase_factors();
 // Fast Fourier Transform implementation.
 void lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N);
 
-#endif // not LIB_FFTW
+#endif
 
 // Spectral Power Distribution (SPD) esteem, selectively in frequency.
 void lingot_fft_spd(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
