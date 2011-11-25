@@ -105,21 +105,32 @@ even better, don't change it.
 
  AUDIO_DEV_ALSA (ALSA sound device)
 
-    Selected sound device for ALSA, the default value is 'plughw:0'.
+    Selected sound device for ALSA, the default value is 'default'.
+
+
+ AUDIO_DEV_JACK (JACK port)
+
+    Selected sound port for JACK, the default value is 'default'.
+
+
+ AUDIO_DEV_PULSEAUDIO (PulseAudio sound device)
+
+    Selected sound device for PulseAudio, the default value is 'default'.
 
 
  SAMPLE_RATE ('physical' sampling rate)
 
-    With ALSA and OSS, the input signal will be sampled at this frequency by the
-    audio driver (in JACK, the sample rate is provided externally by the sound
-    server). Some cards don't support an arbitrary sampling rate, so we
-    recommend to choose one of the options that the GUI gives us, namely
+    With ALSA, OSS and PulseAudio, the input signal will be sampled at this
+    frequency by the audio driver (in JACK, the sample rate is provided
+    externally by the sound server). Some cards don't support an arbitrary
+    sampling rate, so we recommend to choose one of the options that the GUI
+    gives us, namely
 
       8000 Hz
      11025 Hz
      22050 Hz
-     44100 Hz
-     48000 Hz *
+     44100 Hz *
+     48000 Hz
 
     We will be able to find an effective sampling rate submultiple of this by
     means of an oversampling factor.
