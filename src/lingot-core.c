@@ -167,14 +167,13 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		// TODO: use r2r plan
 //		core->fftw_out = fftw_malloc(core->conf->fft_size * sizeof(double));
 //		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(double));
-//		core->fftwplan = fftw_plan_r2r_1d(core->conf->fft_size, core->fftw_in,
+//		core->fftwplan = fftw_plan_r2r_1d(core->conf->fft_size, core->windowed_fft_buffer,
 //				core->fftw_out, FFTW_FORWARD, FFTW_R2HC);
 		core->fftw_out = fftw_malloc(
 				core->conf->fft_size * sizeof(fftw_complex));
 		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(fftw_complex));
 		core->fftwplan = fftw_plan_dft_r2c_1d(core->conf->fft_size,
-				core->windowed_fft_buffer, core->fftw_out,
-				FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
+				core->windowed_fft_buffer, core->fftw_out, FFTW_ESTIMATE);
 #endif
 
 		/*
