@@ -64,8 +64,6 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 		device_name = NULL;
 	}
 
-	printf("device = %s\n", device_name != NULL ? device_name : "null");
-
 	audio->pa_client = pa_simple_new(NULL, // Use the default server.
 			"Lingot", // Our application's name.
 			PA_STREAM_RECORD, //

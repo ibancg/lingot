@@ -416,6 +416,22 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		dialog->input_system =
 				GTK_COMBO_BOX(glade_xml_get_widget(_gladeXML, "input_system"));
+
+		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+				audio_system_t_to_str(AUDIO_SYSTEM_OSS));
+#ifdef ALSA
+		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+				audio_system_t_to_str(AUDIO_SYSTEM_ALSA));
+#endif
+#ifdef JACK
+		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+				audio_system_t_to_str(AUDIO_SYSTEM_JACK));
+#endif
+#ifdef PULSEAUDIO
+		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+				audio_system_t_to_str(AUDIO_SYSTEM_PULSEAUDIO));
+#endif
+
 		dialog->input_dev =
 				GTK_COMBO_BOX_ENTRY(glade_xml_get_widget(_gladeXML, "input_dev"));
 		dialog->sample_rate =
