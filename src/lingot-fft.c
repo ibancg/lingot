@@ -30,7 +30,7 @@
  DFT functions.
  */
 
-#ifndef LIB_FFTW
+#ifndef LIBFFTW
 
 #include "lingot-complex.h"
 

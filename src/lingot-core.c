@@ -29,7 +29,9 @@
 #include <time.h>
 #include <stdlib.h>
 
+#ifndef LIBFFTW
 #include "lingot-complex.h"
+#endif
 
 #include "lingot-fft.h"
 #include "lingot-signal.h"
@@ -121,10 +123,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
 
-		lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
-		core->fft_out = malloc((core->conf->fft_size) * sizeof(LingotComplex)); // complex signal in freq domain.
-		memset(core->fft_out, 0, core->conf->fft_size * sizeof(LingotComplex));
-
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
 				core->audio->read_buffer_size * sizeof(FLT));
@@ -161,6 +159,24 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		memset(core->windowed_fft_buffer, 0,
 				core->conf->fft_size * sizeof(FLT));
 
+#ifndef LIBFFTW
+		lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
+		core->fft_out = malloc((core->conf->fft_size) * sizeof(LingotComplex));// complex signal in freq domain.
+		memset(core->fft_out, 0, core->conf->fft_size * sizeof(LingotComplex));
+#else
+		// TODO: use r2r plan
+//		core->fftw_out = fftw_malloc(core->conf->fft_size * sizeof(double));
+//		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(double));
+//		core->fftwplan = fftw_plan_r2r_1d(core->conf->fft_size, core->fftw_in,
+//				core->fftw_out, FFTW_FORWARD, FFTW_R2HC);
+		core->fftw_out = fftw_malloc(
+				core->conf->fft_size * sizeof(fftw_complex));
+		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(fftw_complex));
+		core->fftwplan = fftw_plan_dft_r2c_1d(core->conf->fft_size,
+				core->windowed_fft_buffer, core->fftw_out,
+				FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
+#endif
+
 		/*
 		 * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
 		 * Pi). We take 0.9 instead of 1 to leave a 10% of safety margin,
@@ -196,8 +212,13 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 void lingot_core_destroy(LingotCore* core) {
 
 	if (core->audio != NULL) {
+#ifdef LIBFFTW
+		fftw_destroy_plan(core->fftwplan);
+		fftw_free(core->fftw_out);
+#else
 		lingot_fft_destroy_phase_factors(); // destroy phase factors.
 		free(core->fft_out);
+#endif
 
 		lingot_audio_destroy(core->audio);
 
@@ -370,13 +391,24 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 						- conf->fft_size], conf->fft_size * sizeof(FLT));
 	}
 
+# ifdef LIBFFTW
+	// transformation.
+	fftw_execute(core->fftwplan);
+
+	// esteem of SPD from FFT. (normalized squared module)
+	for (i = 0; i < ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256); i++)
+	core->spd_fft[i] = (core->fftw_out[i][0] * core->fftw_out[i][0]
+	+ core->fftw_out[i][1] * core->fftw_out[i][1]) * _1_N2;
+//	core->spd_fft[i] = sqrt(core->fftw_out[i]*core->fftw_out[i]);
+# else
 	// transformation.
 	lingot_fft_fft(core->windowed_fft_buffer, core->fft_out, conf->fft_size);
 
 	// esteem of SPD from FFT. (normalized squared module)
 	for (i = 0; i < ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256); i++)
 	core->spd_fft[i] = (core->fft_out[i].r * core->fft_out[i].r
-	+ core->fft_out[i].i * core->fft_out[i].i) * _1_N2;
+			+ core->fft_out[i].i * core->fft_out[i].i) * _1_N2;
+#endif
 
 	// representable piece
 	memcpy(core->X, core->spd_fft, ((conf->fft_size > 256) ? (conf->fft_size

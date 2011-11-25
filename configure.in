@@ -73,7 +73,7 @@ usepulseaudio=yes
 
 AC_ARG_ENABLE(
   pulseaudio,
-  AC_HELP_STRING([--enable-pulseaudio], [use PULSEAUDIO @<:@default=yes@:>@]),
+  AC_HELP_STRING([--enable-pulseaudio], [use PulseAudio @<:@default=yes@:>@]),
   [
     if test "x$enableval" = "xno"; then
       usepulseaudio=no
@@ -88,6 +88,35 @@ if test "x$usepulseaudio" = "xyes"; then
 	AC_SUBST(PULSEAUDIO_CFLAGS)
 	AC_SUBST(PULSEAUDIO_LIBS)
 	CFLAGS="$CFLAGS -DPULSEAUDIO"
+fi
+
+uselibfftw=yes
+fftw_found=no
+
+AC_ARG_ENABLE(
+  libfftw,
+  AC_HELP_STRING([--enable-libfftw], [use libfftw @<:@default=yes@:>@]),
+  [
+    if test "x$enableval" = "xno"; then
+      uselibfftw=no
+    fi
+  ])
+
+dnl AM_CONDITIONAL(HAVE_LIBFFTW, test "x$uselibfftw" = "xyes")
+
+if test "x$uselibfftw" = "xyes"; then
+ PKG_CHECK_MODULES([LIBFFTW],
+	 				[fftw3 >= 3.2.2
+                    fftw3f >= 3.2.2],
+                    [fftw_found=yes],
+                    [fftw_found=no])
+ if test "x$fftw_found" = xyes ; then
+	AC_SUBST([LIBFFTW_CFLAGS])
+	AC_SUBST([LIBFFTW_LIBS])
+	CFLAGS="$CFLAGS -DLIBFFTW"
+ else
+  AC_MSG_WARN([ No libfftw was found : FFT will be slower ])
+ fi
 fi
 
 
