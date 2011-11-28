@@ -125,16 +125,14 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 		memset(audio->read_buffer, 0,
 				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 	}catch {
-		if (audio->capture_handle != NULL
-		)
+		if (audio->capture_handle != NULL)
 			snd_pcm_close(audio->capture_handle);
 		free(audio);
 		audio = NULL;
-		lingot_msg_add_error(exception);
+		lingot_msg_add_error_with_code(exception, -err);
 	}
 
-	if (hw_params != NULL
-	)
+	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
 
 #	else
@@ -163,7 +161,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 		char buff[100];
 		sprintf(buff, _("Read from audio interface failed.\n%s."),
 				snd_strerror(samples_read));
-		lingot_msg_add_error(buff);
+		lingot_msg_add_error_with_code(buff, -samples_read);
 	} else {
 		int i;
 		// float point conversion

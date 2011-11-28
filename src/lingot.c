@@ -84,6 +84,8 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	lingot_config_create_parameter_specs();
+
 	// if config file doesn't exists, i will create it.
 	FILE* fp;
 	if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {

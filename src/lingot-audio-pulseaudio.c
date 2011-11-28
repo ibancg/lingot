@@ -67,19 +67,18 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	audio->pa_client = pa_simple_new(NULL, // Use the default server.
 			"Lingot", // Our application's name.
 			PA_STREAM_RECORD, //
-			device_name, // Use the default device.
+			device_name, //
 			"record", // Description of our stream.
-			&ss, // Our sample format.
+			&ss, // sample format.
 			NULL, // Use default channel map
-			&buff, // Use default buffering attributes.
-			&error // Ignore error code.
-			);
+			&buff, //
+			&error);
 
 	if (!audio->pa_client) {
 		char buff[100];
 		sprintf(buff, _("Error creating PulseAudio client.\n%s."),
 				pa_strerror(error));
-		lingot_msg_add_error(buff);
+		lingot_msg_add_error_with_code(buff, error);
 		free(audio);
 		audio = NULL;
 	} else {
@@ -122,7 +121,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 		char buff[100];
 		sprintf(buff, _("Read from audio interface failed.\n%s."),
 				pa_strerror(error));
-		lingot_msg_add_error(buff);
+		lingot_msg_add_error_with_code(buff, error);
 	} else {
 		samples_read = audio->read_buffer_size;
 		int i;

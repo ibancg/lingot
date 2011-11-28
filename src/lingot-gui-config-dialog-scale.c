@@ -208,24 +208,24 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		if (strchr(new_text, ' ') || strchr(new_text, '\t')) {
 			lingot_msg_add_warning(
 					_("Do not use space characters for the note names."));
-		} else if (strchr(new_text, '\n') || strchr(new_text, '{') || strchr(
-				new_text, '}')) {
+		} else if (strchr(new_text, '\n') || strchr(new_text, '{')
+				|| strchr(new_text, '}')) {
 			lingot_msg_add_warning(_("The name contains illegal characters."));
 		} else {
 			char_pointer = strtok(new_text, delim);
-			gtk_tree_store_set(model_store, &iter, COLUMN_NAME, (char_pointer
-					== NULL) ? "?" : new_text, -1);
-		}
-		break;
+			gtk_tree_store_set(model_store, &iter, COLUMN_NAME,
+					(char_pointer == NULL) ? "?" : new_text, -1);
+				}
+				break;
 
-	case COLUMN_SHIFT:
+				case COLUMN_SHIFT:
 
-		lingot_config_scale_parse_shift(new_text, &shift_cents,
-				&shift_numerator, &shift_denominator);
+				lingot_config_scale_parse_shift(new_text, &shift_cents,
+						&shift_numerator, &shift_denominator);
 
-		// TODO: full validation
+				// TODO: full validation
 
-		if ((ipath == 0) && (fabs(shift_cents - 0.0) > 1e-10)) {
+							if ((ipath == 0) && (fabs(shift_cents -0.0) > 1e-10)) {
 			lingot_msg_add_warning(
 					_("You cannot change the first shift, it must be 1/1."));
 			break;
@@ -288,7 +288,7 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		break;
 	}
 
-}
+		}
 
 void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
 		GtkTreeViewColumn *col, GtkCellRenderer *renderer, GtkTreeModel *model,
@@ -298,8 +298,10 @@ void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
 	LingotConfigDialog* config_dialog = (LingotConfigDialog*) user_data;
 
 	gtk_tree_model_get(model, iter, COLUMN_FREQUENCY, &freq, -1);
-	freq *= pow(2.0, gtk_spin_button_get_value_as_float(
-			config_dialog->root_frequency_error) / 1200.0);
+	freq *= pow(
+			2.0,
+			gtk_spin_button_get_value_as_float(
+					config_dialog->root_frequency_error) / 1200.0);
 
 	if (fabs(freq - MID_A_FREQUENCY) < 1e-3) {
 		g_object_set(renderer, "text", "mid-A", NULL);
@@ -497,8 +499,8 @@ void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
 	int i;
 	for (i = 0; i < scale->notes; i++) {
 		gtk_tree_store_append(store, &iter2, NULL);
-		FLT freq = scale->base_frequency * pow(2.0, scale->offset_cents[i]
-				/ 1200.0);
+		FLT freq = scale->base_frequency
+				* pow(2.0, scale->offset_cents[i] / 1200.0);
 		lingot_config_scale_format_shift(buff, scale->offset_cents[i],
 				scale->offset_ratios[0][i], scale->offset_ratios[1][i]);
 		gtk_tree_store_set(store, &iter2, COLUMN_NAME, scale->note_name[i],
@@ -528,21 +530,26 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-		if (filechooser_last_folder != NULL)
+		if (filechooser_last_folder != NULL) {
 			free(filechooser_last_folder);
-		filechooser_last_folder = strdup(gtk_file_chooser_get_current_folder(
-				GTK_FILE_CHOOSER(dialog)));
+			filechooser_last_folder = NULL;
+		}
+
+		if (gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog))
+				!= NULL) {
+			filechooser_last_folder = strdup(
+					gtk_file_chooser_get_current_folder(
+							GTK_FILE_CHOOSER(dialog)));
+		}
+
 		// TODO
 		LingotScale* scale = lingot_config_scale_new();
-		if (!lingot_config_scale_load_scl(scale, filename)) {
-			lingot_msg_add_error(_(
-					"The scale cannot be imported: file format error"));
-			lingot_config_scale_destroy(scale);
-			free(scale);
-		} else {
+		if (lingot_config_scale_load_scl(scale, filename)) {
 			lingot_gui_config_dialog_scale_rewrite(config_dialog, scale);
 		}
 
+		lingot_config_scale_destroy(scale);
+		free(scale);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);
@@ -555,11 +562,11 @@ gint lingot_gui_config_dialog_scale_key_press_cb(GtkWidget *widget,
 	LingotConfigDialog* dialog = (LingotConfigDialog*) data;
 	if (kevent->type == GDK_KEY_PRESS) {
 		if (kevent->keyval == 0xffff) {
-			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_del),
-					"clicked", NULL);
+			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_del), "clicked",
+					NULL);
 		} else if (kevent->keyval == 0xff63) {
-			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_add),
-					"clicked", NULL);
+			g_signal_emit_by_name(G_OBJECT(dialog->button_scale_add), "clicked",
+					NULL);
 		}
 	}
 
@@ -592,8 +599,8 @@ gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
 	GtkTreeViewColumn* col;
 	gint cx, cy;
 
-	gtk_tree_view_get_path_at_pos((GtkTreeView*) widget, x, y, &path, &col,
-			&cx, &cy);
+	gtk_tree_view_get_path_at_pos((GtkTreeView*) widget, x, y, &path, &col, &cx,
+			&cy);
 
 	gint column_index =
 			lingot_gui_config_dialog_scale_tree_view_column_get_index(col);
@@ -639,11 +646,13 @@ void lingot_gui_config_dialog_scale_show(LingotConfigDialog* dialog,
 
 	/* asocia el modelo al gtkteeview */
 	gtk_tree_view_set_model(dialog->scale_treeview, model);
-	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
-			dialog->scale_treeview), GTK_SELECTION_MULTIPLE);
+	gtk_tree_selection_set_mode(
+			gtk_tree_view_get_selection(dialog->scale_treeview),
+			GTK_SELECTION_MULTIPLE);
 
 	g_object_unref(G_OBJECT(model));
-	gtk_container_add(GTK_CONTAINER(scroll), GTK_WIDGET(dialog->scale_treeview));
+	gtk_container_add(GTK_CONTAINER(scroll),
+			GTK_WIDGET(dialog->scale_treeview));
 
 	dialog->button_scale_del = GTK_BUTTON(glade_xml_get_widget(_gladeXML,
 					"button_scale_del"));
@@ -655,14 +664,16 @@ void lingot_gui_config_dialog_scale_show(LingotConfigDialog* dialog,
 	g_signal_connect(G_OBJECT(dialog->scale_treeview), "key_press_event",
 			G_CALLBACK(lingot_gui_config_dialog_scale_key_press_cb), dialog);
 
-	g_signal_connect(G_OBJECT(dialog->button_scale_add), "clicked", G_CALLBACK(
-					lingot_gui_config_dialog_scale_tree_add_row_tree),
+	g_signal_connect(G_OBJECT(dialog->button_scale_add), "clicked",
+			G_CALLBACK( lingot_gui_config_dialog_scale_tree_add_row_tree),
 			dialog->scale_treeview);
-	g_signal_connect(G_OBJECT(dialog->button_scale_del), "clicked", G_CALLBACK(
-					lingot_gui_config_dialog_scale_tree_remove_selected_items),
+	g_signal_connect(
+			G_OBJECT(dialog->button_scale_del),
+			"clicked",
+			G_CALLBACK( lingot_gui_config_dialog_scale_tree_remove_selected_items),
 			dialog->scale_treeview);
-	g_signal_connect(G_OBJECT(button_import), "clicked", G_CALLBACK(
-					lingot_gui_config_dialog_import_scl), dialog);
+	g_signal_connect(G_OBJECT(button_import), "clicked",
+			G_CALLBACK( lingot_gui_config_dialog_import_scl), dialog);
 
 	gtk_widget_set_has_tooltip(GTK_WIDGET(dialog->scale_treeview), TRUE);
 	g_signal_connect(G_OBJECT(dialog->scale_treeview), "query-tooltip",

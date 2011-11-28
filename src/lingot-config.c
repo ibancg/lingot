@@ -34,24 +34,10 @@
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-#define N_OPTIONS 22
+#define N_OPTIONS 21
 
-// the following tokens will appear in the config file. The options after | are deprecated options.
-const char* options[] = { "AUDIO_SYSTEM", "AUDIO_DEV", "AUDIO_DEV_ALSA",
-		"AUDIO_DEV_JACK", "AUDIO_DEV_PULSEAUDIO", "SAMPLE_RATE", "OVERSAMPLING",
-		"ROOT_FREQUENCY_ERROR", "MIN_FREQUENCY", "FFT_SIZE", "TEMPORAL_WINDOW",
-		"NOISE_THRESHOLD", "CALCULATION_RATE", "VISUALIZATION_RATE",
-		"PEAK_NUMBER", "PEAK_HALF_WIDTH", "PEAK_REJECTION_RELATION",
-		"DFT_NUMBER", "DFT_SIZE", "GAIN", "|", "PEAK_ORDER", NULL // NULL terminated array
-		};
-
-// units, in order to have a more human-readable config file
-const char* units[] = { NULL, NULL, NULL, NULL, NULL, "Hz", NULL, "cents", "Hz",
-		"samples", "seconds", "dB", "Hz", "Hz", "peaks", "samples", "dB",
-		"DFTs", "samples", NULL, NULL, NULL };
-
-// print/scan param formats.
-const char* option_formats = "mssssddffdffffddfddf|d";
+LingotConfigParameterSpec parameters[N_OPTIONS];
+unsigned int parameters_count = 0;
 
 const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio", NULL };
 
@@ -74,6 +60,103 @@ audio_system_t str_to_audio_system_t(char* audio_system) {
 }
 
 //----------------------------------------------------------------------------
+
+static void lingot_config_add_string_parameter_spec(LingotConfigParameterId id,
+		const char* name, unsigned int max_len, int deprecated) {
+	parameters[parameters_count].id = id;
+	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_STRING;
+	parameters[parameters_count].name = name;
+	parameters[parameters_count].units = NULL;
+	parameters[parameters_count].deprecated = deprecated;
+	parameters[parameters_count].str_max_len = max_len;
+	parameters_count++;
+}
+
+static void lingot_config_add_integer_parameter_spec(LingotConfigParameterId id,
+		const char* name, const char* units, int min, int max, int deprecated) {
+	parameters[parameters_count].id = id;
+	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_INTEGER;
+	parameters[parameters_count].name = name;
+	parameters[parameters_count].units = units;
+	parameters[parameters_count].deprecated = deprecated;
+	parameters[parameters_count].int_min = min;
+	parameters[parameters_count].int_max = max;
+	parameters_count++;
+}
+
+static void lingot_config_add_double_parameter_spec(LingotConfigParameterId id,
+		const char* name, const char* units, double min, double max,
+		int deprecated) {
+	parameters[parameters_count].id = id;
+	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_FLOAT;
+	parameters[parameters_count].name = name;
+	parameters[parameters_count].units = units;
+	parameters[parameters_count].deprecated = deprecated;
+	parameters[parameters_count].float_min = min;
+	parameters[parameters_count].float_max = max;
+	parameters_count++;
+}
+
+void lingot_config_create_parameter_specs() {
+	parameters[parameters_count].type = LINGOT_PARAMETER_ID_AUDIO_SYSTEM;
+	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM;
+	parameters[parameters_count].name = "AUDIO_SYSTEM";
+	parameters[parameters_count].units = NULL;
+	parameters[parameters_count].deprecated = 0;
+	parameters_count++;
+
+	lingot_config_add_string_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV,
+			"AUDIO_DEV", 512, 0);
+	lingot_config_add_string_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA,
+			"AUDIO_DEV_ALSA", 512, 0);
+	lingot_config_add_string_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV_JACK,
+			"AUDIO_DEV_JACK", 512, 0);
+	lingot_config_add_string_parameter_spec(
+			LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, "AUDIO_DEV_PULSEAUDIO",
+			512, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_SAMPLE_RATE,
+			"SAMPLE_RATE", "Hz", 100, 200000, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_OVERSAMPLING,
+			"OVERSAMPLING", NULL, 1, 120, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, "ROOT_FREQUENCY_ERROR",
+			"cents", -500.0, 500.0, 0);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MIN_FREQUENCY,
+			"MIN_FREQUENCY", "Hz", 0.0, 22050.0, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_FFT_SIZE,
+			"FFT_SIZE", "samples", 256, 4096, 0);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_TEMPORAL_WINDOW,
+			"TEMPORAL_WINDOW", "seconds", 0.0, 15.00, 0);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_NOISE_THRESHOLD,
+			"NOISE_THRESHOLD", "dB", 0.0, 100.0, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_CALCULATION_RATE, "CALCULATION_RATE", "Hz", 1.0,
+			30.00, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_VISUALIZATION_RATE, "VISUALIZATION_RATE", "Hz",
+			1.0, 40.00, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_NUMBER,
+			"PEAK_NUMBER", "samples", 1, 10, 0);
+	lingot_config_add_integer_parameter_spec(
+			LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, "PEAK_HALF_WIDTH", "samples",
+			1, 5, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION,
+			"PEAK_REJECTION_RELATION", "dB", 0.0, 100.0, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_NUMBER,
+			"DFT_NUMBER", "DFTs", 0, 10, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
+			"DFT_SIZE", "samples", 4, 100, 0);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_GAIN, "GAIN",
+			"dB", -90.0, 90.0, 0);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_ORDER,
+			"PEAK_ORDER", NULL, 0, 10, 1);
+}
+
+LingotConfigParameterSpec lingot_config_get_parameter_spec(
+		LingotConfigParameterId id) {
+	return parameters[(int) id];
+}
 
 LingotConfig* lingot_config_new() {
 
@@ -166,18 +249,28 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 
 // internal parameters mapped to each token in the config file.
 static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
-	void* c_params[] = { &config->audio_system,
-			&config->audio_dev[AUDIO_SYSTEM_OSS],
-			&config->audio_dev[AUDIO_SYSTEM_ALSA],
-			&config->audio_dev[AUDIO_SYSTEM_JACK],
-			&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], &config->sample_rate,
-			&config->oversampling, &config->root_frequency_error,
-			&config->min_frequency, &config->fft_size, &config->temporal_window,
-			&config->noise_threshold_db, &config->calculation_rate,
-			&config->visualization_rate, &config->peak_number,
-			&config->peak_half_width, &config->peak_rejection_relation_db,
-			&config->dft_number, &config->dft_size, &config->gain, NULL,
-			&config->peak_half_width };
+	void* c_params[] = { //
+			&config->audio_system, //
+					&config->audio_dev[AUDIO_SYSTEM_OSS], //
+					&config->audio_dev[AUDIO_SYSTEM_ALSA], //
+					&config->audio_dev[AUDIO_SYSTEM_JACK], //
+					&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], //
+					&config->sample_rate, //
+					&config->oversampling, //
+					&config->root_frequency_error, //
+					&config->min_frequency, //
+					&config->fft_size, //
+					&config->temporal_window, //
+					&config->noise_threshold_db, //
+					&config->calculation_rate, //
+					&config->visualization_rate, //
+					&config->peak_number, //
+					&config->peak_half_width, //
+					&config->peak_rejection_relation_db, //
+					&config->dft_number, //
+					&config->dft_size, //
+					&config->gain, //
+					&config->peak_half_width };
 
 	memcpy(params, c_params, N_OPTIONS * sizeof(void*));
 }
@@ -209,34 +302,35 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	fprintf(fp, "# Config file automatically created by lingot %s\n\n",
 			VERSION);
 
-	for (i = 0; strcmp(options[i], "|"); i++) {
+	for (i = 0; i < N_OPTIONS; i++) {
+		if (!parameters[i].deprecated) {
 
-		option = options[i];
-		param = params[i];
+			//option = options[i];
+			param = params[i];
 
-		switch (option_formats[i]) {
-		case 's':
-			fprintf(fp, "%s = %s", option, (char*) param);
-			break;
-		case 'd':
-			fprintf(fp, "%s = %d", option, *((unsigned int*) param));
-			break;
-		case 'f':
-			fprintf(fp, "%s = %0.3f", option, *((FLT*) param));
-			break;
-		case 'm':
-			if (!strcmp("AUDIO_SYSTEM", option)) {
-				fprintf(fp, "%s = %s", option,
+			fprintf(fp, "%s = ", parameters[i].name);
+			switch (parameters[i].type) {
+			case LINGOT_PARAMETER_TYPE_STRING:
+				fprintf(fp, "%s", (char*) param);
+				break;
+			case LINGOT_PARAMETER_TYPE_INTEGER:
+				fprintf(fp, "%d", *((unsigned int*) param));
+				break;
+			case LINGOT_PARAMETER_TYPE_FLOAT:
+				fprintf(fp, "%0.3f", *((FLT*) param));
+				break;
+			case LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM:
+				fprintf(fp, "%s",
 						audio_system_t_to_str(*((audio_system_t*) param)));
+				break;
 			}
-			break;
-		}
 
-		if (units[i] != NULL) {
-			fprintf(fp, " # %s", units[i]);
-		}
+			if (parameters[i].units != NULL) {
+				fprintf(fp, " # %s", parameters[i].units);
+			}
 
-		fprintf(fp, "\n");
+			fprintf(fp, "\n");
+		}
 	}
 
 	fprintf(fp, "\n");
@@ -267,7 +361,6 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 
 void lingot_config_load(LingotConfig* config, char* filename) {
 	FILE* fp;
-	float aux;
 	int line;
 	int option_index;
 	int deprecated_option = 0;
@@ -280,14 +373,15 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	int reading_scale = 0;
 	char* nl;
 	int parse_errors = 0;
-	int command_count = 0;
+	int scale_errors = 0;
+	LingotScale* scale = NULL;
 
 	// restore default values for non specified parameters
 	lingot_config_restore_default_values(config);
 
 	lingot_config_map_parameters(config, params);
 
-	static const unsigned int max_line_size = 512;
+	static const unsigned int max_line_size = 1024;
 	char char_buffer[max_line_size];
 
 	if ((fp = fopen(filename, "r")) == NULL) {
@@ -305,7 +399,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		line++;
 
 		if (!fgets(char_buffer, max_line_size, fp))
-			break;;
+			break;
 
 		if (char_buffer[0] == '#')
 			continue;
@@ -318,8 +412,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		if (!strcmp(char_buffer_pointer, "SCALE")) {
 			reading_scale = 1;
-			config->scale = lingot_config_scale_new();
-			command_count++;
+			scale = lingot_config_scale_new();
 			continue;
 		}
 
@@ -339,43 +432,92 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				nl = strrchr(char_buffer_pointer, '\n');
 				if (nl)
 					*nl = '\0';
-				config->scale->name = strdup(char_buffer_pointer);
+				scale->name = strdup(char_buffer_pointer);
 				continue;
 			}
 			if (!strcmp(char_buffer_pointer, "BASE_FREQUENCY")) {
 				char_buffer_pointer = strtok(NULL, delim);
-				sscanf(char_buffer_pointer, "%lg",
-						&config->scale->base_frequency);
+				sscanf(char_buffer_pointer, "%lg", &scale->base_frequency);
 				continue;
 			}
 			if (!strcmp(char_buffer_pointer, "NOTE_COUNT")) {
 				char_buffer_pointer = strtok(NULL, delim);
-				sscanf(char_buffer_pointer, "%hu", &config->scale->notes);
-				lingot_config_scale_allocate(config->scale,
-						config->scale->notes);
+				sscanf(char_buffer_pointer, "%hu", &scale->notes);
+				lingot_config_scale_allocate(scale, scale->notes);
 				continue;
 			}
 
 			if (!strcmp(char_buffer_pointer, "NOTES")) {
 				int i = 0;
-				for (i = 0; i < config->scale->notes; i++) {
+				for (i = 0; i < scale->notes; i++) {
 					line++;
-					if (!fgets(char_buffer, max_line_size, fp))
+					if (!fgets(char_buffer, max_line_size, fp)) {
+						scale_errors = 1;
+						fprintf(stderr,
+								"error at line %i: error reading the scale\n",
+								line);
 						break;
+					}
+
 					// tokens into the line.
 					char_buffer_pointer = strtok(char_buffer, delim2);
-					config->scale->note_name[i] = strdup(char_buffer_pointer);
+
+					if (char_buffer_pointer == NULL) {
+						scale_errors = 1;
+						fprintf(stderr,
+								"error at line %i: error reading the scale\n",
+								line);
+						break;
+					}
+
+					scale->note_name[i] = strdup(char_buffer_pointer);
 					char_buffer_pointer = strtok(NULL, delim2);
+
+					if (char_buffer_pointer == NULL) {
+						scale_errors = 1;
+						fprintf(stderr,
+								"error at line %i: error reading the scale\n",
+								line);
+						break;
+					}
+
 					if (!lingot_config_scale_parse_shift(char_buffer_pointer,
-							&config->scale->offset_cents[i],
-							&config->scale->offset_ratios[0][i],
-							&config->scale->offset_ratios[1][i])) {
-						parse_errors = 1;
+							&scale->offset_cents[i],
+							&scale->offset_ratios[0][i],
+							&scale->offset_ratios[1][i])) {
+						scale_errors = 1;
+					} else {
+
+						if ((scale->offset_cents[i] < 0)
+								|| (scale->offset_cents[i] >= 1200)) {
+							scale_errors = 1;
+							fprintf(
+									stderr,
+									"error at line %i: the notes in the scale must be equal or higher than 1/1 (0 cents) and lower than 2/1 (1200 cents)\n",
+									line);
+						}
+
+						if (i == 0) {
+							if (scale->offset_cents[i] != 0.0) {
+								scale_errors = 1;
+								fprintf(
+										stderr,
+										"error at line %i: the first note in the scale must be 1/1 (0 cents shift)\n",
+										line);
+							}
+						} else if (scale->offset_cents[i]
+								<= scale->offset_cents[i - 1]) {
+							scale_errors = 1;
+							fprintf(
+									stderr,
+									"error at line %i: the notes in the scale must be well ordered\n",
+									line);
+						}
 					}
 				}
 				line++;
 				if (!fgets(char_buffer, max_line_size, fp))
-					break; // }
+					break;
 
 				continue;
 			}
@@ -387,19 +529,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		}
 
-		deprecated_option = 0;
-		for (option_index = 0; options[option_index]; option_index++) {
-			if (!strcmp(char_buffer_pointer, options[option_index])) {
+		for (option_index = 0; option_index < N_OPTIONS; option_index++) {
+			if (!strcmp(char_buffer_pointer, parameters[option_index].name)) {
 				break; // found token.
-			} else if (!strcmp("|", options[option_index])) {
-				deprecated_option = 1;
 			}
 		}
 
-		option = options[option_index];
-		param = params[option_index];
-
-		if (!option) {
+		if (option_index == N_OPTIONS) {
 			fprintf(stderr,
 					"warning: parse error at line %i: unknown keyword %s\n",
 					line, char_buffer_pointer);
@@ -407,10 +543,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			continue;
 		}
 
-		if (deprecated_option) {
+		if (parameters[option_index].deprecated) {
 			fprintf(stdout, "warning: deprecated option %s\n",
 					char_buffer_pointer);
+
 		}
+
+		param = params[option_index];
 
 		// take the attribute value.
 		char_buffer_pointer = strtok(NULL, delim);
@@ -422,38 +561,87 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			continue;
 		}
 
-		// asign the value to the parameter.
-		switch (option_formats[option_index]) {
-		case 's':
-			sprintf(((char*) param), "%s", char_buffer_pointer);
-			command_count++;
-			break;
-		case 'd':
-			sscanf(char_buffer_pointer, "%d", (unsigned int*) param);
-			command_count++;
-			break;
-		case 'f':
-			sscanf(char_buffer_pointer, "%f", &aux);
-			*((FLT*) param) = aux;
-			command_count++;
-			break;
-		case 'm':
-			if (!strcmp("AUDIO_SYSTEM", option)) {
-				command_count++;
-				*((audio_system_t*) param) = str_to_audio_system_t(
-						char_buffer_pointer);
-				if (*((audio_system_t*) param) == (audio_system_t) -1) {
-					*((audio_system_t*) param) = AUDIO_SYSTEM_ALSA;
-					char buff[1000];
-					sprintf(
-							buff,
-							_(
-									"Error parsing the configuration file, line %i: unrecognized audio system '%s', assuming default audio system.\n"),
-							line, char_buffer_pointer);
+		int int_value;
+		float float_value;
+		audio_system_t audio_system_value;
 
-					lingot_msg_add_warning(buff);
+		// asign the value to the parameter.
+		switch (parameters[option_index].type) {
+		case LINGOT_PARAMETER_TYPE_STRING:
+			if (strlen(char_buffer_pointer)
+					< parameters[option_index].str_max_len) {
+				sprintf(((char*) param), "%s", char_buffer_pointer);
+			} else {
+				fprintf(
+						stderr,
+						"error: parse error at line %i, '%s = %s': identifier too long (maximum length %d characters), assuming default value '%s'\n",
+						line, parameters[option_index].name,
+						char_buffer_pointer,
+						parameters[option_index].str_max_len, ((char*) param));
+				parse_errors = 1;
+			}
+			break;
+		case LINGOT_PARAMETER_TYPE_INTEGER:
+			sscanf(char_buffer_pointer, "%d", &int_value);
+
+			if (parameters[option_index].id == LINGOT_PARAMETER_ID_FFT_SIZE) {
+				if ((int_value != 256) && (int_value != 512)
+						&& (int_value != 1024) && (int_value != 2048)
+						&& (int_value != 4096)) {
+					fprintf(
+							stderr,
+							"error: parse error at line %i, '%s = %s': invalid value (allowed values are 256, 512, 1024, 2048 and 4096), assuming default value %i\n",
+							line, parameters[option_index].name,
+							char_buffer_pointer, *((unsigned int*) param));
 					parse_errors = 1;
 				}
+			} else {
+				if ((int_value >= parameters[option_index].int_min)
+						&& (int_value <= parameters[option_index].int_max)) {
+					*((unsigned int*) param) = int_value;
+				} else {
+					fprintf(
+							stderr,
+							"error: parse error at line %i, '%s = %s': out of bounds (minimum %i, maximum %i), assuming default value %i\n",
+							line, parameters[option_index].name,
+							char_buffer_pointer,
+							parameters[option_index].int_min,
+							parameters[option_index].int_max,
+							*((unsigned int*) param));
+					parse_errors = 1;
+
+				}
+			}
+			break;
+		case LINGOT_PARAMETER_TYPE_FLOAT:
+			sscanf(char_buffer_pointer, "%f", &float_value);
+			if ((float_value >= parameters[option_index].float_min)
+					&& (float_value <= parameters[option_index].float_max)) {
+				*((FLT*) param) = float_value;
+			} else {
+				fprintf(
+						stderr,
+						"error: parse error at line %i, '%s = %s': out of bounds (minimum %0.3f, maximum %0.3f), assuming default value %0.3f\n",
+						line, parameters[option_index].name,
+						char_buffer_pointer, parameters[option_index].float_min,
+						parameters[option_index].float_max, *((FLT*) param));
+				parse_errors = 1;
+			}
+			break;
+		case LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM:
+			audio_system_value = str_to_audio_system_t(char_buffer_pointer);
+			if (audio_system_value != (audio_system_t) -1) {
+				*((audio_system_t*) param) = audio_system_value;
+			} else {
+				char buff[1000];
+				sprintf(
+						buff,
+						_(
+								"Error parsing the configuration file, line %i: unrecognized audio system '%s', assuming default audio system.\n"),
+						line, char_buffer_pointer);
+
+				lingot_msg_add_warning(buff);
+				parse_errors = 1;
 			}
 			break;
 		}
@@ -461,10 +649,20 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 	fclose(fp);
 
-	if (parse_errors) {
+	if (!scale_errors) {
+		config->scale = lingot_config_scale_new();
+		lingot_config_scale_copy(config->scale, scale);
+	}
+
+	if (scale != NULL) {
+		lingot_config_scale_destroy(scale);
+		free(scale);
+	}
+
+	if (parse_errors || scale_errors) {
 		lingot_msg_add_warning(
 				_(
-						"The configuration file contains errors, and hence some default values have been chosen. Consider checking the settings and fixing the problem using the configuration dialog."));
+						"The configuration file contains errors, and hence some default values have been chosen. Please consider fixing the problem in the configuration dialog."));
 	}
 
 	lingot_config_update_internal_params(config);

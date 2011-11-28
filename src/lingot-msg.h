@@ -31,12 +31,13 @@ typedef enum message_type_t {
 } message_type_t;
 
 // add messages to the queue
-void lingot_msg_add(const char* message, message_type_t type);
+void lingot_msg_add(const char* message, message_type_t type, int error_code);
 void lingot_msg_add_error(const char* message);
+void lingot_msg_add_error_with_code(const char* message, int error_code);
 void lingot_msg_add_warning(const char* message);
 void lingot_msg_add_info(const char* message);
 
 // gets a message from the queue, it returns 0 if no messages are available
-int lingot_msg_get(char** msg, message_type_t* type);
+int lingot_msg_get(char** msg, message_type_t* type, int* error_code);
 
 #endif
