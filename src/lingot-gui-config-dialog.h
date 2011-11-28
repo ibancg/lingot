@@ -52,6 +52,8 @@ struct _LingotConfigDialog {
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
 
+	GtkNotebook* notebook;
+
 	GtkButton* button_scale_add;
 	GtkButton* button_scale_del;
 

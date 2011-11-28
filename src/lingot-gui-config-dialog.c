@@ -229,7 +229,7 @@ void lingot_gui_config_dialog_set_audio_device(GtkComboBoxEntry* combo,
 }
 
 const gchar* lingot_gui_config_dialog_get_audio_device(const gchar* str) {
-	static char buffer[100];
+	static char buffer[1024];
 
 	const char* delim = "<>";
 	char* str_ = strdup(str);
@@ -318,7 +318,38 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	const gchar* text2;
 	LingotConfig* conf = dialog->conf;
 
+	// validation
+
 	if (!lingot_gui_config_dialog_scale_validate(dialog, conf->scale)) {
+		return 0;
+	}
+
+	const char* audio_device = lingot_gui_config_dialog_get_audio_device(
+			gtk_entry_get_text(GTK_ENTRY(GTK_BIN(dialog->input_dev)->child)));
+
+	LingotConfigParameterSpec audioDeviceSpec =
+			lingot_config_get_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV);
+
+	if (strlen(audio_device) >= audioDeviceSpec.str_max_len) {
+		lingot_msg_add_error(_("Audio device identifier too long"));
+		gtk_notebook_set_current_page(dialog->notebook, 0);
+		return 0;
+	}
+
+	text2 = gtk_entry_get_text(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child));
+	int sample_rate = atoi(text2);
+
+	LingotConfigParameterSpec sampleRateSpec = lingot_config_get_parameter_spec(
+			LINGOT_PARAMETER_ID_SAMPLE_RATE);
+
+	if ((sample_rate < sampleRateSpec.int_min)
+			|| (sample_rate > sampleRateSpec.int_max)) {
+		char buff[1000];
+		sprintf(buff, _("Sample rate out of range %i - %i %s"),
+				sampleRateSpec.int_min, sampleRateSpec.int_max,
+				sampleRateSpec.units);
+		lingot_msg_add_error(buff);
+		gtk_notebook_set_current_page(dialog->notebook, 0);
 		return 0;
 	}
 
@@ -355,8 +386,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	text1 = gtk_combo_box_get_active_text(dialog->fft_size);
 	conf->fft_size = atoi(text1);
 	g_free(text1);
-	text2 = gtk_entry_get_text(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child));
-	conf->sample_rate = atoi(text2);
+	conf->sample_rate = sample_rate;
 
 	LingotScale* scale = conf->scale;
 	lingot_config_scale_destroy(scale);
@@ -470,6 +500,8 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->minimum_frequency =
 				GTK_SPIN_BUTTON(glade_xml_get_widget(_gladeXML,
 								"minimum_frequency"));
+		dialog->notebook = GTK_NOTEBOOK(glade_xml_get_widget(_gladeXML,
+						"notebook1"));
 
 		lingot_gui_config_dialog_scale_show(dialog, _gladeXML);
 
