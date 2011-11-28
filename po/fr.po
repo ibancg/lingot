@@ -81,7 +81,6 @@ msgid ""
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
-#, fuzzy
 msgid "Audio device"
 msgstr "Périphérique audio"
 
@@ -379,7 +378,6 @@ msgid "Saves the running configuration to an external file."
 msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:8
-#, fuzzy
 msgid "Show spectrum"
 msgstr "Spectre"
 
@@ -409,7 +407,6 @@ msgid "Tone"
 msgstr "Note"
 
 #: ../src/glade/lingot-mainframe.glade.h:13
-#, fuzzy
 msgid "_Edit"
 msgstr "_Edition"
 
@@ -466,11 +463,11 @@ msgid ""
 msgstr ""
 
 #: ../src/lingot-audio-oss.c:92
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error setting sample rate.\n"
 "%s."
-msgstr "Taux d'échantillonage effectif"
+msgstr ""
 
 #: ../src/lingot-audio-oss.c:128
 msgid "Read from audio interface failed."
@@ -543,9 +540,8 @@ msgid "note number mismatch"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:220
-#, fuzzy
 msgid "Error opening scale file."
-msgstr "Taux d'échantillonage effectif"
+msgstr ""
 
 #: ../src/lingot-config-scale.c:294
 msgid "the notes must be well ordered"
@@ -605,28 +601,24 @@ msgid "Info"
 msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:307
-#, fuzzy
 msgid "Open Configuration File"
-msgstr "configuration de lingot"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:315 ../src/lingot-gui-mainframe.c:359
-#, fuzzy
 msgid "Lingot configuration files"
-msgstr "configuration de lingot"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:348
-#, fuzzy
 msgid "Save Configuration File"
-msgstr "configuration de lingot"
+msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:334
 msgid "Audio device identifier too long"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:348
-#, fuzzy
 msgid "Sample rate out of range"
-msgstr "Taux d'échantillonnage"
+msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401
 msgid ""
