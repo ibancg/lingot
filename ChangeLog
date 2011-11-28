@@ -1,9 +1,9 @@
 
 2011-11-28 Ibán Cereijo <ibancg@gmail.com>
 
-	* Added libfftw support.
-	* Enhanced some error messages.
 	* Implemented task #10683: config file validation.
+	* Implemented task #11100: add libfftw support.
+	* Enhanced some error messages.
 
 2011-11-23 Ibán Cereijo <ibancg@gmail.com>
 

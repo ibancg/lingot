@@ -345,7 +345,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	if ((sample_rate < sampleRateSpec.int_min)
 			|| (sample_rate > sampleRateSpec.int_max)) {
 		char buff[1000];
-		sprintf(buff, _("Sample rate out of range %i - %i %s"),
+		sprintf(buff, "%s %i - %i %s", _("Sample rate out of range"),
 				sampleRateSpec.int_min, sampleRateSpec.int_max,
 				sampleRateSpec.units);
 		lingot_msg_add_error(buff);

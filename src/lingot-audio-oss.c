@@ -125,7 +125,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 
 	if (bytes_read < 0) {
 		char buff[100];
-		sprintf(buff, _("Read from audio interface failed.\n%s."),
+		sprintf(buff, "%s\n%s", _("Read from audio interface failed."),
 				strerror(errno));
 		lingot_msg_add_error(buff);
 	} else {
