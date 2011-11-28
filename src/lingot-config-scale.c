@@ -217,7 +217,8 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		char buff[1000];
-		sprintf(buff, _("Error opening scale file.\n%s"), strerror(errno));
+		sprintf(buff, "%s\n%s", _("Error opening scale file."),
+				strerror(errno));
 		lingot_msg_add_error(buff);
 		return 0;
 	}
@@ -300,7 +301,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	}catch {
 		result = 0;
 		char buff[1000];
-		sprintf(buff, _("Error opening scale file, line %i: %s"), line,
+		sprintf(buff, "%s, line %i: %s", _("Error opening scale file"), line,
 				exception);
 		lingot_msg_add_error(buff);
 	}

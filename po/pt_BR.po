@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 17:10+0000\n"
+"POT-Creation-Date: 2011-11-28 20:31+0100\n"
 "PO-Revision-Date: 2008-06-24 14:00+0200\n"
 "Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
 "Language-Team: Português do Brasil\n"
@@ -225,7 +225,7 @@ msgid "Minimum frequency"
 msgstr "Frequencia mínima"
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
-#: ../src/lingot-gui-config-dialog-scale.c:322
+#: ../src/lingot-gui-config-dialog-scale.c:324
 msgid "Name"
 msgstr ""
 
@@ -475,22 +475,26 @@ msgid ""
 "%s."
 msgstr "Freqüência de amostragem efetiva"
 
-#: ../src/lingot-audio-oss.c:132 ../src/lingot-audio-alsa.c:167
+#: ../src/lingot-audio-oss.c:128
+msgid "Read from audio interface failed."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:140
+msgid "The application has not been built with ALSA support"
+msgstr "A aplicação nao foi compilada com suporte ALSA"
+
+#: ../src/lingot-audio-alsa.c:162
 #, c-format
 msgid ""
 "Read from audio interface failed.\n"
 "%s."
 msgstr ""
 
-#: ../src/lingot-audio-alsa.c:139
-msgid "The application has not been built with ALSA support"
-msgstr "A aplicação nao foi compilada com suporte ALSA"
-
 #: ../src/lingot-audio-jack.c:61
 msgid "Missing connection with JACK audio server"
 msgstr "Falha de conexão com servidor de áudio JACK"
 
-#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:190
+#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:191
 msgid "Unable to connect to JACK server"
 msgstr "Impossível de conetar com o servidor JACK"
 
@@ -498,50 +502,71 @@ msgstr "Impossível de conetar com o servidor JACK"
 msgid "No more JACK ports available"
 msgstr "Nenhuma porta JACK disponível"
 
-#: ../src/lingot-audio-jack.c:133 ../src/lingot-audio-jack.c:247
-#: ../src/lingot-audio-jack.c:314 ../src/lingot-audio-jack.c:346
+#: ../src/lingot-audio-jack.c:134 ../src/lingot-audio-jack.c:254
+#: ../src/lingot-audio-jack.c:321 ../src/lingot-audio-jack.c:353
 msgid "The application has not been built with JACK support"
 msgstr "O programa não foi compilada com o suporte ao JACK"
 
-#: ../src/lingot-audio-jack.c:265
+#: ../src/lingot-audio-jack.c:272
 msgid "Cannot activate client"
 msgstr "Ativação do cliente impossível"
 
-#: ../src/lingot-audio-jack.c:271
+#: ../src/lingot-audio-jack.c:278
 #, fuzzy
 msgid "No active capture ports"
 msgstr "Porta de captura inexistente"
 
-#: ../src/lingot-audio-jack.c:282 ../src/lingot-audio-jack.c:302
+#: ../src/lingot-audio-jack.c:289 ../src/lingot-audio-jack.c:309
 msgid "Cannot connect input ports"
 msgstr "Impossível conetar as portas de entrada"
 
-#: ../src/lingot-audio-jack.c:297
+#: ../src/lingot-audio-jack.c:304
 msgid "No physical capture ports"
 msgstr "Porta de captura inexistente"
 
-#: ../src/lingot-config.c:436
+#: ../src/lingot-config.c:640
 #, c-format
 msgid ""
 "Error parsing the configuration file, line %i: unrecognized audio system "
 "'%s', assuming default audio system.\n"
 msgstr ""
 
-#: ../src/lingot-config.c:452
+#: ../src/lingot-config.c:665
 msgid ""
 "The configuration file contains errors, and hence some default values have "
-"been chosen. Consider checking the settings and fixing the problem using the "
-"configuration dialog."
+"been chosen. Please consider fixing the problem in the configuration dialog."
 msgstr ""
 
-#: ../src/lingot-core.c:86
+#: ../src/lingot-config-scale.c:209
+msgid "incorrect format"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:210
+msgid "note number mismatch"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:220
+#, fuzzy
+msgid "Error opening scale file."
+msgstr "Freqüência de amostragem efetiva"
+
+#: ../src/lingot-config-scale.c:294
+msgid "the notes must be well ordered"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:304
+#, fuzzy
+msgid "Error opening scale file"
+msgstr "Freqüência de amostragem efetiva"
+
+#: ../src/lingot-core.c:87
 #, c-format
 msgid ""
 "The requested sample rate is not available, the real sample rate has been "
 "set to %d Hz"
 msgstr ""
 
-#: ../src/lingot-core.c:99
+#: ../src/lingot-core.c:100
 #, fuzzy, c-format
 msgid ""
 "The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -550,42 +575,63 @@ msgstr ""
 "O buffer temporal é menor que o tamanho da FFT escolhido, Fora ampliado para "
 "%0.3f segundos."
 
-#: ../src/lingot-gui-mainframe.c:100
+#: ../src/lingot-gui-mainframe.c:104
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos musicais preciso e fácil de usar"
 
-#: ../src/lingot-gui-mainframe.c:104
+#: ../src/lingot-gui-mainframe.c:107
 msgid "translator-credits"
 msgstr "Carlos Laué <carlosl@seznam.cz>"
 
-#: ../src/lingot-gui-mainframe.c:247
-msgid "Error"
-msgstr "Erro"
-
-#: ../src/lingot-gui-mainframe.c:248
-msgid "Warning"
-msgstr "Atenção"
-
-#: ../src/lingot-gui-mainframe.c:248
-msgid "Info"
+#: ../src/lingot-gui-mainframe.c:258
+msgid ""
+"Please check that there are not other processes locking the requested "
+"device. Also, consider that some audio servers can sometimes hold the "
+"resources for a few seconds since the last time they were used. In such a "
+"case, you can try again."
 msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:267
+msgid "The core is not running, you must check your configuration."
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:281
+msgid "Error"
+msgstr "Erro"
+
+#: ../src/lingot-gui-mainframe.c:283
+msgid "Warning"
+msgstr "Atenção"
+
+#: ../src/lingot-gui-mainframe.c:283
+msgid "Info"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:307
 #, fuzzy
 msgid "Open Configuration File"
 msgstr "Configuração do lingot"
 
-#: ../src/lingot-gui-mainframe.c:275 ../src/lingot-gui-mainframe.c:318
+#: ../src/lingot-gui-mainframe.c:315 ../src/lingot-gui-mainframe.c:359
 #, fuzzy
 msgid "Lingot configuration files"
 msgstr "Configuração do lingot"
 
-#: ../src/lingot-gui-mainframe.c:307
+#: ../src/lingot-gui-mainframe.c:348
 #, fuzzy
 msgid "Save Configuration File"
 msgstr "Configuração do lingot"
 
-#: ../src/lingot-gui-config-dialog.c:311
+#: ../src/lingot-gui-config-dialog.c:334
+msgid "Audio device identifier too long"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog.c:348
+#, fuzzy
+msgid "Sample rate out of range"
+msgstr "Freqüência de amostragem"
+
+#: ../src/lingot-gui-config-dialog.c:401
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -613,53 +659,49 @@ msgstr ""
 msgid "The shift must be between 0 and 1200 cents, or between 1/1 and 2/1."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:339
+#: ../src/lingot-gui-config-dialog-scale.c:341
 msgid "Shift"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:360
+#: ../src/lingot-gui-config-dialog-scale.c:362
 msgid "Frequency [Hz]"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:417
+#: ../src/lingot-gui-config-dialog-scale.c:419
 msgid "There are notes with the same name"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:431
+#: ../src/lingot-gui-config-dialog-scale.c:433
 msgid ""
 "There are invalid values in the scale: the notes should be ordered by "
 "frequency / shift"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:438
+#: ../src/lingot-gui-config-dialog-scale.c:440
 msgid ""
 "There are invalid values in the scale: all the notes should be in the same "
 "octave"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:447
+#: ../src/lingot-gui-config-dialog-scale.c:449
 msgid "There are notes without name"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:511
+#: ../src/lingot-gui-config-dialog-scale.c:513
 msgid "Open Scale File"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:519
+#: ../src/lingot-gui-config-dialog-scale.c:521
 msgid "Scala files"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:539
-msgid "The scale cannot be imported: file format error"
-msgstr ""
-
-#: ../src/lingot-gui-config-dialog-scale.c:605
+#: ../src/lingot-gui-config-dialog-scale.c:612
 msgid ""
 "Note identifier, free text that will be displayed in the main window when "
 "tuning close to the given note. Don't use space characters here."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:610
+#: ../src/lingot-gui-config-dialog-scale.c:617
 msgid ""
 "Shift. You can define it as a deviation in cents from the reference note "
 "(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
@@ -667,7 +709,7 @@ msgid ""
 "the notes must be in the same octave), and they must be well ordered."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog-scale.c:615
+#: ../src/lingot-gui-config-dialog-scale.c:622
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
 "reference, and all the other frequencies will shift according to the "
