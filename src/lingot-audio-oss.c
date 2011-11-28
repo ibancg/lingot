@@ -101,10 +101,10 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 
 	}catch {
+		lingot_msg_add_error_with_code(exception, errno);
 		close(audio->dsp);
 		free(audio);
 		audio = NULL;
-		lingot_msg_add_error(exception);
 	}
 
 	return audio;

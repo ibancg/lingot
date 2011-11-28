@@ -26,6 +26,59 @@
 #include "lingot-defs.h"
 #include "lingot-config-scale.h"
 
+// configuration parameter identifier
+typedef enum LingotConfigParameterId {
+	LINGOT_PARAMETER_ID_AUDIO_SYSTEM = 0, //
+	LINGOT_PARAMETER_ID_AUDIO_DEV = 1, //
+	LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA = 2, //
+	LINGOT_PARAMETER_ID_AUDIO_DEV_JACK = 3, //
+	LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO = 4, //
+	LINGOT_PARAMETER_ID_SAMPLE_RATE = 5, //
+	LINGOT_PARAMETER_ID_OVERSAMPLING = 6, //
+	LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR = 7, //
+	LINGOT_PARAMETER_ID_MIN_FREQUENCY = 8, //
+	LINGOT_PARAMETER_ID_FFT_SIZE = 9, //
+	LINGOT_PARAMETER_ID_TEMPORAL_WINDOW = 10, //
+	LINGOT_PARAMETER_ID_NOISE_THRESHOLD = 11, //
+	LINGOT_PARAMETER_ID_CALCULATION_RATE = 12, //
+	LINGOT_PARAMETER_ID_VISUALIZATION_RATE = 13, //
+	LINGOT_PARAMETER_ID_PEAK_NUMBER = 14, //
+	LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH = 15, //
+	LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION = 16, //
+	LINGOT_PARAMETER_ID_DFT_NUMBER = 17, //
+	LINGOT_PARAMETER_ID_DFT_SIZE = 18, //
+	LINGOT_PARAMETER_ID_GAIN = 19, //
+	LINGOT_PARAMETER_ID_PEAK_ORDER = 20
+} LingotConfigParameterId;
+
+// configuration parameter type
+typedef enum LingotConfigParameterType {
+	LINGOT_PARAMETER_TYPE_STRING,
+	LINGOT_PARAMETER_TYPE_INTEGER,
+	LINGOT_PARAMETER_TYPE_FLOAT,
+	LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM
+} LingotConfigParameterType;
+
+typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
+
+// configuration parameter specification (id, type, minimum and maximum allowed
+// values, ...)
+struct _LingotConfigParameterSpec {
+
+	LingotConfigParameterId id;
+	LingotConfigParameterType type;
+	const char* name;
+	const char* units;
+
+	int deprecated;
+
+	int str_max_len;
+	int int_min;
+	int int_max;
+	double float_min;
+	double float_max;
+};
+
 typedef enum audio_system_t {
 	AUDIO_SYSTEM_OSS = 0,
 	AUDIO_SYSTEM_ALSA = 1,
@@ -80,7 +133,9 @@ struct _LingotConfig {
 	/* maximum amplitude relation between principal and secondary peaks.
 	 The max peak doesn't has to be the fundamental frequency carrier if it
 	 has an amplitude relation with the fundamental considered peak lower than
-	 this parameter. */FLT peak_rejection_relation_db; // dBs
+	 this parameter. */
+
+	FLT peak_rejection_relation_db; // dBs
 	FLT peak_rejection_relation_nu; // natural units (internal)
 
 	FLT gain; // dBs
@@ -107,6 +162,10 @@ struct _LingotConfig {
 const char* audio_system_t_to_str(audio_system_t audio_system);
 // converts a string to an audio_system_t
 audio_system_t str_to_audio_system_t(char* audio_system);
+
+void lingot_config_create_parameter_specs();
+LingotConfigParameterSpec lingot_config_get_parameter_spec(
+		LingotConfigParameterId id);
 
 LingotConfig* lingot_config_new();
 void lingot_config_destroy(LingotConfig*);
