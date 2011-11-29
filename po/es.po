@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 16:16+0100\n"
+"POT-Creation-Date: 2011-11-29 23:50+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -139,13 +139,13 @@ msgstr "Captura"
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
 msgid ""
-"Choose the audio device if you have more than one. You cannot modify this "
-"field if you are using JACK, but you can connect Lingot to a desired source "
-"externally."
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
 msgstr ""
-"Escoja el dispositivo de entrada si dispone de más de uno. Este campo no "
-"puede ser modificado si se está usando JACK, pero puede conectar Lingot al "
-"origen de audio deseado de forma externa."
+"Escoja el dispositivo de entrada si dispone de más de uno. Si está usando "
+"JACK, puede también conectar Lingot al origen de audio deseado mediante una "
+"aplicación de control de JACK externa."
 
 #: ../src/glade/lingot-config-dialog.glade.h:20
 msgid ""
@@ -543,6 +543,7 @@ msgid "Error setting sample rate."
 msgstr "Error estableciendo tasa de muestreo."
 
 #: ../src/lingot-audio-oss.c:129 ../src/lingot-audio-alsa.c:162
+#: ../src/lingot-audio-pulseaudio.c:122
 msgid "Read from audio interface failed."
 msgstr "La lectura del dispositivo ha fallado."
 
@@ -623,6 +624,18 @@ msgstr "No hay puertos físicos de captura"
 #, c-format
 msgid "Cannot connect to requested port '%s'"
 msgstr "No es posible conectar con el puerto solicitado '%s'"
+
+#: ../src/lingot-audio-pulseaudio.c:79
+msgid "Error creating PulseAudio client."
+msgstr "Error creando cliente PulseAudio."
+
+#: ../src/lingot-audio-pulseaudio.c:94
+msgid "The application has not been built with PulseAudio support"
+msgstr "La aplicación no ha sido construída con soporte para PulseAudio"
+
+#: ../src/lingot-audio-pulseaudio.c:185
+msgid "Default Source"
+msgstr "Fuente Predeterminada"
 
 #: ../src/lingot-config.c:639
 #, c-format

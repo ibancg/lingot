@@ -1,10 +1,17 @@
 
 2011-11-28 Ibán Cereijo <ibancg@gmail.com>
 
+	* Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný)
+	* Tagged beta version 0.9.2b2
+
+	
+2011-11-28 Ibán Cereijo <ibancg@gmail.com>
+
 	* Implemented task #10683: config file validation.
 	* Implemented task #11100: add libfftw support.
 	* Enhanced some error messages.
 	* Allowed to select JACK port. 
+	* Tagged beta version 0.9.2b1
 
 
 2011-11-23 Ibán Cereijo <ibancg@gmail.com>

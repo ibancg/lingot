@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 16:16+0100\n"
+"POT-Creation-Date: 2011-11-29 23:50+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
@@ -138,13 +138,13 @@ msgstr "Captura"
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
 msgid ""
-"Choose the audio device if you have more than one. You cannot modify this "
-"field if you are using JACK, but you can connect Lingot to a desired source "
-"externally."
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
 msgstr ""
-"Escolla o dispositivo de entrada se dispón de máis de un. Este campo non "
-"pode ser modificado se está usando JACK, pero pode conectar Lingot á orixe "
-"de audio deseada de forma externa."
+"Escolla o dispositivo de entrada se dispón de máis de un. Se está usando "
+"JACK, tamén pode conectar Lingot á orixe de audio desexada mediante unha "
+"aplicación de control de JACK externa."
 
 #: ../src/glade/lingot-config-dialog.glade.h:20
 msgid ""
@@ -157,7 +157,7 @@ msgid ""
 "configuration)."
 msgstr ""
 "Escolla aquí a tasa de mostreo hardware. Dámoslle algúns exemplos, pero pode "
-"escoller calqueira outra. Percátese de que, dependendo don sistema de audio "
+"escoller calqueira outra. Percátese de que, dependendo do sistema de audio "
 "seleccionado e/ou o dispositivo, non todas as frecuencias estarán "
 "dispoñibles. De calquer xeito, vostede pode achegarse á frecuencia desexada "
 "combinando este parámetro có factor de sobremostreo (pestaña 'Básico'). Se "
@@ -540,6 +540,7 @@ msgid "Error setting sample rate."
 msgstr "Erro establecendo tasa de mostreo."
 
 #: ../src/lingot-audio-oss.c:129 ../src/lingot-audio-alsa.c:162
+#: ../src/lingot-audio-pulseaudio.c:122
 msgid "Read from audio interface failed."
 msgstr "A lectura do dispositivo fallou."
 
@@ -620,6 +621,18 @@ msgstr "No hai portos físicos de captura"
 #, c-format
 msgid "Cannot connect to requested port '%s'"
 msgstr "Non é posible conectar có porto solicitado '%s'"
+
+#: ../src/lingot-audio-pulseaudio.c:79
+msgid "Error creating PulseAudio client."
+msgstr "Erro creando cliente PulseAudio."
+
+#: ../src/lingot-audio-pulseaudio.c:94
+msgid "The application has not been built with PulseAudio support"
+msgstr "A aplicación non foi construída con soporte para PulseAudio"
+
+#: ../src/lingot-audio-pulseaudio.c:185
+msgid "Default Source"
+msgstr "Fonte Predeterminado."
 
 #: ../src/lingot-config.c:639
 #, c-format

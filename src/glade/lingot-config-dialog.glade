@@ -90,7 +90,7 @@
                     <child>
                       <widget class="GtkComboBoxEntry" id="input_dev">
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Choose the audio device if you have more than one. You cannot modify this field if you are using JACK, but you can connect Lingot to a desired source externally.</property>
+                        <property name="tooltip" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
                         <property name="items" translatable="yes"></property>
                       </widget>
                       <packing>
