@@ -600,7 +600,7 @@ msgstr "Accordeur d'instruments de musique précis et facile à utiliser"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "crédits de traducteurs"
+msgstr "Olivier Humbert <humbert.olivier.1@free.fr>, 2010"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""

@@ -1,22 +1,21 @@
-# translation of cs.po to Czech
-# Copyright (C) 2008 Karel Volný
-# This file is distributed under the same license as the lingot package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# Karel Volný <kavol@seznam.cz>, 2008, 2009.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: cs\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-29 15:25+0100\n"
-"PO-Revision-Date: 2009-08-14 17:00+0200\n"
-"Last-Translator: Karel Volný <kavol@seznam.cz>\n"
-"Language-Team: Czech <diskuze@lists.l10n.cz>\n"
-"Language: cs\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.0\n"
-"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../src/glade/lingot-config-dialog.glade.h:1
 msgid ""
@@ -28,11 +27,11 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:2
 msgid "Adjustments"
-msgstr "Nastavení"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:3
 msgid "Advanced"
-msgstr "Pokročilé"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:4
 msgid ""
@@ -92,11 +91,11 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:14
 msgid "Audio system"
-msgstr "Ovladač"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:15
 msgid "Basic"
-msgstr "Základní"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:16
 msgid ""
@@ -106,11 +105,11 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:17
 msgid "Calculation rate"
-msgstr "Frekvence výpočtů"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:18
 msgid "Capture"
-msgstr "Vstup"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
 msgid ""
@@ -132,19 +131,19 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:21
 msgid "DFT number"
-msgstr "Počet DFT"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:22
 msgid "DFT size"
-msgstr "Rozsah DFT"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:23
 msgid "DFTs"
-msgstr "DFT"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:24
 msgid "Default"
-msgstr "Výchozí nastavení"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:25
 msgid "Delete"
@@ -159,11 +158,11 @@ msgstr ""
 #: ../src/glade/lingot-config-dialog.glade.h:27
 #: ../src/glade/lingot-mainframe.glade.h:3
 msgid "Deviation"
-msgstr "Odchylka"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:28
 msgid "Effective sample rate"
-msgstr "Vzorkovací kmitočet"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:29
 msgid ""
@@ -176,11 +175,11 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:30
 msgid "FFT size"
-msgstr "Rozsah FFT"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:31
 msgid "Gain"
-msgstr "Zisk"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:32
 msgid "Hardware sampling frequency"
@@ -192,7 +191,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:34
 msgid "Hz"
-msgstr "Hz"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:35
 msgid "Import"
@@ -229,7 +228,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:42
 msgid "Noise threshold"
-msgstr "Práh šumu"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:43
 msgid "Number of calculations of the fundamental frequency per second."
@@ -265,15 +264,15 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:49
 msgid "Peak half-width"
-msgstr "Trvání špičky"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:50
 msgid "Peak number"
-msgstr "Počet špiček"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:51
 msgid "Peak rejection relation"
-msgstr "Maximální rozdíl špiček"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:52
 msgid "Quick adjusments on the dynamic response and the signal levels."
@@ -291,7 +290,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:55
 msgid "Sample rate"
-msgstr "Vzorkovací kmitočet"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:56
 msgid "Scale"
@@ -303,7 +302,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:58
 msgid "Temporal window"
-msgstr "Interval pro analýzu"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:59
 msgid ""
@@ -325,7 +324,7 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:61
 msgid "Visualization rate"
-msgstr "Obnovovací frekvence"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:62
 msgid "cents"
@@ -333,23 +332,23 @@ msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:63
 msgid "dB"
-msgstr "dB"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:64
 msgid "lingot configuration"
-msgstr "Nastavení lingot"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:65
 msgid "peaks"
-msgstr "špiček"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:66
 msgid "samples"
-msgstr "vzorků"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:67
 msgid "seconds"
-msgstr "s"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:1
 msgid "---"
@@ -393,7 +392,7 @@ msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:10
 msgid "Spectrum"
-msgstr "Spektrum"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:11
 msgid ""
@@ -406,7 +405,7 @@ msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:12
 msgid "Tone"
-msgstr "Tón"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:13
 msgid "_Edit"
@@ -414,15 +413,15 @@ msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:14
 msgid "_File"
-msgstr "_Soubor"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:15
 msgid "_Help"
-msgstr "_Nápověda"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:16
 msgid "_View"
-msgstr "_Zobrazení"
+msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:17
 msgid "e = ---"
@@ -434,7 +433,7 @@ msgstr ""
 
 #: ../src/glade/lingot-mainframe.glade.h:19
 msgid "lingot"
-msgstr "lingot"
+msgstr ""
 
 #: ../src/lingot-audio-oss.c:56 ../src/lingot-audio-alsa.c:56
 #, c-format
@@ -493,7 +492,7 @@ msgstr ""
 
 #: ../src/lingot-audio-alsa.c:140
 msgid "The application has not been built with ALSA support"
-msgstr "Aplikace nebyla sestavena s podporou pro ALSA"
+msgstr ""
 
 #: ../src/lingot-audio-alsa.c:224
 msgid "Default Device"
@@ -501,20 +500,20 @@ msgstr ""
 
 #: ../src/lingot-audio-jack.c:61
 msgid "Missing connection with JACK audio server"
-msgstr "Chybí spojení se zvukovým serverem JACK"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:194
 msgid "Unable to connect to JACK server"
-msgstr "Nelze se připojit k serveru JACK"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:115
 msgid "No more JACK ports available"
-msgstr "Nejsou dostupné žádné další porty systému JACK"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:136 ../src/lingot-audio-jack.c:259
 #: ../src/lingot-audio-jack.c:337 ../src/lingot-audio-jack.c:369
 msgid "The application has not been built with JACK support"
-msgstr "Aplikace nebyla sestavena s podporou pro JACK"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:227
 msgid "Default Port"
@@ -522,7 +521,7 @@ msgstr ""
 
 #: ../src/lingot-audio-jack.c:277
 msgid "Cannot activate client"
-msgstr "Nelze aktivovat klienta"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:283
 msgid "No active capture ports"
@@ -530,11 +529,11 @@ msgstr ""
 
 #: ../src/lingot-audio-jack.c:295 ../src/lingot-audio-jack.c:315
 msgid "Cannot connect input ports"
-msgstr "Nelze připojit vstupní porty"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:310
 msgid "No physical capture ports"
-msgstr "Žádné fyzické vstupní porty"
+msgstr ""
 
 #: ../src/lingot-audio-jack.c:322
 #, c-format
@@ -588,8 +587,6 @@ msgid ""
 "The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
 "seconds"
 msgstr ""
-"Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na "
-"%0.3f s."
 
 #: ../src/lingot-gui-mainframe.c:95
 msgid "Logo design"
@@ -597,11 +594,11 @@ msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:106
 msgid "Accurate and easy to use musical instrument tuner"
-msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "Karel Volný <kavol@seznam.cz>, 2008 - 2009"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""
@@ -617,11 +614,11 @@ msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:287
 msgid "Error"
-msgstr "Chyba"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:289
 msgid "Warning"
-msgstr "Upozornění"
+msgstr ""
 
 #: ../src/lingot-gui-mainframe.c:289
 msgid "Info"
@@ -732,7 +729,3 @@ msgid ""
 "deviations specified in the 'Shift' column. You can use an absolute numeric "
 "value or the keywords 'mid-C' (261.625565 Hz) and 'mid-A' (440 Hz)."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Cannot connect to JACK server"
-#~ msgstr "Nelze se připojit k serveru JACK"
