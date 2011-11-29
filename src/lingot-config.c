@@ -637,8 +637,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				sprintf(
 						buff,
 						_(
-								"Error parsing the configuration file, line %i: unrecognized audio system '%s', assuming default audio system.\n"),
-						line, char_buffer_pointer);
+								"Error parsing the configuration file, line %i: unrecognized audio system, assuming default value.\n"),
+						line);
 
 				lingot_msg_add_warning(buff);
 				parse_errors = 1;
@@ -662,7 +662,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	if (parse_errors || scale_errors) {
 		lingot_msg_add_warning(
 				_(
-						"The configuration file contains errors, and hence some default values have been chosen. Please consider fixing the problem in the configuration dialog."));
+						"The configuration file contains errors, and hence some default values have been chosen. The problem will be fixed once you have accepted the settings in the configuration dialog."));
 	}
 
 	lingot_config_update_internal_params(config);

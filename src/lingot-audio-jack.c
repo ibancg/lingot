@@ -121,8 +121,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		lingot_msg_add_error(exception);
 	}
 
-	if (ports != NULL
-	)
+	if (ports != NULL)
 		free(ports);
 
 	if (audio != NULL) {
@@ -239,7 +238,9 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 	properties->n_devices = 1;
 	properties->devices = (char**) malloc(sizeof(char*));
-	properties->devices[0] = strdup("Default Port <default>");
+	char buff[100];
+	sprintf(buff, "%s <default>", _("Default Port"));
+	properties->devices[0] = strdup(buff);
 
 	if (ports != NULL) {
 		free(ports);
