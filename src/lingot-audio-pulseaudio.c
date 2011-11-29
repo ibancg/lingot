@@ -119,7 +119,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 	if (pa_simple_read(audio->pa_client, audio->read_buffer,
 			audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error) < 0) {
 		char buff[100];
-		sprintf(buff, "%s\n%s", _("Read from audio interface failed.)"),
+		sprintf(buff, "%s\n%s", _("Read from audio interface failed."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 	} else {

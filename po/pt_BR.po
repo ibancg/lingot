@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 16:16+0100\n"
+"POT-Creation-Date: 2011-11-29 23:50+0100\n"
 "PO-Revision-Date: 2008-06-24 14:00+0200\n"
 "Last-Translator: Carlos Laue <carlosl@seznam.cz>\n"
 "Language-Team: Português do Brasil\n"
@@ -116,9 +116,9 @@ msgstr "Captura"
 
 #: ../src/glade/lingot-config-dialog.glade.h:19
 msgid ""
-"Choose the audio device if you have more than one. You cannot modify this "
-"field if you are using JACK, but you can connect Lingot to a desired source "
-"externally."
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:20
@@ -463,6 +463,7 @@ msgid "Error setting sample rate."
 msgstr ""
 
 #: ../src/lingot-audio-oss.c:129 ../src/lingot-audio-alsa.c:162
+#: ../src/lingot-audio-pulseaudio.c:122
 msgid "Read from audio interface failed."
 msgstr ""
 
@@ -543,6 +544,19 @@ msgstr "Porta de captura inexistente"
 #: ../src/lingot-audio-jack.c:322
 #, c-format
 msgid "Cannot connect to requested port '%s'"
+msgstr ""
+
+#: ../src/lingot-audio-pulseaudio.c:79
+msgid "Error creating PulseAudio client."
+msgstr ""
+
+#: ../src/lingot-audio-pulseaudio.c:94
+#, fuzzy
+msgid "The application has not been built with PulseAudio support"
+msgstr "A aplicação nao foi compilada com suporte PulseAudio"
+
+#: ../src/lingot-audio-pulseaudio.c:185
+msgid "Default Source"
 msgstr ""
 
 #: ../src/lingot-config.c:639
@@ -736,7 +750,3 @@ msgid ""
 "deviations specified in the 'Shift' column. You can either use an absolute "
 "numeric value or the keywords 'mid-C' (261.625565 Hz) and 'mid-A' (440 Hz)."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Cannot connect to JACK server"
-#~ msgstr "Impossível de conetar com o servidor JACK"

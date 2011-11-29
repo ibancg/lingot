@@ -648,12 +648,12 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 	fclose(fp);
 
-	if (!scale_errors) {
-		config->scale = lingot_config_scale_new();
-		lingot_config_scale_copy(config->scale, scale);
-	}
-
 	if (scale != NULL) {
+		if (!scale_errors) {
+			config->scale = lingot_config_scale_new();
+			lingot_config_scale_copy(config->scale, scale);
+		}
+
 		lingot_config_scale_destroy(scale);
 		free(scale);
 	}
