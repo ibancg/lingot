@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 01:33+0100\n"
+"POT-Creation-Date: 2011-11-29 15:25+0100\n"
 "PO-Revision-Date: 2009-08-14 17:00+0200\n"
 "Last-Translator: Karel Volný <kavol@seznam.cz>\n"
 "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
@@ -503,7 +503,7 @@ msgstr ""
 msgid "Missing connection with JACK audio server"
 msgstr "Chybí spojení se zvukovým serverem JACK"
 
-#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:190
+#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:194
 msgid "Unable to connect to JACK server"
 msgstr "Nelze se připojit k serveru JACK"
 
@@ -511,39 +511,44 @@ msgstr "Nelze se připojit k serveru JACK"
 msgid "No more JACK ports available"
 msgstr "Nejsou dostupné žádné další porty systému JACK"
 
-#: ../src/lingot-audio-jack.c:133 ../src/lingot-audio-jack.c:255
-#: ../src/lingot-audio-jack.c:322 ../src/lingot-audio-jack.c:354
+#: ../src/lingot-audio-jack.c:136 ../src/lingot-audio-jack.c:259
+#: ../src/lingot-audio-jack.c:337 ../src/lingot-audio-jack.c:369
 msgid "The application has not been built with JACK support"
 msgstr "Aplikace nebyla sestavena s podporou pro JACK"
 
-#: ../src/lingot-audio-jack.c:242
+#: ../src/lingot-audio-jack.c:227
 msgid "Default Port"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:273
+#: ../src/lingot-audio-jack.c:277
 msgid "Cannot activate client"
 msgstr "Nelze aktivovat klienta"
 
-#: ../src/lingot-audio-jack.c:279
+#: ../src/lingot-audio-jack.c:283
 msgid "No active capture ports"
 msgstr ""
 
-#: ../src/lingot-audio-jack.c:290 ../src/lingot-audio-jack.c:310
+#: ../src/lingot-audio-jack.c:295 ../src/lingot-audio-jack.c:315
 msgid "Cannot connect input ports"
 msgstr "Nelze připojit vstupní porty"
 
-#: ../src/lingot-audio-jack.c:305
+#: ../src/lingot-audio-jack.c:310
 msgid "No physical capture ports"
 msgstr "Žádné fyzické vstupní porty"
 
-#: ../src/lingot-config.c:640
+#: ../src/lingot-audio-jack.c:322
+#, c-format
+msgid "Cannot connect to requested port '%s'"
+msgstr ""
+
+#: ../src/lingot-config.c:639
 #, c-format
 msgid ""
 "Error parsing the configuration file, line %i: unrecognized audio system, "
 "assuming default value.\n"
 msgstr ""
 
-#: ../src/lingot-config.c:665
+#: ../src/lingot-config.c:664
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
@@ -634,15 +639,15 @@ msgstr ""
 msgid "Save Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog.c:334
+#: ../src/lingot-gui-config-dialog.c:332
 msgid "Audio device identifier too long"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog.c:348
+#: ../src/lingot-gui-config-dialog.c:346
 msgid "Sample rate out of range"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog.c:401
+#: ../src/lingot-gui-config-dialog.c:399
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
