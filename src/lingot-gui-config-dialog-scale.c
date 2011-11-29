@@ -619,7 +619,7 @@ gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
 	case COLUMN_FREQUENCY:
 		gtk_tooltip_set_text(
 				tooltip,
-				_("Frequency. You can enter here the absolute frequency for a given note as a reference, and all the other frequencies will shift according to the deviations specified in the 'Shift' column. You can use an absolute numeric value or the keywords 'mid-C' (261.625565 Hz) and 'mid-A' (440 Hz)."));
+				_("Frequency. You can enter here the absolute frequency for a given note as a reference, and all the other frequencies will shift according to the deviations specified in the 'Shift' column. You can either use an absolute numeric value or the keywords 'mid-C' (261.625565 Hz) and 'mid-A' (440 Hz)."));
 		break;
 	}
 
