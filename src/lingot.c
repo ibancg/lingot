@@ -35,7 +35,7 @@
 #include <gdk/gdk.h>
 #include <glib.h>
 
-char CONFIG_FILE_NAME[100];
+char CONFIG_FILE_NAME[200];
 
 int main(int argc, char *argv[]) {
 
