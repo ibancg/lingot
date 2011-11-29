@@ -598,7 +598,7 @@ msgstr "Genaues und einfach zu bedienendes Stimmgerät für Musikinstrumente"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "Roland Stigge <stigge@antcom.de>"
+msgstr "Roland Stigge <stigge@antcom.de>, 2008"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""

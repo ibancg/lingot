@@ -605,7 +605,7 @@ msgstr "Afinador de instrumentos musicais preciso e fácil de usar"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "Carlos Laué <carlosl@seznam.cz>"
+msgstr "Carlos Laué <carlosl@seznam.cz>, 2008 - 2010"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""

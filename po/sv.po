@@ -602,7 +602,7 @@ msgstr "Precist och lättanvänt stämprogram för musikinstrument"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "John Gustafsson <jamminjohn@users.sourceforge.net>"
+msgstr "John Gustafsson <jamminjohn@users.sourceforge.net>, 2008 - 2009"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""

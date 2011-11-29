@@ -605,7 +605,7 @@ msgstr "Accordatore di strumenti affidabile e semplice da usare"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "Stefano Cereda <communico@tiscali.it>"
+msgstr "Stefano Cereda <communico@tiscali.it>, 2008"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""

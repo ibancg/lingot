@@ -602,7 +602,7 @@ msgstr "精确和方便的乐器调音师"
 
 #: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
-msgstr "Careone <careoneagain@gmail.com>, (zh_CN)"
+msgstr "Careone <careoneagain@gmail.com>, 2009"
 
 #: ../src/lingot-gui-mainframe.c:261
 msgid ""
