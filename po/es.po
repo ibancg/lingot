@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 20:31+0100\n"
+"POT-Creation-Date: 2011-11-29 01:33+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -336,7 +336,7 @@ msgstr "Ajustes rápicos sobre la respuesta dinámica y los niveles de señal."
 
 #: ../src/glade/lingot-config-dialog.glade.h:53
 msgid "Resets the built-in settings, without applying them."
-msgstr "Restaura la configuración por defecto, sin aplicarla."
+msgstr "Restaura la configuración predeterminada, sin aplicarla."
 
 #: ../src/glade/lingot-config-dialog.glade.h:54
 msgid ""
@@ -517,73 +517,76 @@ msgstr "f = ---"
 msgid "lingot"
 msgstr "lingot"
 
-#: ../src/lingot-audio-oss.c:56
+#: ../src/lingot-audio-oss.c:56 ../src/lingot-audio-alsa.c:56
 #, c-format
 msgid ""
-"Unable to open audio device %s.\n"
-"%s."
+"Cannot open audio device '%s'.\n"
+"%s"
 msgstr ""
-"Imposible abrir el dispositivo de audio %s.\n"
-"%s."
+"Imposible abrir el dispositivo de audio '%s'.\n"
+"%s"
 
-#: ../src/lingot-audio-oss.c:63
-#, c-format
-msgid ""
-"Error setting number of channels.\n"
-"%s."
-msgstr ""
-"Error estableciendo el número de canales.\n"
-"%s."
+#: ../src/lingot-audio-oss.c:64
+msgid "Error setting number of channels."
+msgstr "Error estableciendo el número de canales."
 
-#: ../src/lingot-audio-oss.c:71
-#, c-format
-msgid ""
-"Error setting bits per sample.\n"
-"%s."
-msgstr ""
-"Error estableciendo los bits por muestra.\n"
-"%s."
+#: ../src/lingot-audio-oss.c:73
+msgid "Error setting bits per sample."
+msgstr "Error estableciendo los bits por muestra."
 
-#: ../src/lingot-audio-oss.c:86
-#, c-format
-msgid ""
-"Error setting DMA buffer size.\n"
-"%s."
-msgstr ""
-"Error estableciendo el tamaño del búfer DMA.\n"
-"%s."
+#: ../src/lingot-audio-oss.c:88
+msgid "Error setting DMA buffer size."
+msgstr "Error estableciendo el tamaño del búfer DMA."
 
-#: ../src/lingot-audio-oss.c:92
-#, c-format
-msgid ""
-"Error setting sample rate.\n"
-"%s."
-msgstr ""
-"Error estableciendo tasa de muestreo.\n"
-"%s."
+#: ../src/lingot-audio-oss.c:93
+msgid "Error setting sample rate."
+msgstr "Error estableciendo tasa de muestreo."
 
-#: ../src/lingot-audio-oss.c:128
+#: ../src/lingot-audio-oss.c:129 ../src/lingot-audio-alsa.c:162
 msgid "Read from audio interface failed."
 msgstr "La lectura del dispositivo ha fallado."
+
+#: ../src/lingot-audio-alsa.c:65 ../src/lingot-audio-alsa.c:73
+msgid "Cannot initialize hardware parameter structure."
+msgstr "Imposible inicializar estructura de parámetros hardware."
+
+#: ../src/lingot-audio-alsa.c:80
+msgid "Cannot set access type."
+msgstr "Imposible establecer tipo de acceso."
+
+#: ../src/lingot-audio-alsa.c:87
+msgid "Cannot set sample format."
+msgstr "Imposible establecer formato de muestra."
+
+#: ../src/lingot-audio-alsa.c:96
+msgid "Cannot set sample rate."
+msgstr "Imposible establecer tasa de muestreo."
+
+#: ../src/lingot-audio-alsa.c:105
+msgid "Cannot set channel number."
+msgstr "Imposible establecer número de canales."
+
+#: ../src/lingot-audio-alsa.c:111
+msgid "Cannot set parameters."
+msgstr "Imposible establecer parámetros."
+
+#: ../src/lingot-audio-alsa.c:118
+msgid "Cannot prepare audio interface for use."
+msgstr "Error preparando el interfaz de audio."
 
 #: ../src/lingot-audio-alsa.c:140
 msgid "The application has not been built with ALSA support"
 msgstr "La aplicación no ha sido construída con soporte para ALSA"
 
-#: ../src/lingot-audio-alsa.c:162
-#, c-format
-msgid ""
-"Read from audio interface failed.\n"
-"%s."
-msgstr ""
-"La lectura del dispositivo ha fallado.\n"
-"%s."
+#: ../src/lingot-audio-alsa.c:224
+msgid "Default Device"
+msgstr "Dispositivo predeterminado."
 
 #: ../src/lingot-audio-jack.c:61
 msgid "Missing connection with JACK audio server"
 msgstr "Perdida conexión con el servidor JACK"
 
-#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:191
+#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:190
 msgid "Unable to connect to JACK server"
 msgstr "No es posible conectar con el servidor JACK"
 
@@ -591,44 +594,49 @@ msgstr "No es posible conectar con el servidor JACK"
 msgid "No more JACK ports available"
 msgstr "No hay más puertos JACK disponibles"
 
-#: ../src/lingot-audio-jack.c:134 ../src/lingot-audio-jack.c:254
-#: ../src/lingot-audio-jack.c:321 ../src/lingot-audio-jack.c:353
+#: ../src/lingot-audio-jack.c:133 ../src/lingot-audio-jack.c:255
+#: ../src/lingot-audio-jack.c:322 ../src/lingot-audio-jack.c:354
 msgid "The application has not been built with JACK support"
 msgstr "La aplicación no ha sido construída con soporte para JACK"
 
-#: ../src/lingot-audio-jack.c:272
+#: ../src/lingot-audio-jack.c:242
+msgid "Default Port"
+msgstr "Puerto predeterminado"
+
+#: ../src/lingot-audio-jack.c:273
 msgid "Cannot activate client"
 msgstr "No es posible activar el cliente"
 
-#: ../src/lingot-audio-jack.c:278
+#: ../src/lingot-audio-jack.c:279
 msgid "No active capture ports"
 msgstr "No hay puertos físicos de captura"
 
-#: ../src/lingot-audio-jack.c:289 ../src/lingot-audio-jack.c:309
+#: ../src/lingot-audio-jack.c:290 ../src/lingot-audio-jack.c:310
 msgid "Cannot connect input ports"
 msgstr "No es posible conectar los puertos de entrada"
 
-#: ../src/lingot-audio-jack.c:304
+#: ../src/lingot-audio-jack.c:305
 msgid "No physical capture ports"
 msgstr "No hay puertos físicos de captura"
 
 #: ../src/lingot-config.c:640
 #, c-format
 msgid ""
-"Error parsing the configuration file, line %i: unrecognized audio system "
-"'%s', assuming default audio system.\n"
+"Error parsing the configuration file, line %i: unrecognized audio system, "
+"assuming default value.\n"
 msgstr ""
 "Error leyendo el archivo de configuración, línea %i: sistema de audio "
-"desconocido '%s', asumiendo valor por defecto.\n"
+"desconocido, asumiendo valor por defetcto.\n"
 
 #: ../src/lingot-config.c:665
 msgid ""
 "The configuration file contains errors, and hence some default values have "
-"been chosen. Please consider fixing the problem in the configuration dialog."
+"been chosen. The problem will be fixed once you have accepted the settings "
+"in the configuration dialog."
 msgstr ""
 "El fichero de configuración contiene errores, y por tanto se usarán valores "
-"por defecto en ciertos parámetros. Considere solucionar el problema en el "
-"diálogo de configuración."
+"por defecto en ciertos parámetros. El problema se habrá solucionado cuando "
+"acepte los parámetros en el diálogo de configuración."
 
 #: ../src/lingot-config-scale.c:209
 msgid "incorrect format"
@@ -668,15 +676,19 @@ msgstr ""
 "El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
 "%0.3f segundos"
 
-#: ../src/lingot-gui-mainframe.c:104
+#: ../src/lingot-gui-mainframe.c:95
+msgid "Logo design"
+msgstr "Diseño del logo"
+
+#: ../src/lingot-gui-mainframe.c:106
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso y fácil de usar"
 
-#: ../src/lingot-gui-mainframe.c:107
+#: ../src/lingot-gui-mainframe.c:109
 msgid "translator-credits"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:258
+#: ../src/lingot-gui-mainframe.c:261
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -688,31 +700,31 @@ msgstr ""
 "dispositivo bloqueado durante unos segundos tras su última utilización. En "
 "ese caso puede probar dentro de unos instantes."
 
-#: ../src/lingot-gui-mainframe.c:267
+#: ../src/lingot-gui-mainframe.c:270
 msgid "The core is not running, you must check your configuration."
 msgstr "El core no está funcionando, debe comprobar la configuración."
 
-#: ../src/lingot-gui-mainframe.c:281
+#: ../src/lingot-gui-mainframe.c:287
 msgid "Error"
 msgstr "Error"
 
-#: ../src/lingot-gui-mainframe.c:283
+#: ../src/lingot-gui-mainframe.c:289
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/lingot-gui-mainframe.c:283
+#: ../src/lingot-gui-mainframe.c:289
 msgid "Info"
 msgstr "Información"
 
-#: ../src/lingot-gui-mainframe.c:307
+#: ../src/lingot-gui-mainframe.c:313
 msgid "Open Configuration File"
 msgstr "Abrir archivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:315 ../src/lingot-gui-mainframe.c:359
+#: ../src/lingot-gui-mainframe.c:321 ../src/lingot-gui-mainframe.c:364
 msgid "Lingot configuration files"
 msgstr "Archivos de configuración de lingot"
 
-#: ../src/lingot-gui-mainframe.c:348
+#: ../src/lingot-gui-mainframe.c:353
 msgid "Save Configuration File"
 msgstr "Guardar archivo de configuración"
 
@@ -835,5 +847,6 @@ msgstr ""
 "'Desplazamiento'). Puede usar tanto un valor numérico, o las palabras clave "
 "'mid-C' (261.625565 Hz) y 'mid-A' (440 Hz)."
 
-#~ msgid "Error opening scale file, line %i: %s"
-#~ msgstr "Error abriendo archivo de escala, línea %i: %s"
+#, fuzzy
+#~ msgid "Cannot connect to JACK server"
+#~ msgstr "No es posible conectar con el servidor JACK"

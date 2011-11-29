@@ -76,7 +76,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	if (!audio->pa_client) {
 		char buff[100];
-		sprintf(buff, _("Error creating PulseAudio client.\n%s."),
+		sprintf(buff, "%s\n%s", _("Error creating PulseAudio client."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 		free(audio);
@@ -119,7 +119,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 	if (pa_simple_read(audio->pa_client, audio->read_buffer,
 			audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error) < 0) {
 		char buff[100];
-		sprintf(buff, _("Read from audio interface failed.\n%s."),
+		sprintf(buff, "%s\n%s", _("Read from audio interface failed.)"),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 	} else {
@@ -181,7 +181,9 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 					sizeof(struct device_name_node_t));
 	struct device_name_node_t* device_names_last = device_names_first;
 	// the first record is the default source
-	device_names_first->name = strdup("Default Source <default>");
+	char buff[100];
+	sprintf(buff, "%s <default>", _("Default Source"));
+	device_names_first->name = strdup(buff);
 	device_names_first->next = NULL;
 
 	context = NULL;
