@@ -101,7 +101,8 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 int lingot_audio_read(LingotAudioHandler* audio) {
 	int result = -1;
 
-	if (audio != NULL)
+	if (audio != NULL
+		)
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			result = lingot_audio_oss_read(audio);
@@ -160,9 +161,11 @@ void lingot_audio_audio_system_properties_destroy(
 		}
 	}
 
-	if (properties->sample_rates != NULL)
+	if (properties->sample_rates != NULL
+		)
 		free(properties->sample_rates);
-	if (properties->devices != NULL)
+	if (properties->devices != NULL
+		)
 		free(properties->devices);
 }
 

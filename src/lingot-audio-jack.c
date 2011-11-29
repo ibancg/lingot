@@ -115,13 +115,16 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 			throw(_("No more JACK ports available"));
 		}
 
+		sprintf(audio->device, "%s", device);
+
 	}catch {
 		free(audio);
 		audio = NULL;
 		lingot_msg_add_error(exception);
 	}
 
-	if (ports != NULL)
+	if (ports != NULL
+	)
 		free(ports);
 
 	if (audio != NULL) {
@@ -179,11 +182,12 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 	unsigned long int flags = JackPortIsOutput;
 
+	properties->forced_sample_rate = 1;
+	properties->n_devices = 0;
+	properties->devices = NULL;
+
 	try {
-		if (client != NULL) {
-			sample_rate = jack_get_sample_rate(client);
-			ports = jack_get_ports(client, NULL, NULL, flags);
-		} else {
+		if (client == NULL) {
 			jack_client = jack_client_open(client_name, options, &status,
 					server_name);
 			if (jack_client == NULL) {
@@ -196,34 +200,40 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 				client_name = jack_get_client_name(jack_client);
 				fprintf(stderr, "unique name `%s' assigned\n", client_name);
 			}
-
-			sample_rate = jack_get_sample_rate(jack_client);
-
-			ports = jack_get_ports(jack_client, NULL, NULL, flags);
+		} else {
+			sample_rate = jack_get_sample_rate(client);
+			ports = jack_get_ports(client, NULL, NULL, flags);
 		}
+
 	}catch {
 		// here I throw a warning message because we are only ontaining the
 		// audio properties
-		lingot_msg_add_warning(exception);
+//		lingot_msg_add_warning(exception);
+		fprintf(stderr, exception);
 	}
 
 	properties->forced_sample_rate = 1;
-	properties->n_devices = 0;
-	properties->devices = NULL;
-
+	properties->n_devices = 1;
 	if (ports != NULL) {
 		int i;
 		for (i = 0; ports[i] != NULL; i++) {
 		}
-		properties->n_devices = i;
+		properties->n_devices = i + 1;
+	}
 
+	properties->devices = (char**) malloc(
+			properties->n_devices * sizeof(char*));
+	char buff[100];
+	sprintf(buff, "%s <default>", _("Default Port"));
+	properties->devices[0] = strdup(buff);
+
+	if (ports != NULL) {
 		if (properties->n_devices != 0) {
-			properties->devices = malloc(properties->n_devices * sizeof(char*));
+			int i;
 			for (i = 0; ports[i] != NULL; i++) {
-				properties->devices[i] = strdup(ports[i]);
+				properties->devices[i + 1] = strdup(ports[i]);
 			}
 		}
-
 	}
 
 	if (sample_rate == -1) {
@@ -236,14 +246,8 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		properties->sample_rates[0] = sample_rate;
 	}
 
-	properties->n_devices = 1;
-	properties->devices = (char**) malloc(sizeof(char*));
-	char buff[100];
-	sprintf(buff, "%s <default>", _("Default Port"));
-	properties->devices[0] = strdup(buff);
-
 	if (ports != NULL) {
-		free(ports);
+		jack_free(ports);
 	}
 
 	if (jack_client != NULL) {
@@ -279,44 +283,55 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 			throw(_("No active capture ports"));
 		}
 
-		// try to connect the client to the ports is was connected before
-		int j = 0;
-		int connections = 0;
-		for (j = 0; j < MAX_LAST_PORTS; j++) {
-			for (index = 0; ports[index]; index++) {
-				if (!strcmp(last_ports[j], ports[index])) {
-					if (jack_connect(audio->jack_client, ports[index],
-							jack_port_name(audio->jack_input_port))) {
-						throw(_("Cannot connect input ports"));
-					} else {
-						connections++;
+		if (!strcmp(audio->device, "default")) {
+			// try to connect the client to the ports is was connected before
+			int j = 0;
+			int connections = 0;
+			for (j = 0; j < MAX_LAST_PORTS; j++) {
+				for (index = 0; ports[index]; index++) {
+					if (!strcmp(last_ports[j], ports[index])) {
+						if (jack_connect(audio->jack_client, ports[index],
+								jack_port_name(audio->jack_input_port))) {
+							throw(_("Cannot connect input ports"));
+						} else {
+							connections++;
+						}
 					}
 				}
 			}
-		}
 
-		// if there wasn't connections before, we connect the client to the
-		// first physical port
-		if (!connections) {
-			free(ports);
-			ports = jack_get_ports(audio->jack_client, NULL, NULL,
-					JackPortIsPhysical | JackPortIsOutput);
-			if (ports == NULL) {
-				throw(_("No physical capture ports"));
+			// if there wasn't connections before, we connect the client to the
+			// first physical port
+			if (!connections) {
+				free(ports);
+				ports = jack_get_ports(audio->jack_client, NULL, NULL,
+						JackPortIsPhysical | JackPortIsOutput);
+				if (ports == NULL) {
+					throw(_("No physical capture ports"));
+				}
+
+				if (jack_connect(audio->jack_client, ports[0],
+						jack_port_name(audio->jack_input_port))) {
+					throw(_("Cannot connect input ports"));
+				}
 			}
-
-			if (jack_connect(audio->jack_client, ports[0],
+		} else {
+			if (jack_connect(audio->jack_client, audio->device,
 					jack_port_name(audio->jack_input_port))) {
-				throw(_("Cannot connect input ports"));
+				char buff[100];
+				sprintf(buff, _("Cannot connect to requested port '%s'"),
+						audio->device);
+				throw(buff);
 			}
 		}
-
 	}catch {
 		lingot_msg_add_error(exception);
 		result = -1;
+
+		lingot_audio_jack_stop(audio);
 	}
 
-	free(ports);
+	jack_free(ports);
 #	else
 	lingot_msg_add_error(
 			_("The application has not been built with JACK support"));

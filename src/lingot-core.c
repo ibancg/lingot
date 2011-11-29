@@ -512,9 +512,13 @@ void lingot_core_start(LingotCore* core) {
 					&core->thread_computation_attr,
 					(void* (*)(void*)) lingot_core_run_computation_thread,
 					core);
+			core->running = 1;
+		} else {
+			core->running = 0;
+			lingot_audio_destroy(core->audio);
+			core->audio = 0x0;
 		}
 
-		core->running = 1;
 	}
 }
 

@@ -4,33 +4,41 @@
 	* Implemented task #10683: config file validation.
 	* Implemented task #11100: add libfftw support.
 	* Enhanced some error messages.
+	* Allowed to select JACK port. 
+
 
 2011-11-23 Ibán Cereijo <ibancg@gmail.com>
 
 	* Added PulseAudio support.
 	* Fixed potential error when reading from OSS and ALSA.
 
+
 2011-11-21 Ibán Cereijo <ibancg@gmail.com>
 
 	* Implemented task #11284: audio devices autodetection.
 	* Fixed flickering problem during gauge and spectrum drawing.
 
+
 2011-09-27 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #643435 in debian
+
 
 2011-08-22 Ibán Cereijo <ibancg@gmail.com>
 
 	* Released lingot 0.9.1
 	
+	
 2011-08-13 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #34007 (#637610 in debian).
+
 
 2011-03-11 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed bug #33046 (#622038 in debian).
 	* Added 48K sample rate to OSS and ALSA.
+
 
 2011-02-21 Ibán Cereijo <ibancg@gmail.com>
 

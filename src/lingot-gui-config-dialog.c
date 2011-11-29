@@ -103,7 +103,6 @@ void lingot_gui_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 		sr = atoi(text);
 	} else {
 		sr = 44100;
-		//g_print("WARNING: cannot get sample rate, assuming 44100\n");
 	}
 
 	char buff1[20];
@@ -130,11 +129,12 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 			lingot_audio_get_audio_system_properties(audio_system);
 
 	if (properties != NULL) {
-		if ((properties->forced_sample_rate)
-				&& (properties->n_sample_rates > 0)) {
-			sprintf(buff, "%d", properties->sample_rates[0]);
-			gtk_entry_set_text(GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child),
-					buff);
+		if (properties->forced_sample_rate) {
+			if (properties->n_sample_rates > 0) {
+				sprintf(buff, "%d", properties->sample_rates[0]);
+				gtk_entry_set_text(
+						GTK_ENTRY(GTK_BIN(dialog->sample_rate)->child), buff);
+			}
 		}
 
 		gtk_widget_set_sensitive(GTK_WIDGET(dialog->sample_rate),
@@ -164,8 +164,6 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 
 		lingot_gui_config_dialog_set_audio_device(dialog->input_dev,
 				dialog->conf->audio_dev[audio_system]);
-		gtk_widget_set_sensitive(GTK_WIDGET(dialog->input_dev),
-				(gboolean) (audio_system != AUDIO_SYSTEM_JACK));
 
 		lingot_audio_audio_system_properties_destroy(properties);
 	} else {
