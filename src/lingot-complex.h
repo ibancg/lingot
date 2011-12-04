@@ -36,9 +36,34 @@ struct _LingotComplex
     FLT i;
   };
 
+/**
+ * Addition. All parameters are overlapables.
+ */
 void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+
+/**
+ * Substraction. All parameters are overlapables.
+ */
 void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+
+/**
+ * Multiplication. Parameters not overlapable.
+ */
 void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+
+/**
+ * Division. Parameters not overlapable.
+ */
 void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+
+/**
+ * Computes a *= b
+ */
+void lingot_complex_mul_by(LingotComplex* a, LingotComplex* b);
+
+/**
+ * Computes a /= b
+ */
+void lingot_complex_div_by(LingotComplex* a, LingotComplex* b);
 
 #endif

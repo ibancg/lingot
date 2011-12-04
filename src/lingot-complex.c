@@ -22,50 +22,36 @@
 
 #include "lingot-complex.h"
 
-/**
- * addition. All parameters are overlapables.
- */
 void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
 	c->r = a->r + b->r;
 	c->i = a->i + b->i;
 }
 
-/**
- * substraction. All parameters are overlapables.
- */
 void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
 	c->r = a->r - b->r;
 	c->i = a->i - b->i;
 }
 
-/**
- * multiplication. All parameters are overlapables.
- */
 void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
-	if ((c != a) && (c != b)) {
-		c->r = a->r * b->r - a->i * b->i;
-		c->i = a->i * b->r + a->r * b->i;
-	} else {
-		LingotComplex r;
-		r.r = a->r * b->r - a->i * b->i;
-		r.i = a->i * b->r + a->r * b->i;
-		*c = r;
-	}
+	c->r = a->r * b->r - a->i * b->i;
+	c->i = a->i * b->r + a->r * b->i;
 }
 
-/**
- * division. All parameters are overlapables.
- */
 void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
 	FLT bm2 = b->r * b->r + b->i * b->i;
+	c->r = (a->r * b->r + a->i * b->i) / bm2;
+	c->i = (a->i * b->r - a->r * b->i) / bm2;
+}
 
-	if ((c != a) && (c != b)) {
-		c->r = (a->r * b->r + a->i * b->i) / bm2;
-		c->i = (a->i * b->r - a->r * b->i) / bm2;
-	} else {
-		LingotComplex r;
-		r.r = (a->r * b->r + a->i * b->i) / bm2;
-		r.i = (a->i * b->r - a->r * b->i) / bm2;
-		*c = r;
-	}
+void lingot_complex_mul_by(LingotComplex* a, LingotComplex* b) {
+	double rr = a->r * b->r - a->i * b->i;
+	a->i = a->i * b->r + a->r * b->i;
+	a->r = rr;
+}
+
+void lingot_complex_div_by(LingotComplex* a, LingotComplex* b) {
+	FLT bm2 = b->r * b->r + b->i * b->i;
+	double rr = (a->r * b->r + a->i * b->i) / bm2;
+	a->i = (a->i * b->r - a->r * b->i) / bm2;
+	a->r = rr;
 }

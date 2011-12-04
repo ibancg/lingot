@@ -106,7 +106,7 @@ void lingot_filter_vector_product(int n, LingotComplex* vector,
 	for (i = 0; i < n; i++) {
 		aux1.r = -vector[i].r;
 		aux1.i = -vector[i].i;
-		lingot_complex_mul(result, &aux1, result);
+		lingot_complex_mul_by(result, &aux1);
 	}
 
 }
@@ -181,7 +181,7 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 
 	lingot_filter_vector_product(n, sp, &tmp1);
 
-	lingot_complex_div(&gain, &tmp1, &gain);
+	lingot_complex_div_by(&gain, &tmp1);
 
 	for (i = 0; i < n; i++) {
 		tmp1.r = (2.0 + pole[i].r * T);
