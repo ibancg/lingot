@@ -1,0 +1,104 @@
+
+Lingot 0.9.1 (2011-08-22)
+-------------------------
+
+ * Fixed bug #34007 (#637610 in debian).
+ * Fixed bug #33046 (#622038 in debian).
+ * Added 48K sample rate to OSS and ALSA.
+
+
+Lingot 0.9.0 (2011-02-21)
+-------------------------
+
+* Lingot is now an universal tuner, it can tune any instrument according to a
+  provided scale.
+	   + Scale edition in a table.
+	   + Importation of Scala .scl files (http://www.huygens-fokker.org/scala/)
+	   + The gauge adapts its range to the scale. 
+	   + The deviation control has been moved to the scale tab.
+* Now it's possible to load and save configuration files from the GUI.
+* The graphic controllers in the audio capture section have been changed. The
+  user can choose now any hardware sampling rate, and is notified when the
+  rate is not available.
+* The GUI has been improved with tooltips and new notification messages.	   
+* Fixed bugs #31532 and #31369.
+
+
+Lingot 0.8.1 (2010-03-17)
+-------------------------
+
+* Added a graphic controller for the MIN_FREQUENCY parameter.
+* Fixed a SIGSEGV in the JACK thread management (bug #29090).
+* Fixed core hang up bug #29091 (#562425 in debian).
+* Fixed https://bugzilla.redhat.com/show_bug.cgi?id=517970#c9
+
+
+Lingot 0.8.0 (2010-02-26)
+-------------------------
+
+* Added JACK and ALSA support.
+* New configuration dialog layout.
+* Fixed memory leak in GUI.
+* Changed default sample rate to 44100 Hz instead of 8 KHz.
+* Added translations: cs, sv, de, it, pt_BR, zh_CN.
+
+
+Lingot 0.7.6 (2007-12-23)
+-------------------------
+
+* Fixed SEGFAULT bug on spectrum representation.
+* Changed Gnome menu ubication.
+
+
+Lingot 0.7.5 (2007-12-18)
+-------------------------
+
+* Now the spectrum section has a real grid, with axis labels referred to the
+  frequency and the signal power.
+* The spectrum section has also a dotted line indicating the noise threshold,
+  enabling a more accurate and easy manner of adjusting it.
+* There has been implemented some internal features, as internal computation of
+  filter coefficients and a Hamming window.
+* The source code has been "downgraded" from C++ to C as a first approach to
+  GNU coding standards.
+* Added Catalan translation, thanks to Raúl Cambeiro.
+
+
+Lingot 0.7.4 (2007-08-30)
+-------------------------
+
+* Added frequency legend, noise threshold and scroll bar to spectrum area
+* Reorganized Menu Items
+* Added a "View" menu item
+* Added translations: gl
+
+
+Lingot 0.7.4 (2007-08-23)
+-------------------------
+
+* Fixed UTF-8 charset problems
+* Added translations: es
+
+
+Lingot 0.7.3
+------------
+
+* Fixed two SIGSEGV bugs
+* Using GtkAboutDialog to show about info
+* Fixed size of the 'Note' frame on main window
+* Removed some gtk deprecated callings
+* Config dialog made more "GTK-compliant"
+
+
+Lingot 0.7.1
+------------
+
+* Files reorganized to a more "GNU-like" structure.
+* Added multilingual support
+
+
+Lingot 0.6.x
+------------
+
+* Start point.
+

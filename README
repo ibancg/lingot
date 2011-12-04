@@ -1,0 +1,321 @@
+LINGOT - A musical instrument tuner.
+
+Written by:
+  Ibán Cereijo Graña <ibancg@gmail.com>
+  Jairo Chapela Martínez <jairochapela@gmail.com>
+
+Copyright (C) 2004-2011 Ibán Cereijo Graña, Jairo Chapela Martínez
+
+Description
+===========
+
+Lingot is a musical instrument tuner. It's accurate, easy to use, and highly
+configurable. Originally conceived to tune electric guitars, it can now be used
+to tune other instruments.
+
+It looks like an analog tuner, with a gauge indicating the relative shift to a
+certain note, found automatically as the closest note to the estimated frequency.
+
+
+Requisites
+==========
+
+* Sound card.
+* Linux kernel with audio support (OSS, ALSA, JACK or PulseAudio).
+* GTK+ library, version 2.0.
+    
+Installation
+============
+
+Type:
+
+ > configure
+ > make install
+
+Lingot supports the following audio systems/servers:
+
+  OSS
+  ALSA
+  JACK
+  PulseAudio
+  
+You can enable/disable each of them with the following options passed to the
+configure script, all of them enabled by default:
+
+  --enable-oss=<yes|no>
+  --enable-alsa=<yes|no>
+  --enable-jack=<yes|no>
+  --enable-pulseaudio=<yes|no>
+
+Please, see the INSTALL file.
+    
+Synopsis
+========
+
+    lingot [-c config]
+
+The -c option causes the search of a file named {config}.conf in the ~/.lingot
+folder. For example:
+
+    lingot -c bass
+
+will take the configuration file ~/.lingot/bass.conf. This is useful for
+maintaining different configurations for different instruments. It's also
+possible to load and save configuration files from the GUI. The default
+configuration file is ~/.lingot/lingot.conf.
+
+Configuration file
+==================
+
+When lingot is launched for the first time, the default configuration file
+~/.lingot/lingot.conf will be created.
+
+The default values are optimized for electric guitar tuning, for other musical
+instruments these values must be slightly changed (a good practice would be
+to have a configuration file for each instrument). The options must be changed
+via GUI.
+
+There is a wide range of options, with the purpose of keeping the maximum
+configurability. Some background in signal processing is needed for a good
+understanding of their effects.
+
+We detail the main options that make up this file, and we recommend to make
+changes regarding the desired tuning precision and the demanded CPU time. If you
+don't understand the effects of any option, then just try different values or,
+even better, don't change it.
+
+
+ AUDIO_SYSTEM
+
+    Audio system switch. Possible values:
+    
+    OSS
+    ALSA *
+    JACK
+    PulseAudio
+    
+    * default value
+
+    
+ AUDIO_DEV (OSS sound device)
+
+    Selected sound device for the OSS audio system. The default value is
+    '/dev/dsp'.
+
+
+ AUDIO_DEV_ALSA (ALSA sound device)
+
+    Selected sound device for ALSA, the default value is 'default'.
+
+
+ AUDIO_DEV_JACK (JACK port)
+
+    Selected sound port for JACK, the default value is 'default'.
+
+
+ AUDIO_DEV_PULSEAUDIO (PulseAudio sound device)
+
+    Selected sound device for PulseAudio, the default value is 'default'.
+
+
+ SAMPLE_RATE ('physical' sampling rate)
+
+    With ALSA, OSS and PulseAudio, the input signal will be sampled at this
+    frequency by the audio driver (in JACK, the sample rate is provided
+    externally by the sound server). Some cards don't support an arbitrary
+    sampling rate, so we recommend to choose one of the options that the GUI
+    gives us, namely
+
+      8000 Hz
+     11025 Hz
+     22050 Hz
+     44100 Hz *
+     48000 Hz
+
+    We will be able to find an effective sampling rate submultiple of this by
+    means of an oversampling factor.
+
+    In order to select a sampling rate, we must consider the maximum frequency
+    our instrument is able to produce (or the maximum one we want to tune), and
+    choose an effective sampling rate (already divided by the oversampling
+    factor) as, at least, the double of the former (Nyquist frequency). All the
+    spectral components over the half of the effective sampling rate will be
+    filtered out and they will not appear in the spectrum.
+
+    It must be an integer number, in Hertz.
+
+
+ OVERSAMPLING (oversampling factor) 
+
+    The sampled signal will be decimated by this factor, producing the same
+    effect as if the sound card was using as sampling rate the effective
+    sampling rate f = SAMPLE_RATE/OVERSAMPLING.
+
+    For example, to obtain an effective sampling rate of 4 KHz (we can tune
+    tones up to 2 KHz), we can choose a sampling rate of 8 KHz and an
+    oversampling factor equals to 2, since 8 KHz / 2 = 4 KHz.
+
+    It must be an integer number, dimensionless. The default value is 25.
+
+
+ ROOT_FREQUENCY_ERROR ("A" reference note error)
+
+    This option is used when we want to tune with a certain amount of frequency
+    shift error.
+
+    This can be useful when tuning an instrument against a recording with a
+    shifted tuning. For example, if we hear an "A" note in a recording that
+    it's a quarter of a tone over the real note (440 Hz), we put here 50 cents
+    of error.
+
+    It must be a real number, expressed in cents. The default value is 0.
+
+
+ MIN_FREQUENCY (minimum valid frequency)
+
+    To avoid detecting the continuous component as the fundamental peak when
+    it has enough power, we consider a minimum valid frequency.
+     
+    It must be a real number, in hertz. The default value is 15 Hz.
+
+
+ FFT_SIZE (Size of the FTT)
+
+    A high value gets more accuracy, especially more precision locking the
+    desired frequency, but it demands more CPU time.
+
+    We must consider the time interval involved on the calculus before
+    unnecessarily raising this value: having a buffer of 4096 samples for the
+    FFT, and a sampling rate of 8 KHz, each transform needs the last 512 ms
+    temporary values, so there is no point in putting a shorter temporal window.
+
+    Let's see a more extreme example:
+
+    Let us suppose we have an instrument able to generate low frequencies
+    (< 200 Hz), and therefore we choose an effective sampling rate of 
+    400 Hz (an audio card sampling rate of 8 KHz and an oversampling factor 
+    of 20). With the aim of obtaining the best initial precision, we choose
+    a FFT buffer of 4096 samples. This implies that the minimal temporal window
+    size has to be 10.24 seconds, in other words, the sounds from the last 10.24
+    seconds are polluting the tuning taking. So, we've to wait 10.24 seconds
+    between note and note to avoid 'interferences'.
+    
+    It must be an integer power of 2. The default value is 512 samples.
+
+
+ TEMPORAL_WINDOW
+
+    The length in time of the signal used to compute the final frequency. With
+    higher values, we'll obtain a more accurate result, but also a slower
+    response polluted by earlier notes.
+
+    As a practical rule, we say that if we've a temporal window of 1 second, we
+    must wait 1 second between two consecutive notes to obtain a correct tuning.
+    So, this parameter affects directly to the dynamic response of the tuner.
+
+    The temporal window size in samples (obtained as the multiplication of its
+    duration in seconds and the effective sampling rate) must be greater than
+    the FFT buffer size.
+
+    It must be a real number in seconds. The default value is 0.32 seconds.
+
+
+ NOISE_THRESHOLD
+
+    To avoid tuning noise, this threshold distinguish what is signal and what
+    is noise. Try to tune it empirically with the help of a sound mixer.
+
+    It's a real number whose units are dB.
+
+
+ CALCULATION_RATE
+
+    With higher calculations per second, the tuner gives us a better dynamic
+    sensation, but it'll need more CPU time.
+    
+    It's a real number, in hertz, and the default value is 20 Hz.
+
+
+ VISUALIZATION_RATE
+
+    It has impact in the dynamism sensation achieved, but less in the
+    computation time.
+
+    There is no point having a calculation rate greater than the visualization
+    rate.
+
+    It's a real number, in hertz. The default value is 30 Hz.
+
+
+ PEAK_NUMBER (Number of peaks)
+
+    For the identification of the fundamental peak, depending on the timbre
+    generated by the instrument, we must consider the number of harmonics
+    (peaks in frequencies multiple of the fundamental one) which can be greater
+    than the fundamental peak (up to the relation remarked in the next option).
+
+    It's an integer, expressing an amount. The default value is 3 peaks.
+
+
+ PEAK_REJECTION_RELATION
+
+    Any peak with a relative amplitude (relative to the maximum peak) bigger
+    than this parameter will be ruled out.
+
+    It's a real number with dB units. The default value is 20 dB.
+
+
+ PEAK_HALF_WIDTH
+
+    Number of samples at each side needed for a peak to be accepted. The correct
+    tuning of this parameter will depend on the instrument, and mainly on the
+    spectral resolution obtained with the effective sampling rate and the FFT
+    size. Note that considering N samples of the FFT implies a variable
+    frequency interval that depends on those parameters.
+    
+    It's an integer expressing a number of samples. The default value is 1
+    sample.
+
+
+ DFT_NUMBER (Number of DFTs)
+
+    After the fundamental peak is found on the FFT, a certain amount of DFTs
+    (localized in frequency domain) are computed to get close to the note
+    frequency. This is a previous step before launching a final approximation
+    with an iterative method (Newton-Raphson).
+
+    It's an integer expressing an amount of DFTs, and the default value is 2
+    DFTs.
+    
+    
+ DFT_SIZE
+
+    DTF size in samples. Bigger values gets more locking precision, but more
+    computing time is needed.
+
+    It's an integer. The default value is 15 samples.
+    
+    
+ GAIN
+
+    Real value indicating a scale factor for the input signal, that may help
+    in fitting the signal between certain desirable levels.
+    
+    It's a real number expressed in logarithmic units (dB). The default value is
+    0 dB.
+    
+    
+ SCALE
+ 
+ 	Definition of the scale used for the tuning. By default a 12 semitones
+ 	equal-tempered scale is used. It contains different parameters:
+ 	
+ 	NAME: Scale name, only for your information.
+ 	BASE_FREQUENCY: The absolute frequency, in hertz, of the first note.
+ 	NOTE_COUNT: number of notes in the scale.
+ 	NOTES: list of notes, being them pairs of name and frequency shift. The
+ 		frequency shift can be expressed as a real number in cents or a
+ 		division of integer values, codifying a frequency ratio, like '3/2'
+ 		or '5/4'. Be careful with leaving wide gaps in frequency between each
+ 		pair of adjacent notes, as the gauge range will adapt to the maximum
+ 		of those distances. Try to use scales with at least 12 tones. 

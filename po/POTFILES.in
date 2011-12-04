@@ -1,0 +1,27 @@
+# List of source files containing translatable strings.
+
+## Created by Anjuta - will be overwritten
+## If you don't want it to overwrite it,
+## 	Please disable it in the Anjuta project configuration
+
+# Source files
+src/glade/lingot-config-dialog.glade
+src/glade/lingot-mainframe.glade
+src/lingot-fft.c
+src/lingot-audio.c
+src/lingot-audio-oss.c
+src/lingot-audio-alsa.c
+src/lingot-audio-jack.c
+src/lingot-audio-pulseaudio.c
+src/lingot-config.c
+src/lingot-config-scale.c
+src/lingot-core.c
+src/lingot-gauge.c
+src/lingot-gui-mainframe.c
+src/lingot-gui-config-dialog.c
+src/lingot-gui-config-dialog-scale.c
+src/lingot-filter.c
+src/lingot-signal.c
+src/lingot.c
+
+

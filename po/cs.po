@@ -1,0 +1,748 @@
+# translation of cs.po to Czech
+# Copyright (C) 2008 Karel Volný
+# This file is distributed under the same license as the lingot package.
+#
+# Karel Volný <kavol@seznam.cz>, 2008, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: cs\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-29 23:50+0100\n"
+"PO-Revision-Date: 2009-08-14 17:00+0200\n"
+"Last-Translator: Karel Volný <kavol@seznam.cz>\n"
+"Language-Team: Czech <diskuze@lists.l10n.cz>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: ../src/glade/lingot-config-dialog.glade.h:1
+msgid ""
+"Adds a new note to the list, just above the selected line, or appends it to "
+"the end if no line is selected. Is not possible to add a note before the "
+"reference (the first) one. You can also use the Insert key on the table "
+"beside."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:2
+msgid "Adjustments"
+msgstr "Nastavení"
+
+#: ../src/glade/lingot-config-dialog.glade.h:3
+msgid "Advanced"
+msgstr "Pokročilé"
+
+#: ../src/glade/lingot-config-dialog.glade.h:4
+msgid ""
+"Advanced settings on the frequency finding algorithm. You should not modify "
+"these parameters unless you really need it and you have a good understanding "
+"of the algorithm. Use the 'Default' button if you get lost, and use those "
+"default parameters as your reference."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:5
+msgid ""
+"After having chosen the fundamental peak on the FFT, Lingot computes a "
+"series of N (being N this parameter) DFTs localized in frequency to enclose "
+"the fundamental frequency."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:6
+msgid ""
+"All the peaks with an amplitude difference with the highest one greater than "
+"this parameter will be rejected as a candidate to host the fundamental "
+"frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:7
+msgid ""
+"Allows you to adapt the signal levels without the aid of an external mixer."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:8
+msgid ""
+"Any signal level below this value will be considered as noise. This noise "
+"level is depicted in the spectrum area as a yellow dotted line."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:9
+msgid ""
+"Applies a shift in frequency to all the notes defined in the table above."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:10
+msgid "Apply the current changes and modify the congifuration file."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:11
+msgid ""
+"Apply the current changes to the running tuner, but doesn't modify the "
+"configuration file."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:12
+msgid "Audio device"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:13
+msgid "Audio input settings. Set here the source and hardware settings."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:14
+msgid "Audio system"
+msgstr "Ovladač"
+
+#: ../src/glade/lingot-config-dialog.glade.h:15
+msgid "Basic"
+msgstr "Základní"
+
+#: ../src/glade/lingot-config-dialog.glade.h:16
+msgid ""
+"Basic settings on the frequency finding algorithm. Come here to get better "
+"accuracy, frequency range or CPU usage. "
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:17
+msgid "Calculation rate"
+msgstr "Frekvence výpočtů"
+
+#: ../src/glade/lingot-config-dialog.glade.h:18
+msgid "Capture"
+msgstr "Vstup"
+
+#: ../src/glade/lingot-config-dialog.glade.h:19
+msgid ""
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:20
+msgid ""
+"Choose the hardware sample rate here. We give you some examples, but you can "
+"choose another one. Please, be aware that depending on the audio system and/"
+"or device, not all the sampling frequencies are available. Anyway, you can "
+"get close to your desired effective sample rate by combining this parameter "
+"with the oversampling factor (Basic tab). If you are using JACK, you cannot "
+"modify this field, but you can change it externally (in the JACK server "
+"configuration)."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:21
+msgid "DFT number"
+msgstr "Počet DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:22
+msgid "DFT size"
+msgstr "Rozsah DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:23
+msgid "DFTs"
+msgstr "DFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:24
+msgid "Default"
+msgstr "Výchozí nastavení"
+
+#: ../src/glade/lingot-config-dialog.glade.h:25
+msgid "Delete"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:26
+msgid ""
+"Deletes the selected notes. The reference note, i.e., the first one, cannot "
+"be removed. You can also use the Delete key on the table beside."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:27
+#: ../src/glade/lingot-mainframe.glade.h:3
+msgid "Deviation"
+msgstr "Odchylka"
+
+#: ../src/glade/lingot-config-dialog.glade.h:28
+msgid "Effective sample rate"
+msgstr "Vzorkovací kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:29
+msgid ""
+"Effective sampling frequency. The lower this parameter is, the more accurate "
+"the FFT will be, and hence the better is the hooking up to the correct peak. "
+"Remember, however, that your temporal window will increase, and the fact "
+"that you won't be able to tune frequencies above the half of this frequency "
+"(Nyquist-Shannon sampling theorem)."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:30
+msgid "FFT size"
+msgstr "Rozsah FFT"
+
+#: ../src/glade/lingot-config-dialog.glade.h:31
+msgid "Gain"
+msgstr "Zisk"
+
+#: ../src/glade/lingot-config-dialog.glade.h:32
+msgid "Hardware sampling frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:33
+msgid "Here you can pick the sound system."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:34
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/glade/lingot-config-dialog.glade.h:35
+msgid "Import"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:36
+msgid ""
+"Imports the scale from an external .scl file, with the Scala project format "
+"(http://www.huygens-fokker.org/scala/)"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:37
+msgid "Insert"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:38
+msgid ""
+"Lingot is an universal tuner, it can tune any instrument according to the "
+"scale you define here."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:39
+msgid "Lingot only considers frequencies above this one."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:40
+msgid "Minimum frequency"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:41
+#: ../src/lingot-gui-config-dialog-scale.c:324
+msgid "Name"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:42
+msgid "Noise threshold"
+msgstr "Práh šumu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:43
+msgid "Number of calculations of the fundamental frequency per second."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:44
+msgid ""
+"Number of main peaks considered over the FFT. Remember that sometimes the "
+"first harmonics can have a higher amplitude than the fundamental component, "
+"depending on your instrument."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:45
+msgid ""
+"Number of samples needed by a peak at each side, lower in amplitude than the "
+"sample at the center, to be considered as a peak. You should not consider "
+"more than 1 or 2 samples, unless you have a really big FFT buffer."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:46
+msgid "Number of samples of each DFT."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:47
+msgid ""
+"Number of visualizations per second of the (last) computed frequency, error "
+"and spectrum. "
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:48
+msgid "Oversampling factor"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:49
+msgid "Peak half-width"
+msgstr "Trvání špičky"
+
+#: ../src/glade/lingot-config-dialog.glade.h:50
+msgid "Peak number"
+msgstr "Počet špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:51
+msgid "Peak rejection relation"
+msgstr "Maximální rozdíl špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:52
+msgid "Quick adjusments on the dynamic response and the signal levels."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:53
+msgid "Resets the built-in settings, without applying them."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:54
+msgid ""
+"Rolls back all the previous applied changes and closes the configuration "
+"dialog."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:55
+msgid "Sample rate"
+msgstr "Vzorkovací kmitočet"
+
+#: ../src/glade/lingot-config-dialog.glade.h:56
+msgid "Scale"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:57
+msgid "Scale name, only for your information."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:58
+msgid "Temporal window"
+msgstr "Interval pro analýzu"
+
+#: ../src/glade/lingot-config-dialog.glade.h:59
+msgid ""
+"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
+"help Lingot to hook up the correct peak, but it's also computationally more "
+"expensive. Don't use high values here unless you have an equally high "
+"effective sample rate."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:60
+msgid ""
+"This is the most recent amount of data considered for tuning. The longer it "
+"is, the more accuracy you can obtain, but also the dynamic response gets "
+"lower, because you are considering older parts of the signal. Also, if you "
+"raise this parameter, the computational cost increases. This value, in "
+"samples (depending on the effective sample rate), must be greater or equal "
+"to the FFT buffer size."
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:61
+msgid "Visualization rate"
+msgstr "Obnovovací frekvence"
+
+#: ../src/glade/lingot-config-dialog.glade.h:62
+msgid "cents"
+msgstr ""
+
+#: ../src/glade/lingot-config-dialog.glade.h:63
+msgid "dB"
+msgstr "dB"
+
+#: ../src/glade/lingot-config-dialog.glade.h:64
+msgid "lingot configuration"
+msgstr "Nastavení lingot"
+
+#: ../src/glade/lingot-config-dialog.glade.h:65
+msgid "peaks"
+msgstr "špiček"
+
+#: ../src/glade/lingot-config-dialog.glade.h:66
+msgid "samples"
+msgstr "vzorků"
+
+#: ../src/glade/lingot-config-dialog.glade.h:67
+msgid "seconds"
+msgstr "s"
+
+#: ../src/glade/lingot-mainframe.glade.h:1
+msgid "---"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:2
+msgid ""
+"Closest note to the estimated frequency, according to the scale defined in "
+"the Lingot settings."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:4
+msgid ""
+"Error in cents between the estimated frequency and the closest note "
+"according to the scale defined in the Lingot settings."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:5
+msgid "Estimated fundamental frequency in hertzs."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:6
+msgid "Opens an external configuration file."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:7
+msgid "Saves the running configuration to an external file."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:8
+msgid "Show spectrum"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:9
+msgid ""
+"Shows the error in cents in a visual way. The range will depend on the "
+"maximum distance between each two notes in the scale defined in the Lingot "
+"settings (try to provide scales with low maximum distance, i.e. with many "
+"notes, to have a higher resolution in this gauge),"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:10
+msgid "Spectrum"
+msgstr "Spektrum"
+
+#: ../src/glade/lingot-mainframe.glade.h:11
+msgid ""
+"This area shows the spectral power density of the captured signal. The "
+"fundamental frequency is shown with a red dot, and the noise threshold with "
+"a horizontal dotted yellow line. If you have a large FFT buffer (with more "
+"than 512 samples), you can browse through the whole spectrum with a "
+"horizontal scrollbar."
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:12
+msgid "Tone"
+msgstr "Tón"
+
+#: ../src/glade/lingot-mainframe.glade.h:13
+msgid "_Edit"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:14
+msgid "_File"
+msgstr "_Soubor"
+
+#: ../src/glade/lingot-mainframe.glade.h:15
+msgid "_Help"
+msgstr "_Nápověda"
+
+#: ../src/glade/lingot-mainframe.glade.h:16
+msgid "_View"
+msgstr "_Zobrazení"
+
+#: ../src/glade/lingot-mainframe.glade.h:17
+msgid "e = ---"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:18
+msgid "f = ---"
+msgstr ""
+
+#: ../src/glade/lingot-mainframe.glade.h:19
+msgid "lingot"
+msgstr "lingot"
+
+#: ../src/lingot-audio-oss.c:56 ../src/lingot-audio-alsa.c:56
+#, c-format
+msgid ""
+"Cannot open audio device '%s'.\n"
+"%s"
+msgstr ""
+
+#: ../src/lingot-audio-oss.c:64
+msgid "Error setting number of channels."
+msgstr ""
+
+#: ../src/lingot-audio-oss.c:73
+msgid "Error setting bits per sample."
+msgstr ""
+
+#: ../src/lingot-audio-oss.c:88
+msgid "Error setting DMA buffer size."
+msgstr ""
+
+#: ../src/lingot-audio-oss.c:93
+msgid "Error setting sample rate."
+msgstr ""
+
+#: ../src/lingot-audio-oss.c:129 ../src/lingot-audio-alsa.c:162
+#: ../src/lingot-audio-pulseaudio.c:122
+msgid "Read from audio interface failed."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:65 ../src/lingot-audio-alsa.c:73
+msgid "Cannot initialize hardware parameter structure."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:80
+msgid "Cannot set access type."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:87
+msgid "Cannot set sample format."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:96
+msgid "Cannot set sample rate."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:105
+msgid "Cannot set channel number."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:111
+msgid "Cannot set parameters."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:118
+msgid "Cannot prepare audio interface for use."
+msgstr ""
+
+#: ../src/lingot-audio-alsa.c:140
+msgid "The application has not been built with ALSA support"
+msgstr "Aplikace nebyla sestavena s podporou pro ALSA"
+
+#: ../src/lingot-audio-alsa.c:224
+msgid "Default Device"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:61
+msgid "Missing connection with JACK audio server"
+msgstr "Chybí spojení se zvukovým serverem JACK"
+
+#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:194
+msgid "Unable to connect to JACK server"
+msgstr "Nelze se připojit k serveru JACK"
+
+#: ../src/lingot-audio-jack.c:115
+msgid "No more JACK ports available"
+msgstr "Nejsou dostupné žádné další porty systému JACK"
+
+#: ../src/lingot-audio-jack.c:136 ../src/lingot-audio-jack.c:259
+#: ../src/lingot-audio-jack.c:337 ../src/lingot-audio-jack.c:369
+msgid "The application has not been built with JACK support"
+msgstr "Aplikace nebyla sestavena s podporou pro JACK"
+
+#: ../src/lingot-audio-jack.c:227
+msgid "Default Port"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:277
+msgid "Cannot activate client"
+msgstr "Nelze aktivovat klienta"
+
+#: ../src/lingot-audio-jack.c:283
+msgid "No active capture ports"
+msgstr ""
+
+#: ../src/lingot-audio-jack.c:295 ../src/lingot-audio-jack.c:315
+msgid "Cannot connect input ports"
+msgstr "Nelze připojit vstupní porty"
+
+#: ../src/lingot-audio-jack.c:310
+msgid "No physical capture ports"
+msgstr "Žádné fyzické vstupní porty"
+
+#: ../src/lingot-audio-jack.c:322
+#, c-format
+msgid "Cannot connect to requested port '%s'"
+msgstr ""
+
+#: ../src/lingot-audio-pulseaudio.c:79
+msgid "Error creating PulseAudio client."
+msgstr ""
+
+#: ../src/lingot-audio-pulseaudio.c:94
+#, fuzzy
+msgid "The application has not been built with PulseAudio support"
+msgstr "Aplikace nebyla sestavena s podporou pro PulseAudio"
+
+#: ../src/lingot-audio-pulseaudio.c:185
+msgid "Default Source"
+msgstr ""
+
+#: ../src/lingot-config.c:639
+#, c-format
+msgid ""
+"Error parsing the configuration file, line %i: unrecognized audio system, "
+"assuming default value.\n"
+msgstr ""
+
+#: ../src/lingot-config.c:664
+msgid ""
+"The configuration file contains errors, and hence some default values have "
+"been chosen. The problem will be fixed once you have accepted the settings "
+"in the configuration dialog."
+msgstr ""
+
+#: ../src/lingot-config-scale.c:209
+msgid "incorrect format"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:210
+msgid "note number mismatch"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:220
+msgid "Error opening scale file."
+msgstr ""
+
+#: ../src/lingot-config-scale.c:294
+msgid "the notes must be well ordered"
+msgstr ""
+
+#: ../src/lingot-config-scale.c:304
+msgid "Error opening scale file"
+msgstr ""
+
+#: ../src/lingot-core.c:87
+#, c-format
+msgid ""
+"The requested sample rate is not available, the real sample rate has been "
+"set to %d Hz"
+msgstr ""
+
+#: ../src/lingot-core.c:100
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na "
+"%0.3f s."
+
+#: ../src/lingot-gui-mainframe.c:95
+msgid "Logo design"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:106
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
+
+#: ../src/lingot-gui-mainframe.c:109
+msgid "translator-credits"
+msgstr "Karel Volný <kavol@seznam.cz>, 2008 - 2009"
+
+#: ../src/lingot-gui-mainframe.c:261
+msgid ""
+"Please check that there are not other processes locking the requested "
+"device. Also, consider that some audio servers can sometimes hold the "
+"resources for a few seconds since the last time they were used. In such a "
+"case, you can try again."
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:270
+msgid "The core is not running, you must check your configuration."
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:287
+msgid "Error"
+msgstr "Chyba"
+
+#: ../src/lingot-gui-mainframe.c:289
+msgid "Warning"
+msgstr "Upozornění"
+
+#: ../src/lingot-gui-mainframe.c:289
+msgid "Info"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:313
+msgid "Open Configuration File"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:321 ../src/lingot-gui-mainframe.c:364
+msgid "Lingot configuration files"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:353
+msgid "Save Configuration File"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog.c:332
+msgid "Audio device identifier too long"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog.c:346
+msgid "Sample rate out of range"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog.c:399
+msgid ""
+"The provided scale contains wide gaps in frequency that increase the gauge "
+"range and produce a loss of visual accuracy. Consider providing scales with "
+"at least 12 tones, or with a maximum distance between adjacent notes below "
+"200 cents."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:84
+msgid "You cannot insert before the reference note."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:210
+msgid "Do not use space characters for the note names."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:213
+msgid "The name contains illegal characters."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:230
+msgid "You cannot change the first shift, it must be 1/1."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:237
+msgid "The shift must be between 0 and 1200 cents, or between 1/1 and 2/1."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:341
+msgid "Shift"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:362
+msgid "Frequency [Hz]"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:419
+msgid "There are notes with the same name"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:433
+msgid ""
+"There are invalid values in the scale: the notes should be ordered by "
+"frequency / shift"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:440
+msgid ""
+"There are invalid values in the scale: all the notes should be in the same "
+"octave"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:449
+msgid "There are notes without name"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:513
+msgid "Open Scale File"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:521
+msgid "Scala files"
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:612
+msgid ""
+"Note identifier, free text that will be displayed in the main window when "
+"tuning close to the given note. Don't use space characters here."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:617
+msgid ""
+"Shift. You can define it as a deviation in cents from the reference note "
+"(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
+"values must be between 0 and 1200 cents, or between 1/1 and 2/1 (i.e., all "
+"the notes must be in the same octave), and they must be well ordered."
+msgstr ""
+
+#: ../src/lingot-gui-config-dialog-scale.c:622
+msgid ""
+"Frequency. You can enter here the absolute frequency for a given note as a "
+"reference, and all the other frequencies will shift according to the "
+"deviations specified in the 'Shift' column. You can either use an absolute "
+"numeric value or the keywords 'mid-C' (261.625565 Hz) and 'mid-A' (440 Hz)."
+msgstr ""
