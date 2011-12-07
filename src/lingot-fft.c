@@ -22,45 +22,67 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "lingot-fft.h"
 #include "lingot-config.h"
 
+#ifndef LIBFFTW
+#include "lingot-complex.h"
+#endif
+
 /*
- DFT functions.
+ DTFT functions.
  */
 
-#ifndef LIBFFTW
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 
-#include "lingot-complex.h"
+	LingotFFTPlan* result = malloc(sizeof(LingotFFTPlan));
+	result->n = n;
+	result->in = in;
 
-// phase factor table, for FFT optimization.
-LingotComplex* wn = NULL;
-
-// creates the phase factor table.
-void lingot_fft_create_phase_factors(LingotConfig* conf) {
+#ifdef LIBFFTW
+	result->fftw_out = fftw_malloc(n * sizeof(fftw_complex));
+	memset(result->fftw_out, 0, n * sizeof(fftw_complex));
+	result->fftwplan = fftw_plan_dft_r2c_1d(n, in, result->fftw_out,
+			FFTW_ESTIMATE);
+#else
 	FLT alpha;
 	unsigned int i;
 
-	wn = (LingotComplex*) malloc((conf->fft_size >> 1) * sizeof(LingotComplex));
+	result->wn = (LingotComplex*) malloc((n >> 1) * sizeof(LingotComplex));
 
-	for (i = 0; i < (conf->fft_size >> 1); i++) {
-		alpha = -2.0 * i * M_PI / conf->fft_size;
-		wn[i].r = cos(alpha);
-		wn[i].i = sin(alpha);
+	for (i = 0; i < (n >> 1); i++) {
+		alpha = -2.0 * i * M_PI / n;
+		result->wn[i].r = cos(alpha);
+		result->wn[i].i = sin(alpha);
 	}
+	result->fft_out = malloc(n * sizeof(LingotComplex)); // complex signal in freq domain.
+	memset(result->fft_out, 0, n * sizeof(LingotComplex));
+#endif
+
+	return result;
 }
 
-void lingot_fft_destroy_phase_factors() {
-	if (wn != NULL) {
-		free(wn);
-	}
+void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
+
+#ifdef LIBFFTW
+	fftw_destroy_plan(plan->fftwplan);
+	fftw_free(plan->fftw_out);
+#else
+	free(plan->fft_out);
+	free(plan->wn);
+#endif
+
+	free(plan);
 }
+
+#ifndef LIBFFTW
 
 //------------------------------------------------------------------------
 
 // Fast Fourier Transform.
-void _lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N,
+void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned long int N,
 		unsigned long int offset, unsigned long int d1, unsigned long int step) {
 	LingotComplex X1, X2;
 	unsigned long int Np2 = (N >> 1); // N/2
@@ -79,8 +101,8 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N,
 		return;
 	}
 
-	_lingot_fft_fft(in, out, Np2, offset, d1, step << 1);
-	_lingot_fft_fft(in, out, Np2, offset + step, d1 + Np2, step << 1);
+	_lingot_fft_fft(in, out, wn, Np2, offset, d1, step << 1);
+	_lingot_fft_fft(in, out, wn, Np2, offset + step, d1 + Np2, step << 1);
 
 	for (q = 0, c = 0; q < (N >> 1); q++, c += step) {
 
@@ -94,19 +116,43 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N,
 	}
 }
 
-void lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N) {
-	_lingot_fft_fft(in, out, N, 0, 0, 1);
+void lingot_fft_fft(LingotFFTPlan* plan) {
+	_lingot_fft_fft(plan->in, plan->fft_out, plan->wn, plan->n, 0, 0, 1);
 }
 
 #endif
 
-//------------------------------------------------------------------------
+void lingot_fft_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 
+	int i;
+	double _1_N2 = 1.0 / (plan->n * plan->n);
+
+# ifdef LIBFFTW
+// transformation.
+	fftw_execute(plan->fftwplan);
+
+// esteem of SPD from FFT. (normalized squared module)
+	for (i = 0; i < n_out; i++)
+		out[i] = (plan->fftw_out[i][0] * plan->fftw_out[i][0]
+				+ plan->fftw_out[i][1] * plan->fftw_out[i][1]) * _1_N2;
+# else
+// transformation.
+	lingot_fft_fft(plan);
+
+// esteem of SPD from FFT. (normalized squared module)
+	for (i = 0; i < n_out; i++)
+	out[i] = (plan->fft_out[i].r * plan->fft_out[i].r
+			+ plan->fft_out[i].i * plan->fft_out[i].i) * _1_N2;
+#endif
+
+}
+
+//------------------------------------------------------------------------
 
 /* Spectral Power Distribution esteem, selectively in frequency, by DFT.
  transforms signal in of N1 samples from frequency wi, with sample
  separation of dw rads, storing the result on buffer out with N2 samples. */
-void lingot_fft_spd(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
+void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
 	FLT Xr, Xi;
 	FLT wn;
 	FLT N1_2 = N1 * N1;
@@ -133,7 +179,7 @@ void lingot_fft_spd(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
 /*
  Evaluates 1st and 2nd derivatives from SPD at frequency w.
  */
-void lingot_fft_spd_diffs(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
+void lingot_fft_spd_diffs_eval(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
 	FLT x_cos_wn;
 	FLT x_sin_wn;
 	register int n;
@@ -159,9 +205,11 @@ void lingot_fft_spd_diffs(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
 	}
 
 	FLT N_2 = N * N;
-	*out_d1 = 2.0 * (SUM_x_sin_wn * SUM_x_n_cos_wn - SUM_x_cos_wn
-			* SUM_x_n_sin_wn) / N_2;
-	*out_d2 = 2.0 * (SUM_x_n_cos_wn * SUM_x_n_cos_wn - SUM_x_sin_wn
-			* SUM_x_n2_sin_wn + SUM_x_n_sin_wn * SUM_x_n_sin_wn - SUM_x_cos_wn
-			* SUM_x_n2_cos_wn) / N_2;
+	*out_d1 = 2.0
+			* (SUM_x_sin_wn * SUM_x_n_cos_wn - SUM_x_cos_wn * SUM_x_n_sin_wn)
+			/ N_2;
+	*out_d2 = 2.0
+			* (SUM_x_n_cos_wn * SUM_x_n_cos_wn - SUM_x_sin_wn * SUM_x_n2_sin_wn
+					+ SUM_x_n_sin_wn * SUM_x_n_sin_wn
+					- SUM_x_cos_wn * SUM_x_n2_cos_wn) / N_2;
 }

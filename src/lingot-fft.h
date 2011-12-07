@@ -29,23 +29,40 @@
 
 #include "lingot-defs.h"
 
-#ifndef LIBFFTW
-
-#  include "lingot-complex.h"
-#  include "lingot-config.h"
-
-void lingot_fft_create_phase_factors(LingotConfig* conf);
-void lingot_fft_destroy_phase_factors();
-
-// Fast Fourier Transform implementation.
-void lingot_fft_fft(FLT* in, LingotComplex* out, unsigned long int N);
-
+#ifdef LIBFFTW
+# include <fftw3.h>
+#else
+# include "lingot-complex.h"
 #endif
 
-// Spectral Power Distribution (SPD) esteem, selectively in frequency.
-void lingot_fft_spd(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
+typedef struct _LingotFFTPlan LingotFFTPlan;
 
-// first and second SPD derivatives at frequency w.
-void lingot_fft_spd_diffs(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2);
+struct _LingotFFTPlan {
+
+	int n;
+	FLT* in;
+
+#ifdef LIBFFTW
+	fftw_complex* fftw_out; // complex signal in freq.
+	fftw_plan fftwplan;
+#else
+// phase factor table, for FFT optimization.
+LingotComplex* wn;
+LingotComplex* fft_out;// complex signal in freq.
+#endif
+
+};
+
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n);
+void lingot_fft_plan_destroy(LingotFFTPlan*);
+
+// Full Spectral Power Distribution (SPD) esteem.
+void lingot_fft_spd(LingotFFTPlan*, FLT* out, int n_out);
+
+// Spectral Power Distribution (SPD) evaluation at a given frequency.
+void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
+
+// Evaluates first and second SPD derivatives at frequency w.
+void lingot_fft_spd_diffs_eval(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2);
 
 #endif
