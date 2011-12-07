@@ -159,22 +159,8 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		memset(core->windowed_fft_buffer, 0,
 				core->conf->fft_size * sizeof(FLT));
 
-#ifndef LIBFFTW
-		lingot_fft_create_phase_factors(conf); // creates the phase factors for FFT.
-		core->fft_out = malloc((core->conf->fft_size) * sizeof(LingotComplex));// complex signal in freq domain.
-		memset(core->fft_out, 0, core->conf->fft_size * sizeof(LingotComplex));
-#else
-		// TODO: use r2r plan
-//		core->fftw_out = fftw_malloc(core->conf->fft_size * sizeof(double));
-//		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(double));
-//		core->fftwplan = fftw_plan_r2r_1d(core->conf->fft_size, core->windowed_fft_buffer,
-//				core->fftw_out, FFTW_FORWARD, FFTW_R2HC);
-		core->fftw_out = fftw_malloc(
-				core->conf->fft_size * sizeof(fftw_complex));
-		memset(core->fftw_out, 0, core->conf->fft_size * sizeof(fftw_complex));
-		core->fftwplan = fftw_plan_dft_r2c_1d(core->conf->fft_size,
-				core->windowed_fft_buffer, core->fftw_out, FFTW_ESTIMATE);
-#endif
+		core->fftplan = lingot_fft_plan_create(core->windowed_fft_buffer,
+				core->conf->fft_size);
 
 		/*
 		 * 8 order Chebyshev filters, with wc=0.9/i (normalized respect to
@@ -211,14 +197,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 void lingot_core_destroy(LingotCore* core) {
 
 	if (core->audio != NULL) {
-#ifdef LIBFFTW
-		fftw_destroy_plan(core->fftwplan);
-		fftw_free(core->fftw_out);
-#else
-		lingot_fft_destroy_phase_factors(); // destroy phase factors.
-		free(core->fft_out);
-#endif
-
+		lingot_fft_plan_destroy(core->fftplan);
 		lingot_audio_destroy(core->audio);
 
 		free(core->spd_fft);
@@ -244,9 +223,9 @@ void lingot_core_destroy(LingotCore* core) {
 			free(core->windowed_fft_buffer);
 		}
 
-		if (core->antialiasing_filter != NULL
-		)
+		if (core->antialiasing_filter != NULL) {
 			lingot_filter_destroy(core->antialiasing_filter);
+		}
 
 		pthread_mutex_destroy(&core->temporal_buffer_mutex);
 	}
@@ -390,28 +369,15 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 						- conf->fft_size], conf->fft_size * sizeof(FLT));
 	}
 
-# ifdef LIBFFTW
-	// transformation.
-	fftw_execute(core->fftwplan);
-
-	// esteem of SPD from FFT. (normalized squared module)
-	for (i = 0; i < ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256); i++)
-	core->spd_fft[i] = (core->fftw_out[i][0] * core->fftw_out[i][0]
-	+ core->fftw_out[i][1] * core->fftw_out[i][1]) * _1_N2;
-//	core->spd_fft[i] = sqrt(core->fftw_out[i]*core->fftw_out[i]);
-# else
-	// transformation.
-	lingot_fft_fft(core->windowed_fft_buffer, core->fft_out, conf->fft_size);
-
-	// esteem of SPD from FFT. (normalized squared module)
-	for (i = 0; i < ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256); i++)
-	core->spd_fft[i] = (core->fft_out[i].r * core->fft_out[i].r
-			+ core->fft_out[i].i * core->fft_out[i].i) * _1_N2;
-#endif
+	lingot_fft_spd(core->fftplan, core->spd_fft,
+			(conf->fft_size > 256) ? (conf->fft_size >> 1) : 256);
 
 	// representable piece
-	memcpy(core->X, core->spd_fft, ((conf->fft_size > 256) ? (conf->fft_size
-			>> 1) : 256)* sizeof(FLT));
+	memcpy(
+			core->X,
+			core->spd_fft,
+			((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256)
+					* sizeof(FLT));
 
 	// truncated 2nd derivative esteem, to enhance peaks
 	core->diff2_spd_fft[0] = 0.0;
@@ -444,13 +410,14 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		d_w = 2.0 * d_w / (conf->dft_size - 1); // resolution in rads.
 
 		if (k == 0) {
-			lingot_fft_spd(core->windowed_fft_buffer, conf->fft_size, w + d_w,
-					d_w, &core->spd_dft[1], conf->dft_size - 2);
+			lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size,
+					w + d_w, d_w, &core->spd_dft[1], conf->dft_size - 2);
 			core->spd_dft[0] = core->spd_fft[Mi - 1];
 			core->spd_dft[conf->dft_size - 1] = core->spd_fft[Mi + 1]; // 2 samples known.
-		} else
-			lingot_fft_spd(core->windowed_fft_buffer, conf->fft_size, w, d_w,
-					core->spd_dft, conf->dft_size);
+		} else {
+			lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size, w,
+					d_w, core->spd_dft, conf->dft_size);
+		}
 
 		lingot_signal_get_max(core->spd_dft, conf->dft_size, &Mi); // search the maximum.
 
@@ -484,7 +451,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		wk = wkm1;
 
 		// ! we use the WHOLE temporal window for greater precission.
-		lingot_fft_spd_diffs(core->windowed_temporal_buffer,
+		lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
 				conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
 		//printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
 		wkm1 = wk - d1_SPD / d2_SPD;
@@ -557,9 +524,12 @@ void lingot_core_stop(LingotCore* core) {
 		pthread_mutex_destroy(&core->thread_computation_mutex);
 		pthread_cond_destroy(&core->thread_computation_cond);
 
-		memset(core->X, 0,
-				((core->conf->fft_size > 256) ? (core->conf->fft_size >> 1)
-				: core->conf->fft_size)* sizeof(FLT));
+		memset(
+				core->X,
+				0,
+				((core->conf->fft_size > 256) ?
+						(core->conf->fft_size >> 1) : core->conf->fft_size)
+						* sizeof(FLT));
 		core->freq = 0.0;
 	}
 
@@ -589,14 +559,17 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 
 		if (core->audio != NULL) {
 			if (core->audio->interrupted) {
-				memset(core->X, 0,
-						((core->conf->fft_size > 256) ? (core->conf->fft_size
-								>> 1) : core->conf->fft_size)* sizeof(FLT));
-						core->freq = 0.0;
-						core->running = 0;
-					}
-				}
+				memset(
+						core->X,
+						0,
+						((core->conf->fft_size > 256) ?
+								(core->conf->fft_size >> 1) :
+								core->conf->fft_size) * sizeof(FLT));
+				core->freq = 0.0;
+				core->running = 0;
 			}
+		}
+	}
 
 	pthread_mutex_lock(&core->thread_computation_mutex);
 	pthread_cond_broadcast(&core->thread_computation_cond);
