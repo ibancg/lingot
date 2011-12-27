@@ -112,10 +112,12 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
-	gtk_widget_set_visible(
-			frame->spectrum_frame,
-			gtk_check_menu_item_get_active(
-					GTK_CHECK_MENU_ITEM(frame->view_spectrum_item)));
+	if (gtk_check_menu_item_get_active(
+			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item))) {
+		gtk_widget_show(frame->spectrum_frame);
+	} else {
+		gtk_widget_hide(frame->spectrum_frame);
+	}
 }
 
 void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
