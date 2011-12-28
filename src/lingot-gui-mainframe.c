@@ -582,8 +582,7 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 // ---------------------------------------------------------------------------
 
 void lingot_gui_mainframe_draw_gauge(LingotMainFrame* frame) {
-	GdkGC* gc = frame->gauge_area->style->fg_gc[gtk_widget_get_state(
-			frame->gauge_area)];
+	GdkGC* gc = frame->gauge_area->style->fg_gc[frame->gauge_area->state];
 	GdkWindow* w = frame->gauge_area->window;
 	//GdkGCValues gv;
 	int i;
@@ -658,8 +657,7 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	int j;
 	int old_j;
 
-	GdkGC * gc = frame->spectrum_area->style->fg_gc[gtk_widget_get_state(
-			frame->spectrum_area)];
+	GdkGC * gc = frame->spectrum_area->style->fg_gc[frame->spectrum_area->state];
 	GdkPixmap* pixmap = frame->pix_spectrum; //spectrum->window;
 
 	// clear all
