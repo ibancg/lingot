@@ -25,11 +25,12 @@
 
 #include "lingot-audio.h"
 
-LingotAudioHandler* lingot_audio_pulseaudio_new(char* device,
-		int sample_rate);
+LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate);
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler*);
 int lingot_audio_pulseaudio_read(LingotAudioHandler*);
 LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties(
 		audio_system_t);
+
+void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio);
 
 #endif
