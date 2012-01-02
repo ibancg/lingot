@@ -4,7 +4,7 @@ dnl If you don't want it to overwrite it,
 dnl 	Please disable it in the Anjuta project configuration
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(lingot, 0.9.2b3)
+AM_INIT_AUTOMAKE(lingot, 0.9.2b4)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
@@ -63,7 +63,7 @@ AC_ARG_ENABLE(
 AM_CONDITIONAL(HAVE_JACK, test "x$usejack" = "xyes")
 
 if test "x$usejack" = "xyes"; then
-	PKG_CHECK_MODULES(JACK, jack >= 0.102.0)
+	PKG_CHECK_MODULES(JACK, jack >= 0.117.0)
 	AC_SUBST(JACK_CFLAGS)
 	AC_SUBST(JACK_LIBS)
 	CFLAGS="$CFLAGS -DJACK"

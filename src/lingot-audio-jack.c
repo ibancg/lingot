@@ -123,10 +123,6 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		lingot_msg_add_error(exception);
 	}
 
-	if (ports != NULL
-	)
-		free(ports);
-
 	if (audio != NULL) {
 		client = audio->jack_client;
 	}
@@ -303,13 +299,6 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 			// if there wasn't connections before, we connect the client to the
 			// first physical port
 			if (!connections) {
-				free(ports);
-				ports = jack_get_ports(audio->jack_client, NULL, NULL,
-						JackPortIsPhysical | JackPortIsOutput);
-				if (ports == NULL) {
-					throw(_("No physical capture ports"));
-				}
-
 				if (jack_connect(audio->jack_client, ports[0],
 						jack_port_name(audio->jack_input_port))) {
 					throw(_("Cannot connect input ports"));
@@ -331,7 +320,9 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 		lingot_audio_jack_stop(audio);
 	}
 
-	jack_free(ports);
+	if (ports != NULL) {
+		jack_free(ports);
+	}
 #	else
 	lingot_msg_add_error(
 			_("The application has not been built with JACK support"));
