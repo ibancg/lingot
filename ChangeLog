@@ -1,4 +1,8 @@
 
+2012-01-02 Ibán Cereijo <ibancg@gmail.com>
+
+	* Fixed #35183, #35220, #35221 (thanks to Roy J. Tellason, Sr.)
+
 2011-11-28 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný)
