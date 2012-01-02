@@ -102,7 +102,7 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 	int result = -1;
 
 	if (audio != NULL
-		)
+	)
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			result = lingot_audio_oss_read(audio);
@@ -162,10 +162,10 @@ void lingot_audio_audio_system_properties_destroy(
 	}
 
 	if (properties->sample_rates != NULL
-		)
+	)
 		free(properties->sample_rates);
 	if (properties->devices != NULL
-		)
+	)
 		free(properties->devices);
 }
 
@@ -221,6 +221,18 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 	return result;
 }
 
+// function invoked when the audio thread must be cancelled
+void lingot_audio_cancel(LingotAudioHandler* audio) {
+	fprintf(stderr, "warning: cancelling audio thread\n");
+	switch (audio->audio_system) {
+	case AUDIO_SYSTEM_PULSEAUDIO:
+		lingot_audio_pulseaudio_cancel(audio);
+		break;
+	default:
+		break;
+	}
+}
+
 void lingot_audio_stop(LingotAudioHandler* audio) {
 	void* thread_result;
 
@@ -238,12 +250,12 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 		case AUDIO_SYSTEM_JACK:
 			lingot_audio_jack_stop(audio);
 			break;
-		case AUDIO_SYSTEM_PULSEAUDIO:
-			pthread_join(audio->thread_input_read, &thread_result);
-			pthread_attr_destroy(&audio->thread_input_read_attr);
-			pthread_mutex_destroy(&audio->thread_input_read_mutex);
-			pthread_cond_destroy(&audio->thread_input_read_cond);
-			break;
+//		case AUDIO_SYSTEM_PULSEAUDIO:
+//			pthread_join(audio->thread_input_read, &thread_result);
+//			pthread_attr_destroy(&audio->thread_input_read_attr);
+//			pthread_mutex_destroy(&audio->thread_input_read_mutex);
+//			pthread_cond_destroy(&audio->thread_input_read_cond);
+//			break;
 		default:
 			timeradd(&tout, &tout_abs, &tout_abs);
 			tout_tspec.tv_sec = tout_abs.tv_sec;
@@ -256,8 +268,8 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 			pthread_mutex_unlock(&audio->thread_input_read_mutex);
 
 			if (result == ETIMEDOUT) {
-				fprintf(stderr, "warning: cancelling audio thread\n");
 				pthread_cancel(audio->thread_input_read);
+				lingot_audio_cancel(audio);
 			} else {
 				pthread_join(audio->thread_input_read, &thread_result);
 			}

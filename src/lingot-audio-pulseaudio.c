@@ -101,10 +101,13 @@ void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
 
 #	ifdef PULSEAUDIO
 	if (audio != NULL) {
-		if (audio->pa_client != 0) {
+		if (audio->read_buffer != 0x0) {
+			free(audio->read_buffer);
+		}
+
+		if (audio->pa_client != 0x0) {
 			pa_simple_free(audio->pa_client);
 			audio->pa_client = 0x0;
-			free(audio->read_buffer);
 		}
 	}
 #	endif
@@ -133,6 +136,14 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 #	endif
 
 	return samples_read;
+}
+
+void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio) {
+#ifdef PULSEAUDIO
+	// warning: memory leak?
+	// TODO: avoid it by using the async API
+	audio->pa_client = 0x0;
+#endif
 }
 
 #ifdef PULSEAUDIO
