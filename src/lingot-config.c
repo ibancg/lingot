@@ -280,7 +280,6 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	char* lc_all;
 	void* params[N_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	const char* option = NULL;
 	char buff[80];
 
 	lingot_config_map_parameters(config, params);
@@ -362,13 +361,11 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	FILE* fp;
 	int line;
 	int option_index;
-	int deprecated_option = 0;
 	char* char_buffer_pointer;
 	const static char* delim = " \t=\n";
 	const static char* delim2 = " \t\n";
 	void* params[N_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	const char* option = NULL;
 	int reading_scale = 0;
 	char* nl;
 	int parse_errors = 0;
@@ -561,7 +558,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 		}
 
 		int int_value;
-		float float_value;
+		double double_value;
 		audio_system_t audio_system_value;
 
 		// asign the value to the parameter.
@@ -613,10 +610,10 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			}
 			break;
 		case LINGOT_PARAMETER_TYPE_FLOAT:
-			sscanf(char_buffer_pointer, "%f", &float_value);
-			if ((float_value >= parameters[option_index].float_min)
-					&& (float_value <= parameters[option_index].float_max)) {
-				*((FLT*) param) = float_value;
+			sscanf(char_buffer_pointer, "%lf", &double_value);
+			if ((double_value >= parameters[option_index].float_min)
+					&& (double_value <= parameters[option_index].float_max)) {
+				*((FLT*) param) = double_value;
 			} else {
 				fprintf(
 						stderr,
