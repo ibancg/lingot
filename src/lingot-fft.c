@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -50,6 +50,7 @@ LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 	FLT alpha;
 	unsigned int i;
 
+	// twiddle factors
 	result->wn = (LingotComplex*) malloc((n >> 1) * sizeof(LingotComplex));
 
 	for (i = 0; i < (n >> 1); i++) {
@@ -122,16 +123,16 @@ void lingot_fft_fft(LingotFFTPlan* plan) {
 
 #endif
 
-void lingot_fft_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
+void lingot_fft_spd_compute(LingotFFTPlan* plan, FLT* out, int n_out) {
 
 	int i;
 	double _1_N2 = 1.0 / (plan->n * plan->n);
 
 # ifdef LIBFFTW
-// transformation.
+	// transformation.
 	fftw_execute(plan->fftwplan);
 
-// esteem of SPD from FFT. (normalized squared module)
+	// esteem of SPD from FFT. (normalized squared module)
 	for (i = 0; i < n_out; i++)
 		out[i] = (plan->fftw_out[i][0] * plan->fftw_out[i][0]
 				+ plan->fftw_out[i][1] * plan->fftw_out[i][1]) * _1_N2;
