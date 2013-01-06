@@ -57,7 +57,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->audio = NULL;
 	core->spd_fft = NULL;
 	core->noise_level = NULL;
-	core->X = NULL;
+	core->SPL = NULL;
 	core->spd_dft = NULL;
 	core->diff2_spd_fft = NULL;
 	core->flt_read_buffer = NULL;
@@ -109,10 +109,10 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 		core->spd_fft = malloc(spd_size * sizeof(FLT));
 		core->noise_level = malloc(spd_size * sizeof(FLT));
-		core->X = malloc(spd_size * sizeof(FLT));
+		core->SPL = malloc(spd_size * sizeof(FLT));
 		memset(core->spd_fft, 0, spd_size * sizeof(FLT));
 		memset(core->noise_level, 0, spd_size * sizeof(FLT));
-		memset(core->X, 0, spd_size * sizeof(FLT));
+		memset(core->SPL, 0, spd_size * sizeof(FLT));
 
 		core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
 		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
@@ -201,7 +201,7 @@ void lingot_core_destroy(LingotCore* core) {
 
 		free(core->spd_fft);
 		free(core->noise_level);
-		free(core->X);
+		free(core->SPL);
 		free(core->spd_dft);
 		free(core->diff2_spd_fft);
 		free(core->flt_read_buffer);
@@ -373,7 +373,10 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	lingot_fft_spd_compute(core->fftplan, core->spd_fft, spd_size);
 
 	// representable piece
-	memcpy(core->X, core->spd_fft, spd_size * sizeof(FLT));
+	for (i = 0; i < spd_size; i++) {
+		core->SPL[i] = log10(core->spd_fft[i]);
+	}
+//	lingot_signal_compute_noise_level(core->SPL, spd_size, 40, core->SPL);
 
 	// truncated 2nd derivative esteem, to enhance peaks
 	core->diff2_spd_fft[0] = 0.0;
@@ -520,7 +523,7 @@ void lingot_core_stop(LingotCore* core) {
 		pthread_mutex_destroy(&core->thread_computation_mutex);
 		pthread_cond_destroy(&core->thread_computation_cond);
 
-		memset(core->X, 0,
+		memset(core->SPL, 0,
 				((core->conf->fft_size > 256) ?
 						(core->conf->fft_size >> 1) : core->conf->fft_size)
 						* sizeof(FLT));
@@ -553,7 +556,7 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 
 		if (core->audio != NULL ) {
 			if (core->audio->interrupted) {
-				memset(core->X, 0,
+				memset(core->SPL, 0,
 						((core->conf->fft_size > 256) ?
 								(core->conf->fft_size >> 1) :
 								core->conf->fft_size) * sizeof(FLT));

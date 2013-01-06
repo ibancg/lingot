@@ -31,16 +31,20 @@
 #include "lingot-config.h"
 
 // returns noise threshold at a given frequency w.
-FLT lingot_signal_get_noise_threshold(LingotConfig*, FLT w);
+FLT lingot_signal_get_noise_threshold(const LingotConfig*, FLT w);
 
 // returns if buffer has a peak at given index
-int lingot_signal_is_peak(LingotConfig*, FLT* buffer, int index);
+int lingot_signal_is_peak(const LingotConfig*, const FLT* buffer, int index);
 
 // returns the maximum index.
-void lingot_signal_get_max(FLT *buffer, int N, int* Mi);
+void lingot_signal_get_max(const FLT *buffer, int N, int* Mi);
 
 // returns the index of the peak that carries the fundamental freq.
-int lingot_signal_get_fundamental_peak(LingotConfig*, FLT *x, FLT* y, int N);
+int lingot_signal_get_fundamental_peak(const LingotConfig*, const FLT *x,
+		const FLT* d2x, int N);
+
+void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
+		FLT* noise_level);
 
 // generates a Hamming window of N samples
 void lingot_signal_window(int N, FLT* out, window_type_t window_type);
