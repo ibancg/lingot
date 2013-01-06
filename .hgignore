@@ -73,3 +73,5 @@ syntax: regexp
 ^mkinstalldirs$
 syntax: regexp
 \.gz$
+syntax: regexp
+^test/Debug$
