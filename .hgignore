@@ -71,3 +71,5 @@ syntax: regexp
 ^Makefile\.in$
 syntax: regexp
 ^mkinstalldirs$
+syntax: regexp
+\.gz$
