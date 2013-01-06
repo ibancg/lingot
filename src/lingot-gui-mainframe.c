@@ -95,25 +95,20 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 	sprintf(buff, "Matthew Blissett (%s)", _("Logo design"));
 	const gchar* artists[] = { buff, NULL };
 
-	gtk_show_about_dialog(
-			NULL,
-			"name",
-			"Lingot",
-			"version",
-			VERSION,
+	gtk_show_about_dialog(NULL, "name", "Lingot", "version", VERSION,
 			"copyright",
 			"\xC2\xA9 2004-2013 Ibán Cereijo Graña\n\xC2\xA9 2004-2013 Jairo Chapela Martínez",
 			"comments", _("Accurate and easy to use musical instrument tuner"),
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website", "http://lingot.nongnu.org/",
 			"translator-credits", _("translator-credits"), "logo-icon-name",
-			"lingot-logo", NULL);
+			"lingot-logo", NULL );
 }
 
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
 	if (gtk_check_menu_item_get_active(
-			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item))) {
+			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item) )) {
 		gtk_widget_show(frame->spectrum_frame);
 	} else {
 		gtk_widget_hide(frame->spectrum_frame);
@@ -122,7 +117,7 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 
 void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 		LingotMainFrame* frame) {
-	lingot_gui_config_dialog_show(frame, NULL);
+	lingot_gui_config_dialog_show(frame, NULL );
 }
 
 unsigned short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
@@ -257,25 +252,20 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
 			if (error_code == EBUSY) {
 				message_pointer +=
-						sprintf(
-								message_pointer,
-								"\n\n%s",
+						sprintf(message_pointer, "\n\n%s",
 								_("Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
 			}
 
 			if ((message_type == ERROR) && !frame->core->running) {
 				buttonsType = GTK_BUTTONS_OK;
 				message_pointer +=
-						sprintf(
-								message_pointer,
-								"\n\n%s",
+						sprintf(message_pointer, "\n\n%s",
 								_("The core is not running, you must check your configuration."));
 			} else {
 				buttonsType = GTK_BUTTONS_OK;
 			}
 
-			message_dialog = gtk_message_dialog_new(
-					parent,
+			message_dialog = gtk_message_dialog_new(parent,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
 					(message_type == ERROR) ?
 							GTK_MESSAGE_ERROR :
@@ -283,15 +273,14 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 									GTK_MESSAGE_WARNING : GTK_MESSAGE_INFO),
 					buttonsType, "%s", message);
 
-			gtk_window_set_title(
-					GTK_WINDOW(message_dialog),
+			gtk_window_set_title(GTK_WINDOW(message_dialog),
 					(message_type == ERROR) ?
 							_("Error") :
 							((message_type == WARNING) ?
-									_("Warning") : _("Info")));
+									_("Warning") : _("Info") ));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
-					gtk_window_get_icon(GTK_WINDOW(frame->win)));
-			gtk_dialog_run(GTK_DIALOG(message_dialog));
+					gtk_window_get_icon(GTK_WINDOW(frame->win) ));
+			gtk_dialog_run(GTK_DIALOG(message_dialog) );
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 
@@ -314,7 +303,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(
 			_("Open Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL );
 	GtkFileFilter *filefilter;
 	LingotConfig* config = NULL;
 	filefilter = gtk_file_filter_new();
@@ -325,18 +314,18 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	if (filechooser_config_last_folder != NULL) {
+	if (filechooser_config_last_folder != NULL ) {
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-		if (filechooser_config_last_folder != NULL)
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
+		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
 		config = lingot_config_new();
 		lingot_config_load(config, filename);
 		g_free(filename);
@@ -344,7 +333,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	gtk_widget_destroy(dialog);
 	//g_free(filefilter);
 
-	if (config != NULL) {
+	if (config != NULL ) {
 		lingot_gui_config_dialog_show(frame, config);
 	}
 }
@@ -354,7 +343,7 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
 			_("Save Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL );
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
 			TRUE);
 
@@ -368,18 +357,18 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	if (filechooser_config_last_folder != NULL) {
+	if (filechooser_config_last_folder != NULL ) {
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-		if (filechooser_config_last_folder != NULL)
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
+		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
 		lingot_config_save(frame->conf, filename);
 		g_free(filename);
 	}
@@ -398,7 +387,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	LingotConfig* conf;
 	GladeXML* _gladeXML = NULL;
 
-	if (filechooser_config_last_folder == NULL) {
+	if (filechooser_config_last_folder == NULL ) {
 		char buff[1000];
 		sprintf(buff, "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
 		filechooser_config_last_folder = strdup(buff);
@@ -429,11 +418,11 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 #	define FILE_NAME "lingot-mainframe.glade"
 	FILE* fd = fopen("src/glade/" FILE_NAME, "r");
-	if (fd != NULL) {
+	if (fd != NULL ) {
 		fclose(fd);
-		_gladeXML = glade_xml_new("src/glade/" FILE_NAME, "window1", NULL);
+		_gladeXML = glade_xml_new("src/glade/" FILE_NAME, "window1", NULL );
 	} else {
-		_gladeXML = glade_xml_new(LINGOT_GLADEDIR FILE_NAME, "window1", NULL);
+		_gladeXML = glade_xml_new(LINGOT_GLADEDIR FILE_NAME, "window1", NULL );
 	}
 #	undef FILE_NAME
 
@@ -609,13 +598,11 @@ void lingot_gui_mainframe_draw_gauge(LingotMainFrame* frame) {
 	gdk_gc_set_foreground(gc, &cents_color);
 	static char buff1[10];
 	static char buff2[10];
-	sprintf(
-			buff1,
+	sprintf(buff1,
 			(frame->conf->scale->max_offset_rounded > 1.0) ?
 					"-%.0f c" : "-%.1f c",
 			0.5 * frame->conf->scale->max_offset_rounded);
-	sprintf(
-			buff2,
+	sprintf(buff2,
 			(frame->conf->scale->max_offset_rounded > 1.0) ?
 					"+%.0f c" : "+%.1f c",
 			0.5 * frame->conf->scale->max_offset_rounded);
@@ -789,8 +776,8 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 		if (frame->core->running) {
 			for (i = min; i < max; i++) {
-				j = (frame->core->X[i] > 1.0) ?
-						(int) (plot_gain * log10(frame->core->X[i])) : 0; // dB.
+				j = (frame->core->SPL[i] >= 0.0) ?
+						(int) (plot_gain * frame->core->SPL[i]) : 0; // dB.
 				if (j >= spectrum_size_y)
 					j = spectrum_size_y - 1;
 				if (spectrum_drawing_filled) {
@@ -821,8 +808,8 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 								/ frame->conf->sample_rate);
 				if ((i < frame->conf->fft_size - 1)
 						&& (i < spectrum_size_x - 1)) {
-					j = (frame->core->X[i] > 1.0) ?
-							(int) (plot_gain * log10(frame->core->X[i])) : 0; // dB.
+					j = (frame->core->SPL[i] >= 0.0) ?
+							(int) (plot_gain * frame->core->SPL[i]) : 0; // dB.
 					if (j < spectrum_size_y - 1)
 						gdk_draw_rectangle(pixmap, gc, TRUE,
 								spectrum_x_margin + i - 1,
@@ -838,7 +825,7 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	widget = frame->spectrum_area;
 
 	gdk_draw_pixmap(widget->window,
-			widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixmap, 0, 0, 0, 0,
+			widget->style->fg_gc[GTK_WIDGET_STATE(widget) ], pixmap, 0, 0, 0, 0,
 			spectrum_size_x + 2 * spectrum_x_margin,
 			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin);
 }
@@ -868,9 +855,7 @@ void lingot_gui_mainframe_draw_labels(LingotMainFrame* frame) {
 
 		current_tone = frame->conf->scale->note_name[note_index];
 		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
-		sprintf(
-				freq_string,
-				"f = %6.2f Hz",
+		sprintf(freq_string, "f = %6.2f Hz",
 				lingot_filter_filter_sample(frame->freq_filter,
 						frame->core->freq));
 	}
@@ -902,12 +887,10 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	frame->pix_spectrum = gdk_pixmap_new(frame->spectrum_area->window, x, y,
 			-1);
 
-	gtk_scrolled_window_set_policy(
-			frame->spectrum_scroll,
+	gtk_scrolled_window_set_policy(frame->spectrum_scroll,
 			(frame->conf->fft_size > 512) ?
 					GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	gtk_widget_set_size_request(
-			GTK_WIDGET(frame->spectrum_scroll),
+	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll),
 			260 + 2 * spectrum_x_margin,
 			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin + 4
 					+ ((frame->conf->fft_size > 512) ? 16 : 0));

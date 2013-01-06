@@ -40,7 +40,7 @@ struct _LingotCore {
 
 	//  -- shared data --
 	FLT freq; // analog frequency calculated.
-	FLT* X; // visual portion of FFT.
+	FLT* SPL; // visual portion of FFT.
 	//  -- shared data --
 
 	LingotAudioHandler* audio; // audio handler.

@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdlib.h>
 #include <math.h>
 
 #include "lingot-signal.h"
@@ -28,7 +29,7 @@
  peak identification functions.
  */
 
-FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w) {
+FLT lingot_signal_get_noise_threshold(const LingotConfig* conf, FLT w) {
 	//return 0.5*(1.0 - 0.9*w/M_PI);
 	return pow(10.0, (conf->noise_threshold_db * (1.0 - 0.9 * w / M_PI)) / 10.0);
 	//return conf->noise_threshold_un;
@@ -37,7 +38,7 @@ FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w) {
 //---------------------------------------------------------------------------
 
 /* returns the maximun index of buffer x (size N) */
-void lingot_signal_get_max(FLT *x, int N, int* Mi) {
+void lingot_signal_get_max(const FLT *x, int N, int* Mi) {
 	register int i;
 	FLT M;
 
@@ -55,7 +56,7 @@ void lingot_signal_get_max(FLT *x, int N, int* Mi) {
 
 //---------------------------------------------------------------------------
 
-int lingot_signal_is_peak(LingotConfig* conf, FLT* x, int index) {
+int lingot_signal_is_peak(const LingotConfig* conf, const FLT* x, int index) {
 	register unsigned int j;
 	//static   FLT  delta_w_FFT = 2.0*M_PI/conf->FFT_SIZE; // resolution in rads
 
@@ -75,8 +76,8 @@ int lingot_signal_is_peak(LingotConfig* conf, FLT* x, int index) {
 //---------------------------------------------------------------------------
 
 // search the fundamental peak given the spd and its 2nd derivative
-int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
-		int N) {
+int lingot_signal_get_fundamental_peak(const LingotConfig* conf, const FLT *x,
+		const FLT* d2x, int N) {
 	register unsigned int i, j, m;
 	int p_index[conf->peak_number];
 
@@ -84,8 +85,9 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 	for (i = 0; i < conf->peak_number; i++)
 		p_index[i] = -1;
 
-	unsigned int lowest_index = (unsigned int) ceil(conf->min_frequency * (1.0
-			* conf->oversampling / conf->sample_rate) * conf->fft_size);
+	unsigned int lowest_index = (unsigned int) ceil(
+			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
+					* conf->fft_size);
 
 	if (lowest_index < conf->peak_half_width)
 		lowest_index = conf->peak_half_width;
@@ -128,8 +130,8 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 
 	// all peaks much lower than maximum are deleted.
 	for (i = 0; i < conf->peak_number; i++)
-		if ((p_index[i] == -1) || (conf->peak_rejection_relation_nu
-				* x[p_index[i]] < maximum))
+		if ((p_index[i] == -1)
+				|| (conf->peak_rejection_relation_nu * x[p_index[i]] < maximum))
 			p_index[i] = N; // there are available places in the buffer.
 
 	// search the lowest maximum index.
@@ -139,6 +141,56 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 	}
 
 	return p_index[m];
+}
+
+void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
+		FLT* noise_level) {
+
+	static int n = 0;
+	static int _np2 = 0.0;
+	static FLT* cbuffer = NULL;
+	static FLT _1pn = 0.0;
+
+	if (cbuffer_size != n) {
+		if (cbuffer != NULL ) {
+			free(cbuffer);
+		}
+		n = cbuffer_size;
+		cbuffer = malloc(n * sizeof(FLT));
+		_np2 = n / 2;
+		_1pn = 1.0 / n;
+	}
+
+	int i = 0;
+	unsigned char cbuffer_top = n - 1;
+
+	// moving average filter
+
+	// first sample
+	FLT spli = spd[0];
+	FLT cbuffer_sum = spli * n;
+	for (i = 0; i < n; i++) {
+		cbuffer[i] = spli;
+	}
+
+	// O(n) algorithm
+	for (i = -_np2; i <= N + _np2; i++) {
+		if (i + _np2 < N) {
+			spli = spd[i + _np2]; // new sample
+		}
+
+		cbuffer_top++;
+		if (cbuffer_top >= n) {
+			cbuffer_top = 0;
+		}
+		cbuffer_sum -= cbuffer[cbuffer_top]; // exiting sample
+		cbuffer[cbuffer_top] = spli; // new sample in the buffer
+		cbuffer_sum += spli;
+
+		if ((i >= 0) && (i < N)) {
+			noise_level[i] = cbuffer_sum * _1pn;
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
