@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -36,7 +36,7 @@ FLT lingot_signal_get_noise_threshold(LingotConfig* conf, FLT w) {
 
 //---------------------------------------------------------------------------
 
-/* returns the index of the maximun of the buffer x of size N */
+/* returns the maximun index of buffer x (size N) */
 void lingot_signal_get_max(FLT *x, int N, int* Mi) {
 	register int i;
 	FLT M;
@@ -80,7 +80,7 @@ int lingot_signal_get_fundamental_peak(LingotConfig* conf, FLT *x, FLT* d2x,
 	register unsigned int i, j, m;
 	int p_index[conf->peak_number];
 
-	// at this moment there is no peaks.
+	// at this moment there are no peaks.
 	for (i = 0; i < conf->peak_number; i++)
 		p_index[i] = -1;
 

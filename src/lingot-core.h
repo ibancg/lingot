@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -60,6 +60,7 @@ struct _LingotCore {
 	FLT* spd_fft;
 	FLT* spd_dft;
 	FLT* diff2_spd_fft;
+	FLT* noise_level;
 
 	LingotFFTPlan* fftplan;
 

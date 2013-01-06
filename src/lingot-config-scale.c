@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -209,7 +209,6 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	const char* error_format_msg = _("incorrect format");
 	const char* error_note_number_msg = _("note number mismatch");
 	const char* exception;
-	char buff1[1000];
 
 #   define MAX_LINE_SIZE 1000
 

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2011  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
  *
  * This file is part of lingot.
  *
@@ -57,7 +57,7 @@ LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n);
 void lingot_fft_plan_destroy(LingotFFTPlan*);
 
 // Full Spectral Power Distribution (SPD) esteem.
-void lingot_fft_spd(LingotFFTPlan*, FLT* out, int n_out);
+void lingot_fft_spd_compute(LingotFFTPlan*, FLT* out, int n_out);
 
 // Spectral Power Distribution (SPD) evaluation at a given frequency.
 void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
