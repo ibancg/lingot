@@ -24,18 +24,11 @@
 #include <math.h>
 
 #include "lingot-signal.h"
+#include "lingot-complex.h"
 
 /*
  peak identification functions.
  */
-
-FLT lingot_signal_get_noise_threshold(const LingotConfig* conf, FLT w) {
-	//return 0.5*(1.0 - 0.9*w/M_PI);
-	return pow(10.0, (conf->noise_threshold_db * (1.0 - 0.9 * w / M_PI)) / 10.0);
-	//return conf->noise_threshold_un;
-}
-
-//---------------------------------------------------------------------------
 
 /* returns the maximun index of buffer x (size N) */
 void lingot_signal_get_max(const FLT *x, int N, int* Mi) {
@@ -56,18 +49,18 @@ void lingot_signal_get_max(const FLT *x, int N, int* Mi) {
 
 //---------------------------------------------------------------------------
 
-int lingot_signal_is_peak(const LingotConfig* conf, const FLT* x, int index) {
+int lingot_signal_is_peak(const FLT* signal, int index, short peak_half_width,
+		FLT noise) {
 	register unsigned int j;
-	//static   FLT  delta_w_FFT = 2.0*M_PI/conf->FFT_SIZE; // resolution in rads
 
 	// a peak must be greater than noise threshold.
-	if (x[index] < conf->noise_threshold_nu)
+	if (signal[index] < noise)
 		return 0;
 
-	for (j = 0; j < conf->peak_half_width; j++) {
-		if (x[index + j] < x[index + j + 1])
+	for (j = 0; j < peak_half_width; j++) {
+		if (signal[index + j] < signal[index + j + 1])
 			return 0;
-		if (x[index - j] < x[index - j - 1])
+		if (signal[index - j] < signal[index - j - 1])
 			return 0;
 	}
 	return 1;
@@ -94,7 +87,8 @@ int lingot_signal_get_fundamental_peak(const LingotConfig* conf, const FLT *x,
 
 	// I'll get the PEAK_NUMBER maximum peaks.
 	for (i = lowest_index; i < N - conf->peak_half_width; i++)
-		if (lingot_signal_is_peak(conf, x, i)) {
+		if (lingot_signal_is_peak(x, i, conf->peak_half_width,
+				conf->noise_threshold_nu)) {
 
 			// search a place in the maximums buffer, if it doesn't exists, the
 			// lower maximum is candidate to be replaced.
@@ -143,37 +137,137 @@ int lingot_signal_get_fundamental_peak(const LingotConfig* conf, const FLT *x,
 	return p_index[m];
 }
 
+int lingot_signal_is_peak2(const FLT* signal, int index, short peak_half_width) {
+	register unsigned int j;
+
+	for (j = 0; j < peak_half_width; j++) {
+		if (signal[index + j] < signal[index + j + 1])
+			return 0;
+		if (signal[index - j] < signal[index - j - 1])
+			return 0;
+	}
+	return 1;
+}
+
+FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
+	return (0.25 * log(3 * x * x + 6 * x + 1)
+			- 0.102062072615966
+					* log(
+							(x + 1 - 0.816496580927726)
+									/ (x + 1 + 0.816496580927726)));
+}
+
+FLT lingot_signal_fft_bin_interpolate_quinn2(const LingotComplex y1,
+		const LingotComplex y2, const LingotComplex y3) {
+	FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
+	FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
+	FLT dp = -ap / (1.0 - ap);
+	FLT am = (y1[0] * y2[0] + y1[1] * y2[1]) / absy2_2;
+	FLT dm = am / (1.0 - am);
+	return (dp + dm) / 2 + lingot_signal_fft_bin_interpolate_quinn2_tau(dp * dp)
+			- lingot_signal_fft_bin_interpolate_quinn2_tau(dm * dm);
+}
+
+// search the fundamental peak given the spd and its 2nd derivative
+int lingot_signal_get_fundamental_peak2(const FLT* signal, const FLT* noise,
+		int N, int n_peaks, int lowest_index, short peak_half_width,
+		FLT min_snr) {
+	register unsigned int i, j, m;
+	int p_index[n_peaks];
+
+// at this moment there are no peaks.
+	for (i = 0; i < n_peaks; i++)
+		p_index[i] = -1;
+
+	if (lowest_index < peak_half_width) {
+		lowest_index = peak_half_width;
+	}
+
+// I'll get the PEAK_NUMBER maximum peaks with SNR above the required.
+	for (i = lowest_index; i < N - peak_half_width; i++)
+		if ((signal[i] - noise[i] > min_snr)
+				&& lingot_signal_is_peak2(signal, i, peak_half_width)) {
+
+			printf("%d %f\n", (signal[i] - noise[i] > min_snr),
+					(signal[i] - noise[i]));
+			// search a place in the maximums buffer, if it doesn't exists, the
+			// lower maximum is candidate to be replaced.
+			m = 0;				// first candidate.
+			for (j = 0; j < n_peaks; j++) {
+				if (p_index[j] == -1) {
+					m = j; // there is a place.
+					break;
+				}
+
+				// if there is no place, finds the smallest peak as a candidate
+				// to be substituted.
+				if (signal[p_index[j]] < signal[p_index[m]]) {
+					m = j;
+				}
+			}
+
+			if (p_index[m] == -1) {
+				p_index[m] = i; // there is a place
+			} else if (signal[i] > signal[p_index[m]]) {
+				p_index[m] = i; // if greater
+			}
+		}
+
+	FLT maximum = 0.0;
+	int maximum_index = -1;
+
+// search the maximum peak
+	for (i = 0; i < n_peaks; i++)
+		if ((p_index[i] != -1) && (signal[p_index[i]] > maximum)) {
+			maximum = signal[p_index[i]];
+			maximum_index = p_index[i];
+		}
+
+	for (i = 0; i < n_peaks; i++) {
+		printf("%i ", p_index[i]);
+	}
+	printf("\n");
+
+	if (maximum_index == -1)
+		return N;
+
+//	// all peaks much lower than maximum are deleted.
+//	for (i = 0; i < n_peaks; i++)
+//		if ((p_index[i] == -1)
+//				|| (conf->peak_rejection_relation_nu * signal[p_index[i]]
+//						< maximum))
+//			p_index[i] = N; // there are available places in the buffer.
+
+// search the lowest maximum index.
+	for (m = 0, j = 0; j < n_peaks; j++) {
+		if (p_index[j] < p_index[m])
+			m = j;
+	}
+
+	return p_index[m];
+}
+
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level) {
 
-	static int n = 0;
-	static int _np2 = 0.0;
-	static FLT* cbuffer = NULL;
-	static FLT _1pn = 0.0;
-
-	if (cbuffer_size != n) {
-		if (cbuffer != NULL ) {
-			free(cbuffer);
-		}
-		n = cbuffer_size;
-		cbuffer = malloc(n * sizeof(FLT));
-		_np2 = n / 2;
-		_1pn = 1.0 / n;
-	}
+	const int n = cbuffer_size;
+	const int _np2 = n / 2;
+	const FLT _1pn = 1.0 / n;
+	FLT cbuffer[n];
 
 	int i = 0;
 	unsigned char cbuffer_top = n - 1;
 
-	// moving average filter
+// moving average filter
 
-	// first sample
+// first sample
 	FLT spli = spd[0];
 	FLT cbuffer_sum = spli * n;
 	for (i = 0; i < n; i++) {
 		cbuffer[i] = spli;
 	}
 
-	// O(n) algorithm
+// O(n) algorithm
 	for (i = -_np2; i <= N + _np2; i++) {
 		if (i + _np2 < N) {
 			spli = spd[i + _np2]; // new sample

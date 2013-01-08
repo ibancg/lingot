@@ -22,36 +22,40 @@
 
 #include "lingot-complex.h"
 
-void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
-	c->r = a->r + b->r;
-	c->i = a->i + b->i;
+void lingot_complex_add(const LingotComplex a, const LingotComplex b,
+		LingotComplex c) {
+	c[0] = a[0] + b[0];
+	c[1] = a[1] + b[1];
 }
 
-void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
-	c->r = a->r - b->r;
-	c->i = a->i - b->i;
+void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
+		LingotComplex c) {
+	c[0] = a[0] - b[0];
+	c[1] = a[1] - b[1];
 }
 
-void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
-	c->r = a->r * b->r - a->i * b->i;
-	c->i = a->i * b->r + a->r * b->i;
+void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
+		LingotComplex c) {
+	c[0] = a[0] * b[0] - a[1] * b[1];
+	c[1] = a[1] * b[0] + a[0] * b[1];
 }
 
-void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c) {
-	FLT bm2 = b->r * b->r + b->i * b->i;
-	c->r = (a->r * b->r + a->i * b->i) / bm2;
-	c->i = (a->i * b->r - a->r * b->i) / bm2;
+void lingot_complex_div(const LingotComplex a, const LingotComplex b,
+		LingotComplex c) {
+	FLT bm2 = b[0] * b[0] + b[1] * b[1];
+	c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
+	c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
 }
 
-void lingot_complex_mul_by(LingotComplex* a, LingotComplex* b) {
-	double rr = a->r * b->r - a->i * b->i;
-	a->i = a->i * b->r + a->r * b->i;
-	a->r = rr;
+void lingot_complex_mul_by(LingotComplex a, const LingotComplex b) {
+	double rr = a[0] * b[0] - a[1] * b[1];
+	a[1] = a[1] * b[0] + a[0] * b[1];
+	a[0] = rr;
 }
 
-void lingot_complex_div_by(LingotComplex* a, LingotComplex* b) {
-	FLT bm2 = b->r * b->r + b->i * b->i;
-	double rr = (a->r * b->r + a->i * b->i) / bm2;
-	a->i = (a->i * b->r - a->r * b->i) / bm2;
-	a->r = rr;
+void lingot_complex_div_by(LingotComplex a, const LingotComplex b) {
+	FLT bm2 = b[0] * b[0] + b[1] * b[1];
+	double rr = (a[0] * b[0] + a[1] * b[1]) / bm2;
+	a[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
+	a[0] = rr;
 }

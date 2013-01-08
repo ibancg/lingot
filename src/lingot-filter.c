@@ -96,17 +96,17 @@ FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in) {
 
 // vector prod
 void lingot_filter_vector_product(int n, LingotComplex* vector,
-		LingotComplex* result) {
+		LingotComplex result) {
 	register int i;
 	LingotComplex aux1;
 
-	result->r = 1.0;
-	result->i = 0.0;
+	result[0] = 1.0;
+	result[1] = 0.0;
 
 	for (i = 0; i < n; i++) {
-		aux1.r = -vector[i].r;
-		aux1.i = -vector[i].i;
-		lingot_complex_mul_by(result, &aux1);
+		aux1[0] = -vector[i][0];
+		aux1[1] = -vector[i][1];
+		lingot_complex_mul_by(result, aux1);
 	}
 
 }
@@ -127,8 +127,8 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	LingotComplex pole[n];
 
 	for (i = 0; i < n; i++) {
-		pole[i].r = 0.0;
-		pole[i].i = 0.0;
+		pole[i][0] = 0.0;
+		pole[i][1] = 0.0;
 	}
 
 	FLT T = 2.0;
@@ -145,50 +145,49 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 
 	for (i = -(n - 1), k = 0; k < n; i += 2, k++) {
 		t = M_PI * i / (2.0 * n);
-		pole[k].r = -sv0 * cos(t);
-		pole[k].i = cv0 * sin(t);
+		pole[k][0] = -sv0 * cos(t);
+		pole[k][1] = cv0 * sin(t);
 	}
 
 	LingotComplex gain;
+	lingot_filter_vector_product(n, pole, gain);
 
-	lingot_filter_vector_product(n, pole, &gain);
-
-	if ((n & 1) == 0) {// even
+	if ((n & 1) == 0) { // even
 		FLT f = pow(10.0, -0.05 * Rp);
-		gain.r *= f;
-		gain.i *= f;
+		gain[0] *= f;
+		gain[1] *= f;
 	}
 
 	FLT f = pow(W, n);
-	gain.r *= f;
-	gain.i *= f;
+	gain[0] *= f;
+	gain[1] *= f;
 
 	for (i = 0; i < n; i++) {
-		pole[i].r *= W;
-		pole[i].i *= W;
+		pole[i][0] *= W;
+		pole[i][1] *= W;
 	}
 
 	// bilinear transform
 	LingotComplex sp[n];
 
 	for (i = 0; i < n; i++) {
-		sp[i].r = (2.0 - pole[i].r * T) / T;
-		sp[i].i = (0.0 - pole[i].i * T) / T;
+		sp[i][0] = (2.0 - pole[i][0] * T) / T;
+		sp[i][1] = (0.0 - pole[i][1] * T) / T;
 	}
 
 	LingotComplex tmp1;
 	LingotComplex aux2;
 
-	lingot_filter_vector_product(n, sp, &tmp1);
+	lingot_filter_vector_product(n, sp, tmp1);
 
-	lingot_complex_div_by(&gain, &tmp1);
+	lingot_complex_div_by(gain, tmp1);
 
 	for (i = 0; i < n; i++) {
-		tmp1.r = (2.0 + pole[i].r * T);
-		tmp1.i = (0.0 + pole[i].i * T);
-		aux2.r = (2.0 - pole[i].r * T);
-		aux2.i = (0.0 - pole[i].i * T);
-		lingot_complex_div(&tmp1, &aux2, &pole[i]);
+		tmp1[0] = (2.0 + pole[i][0] * T);
+		tmp1[1] = (0.0 + pole[i][1] * T);
+		aux2[0] = (2.0 - pole[i][0] * T);
+		aux2[1] = (0.0 - pole[i][1] * T);
+		lingot_complex_div(tmp1, aux2, pole[i]);
 	}
 
 	// compute filter coefficients from pole/zero values
@@ -205,9 +204,9 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 	}
 
 	if ((n & 1) == 1) // odd
-	{
+			{
 		// first subfilter is first order
-		a[1] = -pole[n / 2].r;
+		a[1] = -pole[n / 2][0];
 		b[1] = 1.0;
 	}
 
@@ -216,8 +215,8 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 		FLT b1 = 2.0;
 		FLT b2 = 1.0;
 
-		FLT a1 = -2.0 * pole[p].r;
-		FLT a2 = pole[p].r * pole[p].r + pole[p].i * pole[p].i;
+		FLT a1 = -2.0 * pole[p][0];
+		FLT a2 = pole[p][0] * pole[p][0] + pole[p][1] * pole[p][1];
 
 		// 2nd order subfilter per each pair
 		new_a[1] = a[1] + a1 * a[0];
@@ -234,9 +233,9 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 		}
 	}
 
-	gain.r = fabs(gain.r);
+	gain[0] = fabs(gain[0]);
 	for (i = 0; i <= n; i++) {
-		b[i] *= gain.r;
+		b[i] *= gain[0];
 	}
 
 	return lingot_filter_new(n, n, a, b);

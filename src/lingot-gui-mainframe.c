@@ -527,7 +527,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	lingot_gui_mainframe_color(&spectrum_background_color, 0x1111, 0x3333,
 			0x1111);
 	lingot_gui_mainframe_color(&spectrum_color, 0x2222, 0xEEEE, 0x2222);
-	lingot_gui_mainframe_color(&noise_threshold_color, 0x8888, 0x8888, 0x2222);
+	lingot_gui_mainframe_color(&noise_threshold_color, 0xaaaa, 0x8888, 0xffff);
 	lingot_gui_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
 	lingot_gui_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
 	lingot_gui_mainframe_color(&cents_color, 0x3000, 0x3000, 0x3000);
@@ -707,7 +707,7 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		freq += scale;
 	}
 
-	static const unsigned int plot_gain = 8;
+	static const FLT plot_gain = 8.0;
 
 	sprintf(buff, "dB");
 
@@ -739,30 +739,14 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		j += grid_db_height;
 	}
 
-	gdk_gc_set_foreground(gc, &noise_threshold_color);
-
-	// noise threshold drawing.
-	j = -1;
-	for (i = 0; (i < frame->conf->fft_size) && (i < spectrum_size_x); i++) {
-		if ((i % 10) > 5)
-			continue;
-
-		FLT noise = frame->conf->noise_threshold_nu;
-		old_j = j;
-		j = (noise > 1.0) ? (int) (plot_gain * log10(noise)) : 0; // dB.
-		if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
-				&& (j < spectrum_size_y))
-			gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
-					spectrum_size_y + spectrum_top_margin - old_j,
-					spectrum_x_margin + i,
-					spectrum_size_y + spectrum_top_margin - j);
-	}
-
-	gdk_gc_set_foreground(gc, &spectrum_color);
+	// TODO: specify the visible range
 
 	// TODO: change access to frame->core->X
 	// spectrum drawing.
 	if (frame->core->running) {
+
+		gdk_gc_set_foreground(gc, &spectrum_color);
+
 		j = -1;
 
 		GtkAdjustment* adj = gtk_scrolled_window_get_hadjustment(
@@ -774,50 +758,70 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		if (max >= spectrum_size_x)
 			max = spectrum_size_x;
 
-		if (frame->core->running) {
-			for (i = min; i < max; i++) {
-				j = (frame->core->SPL[i] >= 0.0) ?
-						(int) (plot_gain * frame->core->SPL[i]) : 0; // dB.
-				if (j >= spectrum_size_y)
-					j = spectrum_size_y - 1;
-				if (spectrum_drawing_filled) {
-					gdk_draw_line(pixmap, gc, spectrum_x_margin + i,
-							spectrum_size_y + spectrum_top_margin - 1,
+		for (i = min; i < max; i++) {
+
+			FLT SNR = frame->core->SPL[i] - frame->core->noise_level[i];
+			j = (SNR >= 0.0) ? (int) (plot_gain * SNR / 10.0) : 0; // dB.
+			if (j >= spectrum_size_y)
+				j = spectrum_size_y - 1;
+			if (spectrum_drawing_filled) {
+				gdk_draw_line(pixmap, gc, spectrum_x_margin + i,
+						spectrum_size_y + spectrum_top_margin - 1,
+						spectrum_x_margin + i,
+						spectrum_top_margin + spectrum_size_y - j);
+			} else {
+				if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
+						&& (j < spectrum_size_y))
+					gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
+							spectrum_size_y + spectrum_top_margin - old_j,
 							spectrum_x_margin + i,
-							spectrum_top_margin + spectrum_size_y - j);
-				} else {
-					if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
-							&& (j < spectrum_size_y))
-						gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
-								spectrum_size_y + spectrum_top_margin - old_j,
-								spectrum_x_margin + i,
-								spectrum_size_y + spectrum_top_margin - j);
-					old_j = j;
-				}
-			}
-
-			if (frame->core->freq != 0.0) {
-
-				// fundamental frequency mark with a red point.
-				gdk_gc_set_foreground(gc, &freq_color);
-
-				// index of closest sample to fundamental frequency.
-				i = (int) rint(
-						frame->core->freq * frame->conf->fft_size
-								* frame->conf->oversampling
-								/ frame->conf->sample_rate);
-				if ((i < frame->conf->fft_size - 1)
-						&& (i < spectrum_size_x - 1)) {
-					j = (frame->core->SPL[i] >= 0.0) ?
-							(int) (plot_gain * frame->core->SPL[i]) : 0; // dB.
-					if (j < spectrum_size_y - 1)
-						gdk_draw_rectangle(pixmap, gc, TRUE,
-								spectrum_x_margin + i - 1,
-								spectrum_size_y + spectrum_top_margin - j - 1,
-								3, 3);
-				}
+							spectrum_size_y + spectrum_top_margin - j);
+				old_j = j;
 			}
 		}
+
+		if (frame->core->freq != 0.0) {
+
+			// fundamental frequency mark with a red point.
+			gdk_gc_set_foreground(gc, &freq_color);
+
+			// index of closest sample to fundamental frequency.
+			i = (int) rint(
+					frame->core->freq * frame->conf->fft_size
+							* frame->conf->oversampling
+							/ frame->conf->sample_rate);
+			if ((i < frame->conf->fft_size - 1) && (i < spectrum_size_x - 1)) {
+
+				FLT SNR = frame->core->SPL[i] - frame->core->noise_level[i];
+
+				j = (SNR >= 0.0) ? (int) (plot_gain * SNR / 10.0) : 0; // dB.
+				if (j < spectrum_size_y - 1)
+					gdk_draw_rectangle(pixmap, gc, TRUE,
+							spectrum_x_margin + i - 1,
+							spectrum_size_y + spectrum_top_margin - j - 1, 3,
+							3);
+			}
+		}
+
+		gdk_gc_set_foreground(gc, &noise_threshold_color);
+
+		// noise threshold drawing.
+		j = -1;
+		for (i = 0; (i < frame->conf->fft_size) && (i < spectrum_size_x); i++) {
+			if ((i % 10) > 5)
+				continue;
+
+			FLT noise = frame->core->noise_level[i];
+			old_j = j;
+			j = (noise >= 0.0) ? (int) (plot_gain * noise / 10.0) : 0; // dB.
+			if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
+					&& (j < spectrum_size_y))
+				gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
+						spectrum_size_y + spectrum_top_margin - old_j,
+						spectrum_x_margin + i,
+						spectrum_size_y + spectrum_top_margin - j);
+		}
+
 	}
 
 	gdk_gc_set_foreground(gc, &black_color);

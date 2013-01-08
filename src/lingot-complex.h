@@ -28,42 +28,40 @@
 
 // single complex arithmetic  :)
 
-typedef struct _LingotComplex LingotComplex;
-
-struct _LingotComplex
-  {
-    FLT r;
-    FLT i;
-  };
+typedef FLT LingotComplex[2];
 
 /**
  * Addition. All parameters are overlapables.
  */
-void lingot_complex_add(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_add(const LingotComplex a, const LingotComplex b,
+		LingotComplex c);
 
 /**
  * Substraction. All parameters are overlapables.
  */
-void lingot_complex_sub(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
+		LingotComplex c);
 
 /**
  * Multiplication. Parameters not overlapable.
  */
-void lingot_complex_mul(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
+		LingotComplex c);
 
 /**
  * Division. Parameters not overlapable.
  */
-void lingot_complex_div(LingotComplex* a, LingotComplex* b, LingotComplex* c);
+void lingot_complex_div(const LingotComplex a, const LingotComplex b,
+		LingotComplex c);
 
 /**
  * Computes a *= b
  */
-void lingot_complex_mul_by(LingotComplex* a, LingotComplex* b);
+void lingot_complex_mul_by(LingotComplex a, const LingotComplex b);
 
 /**
  * Computes a /= b
  */
-void lingot_complex_div_by(LingotComplex* a, LingotComplex* b);
+void lingot_complex_div_by(LingotComplex a, const LingotComplex b);
 
 #endif
