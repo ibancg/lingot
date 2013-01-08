@@ -30,12 +30,6 @@
 #include "lingot-defs.h"
 #include "lingot-config.h"
 
-// returns noise threshold at a given frequency w.
-FLT lingot_signal_get_noise_threshold(const LingotConfig*, FLT w);
-
-// returns if buffer has a peak at given index
-int lingot_signal_is_peak(const LingotConfig*, const FLT* buffer, int index);
-
 // returns the maximum index.
 void lingot_signal_get_max(const FLT *buffer, int N, int* Mi);
 

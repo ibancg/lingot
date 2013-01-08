@@ -42,9 +42,9 @@ LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 	result->in = in;
 
 #ifdef LIBFFTW
-	result->fftw_out = fftw_malloc(n * sizeof(fftw_complex));
-	memset(result->fftw_out, 0, n * sizeof(fftw_complex));
-	result->fftwplan = fftw_plan_dft_r2c_1d(n, in, result->fftw_out,
+	result->fft_out = fftw_malloc(n * sizeof(fftw_complex));
+	memset(result->fft_out, 0, n * sizeof(fftw_complex));
+	result->fftwplan = fftw_plan_dft_r2c_1d(n, in, result->fft_out,
 			FFTW_ESTIMATE);
 #else
 	FLT alpha;
@@ -55,8 +55,8 @@ LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 
 	for (i = 0; i < (n >> 1); i++) {
 		alpha = -2.0 * i * M_PI / n;
-		result->wn[i].r = cos(alpha);
-		result->wn[i].i = sin(alpha);
+		result->wn[i][0] = cos(alpha);
+		result->wn[i][1] = sin(alpha);
 	}
 	result->fft_out = malloc(n * sizeof(LingotComplex)); // complex signal in freq domain.
 	memset(result->fft_out, 0, n * sizeof(LingotComplex));
@@ -69,7 +69,7 @@ void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
 
 #ifdef LIBFFTW
 	fftw_destroy_plan(plan->fftwplan);
-	fftw_free(plan->fftw_out);
+	fftw_free(plan->fft_out);
 #else
 	free(plan->fft_out);
 	free(plan->wn);
@@ -91,13 +91,13 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned lo
 
 	if (N == 2) { // butterfly for N = 2;
 
-		X1.r = in[offset];
-		X1.i = 0.0;
-		X2.r = in[offset + step];
-		X2.i = 0.0;
+		X1[0] = in[offset];
+		X1[1] = 0.0;
+		X2[0] = in[offset + step];
+		X2[1] = 0.0;
 
-		lingot_complex_add(&X1, &X2, &out[d1]);
-		lingot_complex_sub(&X1, &X2, &out[d1 + Np2]);
+		lingot_complex_add(X1, X2, out[d1]);
+		lingot_complex_sub(X1, X2, out[d1 + Np2]);
 
 		return;
 	}
@@ -110,10 +110,11 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned lo
 		a = q + d1;
 		b = a + Np2;
 
-		X1 = out[a];
-		lingot_complex_mul(&out[b], &wn[c], &X2);
-		lingot_complex_add(&X1, &X2, &out[a]);
-		lingot_complex_sub(&X1, &X2, &out[b]);
+		X1[0] = out[a][0];
+		X1[1] = out[a][1];
+		lingot_complex_mul(out[b], wn[c], X2);
+		lingot_complex_add(X1, X2, out[a]);
+		lingot_complex_sub(X1, X2, out[b]);
 	}
 }
 
@@ -123,7 +124,7 @@ void lingot_fft_fft(LingotFFTPlan* plan) {
 
 #endif
 
-void lingot_fft_spd_compute(LingotFFTPlan* plan, FLT* out, int n_out) {
+void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 
 	int i;
 	double _1_N2 = 1.0 / (plan->n * plan->n);
@@ -131,21 +132,16 @@ void lingot_fft_spd_compute(LingotFFTPlan* plan, FLT* out, int n_out) {
 # ifdef LIBFFTW
 	// transformation.
 	fftw_execute(plan->fftwplan);
-
-	// esteem of SPD from FFT. (normalized squared module)
-	for (i = 0; i < n_out; i++)
-		out[i] = (plan->fftw_out[i][0] * plan->fftw_out[i][0]
-				+ plan->fftw_out[i][1] * plan->fftw_out[i][1]) * _1_N2;
 # else
-// transformation.
+	// transformation.
 	lingot_fft_fft(plan);
-
-// esteem of SPD from FFT. (normalized squared module)
-	for (i = 0; i < n_out; i++)
-	out[i] = (plan->fft_out[i].r * plan->fft_out[i].r
-			+ plan->fft_out[i].i * plan->fft_out[i].i) * _1_N2;
 #endif
 
+	// esteem of SPD from FFT. (normalized squared module)
+	for (i = 0; i < n_out; i++) {
+		out[i] = (plan->fft_out[i][0] * plan->fft_out[i][0]
+				+ plan->fft_out[i][1] * plan->fft_out[i][1]) * _1_N2;
+	}
 }
 
 //------------------------------------------------------------------------

@@ -370,13 +370,15 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	int spd_size =
 			(conf->fft_size > 256) ? (conf->fft_size >> 1) : conf->fft_size;
 
-	lingot_fft_spd_compute(core->fftplan, core->spd_fft, spd_size);
+	lingot_fft_compute_dft_and_spd(core->fftplan, core->spd_fft, spd_size);
 
 	// representable piece
 	for (i = 0; i < spd_size; i++) {
-		core->SPL[i] = log10(core->spd_fft[i]);
+		core->SPL[i] = 10.0 * log10(core->spd_fft[i]);
 	}
-//	lingot_signal_compute_noise_level(core->SPL, spd_size, 40, core->SPL);
+	// TODO: filter width
+	lingot_signal_compute_noise_level(core->SPL, spd_size, 30,
+			core->noise_level);
 
 	// truncated 2nd derivative esteem, to enhance peaks
 	core->diff2_spd_fft[0] = 0.0;
@@ -390,6 +392,14 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	// peaks searching in that signal.
 	int Mi = lingot_signal_get_fundamental_peak(conf, core->spd_fft,
 			core->diff2_spd_fft, (conf->fft_size >> 1)); // take the fundamental peak.
+
+	unsigned int lowest_index = (unsigned int) ceil(
+			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
+					* conf->fft_size);
+
+	lingot_signal_get_fundamental_peak2(core->SPL, core->noise_level,
+			conf->fft_size >> 1, conf->peak_number, lowest_index,
+			conf->peak_half_width, 10.0);
 
 	if (Mi == (signed) (conf->fft_size >> 1)) {
 		core->freq = 0.0;

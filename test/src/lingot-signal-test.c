@@ -19,7 +19,7 @@ int lingot_signal_test() {
 		noise[i] = -1.0;
 	}
 
-	lingot_signal_compute_noise_level(spd, N, 5, noise);
+	lingot_signal_compute_noise_level(spd, N, 1, noise);
 
 	printf("S = [");
 	for (i = 0; i < N; i++) {

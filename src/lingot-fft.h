@@ -31,9 +31,9 @@
 
 #ifdef LIBFFTW
 # include <fftw3.h>
-#else
-# include "lingot-complex.h"
 #endif
+
+# include "lingot-complex.h"
 
 typedef struct _LingotFFTPlan LingotFFTPlan;
 
@@ -43,21 +43,19 @@ struct _LingotFFTPlan {
 	FLT* in;
 
 #ifdef LIBFFTW
-	fftw_complex* fftw_out; // complex signal in freq.
 	fftw_plan fftwplan;
 #else
 // phase factor table, for FFT optimization.
-LingotComplex* wn;
-LingotComplex* fft_out;// complex signal in freq.
+	LingotComplex* wn;
 #endif
-
+	LingotComplex* fft_out; // complex signal in freq.
 };
 
 LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n);
 void lingot_fft_plan_destroy(LingotFFTPlan*);
 
 // Full Spectral Power Distribution (SPD) esteem.
-void lingot_fft_spd_compute(LingotFFTPlan*, FLT* out, int n_out);
+void lingot_fft_compute_dft_and_spd(LingotFFTPlan*, FLT* out, int n_out);
 
 // Spectral Power Distribution (SPD) evaluation at a given frequency.
 void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
