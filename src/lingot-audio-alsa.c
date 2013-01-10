@@ -197,12 +197,12 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 
 	int status;
 	int card_index = -1;
-	char* card_longname = NULL;
+//	char* card_longname = NULL;
 	char* card_shortname = NULL;
 	const char* exception;
 	char error_message[1000];
 	char device_name[100];
-	char str[64];
+//	char str[64];
 	int device_index = -1;
 	int subdevice_count, subdevice_index;
 	snd_ctl_t *card_handler;

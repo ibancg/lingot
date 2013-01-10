@@ -100,7 +100,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
 
 #	ifdef PULSEAUDIO
-	if (audio != NULL) {
+	if (audio != NULL ) {
 		if (audio->read_buffer != 0x0) {
 			free(audio->read_buffer);
 		}
@@ -226,9 +226,9 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 			pa_context_set_state_callback(context,
 					lingot_audio_pulseaudio_context_state_callback,
 					&device_names_last);
-			if (pa_context_connect(context, server, 0, NULL) < 0) {
-				fprintf(stderr, "PulseAudio: pa_context_connect() failed: %s"), pa_strerror(
-						pa_context_errno(context));
+			if (pa_context_connect(context, server, 0, NULL ) < 0) {
+				fprintf(stderr, "PulseAudio: pa_context_connect() failed: %s",
+						pa_strerror(pa_context_errno(context)));
 			} else if (pa_mainloop_run(m, &ret) < 0) {
 				fprintf(stderr, "PulseAudio: pa_mainloop_run() failed.");
 			}
@@ -252,7 +252,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 
 	if (!fail) {
 		struct device_name_node_t* name_node_current;
-		for (name_node_current = device_names_first; name_node_current != NULL;
+		for (name_node_current = device_names_first; name_node_current != NULL ;
 				name_node_current = name_node_current->next) {
 			properties->n_devices++;
 		}
@@ -273,7 +273,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 
 	// dispose the device names list
 	struct device_name_node_t* name_node_current;
-	for (name_node_current = device_names_first; name_node_current != NULL;) {
+	for (name_node_current = device_names_first; name_node_current != NULL ;) {
 		struct device_name_node_t* name_node_previous = name_node_current;
 		name_node_current = name_node_current->next;
 		free(name_node_previous);
@@ -299,7 +299,7 @@ static void lingot_audio_pulseaudio_drain() {
 	pa_operation *o;
 
 	if (!(o = pa_context_drain(context,
-			lingot_audio_pulseaudio_context_drain_complete, NULL)))
+			lingot_audio_pulseaudio_context_drain_complete, NULL )))
 		pa_context_disconnect(context);
 	else
 		pa_operation_unref(o);

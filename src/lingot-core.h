@@ -77,6 +77,10 @@ struct _LingotCore {
 
 	pthread_mutex_t temporal_buffer_mutex;
 
+
+	// TODO: remove
+	FLT markers[10];
+	short markers_size;
 };
 
 //----------------------------------------------------------------

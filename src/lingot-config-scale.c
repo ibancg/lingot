@@ -28,6 +28,7 @@
 
 #include "lingot-config-scale.h"
 #include "lingot-i18n.h"
+#include "lingot-msg.h"
 
 LingotScale* lingot_config_scale_new() {
 

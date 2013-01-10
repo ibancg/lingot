@@ -59,7 +59,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->noise_level = NULL;
 	core->SPL = NULL;
 	core->spd_dft = NULL;
-	core->diff2_spd_fft = NULL;
 	core->flt_read_buffer = NULL;
 	core->temporal_buffer = NULL;
 	core->windowed_temporal_buffer = NULL;
@@ -67,6 +66,9 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->hamming_window_temporal = NULL;
 	core->hamming_window_fft = NULL;
 	core->antialiasing_filter = NULL;
+
+	// TODO
+	core->markers_size = 0;
 
 	int requested_sample_rate = conf->sample_rate;
 
@@ -117,8 +119,8 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
 		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
 
-		core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
-		memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
+//		core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
+//		memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
 
 		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
 
@@ -203,7 +205,7 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->noise_level);
 		free(core->SPL);
 		free(core->spd_dft);
-		free(core->diff2_spd_fft);
+//		free(core->diff2_spd_fft);
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
 
@@ -342,15 +344,10 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	register unsigned int i, k; // loop variables.
 	const LingotConfig* conf = core->conf;
-	FLT delta_w_FFT = 2.0 * M_PI / conf->fft_size; // FFT resolution in rads.
+	const FLT delta_f_FFT = ((FLT) conf->sample_rate)
+			/ (conf->oversampling * conf->fft_size); // FFT resolution in Hz.
 
 	// ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
-
-	FLT _1_N2 = 1.0 / (conf->fft_size * conf->fft_size);
-	// SPD normalization constant
-
-	//printf("%d samples transformed of a total of %d\n", conf->fft_size,
-	//		conf->temporal_buffer_size);
 
 	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
@@ -380,60 +377,24 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	lingot_signal_compute_noise_level(core->SPL, spd_size, 30,
 			core->noise_level);
 
-	// truncated 2nd derivative esteem, to enhance peaks
-	core->diff2_spd_fft[0] = 0.0;
-	for (i = 1; i < (conf->fft_size >> 1) - 1; i++) {
-		core->diff2_spd_fft[i] = 2.0 * core->spd_fft[i] - core->spd_fft[i - 1]
-				- core->spd_fft[i + 1]; // centred 2nd order derivative, to avoid group delay.
-		if (core->diff2_spd_fft[i] < 0.0)
-			core->diff2_spd_fft[i] = 0.0; // truncation
-	}
-
-	// peaks searching in that signal.
-	int Mi = lingot_signal_get_fundamental_peak(conf, core->spd_fft,
-			core->diff2_spd_fft, (conf->fft_size >> 1)); // take the fundamental peak.
-
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
 					* conf->fft_size);
 
-	lingot_signal_get_fundamental_peak2(core->SPL, core->noise_level,
-			conf->fft_size >> 1, conf->peak_number, lowest_index,
-			conf->peak_half_width, 10.0);
+	// TODO: min SNR
+	short divisor = 1;
+	FLT f0 = lingot_signal_get_fundamental_peak2(core->SPL,
+			core->fftplan->fft_out, core->noise_level, conf->fft_size >> 1, 6,
+			lowest_index, conf->peak_half_width, delta_f_FFT, 15.0, 20.0,
+			conf->min_frequency, core, &divisor);
 
-	if (Mi == (signed) (conf->fft_size >> 1)) {
+	if (f0 == 0.0) {
 		core->freq = 0.0;
 		pthread_mutex_unlock(&core->temporal_buffer_mutex);
 		return;
 	}
 
-	FLT w = (Mi - 1) * delta_w_FFT;
-	// frequency of sample previous to the peak
-
-	//  Approximation to fundamental frequency by selective DFTs
-	// ---------------------------------------------------------
-
-	FLT d_w = delta_w_FFT;
-	for (k = 0; k < conf->dft_number; k++) {
-
-		d_w = 2.0 * d_w / (conf->dft_size - 1); // resolution in rads.
-
-		if (k == 0) {
-			lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size,
-					w + d_w, d_w, &core->spd_dft[1], conf->dft_size - 2);
-			core->spd_dft[0] = core->spd_fft[Mi - 1];
-			core->spd_dft[conf->dft_size - 1] = core->spd_fft[Mi + 1]; // 2 samples known.
-		} else {
-			lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size, w,
-					d_w, core->spd_dft, conf->dft_size);
-		}
-
-		lingot_signal_get_max(core->spd_dft, conf->dft_size, &Mi); // search the maximum.
-
-		w += (Mi - 1) * d_w; // previous sample to the peak.
-	}
-
-	w += d_w; // DFT approximation.
+	FLT w = 2 * M_PI * f0 * conf->oversampling / conf->sample_rate;
 
 	// windowing
 	if (conf->window_type != NONE) {
@@ -459,15 +420,17 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8); k++) {
 		wk = wkm1;
 
-		// ! we use the WHOLE temporal window for greater precission.
+		// ! we use the WHOLE temporal window for bigger precission.
 		lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
 				conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
-		//printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
 		wkm1 = wk - d1_SPD / d2_SPD;
+//		printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
 	}
+//	printf("%d\n", k);
 
 	w = wkm1; // frequency in rads.
-	core->freq = (w * conf->sample_rate) / (2.0 * M_PI * conf->oversampling); // analog frequency.
+	core->freq = (w * conf->sample_rate)
+			/ (divisor * 2.0 * M_PI * conf->oversampling); // analog frequency.
 }
 
 /* start running the core in another thread */
