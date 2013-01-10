@@ -87,7 +87,7 @@ typedef enum audio_system_t {
 } audio_system_t;
 
 typedef enum window_type_t {
-	NONE = 0, RECTANGULAR = 1, HANNING = 2, HAMMING = 3
+	NONE = 0, HANNING = 1, HAMMING = 2
 } window_type_t;
 
 typedef struct _LingotConfig LingotConfig;

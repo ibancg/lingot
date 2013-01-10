@@ -574,7 +574,7 @@ void lingot_gui_mainframe_draw_gauge(LingotMainFrame* frame) {
 	GdkGC* gc = frame->gauge_area->style->fg_gc[frame->gauge_area->state];
 	GdkWindow* w = frame->gauge_area->window;
 	//GdkGCValues gv;
-	int i;
+//	int i;
 
 	//gdk_gc_get_values(gc, &gv);
 
@@ -800,6 +800,30 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 							spectrum_x_margin + i - 1,
 							spectrum_size_y + spectrum_top_margin - j - 1, 3,
 							3);
+			}
+
+			// fundamental frequency mark with a red point.
+			gdk_gc_set_foreground(gc, &freq_color);
+
+			int k;
+			for (k = 0; k < frame->core->markers_size; k++) {
+				// index of closest sample to fundamental frequency.
+				i = (int) rint(
+						frame->core->markers[k] * frame->conf->fft_size
+								* frame->conf->oversampling
+								/ frame->conf->sample_rate);
+				if ((i < frame->conf->fft_size - 1)
+						&& (i < spectrum_size_x - 1)) {
+
+					FLT SNR = frame->core->SPL[i] - frame->core->noise_level[i];
+
+					j = (SNR >= 0.0) ? (int) (plot_gain * SNR / 10.0) : 0; // dB.
+					if (j < spectrum_size_y - 1)
+						gdk_draw_rectangle(pixmap, gc, TRUE,
+								spectrum_x_margin + i - 1,
+								spectrum_size_y + spectrum_top_margin - j - 1,
+								3, 3);
+				}
 			}
 		}
 

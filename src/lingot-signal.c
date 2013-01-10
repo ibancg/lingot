@@ -30,114 +30,8 @@
  peak identification functions.
  */
 
-/* returns the maximun index of buffer x (size N) */
-void lingot_signal_get_max(const FLT *x, int N, int* Mi) {
-	register int i;
-	FLT M;
-
-	M = -1.0;
-	*Mi = -1;
-
-	for (i = 0; i < N; i++) {
-
-		if (x[i] > M) {
-			M = x[i];
-			*Mi = i;
-		}
-	}
-}
-
-//---------------------------------------------------------------------------
-
-int lingot_signal_is_peak(const FLT* signal, int index, short peak_half_width,
-		FLT noise) {
-	register unsigned int j;
-
-	// a peak must be greater than noise threshold.
-	if (signal[index] < noise)
-		return 0;
-
-	for (j = 0; j < peak_half_width; j++) {
-		if (signal[index + j] < signal[index + j + 1])
-			return 0;
-		if (signal[index - j] < signal[index - j - 1])
-			return 0;
-	}
-	return 1;
-}
-
-//---------------------------------------------------------------------------
-
-// search the fundamental peak given the spd and its 2nd derivative
-int lingot_signal_get_fundamental_peak(const LingotConfig* conf, const FLT *x,
-		const FLT* d2x, int N) {
-	register unsigned int i, j, m;
-	int p_index[conf->peak_number];
-
-	// at this moment there are no peaks.
-	for (i = 0; i < conf->peak_number; i++)
-		p_index[i] = -1;
-
-	unsigned int lowest_index = (unsigned int) ceil(
-			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
-					* conf->fft_size);
-
-	if (lowest_index < conf->peak_half_width)
-		lowest_index = conf->peak_half_width;
-
-	// I'll get the PEAK_NUMBER maximum peaks.
-	for (i = lowest_index; i < N - conf->peak_half_width; i++)
-		if (lingot_signal_is_peak(x, i, conf->peak_half_width,
-				conf->noise_threshold_nu)) {
-
-			// search a place in the maximums buffer, if it doesn't exists, the
-			// lower maximum is candidate to be replaced.
-			m = 0; // first candidate.
-			for (j = 0; j < conf->peak_number; j++) {
-				if (p_index[j] == -1) {
-					m = j; // there is a place.
-					break;
-				}
-
-				if (d2x[p_index[j]] < d2x[p_index[m]])
-					m = j; // search the lowest.
-			}
-
-			if (p_index[m] == -1)
-				p_index[m] = i; // there is a place
-			else if (d2x[i] > d2x[p_index[m]])
-				p_index[m] = i; // if greater
-		}
-
-	FLT maximum = 0.0;
-	int maximum_index = -1;
-
-	// search the maximum peak
-	for (i = 0; i < conf->peak_number; i++)
-		if ((p_index[i] != -1) && (x[p_index[i]] > maximum)) {
-			maximum = x[p_index[i]];
-			maximum_index = p_index[i];
-		}
-
-	if (maximum_index == -1)
-		return N;
-
-	// all peaks much lower than maximum are deleted.
-	for (i = 0; i < conf->peak_number; i++)
-		if ((p_index[i] == -1)
-				|| (conf->peak_rejection_relation_nu * x[p_index[i]] < maximum))
-			p_index[i] = N; // there are available places in the buffer.
-
-	// search the lowest maximum index.
-	for (m = 0, j = 0; j < conf->peak_number; j++) {
-		if (p_index[j] < p_index[m])
-			m = j;
-	}
-
-	return p_index[m];
-}
-
-int lingot_signal_is_peak2(const FLT* signal, int index, short peak_half_width) {
+static int lingot_signal_is_peak2(const FLT* signal, int index,
+		short peak_half_width) {
 	register unsigned int j;
 
 	for (j = 0; j < peak_half_width; j++) {
@@ -149,7 +43,7 @@ int lingot_signal_is_peak2(const FLT* signal, int index, short peak_half_width) 
 	return 1;
 }
 
-FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
+static FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
 	return (0.25 * log(3 * x * x + 6 * x + 1)
 			- 0.102062072615966
 					* log(
@@ -157,8 +51,8 @@ FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
 									/ (x + 1 + 0.816496580927726)));
 }
 
-FLT lingot_signal_fft_bin_interpolate_quinn2(const LingotComplex y1,
-		const LingotComplex y2, const LingotComplex y3) {
+static FLT lingot_signal_fft_bin_interpolate_quinn2(LingotComplex y1,
+		LingotComplex y2, LingotComplex y3) {
 	FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
 	FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
 	FLT dp = -ap / (1.0 - ap);
@@ -168,14 +62,34 @@ FLT lingot_signal_fft_bin_interpolate_quinn2(const LingotComplex y1,
 			- lingot_signal_fft_bin_interpolate_quinn2_tau(dm * dm);
 }
 
+// for qsort
+static int lingot_signal_compare_int(const void *a, const void *b) {
+	return (*((int*) a) < *((int*) b)) ? -1 : 1;
+}
+
+// Returns a factor to multiply with in order to give more importance to higher
+// frequency harmonics. This is to give more importance to the higher divisors
+// for the same selected sets.
+static FLT frequency_penalty(FLT freq) {
+	static const FLT f0 = 100;
+	static const FLT f1 = 1000;
+	static const FLT alpha0 = 0.99;
+	static const FLT alpha1 = 1;
+	const FLT freqPenaltyA = (alpha0 - alpha1) / (f0 - f1);
+	const FLT freqPenaltyB = -(alpha0 * f1 - f0 * alpha1) / (f0 - f1);
+
+	return freq * freqPenaltyA + freqPenaltyB;
+}
+
 // search the fundamental peak given the spd and its 2nd derivative
-int lingot_signal_get_fundamental_peak2(const FLT* signal, const FLT* noise,
-		int N, int n_peaks, int lowest_index, short peak_half_width,
-		FLT min_snr) {
+FLT lingot_signal_get_fundamental_peak2(const FLT* spl,
+		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
+		int lowest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
+		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
 	register unsigned int i, j, m;
 	int p_index[n_peaks];
 
-// at this moment there are no peaks.
+	// at this moment there are no peaks.
 	for (i = 0; i < n_peaks; i++)
 		p_index[i] = -1;
 
@@ -183,13 +97,13 @@ int lingot_signal_get_fundamental_peak2(const FLT* signal, const FLT* noise,
 		lowest_index = peak_half_width;
 	}
 
-// I'll get the PEAK_NUMBER maximum peaks with SNR above the required.
-	for (i = lowest_index; i < N - peak_half_width; i++)
-		if ((signal[i] - noise[i] > min_snr)
-				&& lingot_signal_is_peak2(signal, i, peak_half_width)) {
+	short n_found_peaks = 0;
 
-			printf("%d %f\n", (signal[i] - noise[i] > min_snr),
-					(signal[i] - noise[i]));
+	// I'll get the PEAK_NUMBER maximum peaks with SNR above the required.
+	for (i = lowest_index; i < N - peak_half_width; i++)
+		if ((spl[i] - noise[i] > min_snr)
+				&& lingot_signal_is_peak2(spl, i, peak_half_width)) {
+
 			// search a place in the maximums buffer, if it doesn't exists, the
 			// lower maximum is candidate to be replaced.
 			m = 0;				// first candidate.
@@ -201,50 +115,120 @@ int lingot_signal_get_fundamental_peak2(const FLT* signal, const FLT* noise,
 
 				// if there is no place, finds the smallest peak as a candidate
 				// to be substituted.
-				if (signal[p_index[j]] < signal[p_index[m]]) {
+				if (spl[p_index[j]] < spl[p_index[m]]) {
 					m = j;
 				}
 			}
 
 			if (p_index[m] == -1) {
 				p_index[m] = i; // there is a place
-			} else if (signal[i] > signal[p_index[m]]) {
+			} else if (spl[i] > spl[p_index[m]]) {
 				p_index[m] = i; // if greater
+			}
+
+			if (n_found_peaks < n_peaks) {
+				n_found_peaks++;
 			}
 		}
 
-	FLT maximum = 0.0;
-	int maximum_index = -1;
+	qsort(p_index, n_found_peaks, sizeof(int), &lingot_signal_compare_int);
 
-// search the maximum peak
-	for (i = 0; i < n_peaks; i++)
-		if ((p_index[i] != -1) && (signal[p_index[i]] > maximum)) {
-			maximum = signal[p_index[i]];
-			maximum_index = p_index[i];
+	FLT freq_interpolated[n_found_peaks];
+	for (i = 0; i < n_found_peaks; i++) {
+		freq_interpolated[i] = delta_f_fft
+				* (p_index[i]
+						+ lingot_signal_fft_bin_interpolate_quinn2(
+								fft[p_index[i] - 1], fft[p_index[i]],
+								fft[p_index[i] + 1]));
+	}
+
+	// maximum ratio error
+	static const FLT ratioTol = 0.05;
+	static const short max_divisor = 4;
+
+	short tone_index = 0;
+	short div = 0;
+	FLT groundFreq = 0.0;
+	FLT ratios[n_found_peaks];
+	FLT error[n_found_peaks];
+	short indices_related[n_found_peaks];
+	short n_indices_related = 0;
+
+	FLT bestQ = 0.0;
+	short best_indices_related[n_found_peaks];
+	FLT bestF = 0;
+	short bestDivisor = 1;
+
+	// possible ground frequencies
+	for (tone_index = 0; tone_index < n_found_peaks; tone_index++) {
+		for (div = 1; div <= max_divisor; div++) {
+			groundFreq = freq_interpolated[tone_index] / div;
+			if (groundFreq > min_freq) {
+				n_indices_related = 0;
+				for (i = 0; i < n_found_peaks; i++) {
+					ratios[i] = freq_interpolated[i] / groundFreq;
+					error[i] = (ratios[i] - round(ratios[i]));
+					// harmonically related frequencies
+					if (fabs(error[i]) < ratioTol) {
+						indices_related[n_indices_related++] = i;
+					}
+				}
+
+				// add the penalties for short sets and high divisors
+				FLT q = 0.0;
+				for (i = 0; i < n_indices_related; i++) {
+					// add up contributions to the quality factor
+					q += (spl[p_index[indices_related[i]]]
+							- noise[p_index[indices_related[i]]])
+							* frequency_penalty(groundFreq);
+				}
+
+				FLT maxFreq =
+						freq_interpolated[indices_related[n_indices_related - 1]];
+				FLT f = maxFreq;
+
+//				printf(
+//						"tone = %i, divisor = %i, gf = %f, q = %f, n = %i, f = %f, ",
+//						tone, divisor, groundFreq, q, n_indices_related, f);
+//				for (i = 0; i < n_indices_related; i++) {
+//					printf("%f ", freq_interpolated[indices_related[i]]);
+//				}
+//				printf("\n");
+
+				if (q > bestQ) {
+					bestQ = q;
+					memcpy(best_indices_related, indices_related,
+							n_indices_related * sizeof(short));
+					bestDivisor = round(f / groundFreq);
+					bestF = f;
+				}
+
+			} else {
+				break;
+			}
 		}
-
-	for (i = 0; i < n_peaks; i++) {
-		printf("%i ", p_index[i]);
-	}
-	printf("\n");
-
-	if (maximum_index == -1)
-		return N;
-
-//	// all peaks much lower than maximum are deleted.
-//	for (i = 0; i < n_peaks; i++)
-//		if ((p_index[i] == -1)
-//				|| (conf->peak_rejection_relation_nu * signal[p_index[i]]
-//						< maximum))
-//			p_index[i] = N; // there are available places in the buffer.
-
-// search the lowest maximum index.
-	for (m = 0, j = 0; j < n_peaks; j++) {
-		if (p_index[j] < p_index[m])
-			m = j;
 	}
 
-	return p_index[m];
+//	printf("BEST selected f = %f, f* = %f, div = %i, q = %f, n = %i, ",
+//			bestF / bestDivisor, bestDivisor, bestF, bestQ,
+//			best_n_indices_related);
+//	for (i = 0; i < best_n_indices_related; i++) {
+//		printf("%f ", freq_interpolated[best_indices_related[i]]);
+//	}
+//	printf("\n");
+
+	if ((bestF != 0.0) && (bestQ < min_q)) {
+		bestF = 0.0;
+//		printf("q < mq!!\n");
+	}
+
+	if (bestF == 0.0) {
+		core->markers_size = 0;
+	}
+
+	*divisor = bestDivisor;
+	return bestF;
+
 }
 
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
@@ -289,14 +273,10 @@ void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 
 //---------------------------------------------------------------------------
 
-// generates a Hamming window of N samples
+// generates a N-samples window
 void lingot_signal_window(int N, FLT* out, window_type_t window_type) {
 	register int i;
 	switch (window_type) {
-	case RECTANGULAR:
-		for (i = 0; i < N; i++)
-			out[i] = 1.0;
-		break;
 	case HANNING:
 		for (i = 0; i < N; i++)
 			out[i] = 0.5 * (1 - cos((2.0 * M_PI * i) / (N - 1)));

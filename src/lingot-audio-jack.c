@@ -71,7 +71,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 
 #	ifdef JACK
 	const char* exception;
-	const char **ports = NULL;
+//	const char **ports = NULL;
 	const char *client_name = "lingot";
 	const char *server_name = NULL;
 
