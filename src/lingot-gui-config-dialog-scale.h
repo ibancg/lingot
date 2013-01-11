@@ -27,10 +27,10 @@
 
 struct LingotConfigDialog;
 struct LingotScale;
-struct GladeXML;
+struct GtkBuilder;
 
 // initialize and show the components
-void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GladeXML*);
+void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GtkBuilder*);
 
 // validate the information stored in the table
 int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,

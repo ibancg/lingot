@@ -39,7 +39,7 @@
 //int lingot_signal_get_fundamental_peak(const LingotConfig*, const FLT *x,
 //		const FLT* d2x, int N);
 
-FLT lingot_signal_get_fundamental_peak2(const FLT* spl,
+FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
 		int lowest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
 		FLT min_q, FLT min_freq, LingotCore* core, short* divisor);
