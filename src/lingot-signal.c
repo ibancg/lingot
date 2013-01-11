@@ -30,15 +30,15 @@
  peak identification functions.
  */
 
-static int lingot_signal_is_peak2(const FLT* signal, int index,
+static int lingot_signal_is_peak(const FLT* signal, int index,
 		short peak_half_width) {
 	register unsigned int j;
 
 	for (j = 0; j < peak_half_width; j++) {
-		if (signal[index + j] < signal[index + j + 1])
+		if ((signal[index + j] < signal[index + j + 1])
+				|| (signal[index - j] < signal[index - j - 1])) {
 			return 0;
-		if (signal[index - j] < signal[index - j - 1])
-			return 0;
+		}
 	}
 	return 1;
 }
@@ -82,7 +82,7 @@ static FLT frequency_penalty(FLT freq) {
 }
 
 // search the fundamental peak given the spd and its 2nd derivative
-FLT lingot_signal_get_fundamental_peak2(const FLT* spl,
+FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
 		int lowest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
 		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
@@ -99,10 +99,10 @@ FLT lingot_signal_get_fundamental_peak2(const FLT* spl,
 
 	short n_found_peaks = 0;
 
-	// I'll get the PEAK_NUMBER maximum peaks with SNR above the required.
+	// I'll get the n_peaks maximum peaks with SNR above the required.
 	for (i = lowest_index; i < N - peak_half_width; i++)
 		if ((spl[i] - noise[i] > min_snr)
-				&& lingot_signal_is_peak2(spl, i, peak_half_width)) {
+				&& lingot_signal_is_peak(spl, i, peak_half_width)) {
 
 			// search a place in the maximums buffer, if it doesn't exists, the
 			// lower maximum is candidate to be replaced.

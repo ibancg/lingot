@@ -33,8 +33,8 @@ struct _LingotConfigDialog {
 
 	// widgets that contains configuration information.
 	GtkComboBox* input_system;
-	GtkComboBoxEntry* input_dev;
-	GtkComboBoxEntry* sample_rate;
+	GtkComboBox* input_dev;
+	GtkComboBox* sample_rate;
 	GtkHScale* calculation_rate;
 	GtkHScale* visualization_rate;
 	GtkHScale* noise_threshold;

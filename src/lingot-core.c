@@ -383,7 +383,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	// TODO: min SNR
 	short divisor = 1;
-	FLT f0 = lingot_signal_get_fundamental_peak2(core->SPL,
+	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
 			core->fftplan->fft_out, core->noise_level, conf->fft_size >> 1, 6,
 			lowest_index, conf->peak_half_width, delta_f_FFT, 15.0, 20.0,
 			conf->min_frequency, core, &divisor);
