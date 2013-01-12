@@ -25,7 +25,6 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
-#include <glade/glade.h>
 
 #include "lingot-defs.h"
 
@@ -385,7 +384,6 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	LingotMainFrame* frame;
 	LingotConfig* conf;
-	GladeXML* _gladeXML = NULL;
 
 	if (filechooser_config_last_folder == NULL ) {
 		char buff[1000];
@@ -416,35 +414,45 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	gtk_init(&argc, &argv);
 	gtk_set_locale();
 
+	GtkBuilder* builder = gtk_builder_new();
+
+	// TODO: obtain glade files installation dir by other way
+	// TODO: add dev condition to check for the file name in $PWD
 #	define FILE_NAME "lingot-mainframe.glade"
 	FILE* fd = fopen("src/glade/" FILE_NAME, "r");
 	if (fd != NULL ) {
 		fclose(fd);
-		_gladeXML = glade_xml_new("src/glade/" FILE_NAME, "window1", NULL );
+		gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL );
 	} else {
-		_gladeXML = glade_xml_new(LINGOT_GLADEDIR FILE_NAME, "window1", NULL );
+		gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL );
 	}
 #	undef FILE_NAME
 
-	frame->win = glade_xml_get_widget(_gladeXML, "window1");
+	frame->win = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
 
 	GdkPixbuf* logo = gdk_pixbuf_new_from_xpm_data(lingotlogo);
 	gtk_icon_theme_add_builtin_icon("lingot-logo", 64, logo);
 
 	gtk_window_set_icon(GTK_WINDOW(frame->win), logo);
 
-	frame->gauge_area = glade_xml_get_widget(_gladeXML, "gauge_area");
-	frame->spectrum_area = glade_xml_get_widget(_gladeXML, "spectrum_area");
+	frame->gauge_area =
+			GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
+	frame->spectrum_area =
+			GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
 
-	frame->freq_label = glade_xml_get_widget(_gladeXML, "freq_label");
-	frame->tone_label = glade_xml_get_widget(_gladeXML, "tone_label");
-	frame->error_label = glade_xml_get_widget(_gladeXML, "error_label");
+	frame->freq_label =
+			GTK_WIDGET(gtk_builder_get_object(builder, "freq_label"));
+	frame->tone_label =
+			GTK_WIDGET(gtk_builder_get_object(builder, "tone_label"));
+	frame->error_label =
+			GTK_WIDGET(gtk_builder_get_object(builder, "error_label"));
 
-	frame->spectrum_frame = glade_xml_get_widget(_gladeXML, "spectrum_frame");
+	frame->spectrum_frame =
+			GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
 	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(
-			glade_xml_get_widget(_gladeXML, "scrolledwindow1"));
-	frame->view_spectrum_item = glade_xml_get_widget(_gladeXML,
-			"spectrum_item");
+			gtk_builder_get_object(builder, "scrolledwindow1"));
+	frame->view_spectrum_item = GTK_WIDGET(gtk_builder_get_object(builder,
+					"spectrum_item"));
 
 	gtk_check_menu_item_set_active(
 			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
@@ -466,28 +474,28 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	// GTK signals
 	gtk_signal_connect(
-			GTK_OBJECT(glade_xml_get_widget(_gladeXML, "preferences_item")),
+			GTK_OBJECT(gtk_builder_get_object(builder, "preferences_item")),
 			"activate",
 			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_config_dialog),
 			frame);
-	gtk_signal_connect(GTK_OBJECT(glade_xml_get_widget(_gladeXML, "quit_item")),
+	gtk_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "quit_item")),
 			"activate", GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_destroy),
 			frame);
 	gtk_signal_connect(
-			GTK_OBJECT(glade_xml_get_widget(_gladeXML, "about_item")),
+			GTK_OBJECT(gtk_builder_get_object(builder, "about_item")),
 			"activate", GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_about),
 			frame);
 	gtk_signal_connect(
-			GTK_OBJECT(glade_xml_get_widget(_gladeXML, "spectrum_item")),
+			GTK_OBJECT(gtk_builder_get_object(builder, "spectrum_item")),
 			"activate",
 			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_view_spectrum),
 			frame);
 	gtk_signal_connect(
-			GTK_OBJECT(glade_xml_get_widget(_gladeXML, "open_config_item")),
+			GTK_OBJECT(gtk_builder_get_object(builder, "open_config_item")),
 			"activate",
 			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_open_config), frame);
 	gtk_signal_connect(
-			GTK_OBJECT(glade_xml_get_widget(_gladeXML, "save_config_item")),
+			GTK_OBJECT(gtk_builder_get_object(builder, "save_config_item")),
 			"activate",
 			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_save_config), frame);
 
@@ -501,8 +509,8 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	GtkAccelGroup* accel_group = gtk_accel_group_new();
 	gtk_widget_add_accelerator(
-			glade_xml_get_widget(_gladeXML, "preferences_item"), "activate",
-			accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			GTK_WIDGET(gtk_builder_get_object(builder, "preferences_item")),
+			"activate", accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 	gtk_window_add_accel_group(GTK_WINDOW(frame->win), accel_group);
 
 	unsigned int period;
@@ -549,7 +557,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	frame->core = lingot_core_new(conf);
 	lingot_core_start(frame->core);
 
-	g_object_unref(_gladeXML);
+	g_object_unref(builder);
 
 	gtk_main();
 }

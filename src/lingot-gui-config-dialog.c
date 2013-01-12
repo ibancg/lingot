@@ -157,10 +157,8 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		if (properties->devices != NULL ) {
 			for (i = 0; i < properties->n_devices; i++)
 				if (properties->devices[i] != NULL ) {
-					gtk_combo_box_append_text(
-							GTK_COMBO_BOX(dialog->input_dev),
+					gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_dev),
 							properties->devices[i]);
-					printf("DEVICE: %s\n", properties->devices[i]);
 				}
 		}
 
@@ -467,6 +465,7 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		dialog->input_dev =
 				GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_dev"));
+
 		dialog->sample_rate =
 				GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
 		dialog->calculation_rate =
