@@ -48,5 +48,8 @@ int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
 void lingot_config_scale_format_shift(char*, double, short int, short int);
 void lingot_config_scale_copy(LingotScale* dst, LingotScale* src);
 void lingot_config_scale_restore_default_values(LingotScale* scale);
+int lingot_config_scale_get_octave(const LingotScale* scale, int index);
+int lingot_config_scale_get_note_index(const LingotScale* scale, int index);
+FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index);
 
 #endif /* LINGOT_CONFIG_SCALE_H_ */
