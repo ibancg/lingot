@@ -39,18 +39,9 @@
 #include "lingot-background.xpm"
 #include "lingot-logo.xpm"
 
-void lingot_gui_mainframe_draw_gauge(LingotMainFrame*);
-void lingot_gui_mainframe_draw_spectrum(LingotMainFrame*);
-void lingot_gui_mainframe_draw_labels(LingotMainFrame*);
-
-GdkColor black_color;
-GdkColor cents_color;
-GdkColor gauge_color;
-GdkColor spectrum_background_color;
-GdkColor spectrum_color;
-GdkColor noise_threshold_color;
-GdkColor grid_color;
-GdkColor freq_color;
+void lingot_gui_mainframe_draw_gauge(const LingotMainFrame*);
+void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame*);
+void lingot_gui_mainframe_draw_labels(const LingotMainFrame*);
 
 // sizes
 
@@ -63,9 +54,6 @@ int spectrum_size_y = 64;
 int spectrum_bottom_margin = 16;
 int spectrum_top_margin = 12;
 int spectrum_x_margin = 15;
-
-PangoFontDescription* spectrum_legend_font_desc;
-PangoFontDescription* gauge_cents_font_desc;
 
 gchar* filechooser_config_last_folder = NULL;
 
@@ -467,8 +455,6 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	// two pixmaps for double buffer in gauge and spectrum drawing
 	// (virtual screen)
 	gdk_pixmap_new(frame->gauge_area->window, gauge_size_x, gauge_size_y, -1);
-	frame->pix_spectrum = gdk_pixmap_new(frame->spectrum_area->window, x, y,
-			-1);
 	frame->pix_stick = gdk_pixmap_create_from_xpm_d(frame->gauge_area->window,
 			NULL, NULL, background2_xpm);
 
@@ -531,29 +517,6 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	frame->error_dispatcher_uid = g_timeout_add(period,
 			lingot_gui_mainframe_callback_error_dispatcher, frame);
 
-	lingot_gui_mainframe_color(&gauge_color, 0xC000, 0x0000, 0x2000);
-	lingot_gui_mainframe_color(&spectrum_background_color, 0x1111, 0x3333,
-			0x1111);
-	lingot_gui_mainframe_color(&spectrum_color, 0x2222, 0xEEEE, 0x2222);
-	lingot_gui_mainframe_color(&noise_threshold_color, 0xaaaa, 0x8888, 0xffff);
-	lingot_gui_mainframe_color(&grid_color, 0x9000, 0x9000, 0x9000);
-	lingot_gui_mainframe_color(&freq_color, 0xFFFF, 0x2222, 0x2222);
-	lingot_gui_mainframe_color(&cents_color, 0x3000, 0x3000, 0x3000);
-
-	gdk_color_alloc(gdk_colormap_get_system(), &gauge_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &spectrum_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &spectrum_background_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &noise_threshold_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &grid_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &freq_color);
-	gdk_color_black(gdk_colormap_get_system(), &black_color);
-	gdk_color_alloc(gdk_colormap_get_system(), &cents_color);
-
-	spectrum_legend_font_desc = pango_font_description_from_string(
-			"Helvetica Plain 7");
-	gauge_cents_font_desc = pango_font_description_from_string(
-			"Helvetica Plain 7");
-
 	frame->core = lingot_core_new(conf);
 	lingot_core_start(frame->core);
 
@@ -578,32 +541,41 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
 // ---------------------------------------------------------------------------
 
-void lingot_gui_mainframe_draw_gauge(LingotMainFrame* frame) {
-	GdkGC* gc = frame->gauge_area->style->fg_gc[frame->gauge_area->state];
+void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
+	GdkGC * gc =
+			gtk_widget_get_style(frame->gauge_area)->fg_gc[gtk_widget_get_state(
+					frame->gauge_area)];
 	GdkWindow* w = frame->gauge_area->window;
-	//GdkGCValues gv;
-//	int i;
-
-	//gdk_gc_get_values(gc, &gv);
 
 	static FLT gauge_size = 90.0;
 	FLT max = 1.0;
 
-	// draws background
-	gdk_draw_pixmap(w, gc, frame->pix_stick, 0, 0, 0, 0, 160, 100);
+	// TODO: keep?
+	cairo_t* cr = NULL;
+
+	cr = gdk_cairo_create(w);
+	gdk_cairo_set_source_pixmap(cr, frame->pix_stick, 0, 0);
+	GdkRectangle r;
+	r.x = 0;
+	r.y = 0;
+	r.width = 160;
+	r.height = 100;
+	gdk_cairo_rectangle(cr, &r);
+	cairo_fill(cr);
 
 	// and draws gauge
-	gdk_gc_set_foreground(gc, &gauge_color);
-
 	FLT normalized_error = frame->gauge->position
 			/ frame->conf->scale->max_offset_rounded;
 	FLT angle = normalized_error * M_PI / (1.5 * max);
-	gdk_gc_set_foreground(gc, &gauge_color);
-	gdk_draw_line(w, gc, gauge_size_x >> 1, gauge_size_y - 1,
-			(gauge_size_x >> 1) + (int) rint(gauge_size * sin(angle)),
-			gauge_size_y - 1 - (int) rint(gauge_size * cos(angle)));
 
-	gdk_gc_set_foreground(gc, &cents_color);
+	cairo_set_source_rgb(cr, 0.75, 0.0, 0.12);
+	cairo_set_line_width(cr, 1.5);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+	cairo_move_to(cr, gauge_size_x >> 1, gauge_size_y - 1);
+	cairo_line_to(cr, (gauge_size_x >> 1) + gauge_size * sin(angle),
+			gauge_size_y - 1 - gauge_size * cos(angle));
+	cairo_stroke(cr);
+
 	static char buff1[10];
 	static char buff2[10];
 	sprintf(buff1,
@@ -614,33 +586,40 @@ void lingot_gui_mainframe_draw_gauge(LingotMainFrame* frame) {
 			(frame->conf->scale->max_offset_rounded > 1.0) ?
 					"+%.0f c" : "+%.1f c",
 			0.5 * frame->conf->scale->max_offset_rounded);
-	PangoLayout* layout1 = gtk_widget_create_pango_layout(frame->gauge_area,
-			buff1);
-	PangoLayout* layout2 = gtk_widget_create_pango_layout(frame->gauge_area,
-			buff2);
-	pango_layout_set_font_description(layout1, gauge_cents_font_desc);
-	pango_layout_set_font_description(layout2, gauge_cents_font_desc);
-	gdk_draw_layout(w, gc, 0.05 * gauge_size_x, 0.8 * gauge_size_y, layout1);
-	gdk_draw_layout(w, gc, 0.75 * gauge_size_x, 0.8 * gauge_size_y, layout2);
-	g_object_unref(layout1);
-	g_object_unref(layout2);
+
+	cairo_text_extents_t te;
+	cairo_set_source_rgb(cr, 0.15, 0.15, 0.15);
+	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+			CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr, 10.0);
+	cairo_text_extents(cr, buff1, &te);
+	cairo_move_to(cr, 0.1 * gauge_size_x - te.width / 2 - te.x_bearing,
+			0.8 * gauge_size_y - te.height / 2 - te.y_bearing);
+	cairo_show_text(cr, buff1);
+	cairo_text_extents(cr, buff2, &te);
+	cairo_move_to(cr, 0.85 * gauge_size_x - te.width / 2 - te.x_bearing,
+			0.8 * gauge_size_y - te.height / 2 - te.y_bearing);
+	cairo_show_text(cr, buff2);
+
+	// TODO: reuse?
+	cairo_destroy(cr);
 }
 
-void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 	GtkWidget* widget = NULL;
 	PangoLayout* layout;
 
-	int spectrum_size_x = (
+	const int spectrum_size_x = (
 			(frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256);
 
 	// minimum grid size in pixels
-	static int minimum_grid_width = 50;
+	static const int minimum_grid_width = 50;
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
-	static double scales[] =
-			{ 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22, -1.0 };
+	static const double scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22,
+			-1.0 };
 
 	// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;
@@ -652,21 +631,36 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	int j;
 	int old_j;
 
-	GdkGC * gc = frame->spectrum_area->style->fg_gc[frame->spectrum_area->state];
-	GdkPixmap* pixmap = frame->pix_spectrum; //spectrum->window;
+	GdkGC * gc =
+			gtk_widget_get_style(frame->spectrum_area)->fg_gc[gtk_widget_get_state(
+					frame->spectrum_area)];
+	GdkWindow* w = frame->spectrum_area->window;
 
-	// clear all
-	gdk_gc_set_foreground(gc, &spectrum_background_color);
-	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0,
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
 			spectrum_size_x + 2 * spectrum_x_margin,
 			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin);
+	cairo_t *cr = cairo_create(surface);
 
-	gdk_gc_set_foreground(gc, &grid_color);
+	// clear all
+	int sizex = spectrum_size_x + 2 * spectrum_x_margin;
+	int sizey = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
 
-	gdk_draw_line(pixmap, gc, spectrum_x_margin,
-			spectrum_size_y + spectrum_top_margin,
-			spectrum_x_margin + spectrum_size_x,
+	cairo_set_source_rgb(cr, 0.06, 0.2, 0.06);
+	GdkRectangle r;
+	r.x = 0;
+	r.y = 0;
+	r.width = sizex;
+	r.height = sizey;
+	gdk_cairo_rectangle(cr, &r);
+	cairo_fill(cr);
+
+	cairo_set_source_rgb(cr, 0.56, 0.56, 0.56);
+	cairo_set_line_width(cr, 1.0);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+	cairo_move_to(cr, spectrum_x_margin, spectrum_size_y + spectrum_top_margin);
+	cairo_line_to(cr, spectrum_x_margin + spectrum_size_x,
 			spectrum_size_y + spectrum_top_margin);
+	cairo_stroke(cr);
 
 	// choose scale factor
 	for (i = 0; scales[i] > 0.0; i++) {
@@ -685,11 +679,17 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	char buff[10];
 
+	cairo_text_extents_t te;
+	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+			CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(cr, 9.5);
+
 	FLT freq = 0.0;
 	for (i = 0; i <= spectrum_size_x; i += grid_width) {
-		gdk_draw_line(pixmap, gc, spectrum_x_margin + i, spectrum_top_margin,
-				spectrum_x_margin + i,
+		cairo_move_to(cr, spectrum_x_margin + i, spectrum_top_margin);
+		cairo_line_to(cr, spectrum_x_margin + i,
 				spectrum_size_y + spectrum_top_margin + 3);
+		cairo_stroke(cr);
 
 		if (freq == 0.0) {
 			sprintf(buff, "0 Hz");
@@ -707,11 +707,12 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 				sprintf(buff, "%0.2f kHz", freq);
 		}
 
-		layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
-		pango_layout_set_font_description(layout, spectrum_legend_font_desc);
-		gdk_draw_layout(pixmap, gc, spectrum_x_margin - 8 + i,
-				spectrum_size_y + spectrum_top_margin + 5, layout);
-		g_object_unref(layout);
+		cairo_text_extents(cr, buff, &te);
+		cairo_move_to(cr,
+				spectrum_x_margin + i + 6 - te.width / 2 - te.x_bearing,
+				spectrum_size_y + spectrum_top_margin + 8 - te.height / 2
+						- te.y_bearing);
+		cairo_show_text(cr, buff);
 		freq += scale;
 	}
 
@@ -719,10 +720,10 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 
 	sprintf(buff, "dB");
 
-	layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
-	pango_layout_set_font_description(layout, spectrum_legend_font_desc);
-	gdk_draw_layout(pixmap, gc, spectrum_x_margin - 6, 2, layout);
-	g_object_unref(layout);
+	cairo_text_extents(cr, buff, &te);
+	cairo_move_to(cr, spectrum_x_margin - 6 - te.width / 2 - te.x_bearing,
+			6 - te.height / 2 - te.y_bearing);
+	cairo_show_text(cr, buff);
 
 	int grid_height =
 			(int) (plot_gain * log10(pow(10.0, grid_db_height / 10.0))); // dB.
@@ -733,16 +734,17 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		else
 			sprintf(buff, "%i", j);
 
-		layout = gtk_widget_create_pango_layout(frame->spectrum_area, buff);
-		pango_layout_set_font_description(layout, spectrum_legend_font_desc);
-		gdk_draw_layout(pixmap, gc, 2,
-				spectrum_size_y + spectrum_top_margin - i - 5, layout);
-		g_object_unref(layout);
+		cairo_text_extents(cr, buff, &te);
+		cairo_move_to(cr, 6 - te.width / 2 - te.x_bearing,
+				spectrum_size_y + spectrum_top_margin - i - te.height / 2
+						- te.y_bearing);
+		cairo_show_text(cr, buff);
 
-		gdk_draw_line(pixmap, gc, spectrum_x_margin,
-				spectrum_size_y + spectrum_top_margin - i,
-				spectrum_x_margin + spectrum_size_x,
+		cairo_move_to(cr, spectrum_x_margin,
 				spectrum_size_y + spectrum_top_margin - i);
+		cairo_line_to(cr, spectrum_x_margin + spectrum_size_x,
+				spectrum_size_y + spectrum_top_margin - i);
+		cairo_stroke(cr);
 
 		j += grid_db_height;
 	}
@@ -753,7 +755,7 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 	// spectrum drawing.
 	if (frame->core->running) {
 
-		gdk_gc_set_foreground(gc, &spectrum_color);
+		cairo_set_source_rgb(cr, 0.13, 1.0, 0.13);
 
 		j = -1;
 
@@ -773,17 +775,19 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 			if (j >= spectrum_size_y)
 				j = spectrum_size_y - 1;
 			if (spectrum_drawing_filled) {
-				gdk_draw_line(pixmap, gc, spectrum_x_margin + i,
-						spectrum_size_y + spectrum_top_margin - 1,
-						spectrum_x_margin + i,
+				cairo_move_to(cr, spectrum_x_margin + i,
+						spectrum_size_y + spectrum_top_margin - 1);
+				cairo_line_to(cr, spectrum_x_margin + i,
 						spectrum_top_margin + spectrum_size_y - j);
+				cairo_stroke(cr);
 			} else {
 				if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
 						&& (j < spectrum_size_y))
-					gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
-							spectrum_size_y + spectrum_top_margin - old_j,
-							spectrum_x_margin + i,
-							spectrum_size_y + spectrum_top_margin - j);
+					cairo_move_to(cr, spectrum_x_margin + i - 1,
+							spectrum_size_y + spectrum_top_margin - old_j);
+				cairo_line_to(cr, spectrum_x_margin + i,
+						spectrum_size_y + spectrum_top_margin - j);
+				cairo_stroke(cr);
 				old_j = j;
 			}
 		}
@@ -791,7 +795,9 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 		if (frame->core->freq != 0.0) {
 
 			// fundamental frequency mark with a red point.
-			gdk_gc_set_foreground(gc, &freq_color);
+			cairo_set_source_rgb(cr, 1.0, 0.13, 0.13);
+			cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+			cairo_set_line_width(cr, 4.0);
 
 			// index of closest sample to fundamental frequency.
 			i = (int) rint(
@@ -803,15 +809,13 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 				FLT SNR = frame->core->SPL[i] - frame->core->noise_level[i];
 
 				j = (SNR >= 0.0) ? (int) (plot_gain * SNR / 10.0) : 0; // dB.
-				if (j < spectrum_size_y - 1)
-					gdk_draw_rectangle(pixmap, gc, TRUE,
-							spectrum_x_margin + i - 1,
-							spectrum_size_y + spectrum_top_margin - j - 1, 3,
-							3);
+				if (j < spectrum_size_y - 1) {
+					cairo_move_to(cr, spectrum_x_margin + i - 1,
+							spectrum_size_y + spectrum_top_margin - j - 1);
+					cairo_rel_line_to(cr, 0.0, 0.0);
+					cairo_stroke(cr);
+				}
 			}
-
-			// fundamental frequency mark with a red point.
-			gdk_gc_set_foreground(gc, &freq_color);
 
 			int k;
 			for (k = 0; k < frame->core->markers_size; k++) {
@@ -826,16 +830,20 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 					FLT SNR = frame->core->SPL[i] - frame->core->noise_level[i];
 
 					j = (SNR >= 0.0) ? (int) (plot_gain * SNR / 10.0) : 0; // dB.
-					if (j < spectrum_size_y - 1)
-						gdk_draw_rectangle(pixmap, gc, TRUE,
-								spectrum_x_margin + i - 1,
-								spectrum_size_y + spectrum_top_margin - j - 1,
-								3, 3);
+					if (j < spectrum_size_y - 1) {
+						cairo_move_to(cr, spectrum_x_margin + i - 1,
+								spectrum_size_y + spectrum_top_margin - j - 1);
+						cairo_rel_line_to(cr, 0.0, 0.0);
+						cairo_stroke(cr);
+					}
 				}
 			}
+
+			cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+			cairo_set_line_width(cr, 1.0);
 		}
 
-		gdk_gc_set_foreground(gc, &noise_threshold_color);
+		cairo_set_source_rgb(cr, 0.66, 0.53, 1.0);
 
 		// noise threshold drawing.
 		j = -1;
@@ -848,25 +856,28 @@ void lingot_gui_mainframe_draw_spectrum(LingotMainFrame* frame) {
 			j = (noise >= 0.0) ? (int) (plot_gain * noise / 10.0) : 0; // dB.
 			if ((old_j >= 0) && (old_j < spectrum_size_y) && (j >= 0)
 					&& (j < spectrum_size_y))
-				gdk_draw_line(pixmap, gc, spectrum_x_margin + i - 1,
-						spectrum_size_y + spectrum_top_margin - old_j,
-						spectrum_x_margin + i,
-						spectrum_size_y + spectrum_top_margin - j);
+				cairo_move_to(cr, spectrum_x_margin + i - 1,
+						spectrum_size_y + spectrum_top_margin - old_j);
+			cairo_line_to(cr, spectrum_x_margin + i,
+					spectrum_size_y + spectrum_top_margin - j);
+			cairo_stroke(cr);
 		}
 
 	}
 
-	gdk_gc_set_foreground(gc, &black_color);
+	// TODO: keep?
+	cairo_destroy(cr);
 
-	widget = frame->spectrum_area;
+	cairo_t *cr2 = gdk_cairo_create(w);
+	cairo_set_source_surface(cr2, surface, 0, 0);
+	cairo_paint(cr2);
 
-	gdk_draw_pixmap(widget->window,
-			widget->style->fg_gc[GTK_WIDGET_STATE(widget) ], pixmap, 0, 0, 0, 0,
-			spectrum_size_x + 2 * spectrum_x_margin,
-			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin);
+	cairo_destroy(cr2);
+
+	cairo_surface_destroy(surface);
 }
 
-void lingot_gui_mainframe_draw_labels(LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
 	char* current_tone;
 	static char error_string[30], freq_string[30];
@@ -913,15 +924,10 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	// dup.
 	lingot_config_copy(frame->conf, conf);
 
-	// resize the spectrum area
-	g_object_unref(frame->pix_spectrum);
-
 	int x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
 			+ 2 * spectrum_x_margin;
 	int y = spectrum_size_y + spectrum_top_margin + spectrum_bottom_margin;
 	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
-	frame->pix_spectrum = gdk_pixmap_new(frame->spectrum_area->window, x, y,
-			-1);
 
 	gtk_scrolled_window_set_policy(frame->spectrum_scroll,
 			(frame->conf->fft_size > 512) ?
