@@ -144,15 +144,12 @@ int lingot_config_scale_get_octave(const LingotScale* scale, int index) {
 	if (index < 0) {
 		result--;
 	}
+
 	return result;
 }
 
-FLT lingot_config_scale_get_absolute_offset(const LingotScale* scale, int index) {
-	return lingot_config_scale_get_octave(scale, index) * 1200.0
-			+ scale->offset_cents[index];
-}
-
-int lingot_config_scale_get_note_index(const LingotScale* scale, int index) {
+int lingot_config_scale_get_note_index(const LingotScale* scale,
+		int index) {
 	int index2 = index % scale->notes;
 	if (index2 < 0) {
 		index2 += scale->notes;
@@ -160,9 +157,17 @@ int lingot_config_scale_get_note_index(const LingotScale* scale, int index) {
 	return index2;
 }
 
+FLT lingot_config_scale_get_absolute_offset(const LingotScale* scale, int index) {
+	return lingot_config_scale_get_octave(scale, index) * 1200.0
+			+ scale->offset_cents[lingot_config_scale_get_note_index(scale,
+					index)];
+}
+
 FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
-	index = lingot_config_scale_get_note_index(scale, index);
-	return scale->base_frequency * pow(2.0, scale->offset_cents[index] / 1200.0);
+	return scale->base_frequency
+			* pow(2.0,
+					lingot_config_scale_get_absolute_offset(scale, index)
+							/ 1200.0);
 }
 
 int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
