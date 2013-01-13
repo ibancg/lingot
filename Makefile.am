@@ -16,7 +16,6 @@ lingotdoc_DATA = \
 	TODO\
 	THANKS\
 	MAINTAINERS\
-	src/lingot-background.xpm\
 	src/lingot-logo.xpm\
 	intltool-extract.in\
 	intltool-merge.in\

@@ -36,7 +36,6 @@
 
 #include "lingot-msg.h"
 
-#include "lingot-background.xpm"
 #include "lingot-logo.xpm"
 
 void lingot_gui_mainframe_draw_gauge(const LingotMainFrame*);
@@ -45,17 +44,21 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame*);
 
 // sizes
 
-int gauge_size_x = 160;
-int gauge_size_y = 100;
+static const int gauge_size_x = 160;
+static const int gauge_size_y = 100;
 
-int spectrum_size_y = 64;
+static const int spectrum_size_y = 64;
 
 // spectrum area margins
-int spectrum_bottom_margin = 16;
-int spectrum_top_margin = 12;
-int spectrum_x_margin = 15;
+static const int spectrum_bottom_margin = 16;
+static const int spectrum_top_margin = 12;
+static const int spectrum_x_margin = 15;
 
-gchar* filechooser_config_last_folder = NULL;
+static gchar* filechooser_config_last_folder = NULL;
+
+// TODO: keep here?
+static int closest_note_index = 0;
+static FLT frequency = 0.0;
 
 void lingot_gui_mainframe_callback_redraw_gauge(GtkWidget* w, GdkEventExpose* e,
 		LingotMainFrame* frame) {
@@ -107,12 +110,16 @@ void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 	lingot_gui_config_dialog_show(frame, NULL );
 }
 
-unsigned short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
+static short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
 		LingotScale* scale, FLT deviation, FLT* error_cents) {
-	unsigned short note_index = 0;
-	unsigned short int index;
+	short note_index = 0;
+	short int index;
 
 	FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
+	int octave = ((int) (offset)) / 1200;
+	if (offset < 0) {
+		octave--;
+	}
 	offset = fmod(offset, 1200.0);
 	if (offset < 0.0) {
 		offset += 1200.0;
@@ -150,6 +157,13 @@ unsigned short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
 		note_index = index + 1;
 		*error_cents = offset - pitch_sup;
 	}
+
+	if (note_index == scale->notes) {
+		note_index = 0;
+		octave++;
+	}
+
+	note_index += octave * scale->notes;
 
 	return note_index;
 }
@@ -198,13 +212,18 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 	frame->gauge_computation_uid = g_timeout_add(period,
 			lingot_gui_mainframe_callback_gauge_computation, frame);
 
+	// ignore continuous component
 	if (!frame->core->running || isnan(frame->core->freq)
 			|| (frame->core->freq < frame->conf->min_frequency)) {
+		frequency = 0.0;
 		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
 	} else {
-		lingot_gui_mainframe_get_closest_note_index(frame->core->freq,
-				frame->conf->scale, frame->conf->root_frequency_error,
-				&error_cents);
+		FLT error_cents; // do not use, unfiltered
+		frequency = lingot_filter_filter_sample(frame->freq_filter,
+				frame->core->freq);
+		closest_note_index = lingot_gui_mainframe_get_closest_note_index(
+				frame->core->freq, frame->conf->scale,
+				frame->conf->root_frequency_error, &error_cents);
 		lingot_gauge_compute(frame->gauge, error_cents);
 	}
 
@@ -454,9 +473,8 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	// two pixmaps for double buffer in gauge and spectrum drawing
 	// (virtual screen)
-	gdk_pixmap_new(frame->gauge_area->window, gauge_size_x, gauge_size_y, -1);
-	frame->pix_stick = gdk_pixmap_create_from_xpm_d(frame->gauge_area->window,
-			NULL, NULL, background2_xpm);
+	gdk_pixmap_new(gtk_widget_get_window(frame->gauge_area), gauge_size_x,
+			gauge_size_y, -1);
 
 	// GTK signals
 	gtk_signal_connect(
@@ -541,68 +559,316 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
 // ---------------------------------------------------------------------------
 
+static void cairo_set_source_argb(cairo_t *cr, unsigned int color) {
+	cairo_set_source_rgba(cr, 0.00392156862745098 * ((color >> 16) & 0xff),
+			0.00392156862745098 * ((color >> 8) & 0xff),
+			0.00392156862745098 * (color & 0xff),
+			1.0 - 0.00392156862745098 * ((color >> 24) & 0xff));
+}
+
+typedef struct {
+	FLT x;
+	FLT y;
+} point_t;
+
+static void lingot_gui_mainframe_draw_gauge_tic(cairo_t *cr,
+		const point_t* gaugeCenter, double radius1, double radius2,
+		double angle) {
+	cairo_move_to(cr, gaugeCenter->x + radius1 * sin(angle),
+			gaugeCenter->y - radius1 * cos(angle));
+	cairo_rel_line_to(cr, (radius2 - radius1) * sin(angle),
+			(radius1 - radius2) * cos(angle));
+	cairo_stroke(cr);
+}
+
 void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	GdkGC * gc =
 			gtk_widget_get_style(frame->gauge_area)->fg_gc[gtk_widget_get_state(
 					frame->gauge_area)];
-	GdkWindow* w = frame->gauge_area->window;
+	GdkWindow* w = gtk_widget_get_window(frame->gauge_area);
+
+// normalized dimensions
+	static const FLT gauge_gaugeCenterY = 0.94;
+	static const FLT gauge_gaugeLength = 0.85;
+	static const FLT gauge_gaugeLengthBack = 0.08;
+	static const FLT gauge_gaugeCenterRadius = 0.05;
+	static const FLT gauge_gaugeStroke = 0.01;
+	static const FLT gauge_gaugeShadowOffsetX = 0.015;
+	static const FLT gauge_gaugeShadowOffsetY = 0.01;
+	static const FLT gauge_centsBarStroke = 0.025;
+	static const FLT gauge_centsBarRadius = 0.75;
+	static const FLT gauge_centsBarMajorTicRadius = 0.04;
+	static const FLT gauge_centsBarMinorTicRadius = 0.03;
+	static const FLT gauge_centsBarMajorTicStroke = 0.03;
+	static const FLT gauge_centsBarMinorTicStroke = 0.01;
+	static const FLT gauge_centsTextSize = 0.09;
+	static const FLT gauge_frequencyBarStroke = 0.025;
+	static const FLT gauge_frequencyBarRadius = 0.78;
+	static const FLT gauge_frequencyBarMajorTicRadius = 0.04;
+	static const FLT gauge_frequencyBarMinorTicRadius = 0.03;
+	static const FLT gauge_frequencyBarMajorTicStroke = 0.03;
+	static const FLT gauge_frequencyBarMinorTicStroke = 0.01;
+	static const FLT gauge_frequencyTextRadius = 0.1;
+	static const FLT gauge_frequencyTextSize = 0.09;
+	static const FLT gauge_notesRadius = 0.80;
+	static const FLT gauge_notesTextSize = 0.14;
+	static const FLT gauge_notesSubindexTextSize = 0.06;
+	static const FLT gauge_notesSecondaryTextSize = 0.14;
+	static const FLT gauge_okBarStroke = 0.07;
+	static const FLT gauge_okBarRadius = 0.48;
+
+	static const FLT overtureAngle = 65.0 * M_PI / 180.0;
+
+// colors
+	static const unsigned int gauge_backgroundColor = 0xdddddd;
+	static const unsigned int gauge_gaugeColor = 0xaa3333;
+	static const unsigned int gauge_gaugeShadowColor = 0x44000000;
+	static const unsigned int gauge_centsBarColor = 0x333355;
+	static const unsigned int gauge_frequencyBarColor = 0x555533;
+	static const unsigned int gauge_okColor = 0x99dd99;
+	static const unsigned int gauge_koColor = 0xddaaaa;
+
+	int width = gauge_size_x;
+	int height = gauge_size_y;
+
+// dimensions applied to the current size
+	point_t gaugeCenter = { .x = width >> 1, .y = height * gauge_gaugeCenterY };
+	point_t gaugeShadowCenter = { .x = gaugeCenter.x
+			+ height * gauge_gaugeShadowOffsetX, .y = gaugeCenter.y
+			+ height * gauge_gaugeShadowOffsetY };
+	FLT gaugeLength = height * gauge_gaugeLength;
+	FLT gaugeLengthBack = height * gauge_gaugeLengthBack;
+	FLT gaugeCenterRadius = height * gauge_gaugeCenterRadius;
+	FLT gaugeStroke = height * gauge_gaugeStroke;
+	FLT centsBarRadius = height * gauge_centsBarRadius;
+	FLT centsBarStroke = height * gauge_centsBarStroke;
+	FLT centsBarMajorTicRadius = centsBarRadius
+			- height * gauge_centsBarMajorTicRadius;
+	FLT centsBarMinorTicRadius = centsBarRadius
+			- height * gauge_centsBarMinorTicRadius;
+	FLT centsBarMajorTicStroke = height * gauge_centsBarMajorTicStroke;
+	FLT centsBarMinorTicStroke = height * gauge_centsBarMinorTicStroke;
+	FLT centsTextSize = height * gauge_centsTextSize;
+	FLT frequencyBarRadius = height * gauge_frequencyBarRadius;
+	FLT frequencyBarMajorTicRadius = frequencyBarRadius
+			+ height * gauge_frequencyBarMajorTicRadius;
+	FLT frequencyBarMajorTicStroke = height * gauge_frequencyBarMajorTicStroke;
+	FLT frequencyBarMinorTicRadius = frequencyBarRadius
+			+ height * gauge_frequencyBarMinorTicRadius;
+	FLT frequencyBarMinorTicStroke = height * gauge_frequencyBarMinorTicStroke;
+	FLT frequencyBarStroke = height * gauge_frequencyBarStroke;
+	FLT frequencyTextRadius = frequencyBarRadius
+			+ height * gauge_frequencyTextRadius;
+	FLT frequencyTextSize = height * gauge_frequencyTextSize;
+	FLT notesRadius = height * gauge_notesRadius;
+	FLT notesTextSize = height * gauge_notesTextSize;
+	FLT notesSubindexTextSize = height * gauge_notesSubindexTextSize;
+	FLT notesSecondaryTextSize = height * gauge_notesSecondaryTextSize;
+	FLT okBarRadius = height * gauge_okBarRadius;
+	FLT okBarStroke = height * gauge_okBarStroke;
 
 	static FLT gauge_size = 90.0;
 	FLT max = 1.0;
 
-	// TODO: keep?
-	cairo_t* cr = NULL;
+// TODO: keep?
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+			gauge_size_x, gauge_size_y);
+	cairo_t *cr = cairo_create(surface);
 
-	cr = gdk_cairo_create(w);
-	gdk_cairo_set_source_pixmap(cr, frame->pix_stick, 0, 0);
-	GdkRectangle r;
-	r.x = 0;
-	r.y = 0;
-	r.width = 160;
-	r.height = 100;
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	GdkRectangle r = { .x = 0, .y = 0, .width = gauge_size_x, .height =
+			gauge_size_y };
 	gdk_cairo_rectangle(cr, &r);
 	cairo_fill(cr);
 
-	// and draws gauge
-	FLT normalized_error = frame->gauge->position
-			/ frame->conf->scale->max_offset_rounded;
-	FLT angle = normalized_error * M_PI / (1.5 * max);
-
-	cairo_set_source_rgb(cr, 0.75, 0.0, 0.12);
-	cairo_set_line_width(cr, 1.5);
-	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-	cairo_move_to(cr, gauge_size_x >> 1, gauge_size_y - 1);
-	cairo_line_to(cr, (gauge_size_x >> 1) + gauge_size * sin(angle),
-			gauge_size_y - 1 - gauge_size * cos(angle));
+	// draw ok/ko bar
+	cairo_set_line_width(cr, okBarStroke);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+	cairo_set_source_argb(cr, gauge_koColor);
+	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, okBarRadius,
+			-0.5 * M_PI - overtureAngle, -0.5 * M_PI + overtureAngle);
+	cairo_stroke(cr);
+	cairo_set_source_argb(cr, gauge_okColor);
+	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, okBarRadius,
+			-0.5 * M_PI - 0.1 * overtureAngle,
+			-0.5 * M_PI + 0.1 * overtureAngle);
 	cairo_stroke(cr);
 
-	static char buff1[10];
-	static char buff2[10];
-	sprintf(buff1,
-			(frame->conf->scale->max_offset_rounded > 1.0) ?
-					"-%.0f c" : "-%.1f c",
-			0.5 * frame->conf->scale->max_offset_rounded);
-	sprintf(buff2,
-			(frame->conf->scale->max_offset_rounded > 1.0) ?
-					"+%.0f c" : "+%.1f c",
-			0.5 * frame->conf->scale->max_offset_rounded);
+	// draw cents bar
+	cairo_set_line_width(cr, centsBarStroke);
+	cairo_set_source_argb(cr, gauge_centsBarColor);
+	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, centsBarRadius,
+			-0.5 * M_PI - 1.05 * overtureAngle,
+			-0.5 * M_PI + 1.05 * overtureAngle);
+	cairo_stroke(cr);
+
+	// cent tics
+	double maxOffsetRounded = frame->conf->scale->max_offset_rounded;
+	const int maxMinorDivisions = 20;
+	double centsPerMinorDivision = maxOffsetRounded / maxMinorDivisions;
+	double base = pow(10.0, floor(log10(centsPerMinorDivision)));
+	double normalizedCentsPerDivision = centsPerMinorDivision / base;
+	if (normalizedCentsPerDivision >= 6.0) {
+		normalizedCentsPerDivision = 10.0;
+	} else if (normalizedCentsPerDivision >= 2.5) {
+		normalizedCentsPerDivision = 5.0;
+	} else if (normalizedCentsPerDivision >= 1.2) {
+		normalizedCentsPerDivision = 2.0;
+	} else {
+		normalizedCentsPerDivision = 1.0;
+	}
+	centsPerMinorDivision = normalizedCentsPerDivision * base;
+	double centsPerMajorDivision = 5.0 * centsPerMinorDivision;
+
+	// minor tics
+	cairo_set_line_width(cr, centsBarMinorTicStroke);
+	int maxIndex = (int) floor(0.5 * maxOffsetRounded / centsPerMinorDivision);
+	double angleStep = 2.0 * overtureAngle * centsPerMinorDivision
+			/ maxOffsetRounded;
+	int index;
+	for (index = -maxIndex; index <= maxIndex; index++) {
+		double angle = index * angleStep;
+		lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter,
+				centsBarMinorTicRadius, centsBarRadius, angle);
+	}
+
+	// major tics
+	maxIndex = (int) floor(0.5 * maxOffsetRounded / centsPerMajorDivision);
+	angleStep = 2.0 * overtureAngle * centsPerMajorDivision / maxOffsetRounded;
+	cairo_set_line_width(cr, centsBarMajorTicStroke);
+	for (index = -maxIndex; index <= maxIndex; index++) {
+		double angle = index * angleStep;
+		lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter,
+				centsBarMajorTicRadius, centsBarRadius, angle);
+	}
+
+	// cents text
+	cairo_set_line_width(cr, 1.0);
+	double oldAngle = 0.0;
+	float textSize;
+
+	cairo_save(cr);
+
+	static char buff[10];
 
 	cairo_text_extents_t te;
-	cairo_set_source_rgb(cr, 0.15, 0.15, 0.15);
 	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
 			CAIRO_FONT_WEIGHT_NORMAL);
-	cairo_set_font_size(cr, 10.0);
-	cairo_text_extents(cr, buff1, &te);
-	cairo_move_to(cr, 0.1 * gauge_size_x - te.width / 2 - te.x_bearing,
-			0.8 * gauge_size_y - te.height / 2 - te.y_bearing);
-	cairo_show_text(cr, buff1);
-	cairo_text_extents(cr, buff2, &te);
-	cairo_move_to(cr, 0.85 * gauge_size_x - te.width / 2 - te.x_bearing,
-			0.8 * gauge_size_y - te.height / 2 - te.y_bearing);
-	cairo_show_text(cr, buff2);
+	cairo_set_font_size(cr, centsTextSize);
 
-	// TODO: reuse?
+	sprintf(buff, "%s", "cent");
+	cairo_text_extents(cr, buff, &te);
+	cairo_move_to(cr, gaugeCenter.x - te.width / 2 - te.x_bearing,
+			gaugeCenter.y - 0.81 * centsBarMajorTicRadius - te.height / 2
+					- te.y_bearing);
+	cairo_show_text(cr, buff);
+
+	cairo_translate(cr, gaugeCenter.x, gaugeCenter.y);
+	for (index = -maxIndex; index <= maxIndex; index++) {
+		double angle = index * angleStep;
+		cairo_rotate(cr, angle - oldAngle);
+		int cents = (int) (index * centsPerMajorDivision);
+		sprintf(buff, "%s%i", ((cents > 0) ? "+" : ""), cents);
+		cairo_text_extents(cr, buff, &te);
+		cairo_move_to(cr, -te.width / 2 - te.x_bearing,
+				-0.9 * centsBarMajorTicRadius - te.height / 2 - te.y_bearing);
+		cairo_show_text(cr, buff);
+		oldAngle = angle;
+	}
+	cairo_restore(cr);
+	cairo_stroke(cr);
+
+	// draw frequency bar
+	cairo_set_line_width(cr, frequencyBarStroke);
+	cairo_set_source_argb(cr, gauge_frequencyBarColor);
+	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, frequencyBarRadius,
+			-0.5 * M_PI - 1.05 * overtureAngle,
+			-0.5 * M_PI + 1.05 * overtureAngle);
+	cairo_stroke(cr);
+
+	// frequency tics
+	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter,
+			frequencyBarMajorTicRadius, frequencyBarRadius, 0.0);
+//	double baseOffset = lingot_config_scale_get_absolute_offset(
+//			frame->conf->scale, closest_note_index);
+//	for (index = closest_note_index - 1;; index--) {
+//		double offset = lingot_config_scale_get_absolute_offset(
+//				frame->conf->scale, index);
+//		if (baseOffset - offset < 0.5 * maxOffsetRounded) {
+//			double angle = 2 * ((offset - baseOffset) * overtureAngle)
+//					/ (maxOffsetRounded);
+//			lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter,
+//					frequencyBarMajorTicRadius, frequencyBarRadius, angle);
+//		} else {
+//			break;
+//		}
+//	}
+
+//	// note name text
+//	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+//			CAIRO_FONT_WEIGHT_BOLD);
+//	cairo_set_font_size(cr, notesTextSize);
+//	sprintf(buff, "%s",
+//			frame->conf->scale->note_name[lingot_config_scale_get_note_index(
+//					frame->conf->scale, closest_note_index)]);
+//	cairo_text_extents(cr, buff, &te);
+//	cairo_move_to(cr, gaugeCenter.x - te.width / 2 - te.x_bearing,
+//			gaugeCenter.y - notesRadius - te.height / 2 - te.y_bearing);
+//	cairo_show_text(cr, buff);
+//
+//	cairo_set_font_size(cr, notesSubindexTextSize);
+//	sprintf(buff, "%i",
+//			lingot_config_scale_get_octave(frame->conf->scale,
+//					closest_note_index));
+//	cairo_text_extents_t te2;
+//	cairo_text_extents(cr, buff, &te2);
+//	cairo_move_to(cr, gaugeCenter.x + te.width / 2 + te.x_bearing,
+//			gaugeCenter.y - notesRadius);
+//	cairo_show_text(cr, buff);
+
+//	// frequency text
+//	if (frequency > 0.0) {
+//		cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+//				CAIRO_FONT_WEIGHT_NORMAL);
+//		cairo_set_font_size(cr, frequencyTextSize);
+//		sprintf(buff, "%0.1f Hz",
+//				lingot_config_scale_get_frequency(frame->conf->scale,
+//						closest_note_index));
+//		cairo_text_extents(cr, buff, &te);
+//		cairo_move_to(cr, gaugeCenter.x - te.width / 2 - te.x_bearing,
+//				gaugeCenter.y - frequencyTextRadius - te.height / 2
+//						- te.y_bearing);
+//		cairo_show_text(cr, buff);
+//	}
+
+	// draws gauge
+	double normalized_error = frame->gauge->position
+			/ frame->conf->scale->max_offset_rounded;
+	double angle = 2.0 * normalized_error * overtureAngle;
+	cairo_set_line_width(cr, gaugeStroke);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+	cairo_set_source_argb(cr, gauge_gaugeShadowColor);
+	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeShadowCenter,
+			-gaugeLengthBack, gaugeLength, angle);
+	cairo_arc(cr, gaugeShadowCenter.x, gaugeShadowCenter.y, gaugeCenterRadius,
+			0, 2 * M_PI);
+	cairo_fill(cr);
+	cairo_set_source_argb(cr, gauge_gaugeColor);
+	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter, -gaugeLengthBack,
+			gaugeLength, angle);
+	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, gaugeCenterRadius, 0, 2 * M_PI);
+	cairo_fill(cr);
+
 	cairo_destroy(cr);
+
+	cairo_t *cr2 = gdk_cairo_create(w);
+	cairo_set_source_surface(cr2, surface, 0, 0);
+	cairo_paint(cr2);
+
+	cairo_destroy(cr2);
+
+	cairo_surface_destroy(surface);
+
 }
 
 void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
@@ -613,18 +879,18 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	const int spectrum_size_x = (
 			(frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256);
 
-	// minimum grid size in pixels
+// minimum grid size in pixels
 	static const int minimum_grid_width = 50;
 
-	// scale factors (in KHz) to draw the grid. We will choose the smaller
-	// factor that respects the minimum_grid_width
+// scale factors (in KHz) to draw the grid. We will choose the smaller
+// factor that respects the minimum_grid_width
 	static const double scales[] = { 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 4, 11, 22,
 			-1.0 };
 
-	// spectrum drawing mode
+// spectrum drawing mode
 	static gboolean spectrum_drawing_filled = TRUE;
 
-	// grid division in dB
+// grid division in dB
 	static FLT grid_db_height = 25;
 
 	register unsigned int i;
@@ -634,23 +900,19 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	GdkGC * gc =
 			gtk_widget_get_style(frame->spectrum_area)->fg_gc[gtk_widget_get_state(
 					frame->spectrum_area)];
-	GdkWindow* w = frame->spectrum_area->window;
+	GdkWindow* w = gtk_widget_get_window(frame->spectrum_area);
 
 	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
 			spectrum_size_x + 2 * spectrum_x_margin,
 			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin);
 	cairo_t *cr = cairo_create(surface);
 
-	// clear all
+// clear all
 	int sizex = spectrum_size_x + 2 * spectrum_x_margin;
 	int sizey = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
 
 	cairo_set_source_rgb(cr, 0.06, 0.2, 0.06);
-	GdkRectangle r;
-	r.x = 0;
-	r.y = 0;
-	r.width = sizex;
-	r.height = sizey;
+	GdkRectangle r = { .x = 0, .y = 0, .width = sizex, .height = sizey };
 	gdk_cairo_rectangle(cr, &r);
 	cairo_fill(cr);
 
@@ -662,7 +924,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			spectrum_size_y + spectrum_top_margin);
 	cairo_stroke(cr);
 
-	// choose scale factor
+// choose scale factor
 	for (i = 0; scales[i] > 0.0; i++) {
 		if ((1e3 * scales[i] * frame->conf->fft_size * frame->conf->oversampling
 				/ frame->conf->sample_rate) > minimum_grid_width)
@@ -749,10 +1011,10 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		j += grid_db_height;
 	}
 
-	// TODO: specify the visible range
+// TODO: specify the visible range
 
-	// TODO: change access to frame->core->X
-	// spectrum drawing.
+// TODO: change access to frame->core->X
+// spectrum drawing.
 	if (frame->core->running) {
 
 		cairo_set_source_rgb(cr, 0.13, 1.0, 0.13);
@@ -865,7 +1127,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 	}
 
-	// TODO: keep?
+// TODO: keep?
 	cairo_destroy(cr);
 
 	cairo_t *cr2 = gdk_cairo_create(w);
@@ -879,39 +1141,30 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
-	char* current_tone;
+	char* note_name;
 	static char error_string[30], freq_string[30];
 	unsigned short note_index;
 
 	// draw note, error and frequency labels
 
 	// ignore continuous component
-	if (!frame->core->running || isnan(frame->core->freq)
-			|| (frame->core->freq < 10.0)) {
-		current_tone = "---";
+	if (frequency == 0.0) {
+		note_name = "---";
 		strcpy(error_string, "e = ---");
 		strcpy(freq_string, "f = ---");
 	} else {
-		FLT error_cents; // do not use, unfiltered
-		note_index = lingot_gui_mainframe_get_closest_note_index(
-				frame->core->freq, frame->conf->scale,
-				frame->conf->root_frequency_error, &error_cents);
-		if (note_index == frame->conf->scale->notes) {
-			note_index = 0;
-		}
-
-		current_tone = frame->conf->scale->note_name[note_index];
+		note_name =
+				frame->conf->scale->note_name[lingot_config_scale_get_note_index(
+						frame->conf->scale, closest_note_index)];
 		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
-		sprintf(freq_string, "f = %6.2f Hz",
-				lingot_filter_filter_sample(frame->freq_filter,
-						frame->core->freq));
+		sprintf(freq_string, "f = %6.2f Hz", frequency);
 	}
 
 	gtk_label_set_text(GTK_LABEL(frame->freq_label), freq_string);
 	gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
 
 	char* markup = g_markup_printf_escaped(
-			"<span size=\"xx-large\" weight=\"bold\">%s</span>", current_tone);
+			"<span size=\"xx-large\" weight=\"bold\">%s</span>", note_name);
 	gtk_label_set_markup(GTK_LABEL(frame->tone_label), markup);
 	g_free(markup);
 }
@@ -921,7 +1174,7 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
 
-	// dup.
+// dup.
 	lingot_config_copy(frame->conf, conf);
 
 	int x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
@@ -940,6 +1193,6 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	frame->core = lingot_core_new(frame->conf);
 	lingot_core_start(frame->core);
 
-	// some parameters may have changed
+// some parameters may have changed
 	lingot_config_copy(conf, frame->conf);
 }
