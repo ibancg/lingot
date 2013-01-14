@@ -41,8 +41,8 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog*);
 void lingot_gui_config_dialog_close(LingotConfigDialog*);
 void lingot_gui_config_dialog_rewrite(LingotConfigDialog*);
 void lingot_gui_config_dialog_combo_select_value(GtkWidget* combo, int value);
-audio_system_t lingot_gui_config_dialog_get_audio_system(GtkComboBox* combo);
-void lingot_gui_config_dialog_set_audio_device(GtkComboBox* combo,
+audio_system_t lingot_gui_config_dialog_get_audio_system(GtkComboBoxText* combo);
+void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
 		const gchar* device_name);
 const gchar* lingot_gui_config_dialog_get_audio_device(const gchar* str);
 
@@ -107,7 +107,7 @@ void lingot_gui_config_dialog_callback_change_sample_rate(GtkWidget *widget,
 	char buff1[20];
 	char buff2[20];
 	gdouble srf = sr;
-	gdouble os = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(
+	gdouble os = gtk_spin_button_get_value(GTK_SPIN_BUTTON(
 			dialog->oversampling) );
 	sprintf(buff1, "%d", sr);
 	sprintf(buff2, " = %0.1f", srf / os);
@@ -120,7 +120,7 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 
 	char buff[10];
-	char* text = gtk_combo_box_get_active_text(dialog->input_system);
+	char* text = gtk_combo_box_text_get_active_text(dialog->input_system);
 	audio_system_t audio_system = str_to_audio_system_t(text);
 	free(text);
 
@@ -147,7 +147,7 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		int i;
 		for (i = 0; i < properties->n_sample_rates; i++) {
 			sprintf(buff, "%d", properties->sample_rates[i]);
-			gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->sample_rate), buff);
+			gtk_combo_box_text_append_text(dialog->sample_rate, buff);
 		}
 
 		GtkListStore* input_dev_model = GTK_LIST_STORE(gtk_combo_box_get_model(
@@ -157,7 +157,7 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		if (properties->devices != NULL ) {
 			for (i = 0; i < properties->n_devices; i++)
 				if (properties->devices[i] != NULL ) {
-					gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_dev),
+					gtk_combo_box_text_append_text(dialog->input_dev,
 							properties->devices[i]);
 				}
 		}
@@ -179,7 +179,7 @@ void lingot_gui_config_dialog_callback_change_deviation(GtkWidget *widget,
 	gtk_widget_queue_draw(GTK_WIDGET(dialog->scale_treeview) );
 }
 
-void lingot_gui_config_dialog_set_audio_system(GtkComboBox* combo,
+void lingot_gui_config_dialog_set_audio_system(GtkComboBoxText* combo,
 		audio_system_t audio_system) {
 	const char* token = audio_system_t_to_str(audio_system);
 	GtkTreeModel* model = gtk_combo_box_get_model(combo);
@@ -197,14 +197,14 @@ void lingot_gui_config_dialog_set_audio_system(GtkComboBox* combo,
 	}
 }
 
-audio_system_t lingot_gui_config_dialog_get_audio_system(GtkComboBox* combo) {
-	char* text = gtk_combo_box_get_active_text(combo);
+audio_system_t lingot_gui_config_dialog_get_audio_system(GtkComboBoxText* combo) {
+	char* text = gtk_combo_box_text_get_active_text(combo);
 	int result = str_to_audio_system_t(text);
 	free(text);
 	return result;
 }
 
-void lingot_gui_config_dialog_set_audio_device(GtkComboBox* combo,
+void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
 		const gchar* device_name) {
 
 	GtkTreeModel* model = GTK_TREE_MODEL(gtk_combo_box_get_model(
@@ -360,14 +360,13 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 			lingot_gui_config_dialog_get_audio_device(
 					gtk_entry_get_text(
 							GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->input_dev))) )));
-	conf->root_frequency_error = gtk_spin_button_get_value_as_float(
+	conf->root_frequency_error = gtk_spin_button_get_value(
 			dialog->root_frequency_error);
 	conf->calculation_rate = gtk_range_get_value(GTK_RANGE(
 			dialog->calculation_rate) );
 	conf->visualization_rate = gtk_range_get_value(GTK_RANGE(
 			dialog->visualization_rate) );
-	conf->temporal_window = gtk_spin_button_get_value_as_float(
-			dialog->temporal_window);
+	conf->temporal_window = gtk_spin_button_get_value(dialog->temporal_window);
 	conf->noise_threshold_db = gtk_range_get_value(GTK_RANGE(
 			dialog->noise_threshold) );
 	conf->gain = gtk_range_get_value(GTK_RANGE(dialog->gain) );
@@ -382,7 +381,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 			dialog->rejection_peak_relation) );
 	conf->min_frequency = gtk_spin_button_get_value_as_int(
 			dialog->minimum_frequency);
-	text1 = gtk_combo_box_get_active_text(dialog->fft_size);
+	text1 = gtk_combo_box_text_get_active_text(dialog->fft_size);
 	conf->fft_size = atoi(text1);
 	g_free(text1);
 	conf->sample_rate = sample_rate;
@@ -446,28 +445,28 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->mainframe->config_dialog = dialog;
 
 		dialog->input_system =
-				GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_system"));
+				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "input_system"));
 
-		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_OSS));
 #ifdef ALSA
-		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_ALSA));
 #endif
 #ifdef JACK
-		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_JACK));
 #endif
 #ifdef PULSEAUDIO
-		gtk_combo_box_append_text(GTK_COMBO_BOX(dialog->input_system),
+		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_PULSEAUDIO));
 #endif
 
 		dialog->input_dev =
-				GTK_COMBO_BOX(gtk_builder_get_object(builder, "input_dev"));
+				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "input_dev"));
 
 		dialog->sample_rate =
-				GTK_COMBO_BOX(gtk_builder_get_object(builder, "sample_rate"));
+				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "sample_rate"));
 		dialog->calculation_rate =
 				GTK_HSCALE(gtk_builder_get_object(builder, "calculation_rate"));
 		dialog->visualization_rate =
@@ -478,7 +477,7 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->oversampling =
 				GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "oversampling"));
 		dialog->fft_size =
-				GTK_COMBO_BOX(gtk_builder_get_object(builder, "fft_size"));
+				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "fft_size"));
 		dialog->temporal_window =
 				GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "temporal_window"));
 		dialog->root_frequency_error =
@@ -507,46 +506,39 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		lingot_gui_config_dialog_scale_show(dialog, builder);
 
-		gtk_signal_connect( GTK_OBJECT(dialog->input_system), "changed",
-				GTK_SIGNAL_FUNC (lingot_gui_config_dialog_callback_change_input_system),
+		g_signal_connect( dialog->input_system, "changed",
+				G_CALLBACK (lingot_gui_config_dialog_callback_change_input_system),
 				dialog);
-		gtk_signal_connect(
-				GTK_OBJECT(gtk_bin_get_child(GTK_BIN(dialog->sample_rate))),
+		g_signal_connect( gtk_bin_get_child(GTK_BIN(dialog->sample_rate)),
 				"changed",
-				GTK_SIGNAL_FUNC (lingot_gui_config_dialog_callback_change_sample_rate),
+				G_CALLBACK (lingot_gui_config_dialog_callback_change_sample_rate),
 				dialog);
 
-		gtk_signal_connect( GTK_OBJECT (dialog->oversampling), "value_changed",
-				GTK_SIGNAL_FUNC (lingot_gui_config_dialog_callback_change_sample_rate),
+		g_signal_connect( dialog->oversampling, "value_changed",
+				G_CALLBACK (lingot_gui_config_dialog_callback_change_sample_rate),
 				dialog);
-		gtk_signal_connect( GTK_OBJECT (dialog->root_frequency_error),
-				"value_changed",
-				GTK_SIGNAL_FUNC (lingot_gui_config_dialog_callback_change_deviation),
+		g_signal_connect( dialog->root_frequency_error, "value_changed",
+				G_CALLBACK (lingot_gui_config_dialog_callback_change_deviation),
 				dialog);
 
-		g_signal_connect(
-				GTK_OBJECT(gtk_builder_get_object(builder, "button_default")),
+		g_signal_connect( gtk_builder_get_object(builder, "button_default"),
 				"clicked",
-				GTK_SIGNAL_FUNC(lingot_gui_config_dialog_callback_button_default),
+				G_CALLBACK(lingot_gui_config_dialog_callback_button_default),
 				dialog);
-		g_signal_connect(
-				GTK_OBJECT(gtk_builder_get_object(builder, "button_apply")),
+		g_signal_connect( gtk_builder_get_object(builder, "button_apply"),
 				"clicked",
-				GTK_SIGNAL_FUNC(lingot_gui_config_dialog_callback_button_apply),
+				G_CALLBACK(lingot_gui_config_dialog_callback_button_apply),
 				dialog);
-		g_signal_connect(
-				GTK_OBJECT(gtk_builder_get_object(builder, "button_accept")),
+		g_signal_connect( gtk_builder_get_object(builder, "button_accept"),
 				"clicked",
-				GTK_SIGNAL_FUNC(lingot_gui_config_dialog_callback_button_ok),
+				G_CALLBACK(lingot_gui_config_dialog_callback_button_ok),
 				dialog);
-		g_signal_connect(
-				GTK_OBJECT(gtk_builder_get_object(builder, "button_cancel")),
+		g_signal_connect( gtk_builder_get_object(builder, "button_cancel"),
 				"clicked",
-				GTK_SIGNAL_FUNC(lingot_gui_config_dialog_callback_button_cancel),
+				G_CALLBACK(lingot_gui_config_dialog_callback_button_cancel),
 				dialog);
-		g_signal_connect(GTK_OBJECT(dialog->win), "destroy",
-				GTK_SIGNAL_FUNC(lingot_gui_config_dialog_callback_close),
-				dialog);
+		g_signal_connect(dialog->win, "destroy",
+				G_CALLBACK(lingot_gui_config_dialog_callback_close), dialog);
 
 		lingot_gui_config_dialog_rewrite(dialog);
 

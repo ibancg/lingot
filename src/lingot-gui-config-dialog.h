@@ -32,15 +32,15 @@ typedef struct _LingotConfigDialog LingotConfigDialog;
 struct _LingotConfigDialog {
 
 	// widgets that contains configuration information.
-	GtkComboBox* input_system;
-	GtkComboBox* input_dev;
-	GtkComboBox* sample_rate;
+	GtkComboBoxText* input_system;
+	GtkComboBoxText* input_dev;
+	GtkComboBoxText* sample_rate;
 	GtkHScale* calculation_rate;
 	GtkHScale* visualization_rate;
 	GtkHScale* noise_threshold;
 	GtkHScale* gain;
 	GtkSpinButton* oversampling;
-	GtkComboBox* fft_size;
+	GtkComboBoxText* fft_size;
 	GtkSpinButton* temporal_window;
 	GtkSpinButton* root_frequency_error;
 	GtkSpinButton* dft_number;

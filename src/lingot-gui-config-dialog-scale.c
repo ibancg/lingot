@@ -265,7 +265,7 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 				lingot_config_scale_parse_shift(shift_char, &shift_cents, NULL, NULL);
 				free(shift_char);
 
-				freq *= pow(2.0, -gtk_spin_button_get_value_as_float(
+				freq *= pow(2.0, -gtk_spin_button_get_value(
 								config_dialog->root_frequency_error) / 1200.0);
 				base_freq = freq * pow(2.0, -shift_cents / 1200.0);
 
@@ -298,8 +298,8 @@ void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
 
 	gtk_tree_model_get(model, iter, COLUMN_FREQUENCY, &freq, -1);
 	freq *= pow(2.0,
-			gtk_spin_button_get_value_as_float(
-					config_dialog->root_frequency_error) / 1200.0);
+			gtk_spin_button_get_value(config_dialog->root_frequency_error)
+					/ 1200.0);
 
 	if (fabs(freq - MID_A_FREQUENCY) < 1e-3) {
 		g_object_set(renderer, "text", "mid-A", NULL );
@@ -567,7 +567,8 @@ gint lingot_gui_config_dialog_scale_key_press_cb(GtkWidget *widget,
 
 gint lingot_gui_config_dialog_scale_tree_view_column_get_index(
 		GtkTreeViewColumn *column) {
-	GtkTreeView *tree = GTK_TREE_VIEW(column->tree_view);
+	GtkTreeView *tree =
+			GTK_TREE_VIEW(gtk_tree_view_column_get_tree_view(column));
 	GList *cols = gtk_tree_view_get_columns(tree);
 	int counter = 0;
 
