@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkAccelGroup" id="accelgroup1"/>
   <object class="GtkWindow" id="window1">
     <property name="visible">True</property>
@@ -9,7 +8,6 @@
     <property name="no_show_all">True</property>
     <property name="border_width">6</property>
     <property name="title" translatable="yes">lingot</property>
-    <property name="resizable">False</property>
     <property name="window_position">center</property>
     <accel-groups>
       <group name="accelgroup1"/>
@@ -167,15 +165,12 @@
             <property name="spacing">4</property>
             <child>
               <object class="GtkFrame" id="frame1">
-                <property name="width_request">164</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkDrawingArea" id="gauge_area">
-                    <property name="width_request">160</property>
-                    <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge),</property>
@@ -290,8 +285,6 @@
                 <property name="height_request">96</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
                 <child>
                   <object class="GtkViewport" id="viewport1">
                     <property name="visible">True</property>

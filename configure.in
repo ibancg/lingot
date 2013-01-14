@@ -27,7 +27,7 @@ AM_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
 
-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.24])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
@@ -120,9 +120,9 @@ if test "x$uselibfftw" = "xyes"; then
 fi
 
 
-PKG_CHECK_MODULES([GLADE], [libglade-2.0])
-AC_SUBST(GLADE_CFLAGS)
-AC_SUBST(GLADE_LIBS)
+dnl PKG_CHECK_MODULES([GLADE], [libglade-2.0])
+dnl AC_SUBST(GLADE_CFLAGS)
+dnl AC_SUBST(GLADE_LIBS)
 
 dnl Set PACKAGE_LOCALE_DIR in config.h.
 if test "x${prefix}" = "xNONE"; then

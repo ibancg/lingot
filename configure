@@ -643,8 +643,6 @@ PACKAGE_DOC_DIR
 NO_PREFIX_PACKAGE_DOC_DIR
 PACKAGE_DATA_DIR
 NO_PREFIX_PACKAGE_DATA_DIR
-GLADE_LIBS
-GLADE_CFLAGS
 LIBFFTW_LIBS
 LIBFFTW_CFLAGS
 PULSEAUDIO_LIBS
@@ -861,9 +859,7 @@ JACK_LIBS
 PULSEAUDIO_CFLAGS
 PULSEAUDIO_LIBS
 LIBFFTW_CFLAGS
-LIBFFTW_LIBS
-GLADE_CFLAGS
-GLADE_LIBS'
+LIBFFTW_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1532,9 +1528,6 @@ Some influential environment variables:
               C compiler flags for LIBFFTW, overriding pkg-config
   LIBFFTW_LIBS
               linker flags for LIBFFTW, overriding pkg-config
-  GLADE_CFLAGS
-              C compiler flags for GLADE, overriding pkg-config
-  GLADE_LIBS  linker flags for GLADE, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -14275,12 +14268,12 @@ if test -n "$GTK_CFLAGS"; then
     pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.24\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.24") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.24" 2>/dev/null`
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0 >= 3.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -14292,12 +14285,12 @@ if test -n "$GTK_LIBS"; then
     pkg_cv_GTK_LIBS="$GTK_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.24\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.24") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.24" 2>/dev/null`
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-3.0 >= 3.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -14318,14 +14311,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gtk+-2.0 >= 2.24" 2>&1`
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gtk+-3.0 >= 3.0" 2>&1`
         else
-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk+-2.0 >= 2.24" 2>&1`
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk+-3.0 >= 3.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.24) were not met:
+	as_fn_error $? "Package requirements (gtk+-3.0 >= 3.0) were not met:
 
 $GTK_PKG_ERRORS
 
@@ -14807,99 +14800,6 @@ fi
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING:  No libfftw was found : FFT will be slower " >&5
 $as_echo "$as_me: WARNING:  No libfftw was found : FFT will be slower " >&2;}
  fi
-fi
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLADE" >&5
-$as_echo_n "checking for GLADE... " >&6; }
-
-if test -n "$GLADE_CFLAGS"; then
-    pkg_cv_GLADE_CFLAGS="$GLADE_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libglade-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libglade-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GLADE_CFLAGS=`$PKG_CONFIG --cflags "libglade-2.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GLADE_LIBS"; then
-    pkg_cv_GLADE_LIBS="$GLADE_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libglade-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libglade-2.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GLADE_LIBS=`$PKG_CONFIG --libs "libglade-2.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GLADE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libglade-2.0" 2>&1`
-        else
-	        GLADE_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libglade-2.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GLADE_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (libglade-2.0) were not met:
-
-$GLADE_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables GLADE_CFLAGS
-and GLADE_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables GLADE_CFLAGS
-and GLADE_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5; }
-else
-	GLADE_CFLAGS=$pkg_cv_GLADE_CFLAGS
-	GLADE_LIBS=$pkg_cv_GLADE_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
 fi
 
 

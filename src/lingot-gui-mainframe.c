@@ -98,7 +98,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
 	if (gtk_check_menu_item_get_active(
-			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item) )) {
+			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item))) {
 		gtk_widget_show(frame->spectrum_frame);
 	} else {
 		gtk_widget_hide(frame->spectrum_frame);
@@ -246,9 +246,8 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 				&error_code);
 
 		if (more_messages) {
-			GtkWindow* parent = GTK_WINDOW(
-					(frame->config_dialog != NULL) ?
-					frame->config_dialog->win : frame->win);
+			GtkWindow* parent = GTK_WINDOW((frame->config_dialog != NULL )?
+			frame->config_dialog->win : frame->win);
 			GtkButtonsType buttonsType;
 
 			char message[2000];
@@ -285,8 +284,8 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 							((message_type == WARNING) ?
 									_("Warning") : _("Info") ));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
-					gtk_window_get_icon(GTK_WINDOW(frame->win) ));
-			gtk_dialog_run(GTK_DIALOG(message_dialog) );
+					gtk_window_get_icon(GTK_WINDOW(frame->win)));
+			gtk_dialog_run(GTK_DIALOG(message_dialog));
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 
@@ -325,13 +324,13 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		config = lingot_config_new();
 		lingot_config_load(config, filename);
 		g_free(filename);
@@ -368,13 +367,13 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		lingot_config_save(frame->conf, filename);
 		g_free(filename);
 	}
@@ -419,7 +418,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	// ---------------------------------------------------
 
 	gtk_init(&argc, &argv);
-	gtk_set_locale();
+//	gtk_set_locale();
 
 	GtkBuilder* builder = gtk_builder_new();
 
@@ -442,24 +441,24 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	gtk_window_set_icon(GTK_WINDOW(frame->win), logo);
 
-	frame->gauge_area =
-			GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
-	frame->spectrum_area =
-			GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
+	frame->gauge_area = GTK_WIDGET(
+			gtk_builder_get_object(builder, "gauge_area"));
+	frame->spectrum_area = GTK_WIDGET(
+			gtk_builder_get_object(builder, "spectrum_area"));
 
-	frame->freq_label =
-			GTK_WIDGET(gtk_builder_get_object(builder, "freq_label"));
-	frame->tone_label =
-			GTK_WIDGET(gtk_builder_get_object(builder, "tone_label"));
-	frame->error_label =
-			GTK_WIDGET(gtk_builder_get_object(builder, "error_label"));
+	frame->freq_label = GTK_WIDGET(
+			gtk_builder_get_object(builder, "freq_label"));
+	frame->tone_label = GTK_WIDGET(
+			gtk_builder_get_object(builder, "tone_label"));
+	frame->error_label = GTK_WIDGET(
+			gtk_builder_get_object(builder, "error_label"));
 
-	frame->spectrum_frame =
-			GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
+	frame->spectrum_frame = GTK_WIDGET(
+			gtk_builder_get_object(builder, "spectrum_frame"));
 	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(
 			gtk_builder_get_object(builder, "scrolledwindow1"));
-	frame->view_spectrum_item = GTK_WIDGET(gtk_builder_get_object(builder,
-					"spectrum_item"));
+	frame->view_spectrum_item = GTK_WIDGET(
+			gtk_builder_get_object(builder, "spectrum_item"));
 
 	gtk_check_menu_item_set_active(
 			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
@@ -473,43 +472,33 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	// two pixmaps for double buffer in gauge and spectrum drawing
 	// (virtual screen)
-	gdk_pixmap_new(gtk_widget_get_window(frame->gauge_area), gauge_size_x,
-			gauge_size_y, -1);
+//	gdk_pixmap_new(gtk_widget_get_window(frame->gauge_area), gauge_size_x,
+//			gauge_size_y, -1);
 
 	// GTK signals
-	gtk_signal_connect(
-			GTK_OBJECT(gtk_builder_get_object(builder, "preferences_item")),
-			"activate",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_config_dialog),
+	g_signal_connect(gtk_builder_get_object(builder, "preferences_item"),
+			"activate", G_CALLBACK(lingot_gui_mainframe_callback_config_dialog),
 			frame);
-	gtk_signal_connect(GTK_OBJECT(gtk_builder_get_object(builder, "quit_item")),
-			"activate", GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_destroy),
+	g_signal_connect(gtk_builder_get_object(builder, "quit_item"), "activate",
+			G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
+	g_signal_connect(gtk_builder_get_object(builder, "about_item"), "activate",
+			G_CALLBACK(lingot_gui_mainframe_callback_about), frame);
+	g_signal_connect(gtk_builder_get_object(builder, "spectrum_item"),
+			"activate", G_CALLBACK(lingot_gui_mainframe_callback_view_spectrum),
 			frame);
-	gtk_signal_connect(
-			GTK_OBJECT(gtk_builder_get_object(builder, "about_item")),
-			"activate", GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_about),
+	g_signal_connect(gtk_builder_get_object(builder, "open_config_item"),
+			"activate", G_CALLBACK(lingot_gui_mainframe_callback_open_config),
 			frame);
-	gtk_signal_connect(
-			GTK_OBJECT(gtk_builder_get_object(builder, "spectrum_item")),
-			"activate",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_view_spectrum),
+	g_signal_connect(gtk_builder_get_object(builder, "save_config_item"),
+			"activate", G_CALLBACK(lingot_gui_mainframe_callback_save_config),
 			frame);
-	gtk_signal_connect(
-			GTK_OBJECT(gtk_builder_get_object(builder, "open_config_item")),
-			"activate",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_open_config), frame);
-	gtk_signal_connect(
-			GTK_OBJECT(gtk_builder_get_object(builder, "save_config_item")),
-			"activate",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_save_config), frame);
 
-	gtk_signal_connect(GTK_OBJECT(frame->gauge_area), "expose_event",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_redraw_gauge), frame);
-	gtk_signal_connect(GTK_OBJECT(frame->spectrum_area), "expose_event",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_redraw_spectrum),
-			frame);
-	gtk_signal_connect(GTK_OBJECT(frame->win), "destroy",
-			GTK_SIGNAL_FUNC(lingot_gui_mainframe_callback_destroy), frame);
+	g_signal_connect(frame->gauge_area, "draw",
+			G_CALLBACK(lingot_gui_mainframe_callback_redraw_gauge), frame);
+	g_signal_connect(frame->spectrum_area, "draw",
+			G_CALLBACK(lingot_gui_mainframe_callback_redraw_spectrum), frame);
+	g_signal_connect(frame->win, "destroy",
+			G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
 
 	GtkAccelGroup* accel_group = gtk_accel_group_new();
 	gtk_widget_add_accelerator(
@@ -582,9 +571,6 @@ static void lingot_gui_mainframe_draw_gauge_tic(cairo_t *cr,
 }
 
 void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
-	GdkGC * gc =
-			gtk_widget_get_style(frame->gauge_area)->fg_gc[gtk_widget_get_state(
-					frame->gauge_area)];
 	GdkWindow* w = gtk_widget_get_window(frame->gauge_area);
 
 // normalized dimensions
@@ -676,10 +662,14 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	cairo_t *cr = cairo_create(surface);
 
 	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_save(cr);
 	GdkRectangle r = { .x = 0, .y = 0, .width = gauge_size_x, .height =
 			gauge_size_y };
 	gdk_cairo_rectangle(cr, &r);
-	cairo_fill(cr);
+	cairo_fill_preserve(cr);
+	cairo_restore(cr);
+	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+	cairo_stroke(cr);
 
 	// draw ok/ko bar
 	cairo_set_line_width(cr, okBarStroke);
@@ -897,9 +887,6 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	int j;
 	int old_j;
 
-	GdkGC * gc =
-			gtk_widget_get_style(frame->spectrum_area)->fg_gc[gtk_widget_get_state(
-					frame->spectrum_area)];
 	GdkWindow* w = gtk_widget_get_window(frame->spectrum_area);
 
 	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,

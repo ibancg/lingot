@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy toplevel-contextual -->
+  <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">1</property>
     <property name="upper">30</property>
@@ -87,12 +86,12 @@
     <property name="window_position">center-always</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox5">
+      <object class="GtkBox" id="dialog-vbox5">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area5">
+          <object class="GtkButtonBox" id="dialog-action_area5">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
@@ -104,6 +103,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Resets the built-in settings, without applying them.</property>
+                <property name="use_action_appearance">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -119,6 +119,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Apply the current changes to the running tuner, but doesn't modify the configuration file.</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -135,6 +136,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Apply the current changes and modify the congifuration file.</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -151,6 +153,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Rolls back all the previous applied changes and closes the configuration dialog.</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -260,14 +263,18 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="sample_rate">
+                      <object class="GtkComboBoxText" id="sample_rate">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Choose the hardware sample rate here. We give you some examples, but you can choose another one. Please, be aware that depending on the audio system and/or device, not all the sampling frequencies are available. Anyway, you can get close to your desired effective sample rate by combining this parameter with the oversampling factor (Basic tab). If you are using JACK, you cannot modify this field, but you can change it externally (in the JACK server configuration).</property>
-                        <property name="model">liststore1</property>
                         <property name="has_entry">True</property>
                         <property name="entry_text_column">0</property>
                         <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="combobox-entry2">
+                            <property name="can_focus">False</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -278,18 +285,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="input_system">
+                      <object class="GtkComboBoxText" id="input_system">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Here you can pick the sound system.</property>
-                        <property name="model">liststore2</property>
                         <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -298,14 +298,18 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="input_dev">
+                      <object class="GtkComboBoxText" id="input_dev">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
-                        <property name="model">liststore4</property>
                         <property name="has_entry">True</property>
                         <property name="entry_text_column">0</property>
                         <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="combobox-entry4">
+                            <property name="can_focus">False</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -342,7 +346,6 @@
               <object class="GtkTable" id="table3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="extension_events">cursor</property>
                 <property name="border_width">10</property>
                 <property name="n_rows">4</property>
                 <property name="n_columns">3</property>
@@ -547,8 +550,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment5</property>
                     <property name="digits">3</property>
                   </object>
@@ -561,11 +562,10 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="fft_size">
+                  <object class="GtkComboBoxText" id="fft_size">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it's also computationally more expensive. Don't use high values here unless you have an equally high effective sample rate.</property>
-                    <property name="model">liststore3</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext3"/>
                       <attributes>
@@ -618,8 +618,6 @@
                         <property name="xalign">1</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
                         <property name="adjustment">adjustment6</property>
                       </object>
                       <packing>
@@ -745,8 +743,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment7</property>
                     <property name="digits">1</property>
                   </object>
@@ -890,8 +886,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment9</property>
                   </object>
                   <packing>
@@ -910,8 +904,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment10</property>
                   </object>
                   <packing>
@@ -930,8 +922,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment11</property>
                   </object>
                   <packing>
@@ -962,8 +952,6 @@
                     <property name="xalign">1</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment12</property>
                   </object>
                   <packing>
@@ -1069,8 +1057,6 @@
                         <property name="invisible_char">●</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -1096,7 +1082,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="hscrollbar_policy">never</property>
-                        <property name="vscrollbar_policy">automatic</property>
                         <property name="shadow_type">out</property>
                         <child>
                           <placeholder/>
@@ -1125,6 +1110,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="tooltip_text" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
+                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1140,6 +1126,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="tooltip_text" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
+                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1155,6 +1142,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="tooltip_text" translatable="yes">Imports the scale from an external .scl file, with the Scala project format (http://www.huygens-fokker.org/scala/)</property>
+                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1216,8 +1204,6 @@
                             <property name="xalign">1</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="secondary_icon_activatable">False</property>
-                            <property name="primary_icon_sensitive">True</property>
-                            <property name="secondary_icon_sensitive">True</property>
                             <property name="adjustment">adjustment13</property>
                           </object>
                           <packing>
