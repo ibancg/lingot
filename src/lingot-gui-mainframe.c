@@ -930,12 +930,12 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	int sizex = spectrum_size_x + 2 * spectrum_x_margin;
 	int sizey = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
 
-	cairo_set_source_rgb(cr, 0.06, 0.2, 0.06);
+	cairo_set_source_rgba(cr, 0.06, 0.2, 0.06, 1.0);
 	GdkRectangle r = { .x = 0, .y = 0, .width = sizex, .height = sizey };
 	gdk_cairo_rectangle(cr, &r);
 	cairo_fill(cr);
 
-	cairo_set_source_rgb(cr, 0.56, 0.56, 0.56);
+	cairo_set_source_rgba(cr, 0.56, 0.56, 0.56, 1.0);
 	cairo_set_line_width(cr, 1.0);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
 	cairo_move_to(cr, spectrum_x_margin, spectrum_size_y + spectrum_top_margin);
@@ -1036,7 +1036,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 // spectrum drawing.
 	if (frame->core->running) {
 
-		cairo_set_source_rgb(cr, 0.13, 1.0, 0.13);
+		cairo_set_source_rgba(cr, 0.13, 1.0, 0.13, 1.0);
 
 		j = -1;
 
@@ -1074,7 +1074,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		if (frame->core->freq != 0.0) {
 
 			// fundamental frequency mark with a red point.
-			cairo_set_source_rgb(cr, 1.0, 0.13, 0.13);
+			cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
 			cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 			cairo_set_line_width(cr, 4.0);
 
@@ -1122,7 +1122,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			cairo_set_line_width(cr, 1.0);
 		}
 
-		cairo_set_source_rgb(cr, 0.66, 0.53, 1.0);
+		cairo_set_source_rgba(cr, 0.66, 0.53, 1.0, 1.0);
 
 		// noise threshold drawing.
 		j = -1;

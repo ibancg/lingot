@@ -566,12 +566,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it's also computationally more expensive. Don't use high values here unless you have an equally high effective sample rate.</property>
-                    <child>
-                      <object class="GtkCellRendererText" id="cellrenderertext3"/>
-                      <attributes>
-                        <attribute name="text">0</attribute>
-                      </attributes>
-                    </child>
+                    <items>
+                      <item translatable="yes">256</item>
+                      <item translatable="yes">512</item>
+                      <item translatable="yes">1024</item>
+                      <item translatable="yes">2048</item>
+                      <item translatable="yes">4096</item>
+                    </items>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
