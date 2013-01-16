@@ -44,10 +44,14 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame*);
 
 // sizes
 
-static const int gauge_size_x = 160;
-static const int gauge_size_y = 100;
+static int gauge_size_x = 0;
+static int gauge_size_y = 0;
 
-static const int spectrum_size_y = 64;
+static int spectrum_size_x = 0;
+static int spectrum_size_y = 0;
+
+static int labelsbox_size_x = 0;
+static int labelsbox_size_y = 0;
 
 // spectrum area margins
 static const int spectrum_bottom_margin = 16;
@@ -386,6 +390,27 @@ void lingot_gui_mainframe_color(GdkColor* color, int red, int green, int blue) {
 	color->blue = blue;
 }
 
+void my_getsize(GtkWidget *widget, GtkAllocation *allocation, void *data) {
+
+	LingotMainFrame* frame = (LingotMainFrame*) data;
+
+	GtkAllocation req;
+	gtk_widget_get_allocation(frame->gauge_area, &req);
+
+	gauge_size_x = req.width;
+	gauge_size_y = req.height;
+
+	gtk_widget_get_allocation(frame->spectrum_area, &req);
+
+	spectrum_size_x = req.width;
+	spectrum_size_y = req.height;
+
+	gtk_widget_get_allocation(frame->labelsbox, &req);
+
+	labelsbox_size_x = req.width;
+	labelsbox_size_y = req.height;
+}
+
 void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	LingotMainFrame* frame;
@@ -455,10 +480,9 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	frame->spectrum_frame = GTK_WIDGET(
 			gtk_builder_get_object(builder, "spectrum_frame"));
-	frame->spectrum_scroll = GTK_SCROLLED_WINDOW(
-			gtk_builder_get_object(builder, "scrolledwindow1"));
 	frame->view_spectrum_item = GTK_WIDGET(
 			gtk_builder_get_object(builder, "spectrum_item"));
+	frame->labelsbox = GTK_WIDGET(gtk_builder_get_object(builder, "labelsbox"));
 
 	gtk_check_menu_item_set_active(
 			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
@@ -466,9 +490,9 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	// show all
 	gtk_widget_show_all(frame->win);
 
-	int x = ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256)
-			+ 2 * spectrum_x_margin;
-	int y = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
+//	int x = ((conf->fft_size > 256) ? (conf->fft_size >> 1) : 256)
+//			+ 2 * spectrum_x_margin;
+//	int y = spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin;
 
 	// two pixmaps for double buffer in gauge and spectrum drawing
 	// (virtual screen)
@@ -499,6 +523,10 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 			G_CALLBACK(lingot_gui_mainframe_callback_redraw_spectrum), frame);
 	g_signal_connect(frame->win, "destroy",
 			G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
+
+	// TODO: remove
+	g_signal_connect(frame->win, "size-allocate", G_CALLBACK(my_getsize),
+			frame);
 
 	GtkAccelGroup* accel_group = gtk_accel_group_new();
 	gtk_widget_add_accelerator(
@@ -616,6 +644,10 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 
 	int width = gauge_size_x;
 	int height = gauge_size_y;
+
+//	GtkRequisition req;
+//	gtk_widget_size_request(frame->gauge_area, &req);
+//	printf("%d x %d\n", req.width, req.height);
 
 // dimensions applied to the current size
 	point_t gaugeCenter = { .x = width >> 1, .y = height * gauge_gaugeCenterY };
@@ -866,8 +898,8 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	GtkWidget* widget = NULL;
 	PangoLayout* layout;
 
-	const int spectrum_size_x = (
-			(frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256);
+//	const int spectrum_size_x = (
+//			(frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256);
 
 // minimum grid size in pixels
 	static const int minimum_grid_width = 50;
@@ -1008,9 +1040,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 		j = -1;
 
-		GtkAdjustment* adj = gtk_scrolled_window_get_hadjustment(
-				frame->spectrum_scroll);
-		int min = gtk_adjustment_get_value(adj) - spectrum_x_margin;
+		int min = 0;
 		int max = min + 256 + 3 * spectrum_x_margin;
 		if (min < 0)
 			min = 0;
@@ -1128,30 +1158,39 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
-	char* note_name;
-	static char error_string[30], freq_string[30];
-	unsigned short note_index;
+	char* note_string;
+	static char error_string[30];
+	static char freq_string[30];
+	static char octave_string[30];
 
 	// draw note, error and frequency labels
 
 	// ignore continuous component
 	if (frequency == 0.0) {
-		note_name = "---";
+		note_string = "---";
 		strcpy(error_string, "e = ---");
 		strcpy(freq_string, "f = ---");
+		strcpy(octave_string, "");
 	} else {
-		note_name =
+		note_string =
 				frame->conf->scale->note_name[lingot_config_scale_get_note_index(
 						frame->conf->scale, closest_note_index)];
 		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
 		sprintf(freq_string, "f = %6.2f Hz", frequency);
+		sprintf(octave_string, "%d",
+				lingot_config_scale_get_octave(frame->conf->scale,
+						closest_note_index) + 4);
 	}
 
 	gtk_label_set_text(GTK_LABEL(frame->freq_label), freq_string);
 	gtk_label_set_text(GTK_LABEL(frame->error_label), error_string);
 
-	char* markup = g_markup_printf_escaped(
-			"<span size=\"xx-large\" weight=\"bold\">%s</span>", note_name);
+	int font_size = labelsbox_size_y / 6;
+	char* markup =
+			g_markup_printf_escaped(
+					"<span font_desc=\"%d\" weight=\"bold\">%s</span><span font_desc=\"%d\" weight=\"bold\"><sub>%s</sub></span>",
+					font_size, note_string, (int) (0.75 * font_size),
+					octave_string);
 	gtk_label_set_markup(GTK_LABEL(frame->tone_label), markup);
 	g_free(markup);
 }
@@ -1164,18 +1203,18 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 // dup.
 	lingot_config_copy(frame->conf, conf);
 
-	int x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
-			+ 2 * spectrum_x_margin;
-	int y = spectrum_size_y + spectrum_top_margin + spectrum_bottom_margin;
-	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
+//	int x = ((frame->conf->fft_size > 256) ? (frame->conf->fft_size >> 1) : 256)
+//			+ 2 * spectrum_x_margin;
+//	int y = spectrum_size_y + spectrum_top_margin + spectrum_bottom_margin;
+//	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_area), x, y);
 
-	gtk_scrolled_window_set_policy(frame->spectrum_scroll,
-			(frame->conf->fft_size > 512) ?
-					GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll),
-			260 + 2 * spectrum_x_margin,
-			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin + 4
-					+ ((frame->conf->fft_size > 512) ? 16 : 0));
+//	gtk_scrolled_window_set_policy(frame->spectrum_scroll,
+//			(frame->conf->fft_size > 512) ?
+//					GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+//	gtk_widget_set_size_request(GTK_WIDGET(frame->spectrum_scroll),
+//			260 + 2 * spectrum_x_margin,
+//			spectrum_size_y + spectrum_bottom_margin + spectrum_top_margin + 4
+//					+ ((frame->conf->fft_size > 512) ? 16 : 0));
 
 	frame->core = lingot_core_new(frame->conf);
 	lingot_core_start(frame->core);

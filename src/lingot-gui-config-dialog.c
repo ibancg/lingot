@@ -182,7 +182,7 @@ void lingot_gui_config_dialog_callback_change_deviation(GtkWidget *widget,
 void lingot_gui_config_dialog_set_audio_system(GtkComboBoxText* combo,
 		audio_system_t audio_system) {
 	const char* token = audio_system_t_to_str(audio_system);
-	GtkTreeModel* model = gtk_combo_box_get_model(combo);
+	GtkTreeModel* model = gtk_combo_box_get_model(GTK_COMBO_BOX(combo) );
 	GtkTreeIter iter;
 
 	gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
@@ -191,7 +191,7 @@ void lingot_gui_config_dialog_set_audio_system(GtkComboBoxText* combo,
 		gchar *str_data;
 		gtk_tree_model_get(model, &iter, 0, &str_data, -1);
 		if (!strcmp(str_data, token))
-			gtk_combo_box_set_active_iter(combo, &iter);
+			gtk_combo_box_set_active_iter(GTK_COMBO_BOX(combo), &iter);
 		g_free(str_data);
 		valid = gtk_tree_model_iter_next(model, &iter);
 	}

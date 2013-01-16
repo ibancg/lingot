@@ -47,7 +47,7 @@ struct _LingotMainFrame {
 	GtkWidget* freq_label;
 	GtkWidget* error_label;
 
-	GtkScrolledWindow* spectrum_scroll;
+	GtkWidget* labelsbox;
 
 	LingotFilter* freq_filter;
 
