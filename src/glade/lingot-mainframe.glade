@@ -159,21 +159,28 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkGrid" id="grid1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">4</property>
             <child>
-              <object class="GtkFrame" id="frame1">
+              <object class="GtkFrame" id="gauge_frame">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkDrawingArea" id="gauge_area">
+                    <property name="width_request">184</property>
+                    <property name="height_request">115</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge),</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
+                    <property name="tooltip_text" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                   </object>
                 </child>
                 <child type="label">
@@ -186,15 +193,18 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+                <property name="width">2</property>
+                <property name="height">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkFrame" id="frame3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">in</property>
                 <child>
@@ -203,15 +213,18 @@
                     <property name="can_focus">False</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkVBox" id="vbox2">
+                      <object class="GtkVBox" id="labelsbox">
                         <property name="width_request">110</property>
                         <property name="height_request">100</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="resize_mode">immediate</property>
                         <child>
                           <object class="GtkLabel" id="freq_label">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">Estimated fundamental frequency in hertzs.</property>
                             <property name="tooltip_text" translatable="yes">Estimated fundamental frequency in hertzs.</property>
                             <property name="label" translatable="yes">f = ---</property>
                           </object>
@@ -225,6 +238,8 @@
                           <object class="GtkLabel" id="tone_label">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
                             <property name="tooltip_text" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
                             <property name="label" translatable="yes">---</property>
                           </object>
@@ -238,6 +253,8 @@
                           <object class="GtkLabel" id="error_label">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
                             <property name="tooltip_text" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
                             <property name="label" translatable="yes">e = ---</property>
                           </object>
@@ -261,9 +278,10 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
               </packing>
             </child>
           </object>
@@ -277,28 +295,21 @@
           <object class="GtkFrame" id="spectrum_frame">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
             <property name="label_xalign">0</property>
             <property name="shadow_type">in</property>
             <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow1">
-                <property name="width_request">290</property>
+              <object class="GtkDrawingArea" id="spectrum_area">
+                <property name="width_request">300</property>
                 <property name="height_request">96</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <child>
-                  <object class="GtkViewport" id="viewport1">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="resize_mode">queue</property>
-                    <child>
-                      <object class="GtkDrawingArea" id="spectrum_area">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="can_focus">False</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
+                <property name="tooltip_text" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
               </object>
             </child>
             <child type="label">
