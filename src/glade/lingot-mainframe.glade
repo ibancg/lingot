@@ -214,8 +214,8 @@
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkVBox" id="labelsbox">
-                        <property name="width_request">110</property>
-                        <property name="height_request">100</property>
+                        <property name="width_request">150</property>
+                        <property name="height_request">115</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="resize_mode">immediate</property>
