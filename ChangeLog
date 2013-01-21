@@ -1,4 +1,13 @@
 
+2013-01-21 Ibán Cereijo <ibancg@gmail.com>
+
+	* Migration to GTK+ 3.0
+	* Migration to graphic vectors with libcairo. Main window now resizable.
+	* Modified the frequency finding algorithm.
+	* Showing octave index along with the note.
+	* Tagged beta version 0.9.2b5
+	
+
 2012-01-02 Ibán Cereijo <ibancg@gmail.com>
 
 	* Fixed #35183, #35220, #35221 (thanks to Roy J. Tellason, Sr.)

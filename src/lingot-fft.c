@@ -35,7 +35,7 @@
  DTFT functions.
  */
 
-LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
+LingotFFTPlan* lingot_fft_plan_create(const FLT* in, int n) {
 
 	LingotFFTPlan* result = malloc(sizeof(LingotFFTPlan));
 	result->n = n;
@@ -80,9 +80,6 @@ void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
 
 #ifndef LIBFFTW
 
-//------------------------------------------------------------------------
-
-// Fast Fourier Transform.
 void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned long int N,
 		unsigned long int offset, unsigned long int d1, unsigned long int step) {
 	LingotComplex X1, X2;
@@ -144,39 +141,7 @@ void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 	}
 }
 
-//------------------------------------------------------------------------
-
-/* Spectral Power Distribution esteem, selectively in frequency, by DFT.
- transforms signal in of N1 samples from frequency wi, with sample
- separation of dw rads, storing the result on buffer out with N2 samples. */
-void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
-	FLT Xr, Xi;
-	FLT wn;
-	FLT N1_2 = N1 * N1;
-	register int i, n;
-
-	for (i = 0; i < N2; i++) {
-
-		Xr = 0.0;
-		Xi = 0.0;
-
-		for (n = 0; n < N1; n++) { // O(n1*n2)  :(
-
-			wn = (wi + dw * i) * n;
-			Xr = Xr + cos(wn) * in[n];
-			Xi = Xi - sin(wn) * in[n];
-		}
-
-		out[i] = (Xr * Xr + Xi * Xi) / N1_2; // normalized squared module.
-	}
-}
-
-//------------------------------------------------------------------------
-
-/*
- Evaluates 1st and 2nd derivatives from SPD at frequency w.
- */
-void lingot_fft_spd_diffs_eval(FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
+void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
 	FLT x_cos_wn;
 	FLT x_sin_wn;
 	register int n;

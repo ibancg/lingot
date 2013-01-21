@@ -1,4 +1,22 @@
 
+Lingot 0.9.2 (2013-xx-xx)
+-------------------------
+
+ * Added PulseAudio support.
+ * Migration to GTK+ 3.0
+ * Migration to graphic vectors with libcairo. Main window now resizable.
+ * Modified the frequency finding algorithm.
+ * Implemented task #11284: audio devices autodetection.
+ * Fixed #35183, #35220, #35221.
+ * Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný).
+ * Showing octave index along with the note.
+ * Implemented task #10683: config file validation.
+ * Implemented task #11100: add libfftw support.
+ * Fixed bug #643435 in debian
+ * Enhanced some error messages.
+ * Fixed potential error when reading from OSS and ALSA.
+
+
 Lingot 0.9.1 (2011-08-22)
 -------------------------
 
