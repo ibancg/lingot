@@ -389,7 +389,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="label13">
-                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Gain</property>
                   </object>
@@ -444,7 +443,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="label17">
-                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">dB</property>
                   </object>
@@ -503,7 +501,6 @@
                 </child>
                 <child>
                   <object class="GtkHScale" id="gain">
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="tooltip_text" translatable="yes">Allows you to adapt the signal levels without the aid of an external mixer.</property>
                     <property name="adjustment">adjustment4</property>
@@ -788,7 +785,6 @@
             </child>
             <child>
               <object class="GtkTable" id="table5">
-                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">10</property>
                 <property name="n_rows">5</property>
@@ -1018,7 +1014,6 @@
             </child>
             <child type="tab">
               <object class="GtkLabel" id="label4">
-                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Advanced settings on the frequency finding algorithm. You should not modify these parameters unless you really need it and you have a good understanding of the algorithm. Use the 'Default' button if you get lost, and use those default parameters as your reference.</property>
                 <property name="label" translatable="yes">Advanced</property>

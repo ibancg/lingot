@@ -34,19 +34,19 @@
 
 typedef struct _LingotFilter LingotFilter;
 
-struct _LingotFilter
-  {
+struct _LingotFilter {
 
-    FLT* a;
-    FLT* b; // coefs
-    FLT* s; // status
+	FLT* a;
+	FLT* b; // coefs
+	FLT* s; // status
 
-    unsigned int N;
+	unsigned int N;
 
-  };
+};
 
 LingotFilter
-    * lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a, FLT* b);
+* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
+		const FLT* b);
 
 /**
  * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple
@@ -57,7 +57,8 @@ LingotFilter* lingot_filter_cheby_design(unsigned int order, FLT Rp, FLT wc);
 void lingot_filter_destroy(LingotFilter*);
 
 // Digital Filter Implementation II, in & out overlapables. Vector filtering
-void lingot_filter_filter(LingotFilter*, unsigned int n, FLT* in, FLT* out);
+void lingot_filter_filter(LingotFilter*, unsigned int n, const FLT* in,
+		FLT* out);
 
 // sample filtering
 FLT lingot_filter_filter_sample(LingotFilter*, FLT in);

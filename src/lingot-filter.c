@@ -29,8 +29,8 @@
 #define max(a,b) (((a)<(b))?(b):(a))
 
 // given each polynomial order and coefs, with optional initial status.
-LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, FLT* a,
-		FLT* b) {
+LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
+		const FLT* b) {
 	unsigned int i;
 	LingotFilter* filter = malloc(sizeof(LingotFilter));
 	filter->N = max(Na, Nb);
@@ -62,7 +62,7 @@ void lingot_filter_destroy(LingotFilter* filter) {
 }
 
 // Digital Filter Implementation II, in & out overlapables.
-void lingot_filter_filter(LingotFilter* filter, unsigned int n, FLT* in,
+void lingot_filter_filter(LingotFilter* filter, unsigned int n, const FLT* in,
 		FLT* out) {
 	FLT w, y;
 	register unsigned int i;
