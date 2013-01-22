@@ -35,7 +35,7 @@
  DTFT functions.
  */
 
-LingotFFTPlan* lingot_fft_plan_create(const FLT* in, int n) {
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 
 	LingotFFTPlan* result = malloc(sizeof(LingotFFTPlan));
 	result->n = n;
@@ -141,7 +141,8 @@ void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 	}
 }
 
-void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1, FLT* out_d2) {
+void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1,
+		FLT* out_d2) {
 	FLT x_cos_wn;
 	FLT x_sin_wn;
 	register int n;

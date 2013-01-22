@@ -57,6 +57,8 @@ struct _LingotMainFrame {
 
 	GtkWidget* win;
 
+	cairo_surface_t* gauge_background;
+
 	GdkColor gauge_color;
 	GdkColor spectrum_color;
 
