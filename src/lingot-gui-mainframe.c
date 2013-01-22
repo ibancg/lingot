@@ -1000,7 +1000,7 @@ void lingot_gui_mainframe_draw_spectrum_background(const LingotMainFrame* frame)
 		cairo_surface_destroy(spectrum_background);
 	}
 
-	spectrum_background = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+	spectrum_background = cairo_image_surface_create(CAIRO_FORMAT_RGB16_565,
 			spectrum_size_x, spectrum_size_y);
 
 	cairo_t *cr = cairo_create(spectrum_background);
@@ -1137,7 +1137,10 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	// spectrum drawing.
 	if (frame->core->running) {
 
-		cairo_t *cr = gdk_cairo_create(w);
+		cairo_surface_t* surface = cairo_image_surface_create(
+				CAIRO_FORMAT_RGB16_565, spectrum_size_x, spectrum_size_y);
+		cairo_t *cr = cairo_create(surface);
+
 		cairo_set_source_surface(cr, spectrum_background, 0, 0);
 		cairo_paint(cr);
 
@@ -1167,9 +1170,9 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		FLT dydxm1 = 0;
 
 		cairo_set_source_rgba(cr, 0.13, 1.0, 0.13, 1.0);
-	//		cairo_mask_surface(cr, surface, 20.0, 20.);
-	//		cairo_rectangle(cr, spectrum_left_margin, spectrum_top_margin,
-	//				spectrum_inner_x, spectrum_inner_y);
+		//		cairo_mask_surface(cr, surface, 20.0, 20.);
+		//		cairo_rectangle(cr, spectrum_left_margin, spectrum_top_margin,
+		//				spectrum_inner_x, spectrum_inner_y);
 		cairo_move_to(cr, x0, y0);
 		cairo_line_to(cr, x0, y);
 
@@ -1197,6 +1200,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 			dydxm1 = dydx;
 			cairo_curve_to(cr, x1, y1, x2, y2, x, y);
+//			cairo_line_to(cr, x, y);
 		}
 
 		y = y0
@@ -1255,6 +1259,13 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 		cairo_destroy(cr);
 
+		cr = gdk_cairo_create(w);
+		cairo_set_source_surface(cr, surface, 0, 0);
+		cairo_paint(cr);
+
+		cairo_destroy(cr);
+
+		cairo_surface_destroy(surface);
 	}
 
 }
