@@ -585,7 +585,8 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
 // ---------------------------------------------------------------------------
 
-static void cairo_set_source_argb(cairo_t *cr, unsigned int color) {
+static void lingot_gui_mainframe_cairo_set_source_argb(cairo_t *cr,
+		unsigned int color) {
 	cairo_set_source_rgba(cr, 0.00392156862745098 * ((color >> 16) & 0xff),
 			0.00392156862745098 * ((color >> 8) & 0xff),
 			0.00392156862745098 * (color & 0xff),
@@ -718,11 +719,11 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 // draw ok/ko bar
 	cairo_set_line_width(cr, okBarStroke);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
-	cairo_set_source_argb(cr, gauge_koColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_koColor);
 	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, okBarRadius,
 			-0.5 * M_PI - overtureAngle, -0.5 * M_PI + overtureAngle);
 	cairo_stroke(cr);
-	cairo_set_source_argb(cr, gauge_okColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_okColor);
 	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, okBarRadius,
 			-0.5 * M_PI - 0.1 * overtureAngle,
 			-0.5 * M_PI + 0.1 * overtureAngle);
@@ -730,7 +731,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 
 // draw cents bar
 	cairo_set_line_width(cr, centsBarStroke);
-	cairo_set_source_argb(cr, gauge_centsBarColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_centsBarColor);
 	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, centsBarRadius,
 			-0.5 * M_PI - 1.05 * overtureAngle,
 			-0.5 * M_PI + 1.05 * overtureAngle);
@@ -814,7 +815,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 
 // draw frequency bar
 	cairo_set_line_width(cr, frequencyBarStroke);
-	cairo_set_source_argb(cr, gauge_frequencyBarColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_frequencyBarColor);
 	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, frequencyBarRadius,
 			-0.5 * M_PI - 1.05 * overtureAngle,
 			-0.5 * M_PI + 1.05 * overtureAngle);
@@ -881,13 +882,15 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	double angle = 2.0 * normalized_error * overtureAngle;
 	cairo_set_line_width(cr, gaugeStroke);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
-	cairo_set_source_argb(cr, gauge_gaugeShadowColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_gaugeShadowColor);
 	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeShadowCenter,
-			-gaugeLengthBack, gaugeLength, angle);
+			-gaugeLengthBack, -0.99 * gaugeCenterRadius, angle);
+	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeShadowCenter,
+			0.99 * gaugeCenterRadius, gaugeLength, angle);
 	cairo_arc(cr, gaugeShadowCenter.x, gaugeShadowCenter.y, gaugeCenterRadius,
 			0, 2 * M_PI);
 	cairo_fill(cr);
-	cairo_set_source_argb(cr, gauge_gaugeColor);
+	lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_gaugeColor);
 	lingot_gui_mainframe_draw_gauge_tic(cr, &gaugeCenter, -gaugeLengthBack,
 			gaugeLength, angle);
 	cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, gaugeCenterRadius, 0, 2 * M_PI);
@@ -1106,10 +1109,16 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		// TODO: step
 		int index_step = 1;
 
+		static const double dashed1[] = { 5.0, 5.0 };
+		static int len1 = sizeof(dashed1) / sizeof(dashed1[0]);
+
 		const FLT x0 = spectrum_left_margin;
 		const FLT y0 = spectrum_size_y - spectrum_bottom_margin;
-		FLT s = lingot_gui_mainframe_get_signal(frame, 0, min_db, max_db);
-		y = y0 - db_density * s; // dB.
+
+		y = y0
+				- db_density
+						* lingot_gui_mainframe_get_signal(frame, min, min_db,
+								max_db); // dB.
 		FLT dydxm1 = 0;
 
 		cairo_set_source_rgba(cr, 0.13, 1.0, 0.13, 1.0);
@@ -1119,29 +1128,33 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_move_to(cr, x0, y0);
 		cairo_line_to(cr, x0, y);
 
-		for (i = min + index_step; i < max - 1; i += index_step) {
+		FLT yp1 = y0
+				- db_density
+						* lingot_gui_mainframe_get_signal(frame, min + 1,
+								min_db, max_db);
+		FLT ym1 = y;
+
+		for (i = index_step; i < max - 1; i += index_step) {
 
 			x = x0 + index_density * i;
-			s = lingot_gui_mainframe_get_signal(frame, i, min_db, max_db);
-			y = s; // dB.
-			FLT sm1 = lingot_gui_mainframe_get_signal(frame, i - 1, min_db,
-					max_db);
-			FLT sp1 = lingot_gui_mainframe_get_signal(frame, i + 1, min_db,
-					max_db);
-			FLT dydx = (sp1 - sm1) / (2 * index_density);
-			FLT dx = 0.4;
+			ym1 = y;
+			y = yp1;
+			yp1 = y0
+					- db_density
+							* lingot_gui_mainframe_get_signal(frame, i + 1,
+									min_db, max_db);
+			FLT dydx = (yp1 - ym1) / (2 * index_density);
+			static const FLT dx = 0.4;
 			FLT x1 = x - (1 - dx) * index_density;
 			FLT x2 = x - dx * index_density;
-			FLT y1 = sm1 + dydxm1 * dx;
-			FLT y2 = s - dydx * dx;
-			dydxm1 = dydx;
+			FLT y1 = ym1 + dydxm1 * dx;
+			FLT y2 = y - dydx * dx;
 
-			cairo_curve_to(cr, x1, y0 - db_density * y1, x2,
-					y0 - db_density * y2, x, y0 - db_density * y);
+			dydxm1 = dydx;
+			cairo_curve_to(cr, x1, y1, x2, y2, x, y);
 		}
 
-		s = lingot_gui_mainframe_get_signal(frame, max - 1, min_db, max_db);
-		y = y0 - db_density * s; // dB.
+		y = y0 - db_density * lingot_gui_mainframe_get_signal(frame, max - 1, min_db, max_db);; // dB.
 		cairo_line_to(cr, x0 + index_density * max, y);
 		cairo_line_to(cr, x0 + index_density * max, y0);
 		cairo_close_path(cr);
@@ -1149,45 +1162,40 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 //		cairo_restore(cr);
 		cairo_stroke(cr);
 
+		cairo_set_dash(cr, dashed1, len1, 0);
+
 		if (frame->core->freq != 0.0) {
 
-			// fundamental frequency mark with a red point.
+			// fundamental frequency mark with a red vertical line.
 			cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
 			cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-			cairo_set_line_width(cr, 4.0);
+			cairo_set_line_width(cr, 1.5);
 
 			// index of closest sample to fundamental frequency.
-			i = (int) rint(
-					frame->core->freq * frame->conf->fft_size
-							* frame->conf->oversampling
-							/ frame->conf->sample_rate);
-
-			s = lingot_gui_mainframe_get_signal(frame, i, min_db, max_db);
-			x = x0 + index_density * i;
-			y = y0 - db_density * s; // dB.
-			cairo_move_to(cr, x, y);
-			cairo_rel_line_to(cr, 0.0, 0.0);
+			x = x0 + index_density * frame->core->freq * frame->conf->fft_size
+					* frame->conf->oversampling / frame->conf->sample_rate;
+			//			s = lingot_gui_mainframe_get_signal(frame, i, min_db, max_db);
+//			y = y0 - db_density * s; // dB.
+			cairo_move_to(cr, x, y0);
+			cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
 			cairo_stroke(cr);
 
 			cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
 			cairo_set_line_width(cr, 1.0);
 		}
 
-		cairo_set_source_rgba(cr, 0.66, 0.53, 1.0, 1.0);
+		cairo_set_source_rgba(cr, 0.86, 0.83, 0.0, 1.0);
 
-		static const double dashed1[] = { 5.0, 5.0 };
-		static int len1 = sizeof(dashed1) / sizeof(dashed1[0]);
-		cairo_set_dash(cr, dashed1, len1, 0);
-
-		s = lingot_gui_mainframe_get_noise(frame, 0, min_db, max_db);
-		y = y0 - db_density * s; // dB.
+		y = y0 - db_density * lingot_gui_mainframe_get_noise(frame, 0, min_db, max_db);; // dB.
 		cairo_move_to(cr, x0, y);
 		// noise threshold drawing.
 		for (i = min + index_step; i < max - 1; i += index_step) {
 
 			x = x0 + index_density * i;
-			s = lingot_gui_mainframe_get_noise(frame, i, min_db, max_db);
-			y = y0 - db_density * s; // dB.
+			y = y0
+					- db_density
+							* lingot_gui_mainframe_get_noise(frame, i, min_db,
+									max_db); // dB.
 			cairo_line_to(cr, x, y);
 		}
 		cairo_stroke(cr);

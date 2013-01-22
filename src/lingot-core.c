@@ -340,6 +340,10 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	return 0;
 }
 
+static void lingot_core_frequency_locker(LingotCore* core) {
+
+}
+
 void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	register unsigned int i, k; // loop variables.

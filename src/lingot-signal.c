@@ -70,7 +70,7 @@ static int lingot_signal_compare_int(const void *a, const void *b) {
 // Returns a factor to multiply with in order to give more importance to higher
 // frequency harmonics. This is to give more importance to the higher divisors
 // for the same selected sets.
-static FLT frequency_penalty(FLT freq) {
+static FLT lingot_signal_frequency_penalty(FLT freq) {
 	static const FLT f0 = 100;
 	static const FLT f1 = 1000;
 	static const FLT alpha0 = 0.99;
@@ -180,7 +180,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 					// add up contributions to the quality factor
 					q += (spl[p_index[indices_related[i]]]
 							- noise[p_index[indices_related[i]]])
-							* frequency_penalty(groundFreq);
+							* lingot_signal_frequency_penalty(groundFreq);
 				}
 
 				FLT maxFreq =
@@ -242,16 +242,16 @@ void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 	int i = 0;
 	unsigned char cbuffer_top = n - 1;
 
-// moving average filter
+	// moving average filter
 
-// first sample
+	// first sample
 	FLT spli = spd[0];
 	FLT cbuffer_sum = spli * n;
 	for (i = 0; i < n; i++) {
 		cbuffer[i] = spli;
 	}
 
-// O(n) algorithm
+	// O(n) algorithm
 	for (i = -_np2; i <= N + _np2; i++) {
 		if (i + _np2 < N) {
 			spli = spd[i + _np2]; // new sample
