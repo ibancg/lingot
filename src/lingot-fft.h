@@ -51,7 +51,7 @@ struct _LingotFFTPlan {
 	LingotComplex* fft_out; // complex signal in freq.
 };
 
-LingotFFTPlan* lingot_fft_plan_create(const FLT* in, int n);
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n);
 void lingot_fft_plan_destroy(LingotFFTPlan*);
 
 // Full Spectral Power Distribution (SPD) esteem.
