@@ -58,7 +58,6 @@ struct _LingotCore {
 
 	// spectral power distribution esteem.
 	FLT* spd_fft;
-	FLT* spd_dft;
 	FLT* diff2_spd_fft;
 	FLT* noise_level;
 

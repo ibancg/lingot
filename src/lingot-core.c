@@ -58,7 +58,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->spd_fft = NULL;
 	core->noise_level = NULL;
 	core->SPL = NULL;
-	core->spd_dft = NULL;
 	core->flt_read_buffer = NULL;
 	core->temporal_buffer = NULL;
 	core->windowed_temporal_buffer = NULL;
@@ -112,17 +111,17 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		core->spd_fft = malloc(spd_size * sizeof(FLT));
 		core->noise_level = malloc(spd_size * sizeof(FLT));
 		core->SPL = malloc(spd_size * sizeof(FLT));
+
 		memset(core->spd_fft, 0, spd_size * sizeof(FLT));
 		memset(core->noise_level, 0, spd_size * sizeof(FLT));
 		memset(core->SPL, 0, spd_size * sizeof(FLT));
 
-		core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
-		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
-
-//		core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
-//		memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
-
-		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
+//		int i;
+//		for (i = 0; i < spd_size; i++) {
+//			core->spd_fft[i] = 1e-10;
+//			core->noise_level[i] = 1e-10;
+//			core->SPL[i] = 1e-10;
+//		}
 
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
@@ -204,8 +203,6 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->spd_fft);
 		free(core->noise_level);
 		free(core->SPL);
-		free(core->spd_dft);
-//		free(core->diff2_spd_fft);
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
 
@@ -374,12 +371,21 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	lingot_fft_compute_dft_and_spd(core->fftplan, core->spd_fft, spd_size);
 
 	// representable piece
+	static const FLT minSPL = -200.0;
 	for (i = 0; i < spd_size; i++) {
 		core->SPL[i] = 10.0 * log10(core->spd_fft[i]);
+		if (core->SPL[i] < minSPL) {
+			core->SPL[i] = minSPL;
+		}
 	}
-	// TODO: filter width
-	lingot_signal_compute_noise_level(core->SPL, spd_size, 30,
-			core->noise_level);
+
+	FLT noise_filter_width = 150.0; // hz
+	unsigned int noise_filter_width_samples = ceil(
+			noise_filter_width * conf->fft_size * conf->oversampling
+					/ conf->sample_rate);
+
+	lingot_signal_compute_noise_level(core->SPL, spd_size,
+			noise_filter_width_samples, core->noise_level);
 
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
