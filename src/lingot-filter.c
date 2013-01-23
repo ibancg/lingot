@@ -39,13 +39,16 @@ LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
 	filter->b = malloc((filter->N + 1) * sizeof(FLT));
 	filter->s = malloc((filter->N + 1) * sizeof(FLT));
 
-	for (i = 0; i < filter->N + 1; i++)
-		filter->a[i] = filter->b[i] = filter->s[i] = 0.0;
+	for (i = 0; i <= filter->N; i++) {
+		filter->a[i] = 0.0;
+		filter->b[i] = 0.0;
+		filter->s[i] = 0.0;
+	}
 
 	memcpy(filter->a, a, (Na + 1) * sizeof(FLT));
 	memcpy(filter->b, b, (Nb + 1) * sizeof(FLT));
 
-	for (i = 0; i < filter->N + 1; i++) {
+	for (i = 0; i <= filter->N; i++) {
 		filter->a[i] /= a[0]; // polynomial normalization.
 		filter->b[i] /= a[0];
 	}

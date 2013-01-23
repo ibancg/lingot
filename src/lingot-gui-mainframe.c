@@ -143,6 +143,7 @@ void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 
 static short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
 		const LingotScale* scale, FLT deviation, FLT* error_cents) {
+
 	short note_index = 0;
 	short int index;
 
@@ -158,6 +159,7 @@ static short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
 
 	index = floor(scale->notes * offset / 1200.0);
 
+	// TODO: bisection
 	FLT pitch_inf;
 	FLT pitch_sup;
 	int n = 0;
@@ -1150,10 +1152,10 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		FLT x;
 		FLT y = -1;
 
-		const int min = 0;
-		const int max = frame->conf->fft_size / 2;
+		const int min_index = 0;
+		const int max_index = frame->conf->fft_size / 2;
 
-		FLT index_density = spectrum_inner_x / max;
+		FLT index_density = spectrum_inner_x / max_index;
 		// TODO: step
 		int index_step = 1;
 
@@ -1163,34 +1165,36 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		const FLT x0 = spectrum_left_margin;
 		const FLT y0 = spectrum_size_y - spectrum_bottom_margin;
 
-		y = y0
-				- spectrum_db_density
-						* lingot_gui_mainframe_get_signal(frame, min,
-								spectrum_min_db, spectrum_max_db); // dB.
 		FLT dydxm1 = 0;
 
 		cairo_set_source_rgba(cr, 0.13, 1.0, 0.13, 1.0);
-		//		cairo_mask_surface(cr, surface, 20.0, 20.);
-		//		cairo_rectangle(cr, spectrum_left_margin, spectrum_top_margin,
-		//				spectrum_inner_x, spectrum_inner_y);
-		cairo_move_to(cr, x0, y0);
-		cairo_line_to(cr, x0, y);
 
-		FLT yp1 = y0
-				- spectrum_db_density
-						* lingot_gui_mainframe_get_signal(frame, min + 1,
-								spectrum_min_db, spectrum_max_db);
+		cairo_translate(cr, x0, y0);
+		cairo_rectangle(cr, 1.0, -1.0, spectrum_inner_x - 2,
+				-(spectrum_inner_y - 2));
+		cairo_clip(cr);
+		cairo_new_path(cr); // path not consumed by clip()
+
+		y = -spectrum_db_density
+				* lingot_gui_mainframe_get_signal(frame, min_index,
+						spectrum_min_db, spectrum_max_db); // dB.
+
+		cairo_move_to(cr, 0, 0);
+		cairo_line_to(cr, 0, y);
+
+		FLT yp1 = -spectrum_db_density
+				* lingot_gui_mainframe_get_signal(frame, min_index + 1,
+						spectrum_min_db, spectrum_max_db);
 		FLT ym1 = y;
 
-		for (i = index_step; i < max - 1; i += index_step) {
+		for (i = index_step; i < max_index - 1; i += index_step) {
 
-			x = x0 + index_density * i;
+			x = index_density * i;
 			ym1 = y;
 			y = yp1;
-			yp1 = y0
-					- spectrum_db_density
-							* lingot_gui_mainframe_get_signal(frame, i + 1,
-									spectrum_min_db, spectrum_max_db);
+			yp1 = -spectrum_db_density
+					* lingot_gui_mainframe_get_signal(frame, i + 1,
+							spectrum_min_db, spectrum_max_db);
 			FLT dydx = (yp1 - ym1) / (2 * index_density);
 			static const FLT dx = 0.4;
 			FLT x1 = x - (1 - dx) * index_density;
@@ -1203,20 +1207,19 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 //			cairo_line_to(cr, x, y);
 		}
 
-		y = y0
-				- spectrum_db_density
-						* lingot_gui_mainframe_get_signal(frame, max - 1,
-								spectrum_min_db, spectrum_max_db); // dB.
-		cairo_line_to(cr, x0 + index_density * max, y);
-		cairo_line_to(cr, x0 + index_density * max, y0);
+		y = -spectrum_db_density
+				* lingot_gui_mainframe_get_signal(frame, max_index - 1,
+						spectrum_min_db, spectrum_max_db); // dB.
+		cairo_line_to(cr, index_density * max_index, y);
+		cairo_line_to(cr, index_density * max_index, 0);
 		cairo_close_path(cr);
 		cairo_fill_preserve(cr);
 //		cairo_restore(cr);
 		cairo_stroke(cr);
 
-		cairo_set_dash(cr, dashed1, len1, 0);
-
 		if (frame->core->freq != 0.0) {
+
+			cairo_set_dash(cr, dashed1, len1, 0);
 
 			// fundamental frequency mark with a red vertical line.
 			cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
@@ -1224,13 +1227,11 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			cairo_set_line_width(cr, 1.5);
 
 			// index of closest sample to fundamental frequency.
-			x = x0
-					+ index_density * frame->core->freq * frame->conf->fft_size
-							* frame->conf->oversampling
-							/ frame->conf->sample_rate;
+			x = index_density * frame->core->freq * frame->conf->fft_size
+					* frame->conf->oversampling / frame->conf->sample_rate;
 			//			s = lingot_gui_mainframe_get_signal(frame, i, min_db, max_db);
 //			y = y0 - spectrum_db_density * s; // dB.
-			cairo_move_to(cr, x, y0);
+			cairo_move_to(cr, x, 0);
 			cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
 			cairo_stroke(cr);
 
@@ -1238,21 +1239,20 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			cairo_set_line_width(cr, 1.0);
 		}
 
+		cairo_set_dash(cr, dashed1, len1, 0);
 		cairo_set_source_rgba(cr, 0.86, 0.83, 0.0, 1.0);
 
-		y = y0
-				- spectrum_db_density
-						* lingot_gui_mainframe_get_noise(frame, 0,
-								spectrum_min_db, spectrum_max_db); // dB.
+		y = -spectrum_db_density
+				* lingot_gui_mainframe_get_noise(frame, 0, spectrum_min_db,
+						spectrum_max_db); // dB.
 		cairo_move_to(cr, x0, y);
 		// noise threshold drawing.
-		for (i = min + index_step; i < max - 1; i += index_step) {
+		for (i = min_index + index_step; i < max_index - 1; i += index_step) {
 
-			x = x0 + index_density * i;
-			y = y0
-					- spectrum_db_density
-							* lingot_gui_mainframe_get_noise(frame, i,
-									spectrum_min_db, spectrum_max_db); // dB.
+			x = index_density * i;
+			y = -spectrum_db_density
+					* lingot_gui_mainframe_get_noise(frame, i, spectrum_min_db,
+							spectrum_max_db); // dB.
 			cairo_line_to(cr, x, y);
 		}
 		cairo_stroke(cr);
@@ -1277,9 +1277,8 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 	static char freq_string[30];
 	static char octave_string[30];
 
-// draw note, error and frequency labels
+	// draw note, error and frequency labels
 
-// ignore continuous component
 	if (frequency == 0.0) {
 		note_string = "---";
 		strcpy(error_string, "e = ---");
@@ -1321,12 +1320,12 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
 
-// dup.
+	// dup.
 	lingot_config_copy(frame->conf, conf);
 
 	frame->core = lingot_core_new(frame->conf);
 	lingot_core_start(frame->core);
 
-// some parameters may have changed
+	// some parameters may have changed
 	lingot_config_copy(conf, frame->conf);
 }

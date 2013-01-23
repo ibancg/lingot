@@ -234,41 +234,50 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level) {
 
-	const int n = cbuffer_size;
+	static int n = 0;
+	static LingotFilter* filter = 0x0;
+	static double* b = 0x0;
+
+	if (cbuffer_size != n) {
+		if (filter != 0x0) {
+			lingot_filter_destroy(filter);
+			free(b);
+		}
+		filter = 0x0;
+		n = cbuffer_size;
+		b = malloc(n * sizeof(double));
+	}
+
 	const int _np2 = n / 2;
-	const FLT _1pn = 1.0 / n;
-	FLT cbuffer[n];
-
+	double a0 = 1.0;
 	int i = 0;
-	unsigned char cbuffer_top = n - 1;
-
-	// moving average filter
-
-	// first sample
-	FLT spli = spd[0];
-	FLT cbuffer_sum = spli * n;
 	for (i = 0; i < n; i++) {
-		cbuffer[i] = spli;
+		b[i] = 1.0 / n;
 	}
 
-	// O(n) algorithm
-	for (i = -_np2; i <= N + _np2; i++) {
+	if (filter == 0x0) {
+		filter = lingot_filter_new(1, n, &a0, b);
+	}
+
+	double x = spd[0];
+	double y;
+
+	// fills filter
+	for (i = 0; i <= _np2; i++) {
+		lingot_filter_filter_sample(filter, x);
+	}
+
+	// starts filtering data
+	for (i = -_np2; i < N; i++) {
 		if (i + _np2 < N) {
-			spli = spd[i + _np2]; // new sample
+			x = spd[i + _np2]; // new sample
 		}
-
-		cbuffer_top++;
-		if (cbuffer_top >= n) {
-			cbuffer_top = 0;
-		}
-		cbuffer_sum -= cbuffer[cbuffer_top]; // exiting sample
-		cbuffer[cbuffer_top] = spli; // new sample in the buffer
-		cbuffer_sum += spli;
-
+		y = lingot_filter_filter_sample(filter, x);
 		if ((i >= 0) && (i < N)) {
-			noise_level[i] = cbuffer_sum * _1pn;
+			noise_level[i] = y;
 		}
 	}
+
 }
 
 //---------------------------------------------------------------------------
