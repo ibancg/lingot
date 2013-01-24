@@ -56,6 +56,13 @@ LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
 	return filter;
 }
 
+void lingot_filter_reset(LingotFilter* filter) {
+	unsigned int i;
+	for (i = 0; i <= filter->N; i++) {
+		filter->s[i] = 0.0;
+	}
+}
+
 void lingot_filter_destroy(LingotFilter* filter) {
 	free(filter->a);
 	free(filter->b);

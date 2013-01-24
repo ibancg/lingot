@@ -44,9 +44,10 @@ struct _LingotFilter {
 
 };
 
-LingotFilter
-* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
+LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
 		const FLT* b);
+
+void lingot_filter_reset(LingotFilter* filter);
 
 /**
  * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple

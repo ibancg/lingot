@@ -84,8 +84,9 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 // search the fundamental peak given the spd and its 2nd derivative
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
-		int lowest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
-		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
+		int lowest_index, int highest_index, short peak_half_width,
+		FLT delta_f_fft, FLT min_snr, FLT min_q, FLT min_freq, LingotCore* core,
+		short* divisor) {
 	register unsigned int i, j, m;
 	int p_index[n_peaks];
 
@@ -96,11 +97,14 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 	if (lowest_index < peak_half_width) {
 		lowest_index = peak_half_width;
 	}
+	if (highest_index > N - peak_half_width) {
+		highest_index = N - peak_half_width;
+	}
 
 	short n_found_peaks = 0;
 
 	// I'll get the n_peaks maximum peaks with SNR above the required.
-	for (i = lowest_index; i < N - peak_half_width; i++)
+	for (i = lowest_index; i < highest_index; i++)
 		if ((spl[i] - noise[i] > min_snr)
 				&& lingot_signal_is_peak(spl, i, peak_half_width)) {
 
@@ -143,7 +147,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 	}
 
 	// maximum ratio error
-	static const FLT ratioTol = 0.05;
+	static const FLT ratioTol = 0.03;
 	static const short max_divisor = 4;
 
 	short tone_index = 0;
@@ -231,51 +235,147 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 
 }
 
+/*
+ *  This Quickselect routine is based on the algorithm described in
+ *  "Numerical recipes in C", Second Edition,
+ *  Cambridge University Press, 1992, Section 8.5, ISBN 0-521-43108-5
+ *  This code by Nicolas Devillard - 1998. Public domain.
+ */
+
+#define ELEM_SWAP(a,b) { register double t=(a);(a)=(b);(b)=t; }
+
+double lingot_signal_quick_select(double arr[], int n) {
+	int low, high;
+	int median;
+	int middle, ll, hh;
+
+	low = 0;
+	high = n - 1;
+	median = (low + high) / 2;
+	for (;;) {
+		if (high <= low) /* One element only */
+			return arr[median];
+
+		if (high == low + 1) { /* Two elements only */
+			if (arr[low] > arr[high])
+				ELEM_SWAP(arr[low], arr[high]);
+			return arr[median];
+		}
+
+		/* Find median of low, middle and high items; swap into position low */
+		middle = (low + high) / 2;
+		if (arr[middle] > arr[high])
+			ELEM_SWAP(arr[middle], arr[high]);
+		if (arr[low] > arr[high])
+			ELEM_SWAP(arr[low], arr[high]);
+		if (arr[middle] > arr[low])
+			ELEM_SWAP(arr[middle], arr[low]);
+
+		/* Swap low item (now in position middle) into position (low+1) */
+		ELEM_SWAP(arr[middle], arr[low+1]);
+
+		/* Nibble from each end towards middle, swapping items when stuck */
+		ll = low + 1;
+		hh = high;
+		for (;;) {
+			do
+				ll++;
+			while (arr[low] > arr[ll]);
+			do
+				hh--;
+			while (arr[hh] > arr[low]);
+
+			if (hh < ll)
+				break;
+
+			ELEM_SWAP(arr[ll], arr[hh]);
+		}
+
+		/* Swap middle item (in position low) back into correct position */
+		ELEM_SWAP(arr[low], arr[hh]);
+
+		/* Re-set active partition */
+		if (hh <= median)
+			low = ll;
+		if (hh >= median)
+			high = hh - 1;
+	}
+}
+
+#undef ELEM_SWAP
+
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level) {
 
-	static int n = 0;
-	static LingotFilter* filter = 0x0;
-	static double* b = 0x0;
+//	static int n = -1;
+//	static LingotFilter* filter = 0x0;
+//	static double* b = 0x0;
+//	static double a0 = 1.0;
+//
+//	if (cbuffer_size != n) {
+//		if (filter != 0x0) {
+//			lingot_filter_destroy(filter);
+//			free(b);
+//		}
+//		filter = 0x0;
+//		n = cbuffer_size;
+//		b = malloc(n * sizeof(double));
+//	}
+//
+//	const int _np2 = n / 2;
+//	int i = 0;
+//	for (i = 0; i < n; i++) {
+//		b[i] = 1.0 / n;
+//	}
+//
+//	if (filter == 0x0) {
+//		filter = lingot_filter_new(0, n - 1, &a0, b);
+//	}
+//	lingot_filter_reset(filter);
+//
+//	double x = spd[0];
+//	double y;
+//
+//	// fills filter
+//	for (i = 0; i <= _np2; i++) {
+//		lingot_filter_filter_sample(filter, x);
+//	}
+//
+//	// starts filtering data
+//	for (i = -_np2; i < N; i++) {
+//		if (i + _np2 < N) {
+//			x = spd[i + _np2]; // new sample
+//		}
+//		y = lingot_filter_filter_sample(filter, x);
+//		if ((i >= 0) && (i < N)) {
+//			noise_level[i] = y;
+//		}
+//	}
 
-	if (cbuffer_size != n) {
-		if (filter != 0x0) {
-			lingot_filter_destroy(filter);
-			free(b);
+	// median filter
+	int n = cbuffer_size;
+	FLT cbuffer[n];
+	const int _np2_l = n / 2;
+	const int _np2_r = n - _np2_l;
+
+	int i;
+	int il = 0;
+	int ir = 0;
+
+	for (i = 0; i < N; i++) {
+
+		il = i - _np2_l;
+		if (il < 0) {
+			il = 0;
 		}
-		filter = 0x0;
-		n = cbuffer_size;
-		b = malloc(n * sizeof(double));
-	}
 
-	const int _np2 = n / 2;
-	double a0 = 1.0;
-	int i = 0;
-	for (i = 0; i < n; i++) {
-		b[i] = 1.0 / n;
-	}
-
-	if (filter == 0x0) {
-		filter = lingot_filter_new(1, n, &a0, b);
-	}
-
-	double x = spd[0];
-	double y;
-
-	// fills filter
-	for (i = 0; i <= _np2; i++) {
-		lingot_filter_filter_sample(filter, x);
-	}
-
-	// starts filtering data
-	for (i = -_np2; i < N; i++) {
-		if (i + _np2 < N) {
-			x = spd[i + _np2]; // new sample
+		ir = i + _np2_r;
+		if (ir >= N) {
+			ir = N - 1;
 		}
-		y = lingot_filter_filter_sample(filter, x);
-		if ((i >= 0) && (i < N)) {
-			noise_level[i] = y;
-		}
+
+		memcpy(cbuffer, &spd[il], (ir - il) * sizeof(FLT));
+		noise_level[i] = lingot_signal_quick_select(cbuffer, (ir - il));
 	}
 
 }
