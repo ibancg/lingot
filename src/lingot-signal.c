@@ -147,7 +147,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 	}
 
 	// maximum ratio error
-	static const FLT ratioTol = 0.03;
+	static const FLT ratioTol = 0.04; // TODO
 	static const short max_divisor = 4;
 
 	short tone_index = 0;
@@ -205,6 +205,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 							n_indices_related * sizeof(short));
 					bestDivisor = round(f / groundFreq);
 					bestF = f;
+					printf("%d\n", n_indices_related);
 				}
 
 			} else {
