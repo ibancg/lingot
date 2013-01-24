@@ -371,7 +371,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	lingot_fft_compute_dft_and_spd(core->fftplan, core->spd_fft, spd_size);
 
 	// representable piece
-	static const FLT minSPL = -200.0;
+	static const FLT minSPL = -200;
 	for (i = 0; i < spd_size; i++) {
 		core->SPL[i] = 10.0 * log10(core->spd_fft[i]);
 		if (core->SPL[i] < minSPL) {
@@ -390,15 +390,18 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
 					* conf->fft_size);
+	unsigned int highest_index = (unsigned int) ceil(0.85 * conf->fft_size / 2);
 
 	// TODO: min SNR
 	short divisor = 1;
+	static const short nPeaks = 8;
+	const short peakHalfWidth = (conf->fft_size > 256) ? 2 : 1; // conf->peak_half_width
+	const FLT minQ = conf->peak_rejection_relation_db;
+	const FLT minSNR = 0.6 * minQ;
 	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
-			core->fftplan->fft_out, core->noise_level, conf->fft_size >> 1, 8,
-			lowest_index, conf->peak_half_width, delta_f_FFT,
-			0.6 * conf->peak_rejection_relation_db,
-			conf->peak_rejection_relation_db, conf->min_frequency, core,
-			&divisor);
+			core->fftplan->fft_out, core->noise_level, conf->fft_size / 2,
+			nPeaks, lowest_index, highest_index, peakHalfWidth, delta_f_FFT,
+			minSNR, minQ, conf->min_frequency, core, &divisor);
 
 	if (f0 == 0.0) {
 		core->freq = 0.0;

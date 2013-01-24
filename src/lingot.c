@@ -57,10 +57,8 @@ int main(int argc, char *argv[]) {
 		return -1;
 	} else if (argc > 1) {
 		int c;
-		//		int digit_optind = 0;
 
 		while (1) {
-			//		int this_option_optind = optind ? optind : 1;
 			int option_index = 0;
 			static struct option long_options[] = { { "config", 1, 0, 'c' }, {
 					0, 0, 0, 0 } };
@@ -106,8 +104,9 @@ int main(int argc, char *argv[]) {
 
 		printf("ok\n");
 
-	} else
+	} else {
 		fclose(fp);
+	}
 
 	lingot_gui_mainframe_create(argc, argv);
 

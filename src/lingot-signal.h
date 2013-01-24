@@ -41,8 +41,9 @@
 
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
-		int lowest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
-		FLT min_q, FLT min_freq, LingotCore* core, short* divisor);
+		int lowest_index, int highest_index, short peak_half_width,
+		FLT delta_f_fft, FLT min_snr, FLT min_q, FLT min_freq, LingotCore* core,
+		short* divisor);
 
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level);
