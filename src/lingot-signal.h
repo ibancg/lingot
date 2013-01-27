@@ -32,13 +32,6 @@
 #include "lingot-complex.h"
 #include "lingot-core.h"
 
-//// returns the maximum index.
-//void lingot_signal_get_max(const FLT *buffer, int N, int* Mi);
-//
-//// returns the index of the peak that carries the fundamental freq.
-//int lingot_signal_get_fundamental_peak(const LingotConfig*, const FLT *x,
-//		const FLT* d2x, int N);
-
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
 		int lowest_index, int highest_index, short peak_half_width,
