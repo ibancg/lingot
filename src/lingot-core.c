@@ -337,8 +337,153 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	return 0;
 }
 
-static void lingot_core_frequency_locker(LingotCore* core) {
+static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
+		FLT minFrequency, FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 
+	int result = 0;
+	static const FLT tol = 5e-2;
+	static const int maxDivisor = 4;
+
+	if ((freq1 != 0.0) && (freq2 != 0.0)) {
+
+		FLT smallFreq = freq1;
+		FLT bigFreq = freq2;
+
+		if (bigFreq < smallFreq) {
+			smallFreq = freq2;
+			bigFreq = freq1;
+		}
+
+		int divisor;
+		FLT frac;
+		FLT error = -1.0;
+		for (divisor = 1; divisor <= maxDivisor; divisor++) {
+			if (minFrequency * divisor > minFrequency) {
+				break;
+			}
+
+			frac = bigFreq * divisor / smallFreq;
+			error = fabs(frac - round(frac));
+			if (error < tol) {
+				*mulFreq1ToFreq =
+						(smallFreq == freq1) ?
+								(1.0 / divisor) : (1.0 / round(frac));
+				*mulFreq2ToFreq =
+						(smallFreq == freq1) ?
+								(1.0 / round(frac)) : (1.0 / divisor);
+				result = 1;
+				break;
+			}
+		}
+	} else {
+		*mulFreq1ToFreq = 0.0;
+		*mulFreq2ToFreq = 0.0;
+	}
+
+//	printf("relation %f, %f = %i, e = %f\n", freq1, freq2, result, error);
+
+	return result;
+}
+
+static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
+
+	static int locked = 0;
+	static FLT current_frequency = -1.0;
+	static int hits_counter = 0;
+	static int rehits_counter = 0;
+	static const int nhits_to_lock = 5;
+	static const int nhits_to_unlock = 5;
+	FLT multiplier = 0.0;
+	FLT multiplier2 = 0.0;
+	static FLT old_multiplier2 = 0.0;
+	int hit = 0;
+	int fail = 0;
+	FLT result = 0.0;
+
+	printf("f = %f\n", freq);
+	old_multiplier2 = multiplier2;
+	int consistent_with_current_frequency = 0;
+	consistent_with_current_frequency = lingot_core_frequencies_related(freq,
+			current_frequency, minFrequency, &multiplier, &multiplier2);
+
+	if (!locked) {
+
+		if ((freq > 0.0) && (current_frequency == 0.0)) {
+			consistent_with_current_frequency = 1;
+			multiplier = 1.0;
+			multiplier2 = 1.0;
+		}
+
+//		printf("filtering frequency %f, current %f\n", freq, current_frequency);
+
+		if (consistent_with_current_frequency && (multiplier == 1.0)
+				&& (multiplier2 == 1.0)) {
+			current_frequency = freq * multiplier;
+
+			if (++hits_counter >= nhits_to_lock) {
+				locked = 1;
+				printf("locked to frequency %f\n", current_frequency);
+			}
+		} else {
+			hits_counter = 0;
+			current_frequency = 0.0;
+		}
+
+//		result = freq;
+	} else {
+		printf("c = %i, f = %f, cf = %f, multiplier = %f, multiplier2 = %f\n",
+				consistent_with_current_frequency, freq, current_frequency,
+				multiplier, multiplier2);
+
+		if (consistent_with_current_frequency) {
+			if (multiplier2 == 1.0) {
+				result = freq * multiplier;
+				current_frequency = result;
+				rehits_counter = 0;
+			} else {
+				fail = 1;
+				if (freq * multiplier < minFrequency) {
+					printf("warning freq * mul = %f < min\n",
+							freq * multiplier);
+				} else {
+//					result = freq * multiplier;
+					printf("hop detected!\n");
+//					current_frequency = result;
+
+					if (multiplier2 == old_multiplier2) {
+						if (++rehits_counter >= 3) {
+							result = freq * multiplier;
+							current_frequency = result;
+							printf("relock!! to %f\n", freq);
+							rehits_counter = 0;
+							fail = 0;
+						}
+					}
+				}
+			}
+
+		} else {
+			fail = 1;
+		}
+
+		if (fail) {
+			result = current_frequency;
+			hits_counter++;
+			if (hits_counter >= nhits_to_unlock) {
+				current_frequency = 0.0;
+				locked = 0;
+				hits_counter = 0;
+				printf("unlocked\n");
+				result = 0.0;
+			}
+		} else {
+			hits_counter = 0;
+		}
+	}
+
+	if (result != 0.0)
+		printf("result = %f\n", result);
+	return result;
 }
 
 void lingot_core_compute_fundamental_fequency(LingotCore* core) {
@@ -348,11 +493,11 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	const FLT delta_f_FFT = ((FLT) conf->sample_rate)
 			/ (conf->oversampling * conf->fft_size); // FFT resolution in Hz.
 
-	// ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
+// ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
 
 	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
-	// windowing
+// windowing
 	if (conf->window_type != NONE) {
 		for (i = 0; i < conf->fft_size; i++) {
 			core->windowed_fft_buffer[i] =
@@ -370,7 +515,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	lingot_fft_compute_dft_and_spd(core->fftplan, core->spd_fft, spd_size);
 
-	// representable piece
+// representable piece
 	static const FLT minSPL = -200;
 	for (i = 0; i < spd_size; i++) {
 		core->SPL[i] = 10.0 * log10(core->spd_fft[i]);
@@ -392,7 +537,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 					* conf->fft_size);
 	unsigned int highest_index = (unsigned int) ceil(0.85 * conf->fft_size / 2);
 
-	// TODO: min SNR
+// TODO: min SNR
 	short divisor = 1;
 	static const short nPeaks = 8;
 	const short peakHalfWidth = (conf->fft_size > 256) ? 2 : 1; // conf->peak_half_width
@@ -403,49 +548,51 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 			nPeaks, lowest_index, highest_index, peakHalfWidth, delta_f_FFT,
 			minSNR, minQ, conf->min_frequency, core, &divisor);
 
-	if (f0 == 0.0) {
-		core->freq = 0.0;
-		pthread_mutex_unlock(&core->temporal_buffer_mutex);
-		return;
-	}
-
 	FLT w = 2 * M_PI * f0 * conf->oversampling / conf->sample_rate;
 
-	// windowing
-	if (conf->window_type != NONE) {
-		for (i = 0; i < conf->temporal_buffer_size; i++) {
-			core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
-					* core->hamming_window_temporal[i];
+	if (f0 != 0.0) {
+		// windowing
+		if (conf->window_type != NONE) {
+			for (i = 0; i < conf->temporal_buffer_size; i++) {
+				core->windowed_temporal_buffer[i] = core->temporal_buffer[i]
+						* core->hamming_window_temporal[i];
+			}
+		} else {
+			memmove(core->windowed_temporal_buffer, core->temporal_buffer,
+					conf->temporal_buffer_size * sizeof(FLT));
 		}
-	} else {
-		memmove(core->windowed_temporal_buffer, core->temporal_buffer,
-				conf->temporal_buffer_size * sizeof(FLT));
 	}
 
 	pthread_mutex_unlock(&core->temporal_buffer_mutex);
 
-	//  Maximum finding by Newton-Raphson
-	// -----------------------------------
+	if (f0 != 0.0) {
 
-	FLT wk = -1.0e5;
-	FLT wkm1 = w;
-	// first iterator set to the current approximation.
-	FLT d1_SPD, d2_SPD;
+		//  Maximum finding by Newton-Raphson
+		// -----------------------------------
 
-	for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8); k++) {
-		wk = wkm1;
+		FLT wk = -1.0e5;
+		FLT wkm1 = w;
+		// first iterator set to the current approximation.
+		FLT d1_SPD, d2_SPD;
 
-		// ! we use the WHOLE temporal window for bigger precission.
-		lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
-				conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
-		wkm1 = wk - d1_SPD / d2_SPD;
+		for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8);
+				k++) {
+			wk = wkm1;
+
+			// ! we use the WHOLE temporal window for bigger precission.
+			lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
+					conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
+			wkm1 = wk - d1_SPD / d2_SPD;
 //		printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
-	}
+		}
 //	printf("%d\n", k);
 
-	w = wkm1; // frequency in rads.
-	core->freq = (w * conf->sample_rate)
-			/ (divisor * 2.0 * M_PI * conf->oversampling); // analog frequency.
+		w = wkm1; // frequency in rads.
+	}
+
+	FLT freq = w * conf->sample_rate
+			/ (divisor * 2.0 * M_PI * conf->oversampling); // analog frequency in Hz.
+	core->freq = lingot_core_frequency_locker(freq, core->conf->min_frequency);
 }
 
 /* start running the core in another thread */

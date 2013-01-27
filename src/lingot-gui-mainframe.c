@@ -885,7 +885,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 }
 
 static const int showSNR = 1;
-static const int gain = 0;
+static const int gain = 40;
 
 FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 		FLT min, FLT max) {
@@ -1203,7 +1203,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		}
 
 		cairo_set_dash(cr, dashed1, len1, 0);
-		cairo_set_source_rgba(cr, 0.86, 0.83, 0.0, 1.0);
+		cairo_set_source_rgba(cr, 1.0, 0.5, 0.5, 1.0);
 
 		y = -spectrum_db_density
 				* lingot_gui_mainframe_get_noise(frame, 0, spectrum_min_db,
