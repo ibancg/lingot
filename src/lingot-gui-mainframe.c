@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
+#include <errno.h>
 
 #include "lingot-defs.h"
 
