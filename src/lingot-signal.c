@@ -236,85 +236,6 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 
 }
 
-///*
-// *  This Quickselect routine is based on the algorithm described in
-// *  "Numerical recipes in C", Second Edition,
-// *  Cambridge University Press, 1992, Section 8.5, ISBN 0-521-43108-5
-// *  This code by Nicolas Devillard - 1998. Public domain.
-// */
-//
-//double lingot_signal_quick_select(double arr[], int n) {
-//	int low, high;
-//	int median;
-//	int middle, ll, hh;
-//	double t;
-//
-//#	define ELEM_SWAP(ia,ib) { t=arr[ia];arr[ia]=arr[ib];arr[ib]=t; }
-//
-//	low = 0;
-//	high = n - 1;
-//	median = (low + high) / 2;
-//	for (;;) {
-//		if (high <= low) {/* One element only */
-//			return arr[median];
-//		}
-//
-//		if (high == low + 1) { /* Two elements only */
-//			if (arr[low] > arr[high]) {
-//				ELEM_SWAP(low, high);
-//			}
-//			return arr[median];
-//		}
-//
-//		/* Find median of low, middle and high items; swap into position low */
-//		middle = (low + high) / 2;
-//		if (arr[middle] > arr[high]) {
-//			ELEM_SWAP(middle, high);
-//		}
-//		if (arr[low] > arr[high]) {
-//			ELEM_SWAP(low, high);
-//		}
-//		if (arr[middle] > arr[low]) {
-//			ELEM_SWAP(middle, low);
-//		}
-//
-//		/* Swap low item (now in position middle) into position (low+1) */
-//		ELEM_SWAP(middle, low+1);
-//
-//		/* Nibble from each end towards middle, swapping items when stuck */
-//		ll = low + 1;
-//		hh = high;
-//		for (;;) {
-//			do {
-//				ll++;
-//			} while (arr[low] > arr[ll]);
-//			do {
-//				hh--;
-//			} while (arr[hh] > arr[low]);
-//
-//			if (hh < ll) {
-//				break;
-//			}
-//
-//			ELEM_SWAP(ll, hh);
-//		}
-//
-//		/* Swap middle item (in position low) back into correct position */
-//		ELEM_SWAP(low, hh);
-//
-//		/* Re-set active partition */
-//		if (hh <= median) {
-//			low = ll;
-//		}
-//		if (hh >= median) {
-//			high = hh - 1;
-//		}
-//	}
-//
-//#	undef ELEM_SWAP
-//
-//}
-
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level) {
 
@@ -324,87 +245,15 @@ void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 	const FLT filter_b[] = { c };
 	static LingotFilter* filter = 0x0;
 
-	filter = lingot_filter_new(1, 0, filter_a, filter_b);
+	if (filter == 0x0) {
+		filter = lingot_filter_new(1, 0, filter_a, filter_b);
+	}
 
-//	lingot_filter_reset(filter);
+	lingot_filter_reset(filter);
 
 	lingot_filter_filter(filter, cbuffer_size, spd, noise_level);
 	lingot_filter_filter(filter, N, spd, noise_level);
 
-	lingot_filter_destroy(filter);
-
-	// mean filter
-//	static int n = -1;
-//	static LingotFilter* filter = 0x0;
-//	static double* b = 0x0;
-//	static double a0 = 1.0;
-//
-//	if (cbuffer_size != n) {
-//		if (filter != 0x0) {
-//			lingot_filter_destroy(filter);
-//			free(b);
-//		}
-//		filter = 0x0;
-//		n = cbuffer_size;
-//		b = malloc(n * sizeof(double));
-//	}
-//
-//	const int _np2 = n / 2;
-//	int i = 0;
-//	for (i = 0; i < n; i++) {
-//		b[i] = 1.0 / n;
-//	}
-//
-//	if (filter == 0x0) {
-//		filter = lingot_filter_new(0, n - 1, &a0, b);
-//	}
-//	lingot_filter_reset(filter);
-//
-//	double x = spd[0];
-//	double y;
-//
-//	// fills filter
-//	for (i = 0; i <= _np2; i++) {
-//		lingot_filter_filter_sample(filter, x);
-//	}
-//
-//	// starts filtering data
-//	for (i = -_np2; i < N; i++) {
-//		if (i + _np2 < N) {
-//			x = spd[i + _np2]; // new sample
-//		}
-//		y = lingot_filter_filter_sample(filter, x);
-//		if ((i >= 0) && (i < N)) {
-//			noise_level[i] = y;
-//		}
-//	}
-
-//	// median filter
-//	int n = cbuffer_size;
-//	FLT cbuffer[n];
-//	const int _np2_l = n / 2;
-//	const int _np2_r = n - _np2_l;
-//
-//	int i;
-//	int il = 0;
-//	int ir = 0;
-//
-//	for (i = 0; i < N; i++) {
-//
-//		il = i - _np2_l;
-//		if (il < 0) {
-//			il = 0;
-//		}
-//
-//		ir = i + _np2_r;
-//		if (ir >= N) {
-//			ir = N - 1;
-//		}
-//
-//		memcpy(cbuffer, &spd[il], (ir - il) * sizeof(FLT));
-//		noise_level[i] = lingot_signal_quick_select(cbuffer, (ir - il));
-//	}
-//
 }
 
 //---------------------------------------------------------------------------

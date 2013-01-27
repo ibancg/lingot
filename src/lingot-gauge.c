@@ -36,13 +36,13 @@ LingotGauge* lingot_gauge_new(FLT initial_position)
     //                2                            dt
     //              dt
     //
-    // acceleration of gauge position 's(t)' linealy depends on the difference
+    // acceleration of gauge position 's(t)' linearly depends on the difference
     // respect to the input stimulus 'e(t)' (destination position). Inserting
-    // a friction coefficient 'q', acceleration proportionaly diminish with
-    // velocity (typical friction in mechanics). 'k' is the adaptation constant,
-    // and depends on the gauge mass.
+    // a friction coefficient 'q', the acceleration proportionally diminish with
+    // the velocity (typical friction in mechanics). 'k' is the adaptation
+	// constant, and depends on the gauge mass.
     //
-    // with the following derivatives approximation (valid for high sample rate):
+    // with the following derivative approximations (valid for high sample rate):
     //
     //                 d
     //                 -- s(t) ~= (s[n] - s[n - 1])*fs

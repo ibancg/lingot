@@ -337,6 +337,8 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	return 0;
 }
 
+// tells whether the two frequencies are harmonically related, giving the
+// multipliers to the ground frequency
 static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 		FLT minFrequency, FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 
@@ -365,12 +367,13 @@ static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 			frac = bigFreq * divisor / smallFreq;
 			error = fabs(frac - round(frac));
 			if (error < tol) {
-				*mulFreq1ToFreq =
-						(smallFreq == freq1) ?
-								(1.0 / divisor) : (1.0 / round(frac));
-				*mulFreq2ToFreq =
-						(smallFreq == freq1) ?
-								(1.0 / round(frac)) : (1.0 / divisor);
+				if (smallFreq == freq1) {
+					*mulFreq1ToFreq = 1.0 / divisor;
+					*mulFreq2ToFreq = 1.0 / round(frac);
+				} else {
+					*mulFreq1ToFreq = 1.0 / round(frac);
+					*mulFreq2ToFreq = 1.0 / divisor;
+				}
 				result = 1;
 				break;
 			}
@@ -380,7 +383,7 @@ static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 		*mulFreq2ToFreq = 0.0;
 	}
 
-//	printf("relation %f, %f = %i, e = %f\n", freq1, freq2, result, error);
+	//	printf("relation %f, %f = %i, e = %f\n", freq1, freq2, result, error);
 
 	return result;
 }
@@ -393,10 +396,10 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 	static int rehits_counter = 0;
 	static const int nhits_to_lock = 5;
 	static const int nhits_to_unlock = 5;
+	static const int nhits_to_relock = 5;
 	FLT multiplier = 0.0;
 	FLT multiplier2 = 0.0;
 	static FLT old_multiplier2 = 0.0;
-	int hit = 0;
 	int fail = 0;
 	FLT result = 0.0;
 
@@ -451,7 +454,7 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 //					current_frequency = result;
 
 					if (multiplier2 == old_multiplier2) {
-						if (++rehits_counter >= 3) {
+						if (++rehits_counter >= nhits_to_relock) {
 							result = freq * multiplier;
 							current_frequency = result;
 							printf("relock!! to %f\n", freq);
@@ -583,9 +586,9 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 			lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
 					conf->temporal_buffer_size, wk, &d1_SPD, &d2_SPD);
 			wkm1 = wk - d1_SPD / d2_SPD;
-//		printf("%f %f %f\n", wk, d1_SPD, d2_SPD);
+//			printf("%f %g %g\n", wk, d1_SPD, d2_SPD);
 		}
-//	printf("%d\n", k);
+//		printf("%d\n", k);
 
 		w = wkm1; // frequency in rads.
 	}

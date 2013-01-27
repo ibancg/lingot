@@ -1,5 +1,5 @@
 
-2013-01-21 Ibán Cereijo <ibancg@gmail.com>
+2013-01-27 Ibán Cereijo <ibancg@gmail.com>
 
 	* Migration to GTK+ 3.0
 	* Migration to graphic vectors with libcairo. Main window now resizable.
