@@ -148,7 +148,7 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
 			"DFT_SIZE", "samples", 4, 100, 0);
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_GAIN, "GAIN",
-			"dB", -90.0, 90.0, 0);
+			"dB", -90.0, 90.0, 1);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_ORDER,
 			"PEAK_ORDER", NULL, 0, 10, 1);
 }
@@ -200,7 +200,6 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	config->calculation_rate = 20; // Hz
 	config->visualization_rate = 30; // Hz
 	config->noise_threshold_db = 20.0; // dB
-	config->gain = 0;
 
 	config->peak_number = 3; // peaks
 	config->peak_half_width = 1; // samples
@@ -226,7 +225,6 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	config->peak_rejection_relation_nu = pow(10.0,
 			config->peak_rejection_relation_db / 10.0);
 	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
-	config->gain_nu = pow(10.0, config->gain / 20.0);
 
 	LingotScale* scale = config->scale;
 	if (scale->notes == 1) {
@@ -268,7 +266,7 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 					&config->peak_rejection_relation_db, //
 					&config->dft_number, //
 					&config->dft_size, //
-					&config->gain, //
+					NULL, //
 					&config->peak_half_width };
 
 	memcpy(params, c_params, N_OPTIONS * sizeof(void*));
@@ -547,96 +545,103 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		param = params[option_index];
 
-		// take the attribute value.
-		char_buffer_pointer = strtok(NULL, delim);
+		if (param != NULL ) {
+			// take the attribute value.
+			char_buffer_pointer = strtok(NULL, delim);
 
-		if (!char_buffer_pointer) {
-			fprintf(stderr, "warning: parse error at line %i: value expected\n",
-					line);
-			parse_errors = 1;
-			continue;
-		}
-
-		int int_value;
-		double double_value;
-		audio_system_t audio_system_value;
-
-		// asign the value to the parameter.
-		switch (parameters[option_index].type) {
-		case LINGOT_PARAMETER_TYPE_STRING:
-			if (strlen(char_buffer_pointer)
-					< parameters[option_index].str_max_len) {
-				sprintf(((char*) param), "%s", char_buffer_pointer);
-			} else {
+			if (!char_buffer_pointer) {
 				fprintf(stderr,
-						"error: parse error at line %i, '%s = %s': identifier too long (maximum length %d characters), assuming default value '%s'\n",
-						line, parameters[option_index].name,
-						char_buffer_pointer,
-						parameters[option_index].str_max_len, ((char*) param));
+						"warning: parse error at line %i: value expected\n",
+						line);
 				parse_errors = 1;
+				continue;
 			}
-			break;
-		case LINGOT_PARAMETER_TYPE_INTEGER:
-			sscanf(char_buffer_pointer, "%d", &int_value);
 
-			if (parameters[option_index].id == LINGOT_PARAMETER_ID_FFT_SIZE) {
-				if ((int_value != 256) && (int_value != 512)
-						&& (int_value != 1024) && (int_value != 2048)
-						&& (int_value != 4096)) {
-					fprintf(stderr,
-							"error: parse error at line %i, '%s = %s': invalid value (allowed values are 256, 512, 1024, 2048 and 4096), assuming default value %i\n",
-							line, parameters[option_index].name,
-							char_buffer_pointer, *((unsigned int*) param));
-					parse_errors = 1;
-				} else {
-					*((unsigned int*) param) = int_value;
-				}
-			} else {
-				if ((int_value >= parameters[option_index].int_min)
-						&& (int_value <= parameters[option_index].int_max)) {
-					*((unsigned int*) param) = int_value;
+			int int_value;
+			double double_value;
+			audio_system_t audio_system_value;
+
+			// asign the value to the parameter.
+			switch (parameters[option_index].type) {
+			case LINGOT_PARAMETER_TYPE_STRING:
+				if (strlen(char_buffer_pointer)
+						< parameters[option_index].str_max_len) {
+					sprintf(((char*) param), "%s", char_buffer_pointer);
 				} else {
 					fprintf(stderr,
-							"error: parse error at line %i, '%s = %s': out of bounds (minimum %i, maximum %i), assuming default value %i\n",
+							"error: parse error at line %i, '%s = %s': identifier too long (maximum length %d characters), assuming default value '%s'\n",
 							line, parameters[option_index].name,
 							char_buffer_pointer,
-							parameters[option_index].int_min,
-							parameters[option_index].int_max,
-							*((unsigned int*) param));
+							parameters[option_index].str_max_len,
+							((char*) param));
 					parse_errors = 1;
-
 				}
-			}
-			break;
-		case LINGOT_PARAMETER_TYPE_FLOAT:
-			sscanf(char_buffer_pointer, "%lf", &double_value);
-			if ((double_value >= parameters[option_index].float_min)
-					&& (double_value <= parameters[option_index].float_max)) {
-				*((FLT*) param) = double_value;
-			} else {
-				fprintf(stderr,
-						"error: parse error at line %i, '%s = %s': out of bounds (minimum %0.3f, maximum %0.3f), assuming default value %0.3f\n",
-						line, parameters[option_index].name,
-						char_buffer_pointer, parameters[option_index].float_min,
-						parameters[option_index].float_max, *((FLT*) param));
-				parse_errors = 1;
-			}
-			break;
-		case LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM:
-			audio_system_value = str_to_audio_system_t(char_buffer_pointer);
-			if (audio_system_value != (audio_system_t) -1) {
-				*((audio_system_t*) param) = audio_system_value;
-			} else {
-				char buff[1000];
-				sprintf(buff,
-						_(
-								"Error parsing the configuration file, line %i: unrecognized audio system, assuming default value.\n"),
-						line);
+				break;
+			case LINGOT_PARAMETER_TYPE_INTEGER:
+				sscanf(char_buffer_pointer, "%d", &int_value);
 
-				lingot_msg_add_warning(buff);
-				parse_errors = 1;
+				if (parameters[option_index].id
+						== LINGOT_PARAMETER_ID_FFT_SIZE) {
+					if ((int_value != 256) && (int_value != 512)
+							&& (int_value != 1024) && (int_value != 2048)
+							&& (int_value != 4096)) {
+						fprintf(stderr,
+								"error: parse error at line %i, '%s = %s': invalid value (allowed values are 256, 512, 1024, 2048 and 4096), assuming default value %i\n",
+								line, parameters[option_index].name,
+								char_buffer_pointer, *((unsigned int*) param));
+						parse_errors = 1;
+					} else {
+						*((unsigned int*) param) = int_value;
+					}
+				} else {
+					if ((int_value >= parameters[option_index].int_min)
+							&& (int_value <= parameters[option_index].int_max)) {
+						*((unsigned int*) param) = int_value;
+					} else {
+						fprintf(stderr,
+								"error: parse error at line %i, '%s = %s': out of bounds (minimum %i, maximum %i), assuming default value %i\n",
+								line, parameters[option_index].name,
+								char_buffer_pointer,
+								parameters[option_index].int_min,
+								parameters[option_index].int_max,
+								*((unsigned int*) param));
+						parse_errors = 1;
+
+					}
+				}
+				break;
+			case LINGOT_PARAMETER_TYPE_FLOAT:
+				sscanf(char_buffer_pointer, "%lf", &double_value);
+				if ((double_value >= parameters[option_index].float_min)
+						&& (double_value <= parameters[option_index].float_max)) {
+					*((FLT*) param) = double_value;
+				} else {
+					fprintf(stderr,
+							"error: parse error at line %i, '%s = %s': out of bounds (minimum %0.3f, maximum %0.3f), assuming default value %0.3f\n",
+							line, parameters[option_index].name,
+							char_buffer_pointer,
+							parameters[option_index].float_min,
+							parameters[option_index].float_max,
+							*((FLT*) param));
+					parse_errors = 1;
+				}
+				break;
+			case LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM:
+				audio_system_value = str_to_audio_system_t(char_buffer_pointer);
+				if (audio_system_value != (audio_system_t) -1) {
+					*((audio_system_t*) param) = audio_system_value;
+				} else {
+					char buff[1000];
+					sprintf(buff,
+							_(
+									"Error parsing the configuration file, line %i: unrecognized audio system, assuming default value.\n"),
+							line);
+
+					lingot_msg_add_warning(buff);
+					parse_errors = 1;
+				}
+				break;
 			}
-			break;
 		}
 	}
 

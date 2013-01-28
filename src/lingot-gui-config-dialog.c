@@ -278,7 +278,7 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			conf->visualization_rate);
 	gtk_range_set_value(GTK_RANGE(dialog->noise_threshold),
 			conf->noise_threshold_db);
-	gtk_range_set_value(GTK_RANGE(dialog->gain), conf->gain);
+//	gtk_range_set_value(GTK_RANGE(dialog->gain), conf->gain);
 	gtk_spin_button_set_value(dialog->oversampling, conf->oversampling);
 	//	lingot_config_dialog_set_root_reference_note(
 	//			dialog->combo_root_frequency_reference_note,
@@ -369,7 +369,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	conf->temporal_window = gtk_spin_button_get_value(dialog->temporal_window);
 	conf->noise_threshold_db = gtk_range_get_value(GTK_RANGE(
 			dialog->noise_threshold) );
-	conf->gain = gtk_range_get_value(GTK_RANGE(dialog->gain) );
+//	conf->gain = gtk_range_get_value(GTK_RANGE(dialog->gain) );
 	conf->oversampling = gtk_spin_button_get_value_as_int(dialog->oversampling);
 	conf->dft_number = gtk_spin_button_get_value_as_int(dialog->dft_number);
 	conf->dft_size = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(

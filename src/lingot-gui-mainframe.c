@@ -1188,13 +1188,21 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			// fundamental frequency mark with a red vertical line.
 			cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
 			cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-			cairo_set_line_width(cr, 1.5);
+//			cairo_set_line_width(cr, 4.0);
+			cairo_set_line_width(cr, 1.0);
 
 			// index of closest sample to fundamental frequency.
+//			i = (int) rint(
+//					frame->core->freq * frame->conf->fft_size
+//							* frame->conf->oversampling
+//							/ frame->conf->sample_rate);
 			x = index_density * frame->core->freq * frame->conf->fft_size
 					* frame->conf->oversampling / frame->conf->sample_rate;
-			//			s = lingot_gui_mainframe_get_signal(frame, i, min_db, max_db);
-//			y = y0 - spectrum_db_density * s; // dB.
+//			y = -spectrum_db_density
+//					* lingot_gui_mainframe_get_signal(frame, i, spectrum_min_db,
+//							spectrum_max_db); // dB.
+//			cairo_move_to(cr, x, y);
+//			cairo_rel_line_to(cr, 0, 0);
 			cairo_move_to(cr, x, 0);
 			cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
 			cairo_stroke(cr);
