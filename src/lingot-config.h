@@ -140,9 +140,6 @@ struct _LingotConfig {
 	FLT peak_rejection_relation_db; // dBs
 	FLT peak_rejection_relation_nu; // natural units (internal)
 
-	FLT gain; // dBs
-	FLT gain_nu; // natural units (internal)
-
 	// DFT approximation
 	unsigned int dft_number; // number of DFTs.
 	unsigned int dft_size; // samples of each DFT.

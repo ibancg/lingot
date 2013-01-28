@@ -116,13 +116,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		memset(core->noise_level, 0, spd_size * sizeof(FLT));
 		memset(core->SPL, 0, spd_size * sizeof(FLT));
 
-//		int i;
-//		for (i = 0; i < spd_size; i++) {
-//			core->spd_fft[i] = 1e-10;
-//			core->noise_level[i] = 1e-10;
-//			core->SPL[i] = 1e-10;
-//		}
-
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
 				core->audio->read_buffer_size * sizeof(FLT));
@@ -173,9 +166,9 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		 *
 		 * Why Chebyshev filters?, for a given order, those filters yield
 		 * abrupt falls than other ones as Butterworth, making the most of
-		 * the order. Although Chebyshev filters affects more to the phase,
+		 * the order. Although Chebyshev filters affect more to the phase,
 		 * it doesn't matter due to the analysis is made on the signal
-		 * power distribution (only module).
+		 * power distribution (only magnitude).
 		 */
 		core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5,
 				0.9 / core->conf->oversampling);
@@ -247,16 +240,18 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 
 	memcpy(core->flt_read_buffer, read_buffer, read_buffer_size * sizeof(FLT));
 
-	//	double freq = 100.0;
-	//	for (i = 0; i < read_buffer_size; i++) {
-	//		core->flt_read_buffer[i] = 5e2 * cos(2.0 * M_PI * freq * i
-	//				/ conf->sample_rate);
-	//	}
+//	double freq = 100.0;
+//	for (i = 0; i < read_buffer_size; i++) {
+//		core->flt_read_buffer[i] =
+//				* cos(
+//						2.0 * M_PI * freq * i * conf->oversampling
+//								/ conf->sample_rate);
+//	}
 
-	if (conf->gain_nu != 1.0) {
-		for (i = 0; i < read_buffer_size; i++)
-			core->flt_read_buffer[i] *= conf->gain_nu;
-	}
+//	if (conf->gain_nu != 1.0) {
+//		for (i = 0; i < read_buffer_size; i++)
+//			core->flt_read_buffer[i] *= conf->gain_nu;
+//	}
 
 	//
 	// just readed:
@@ -403,7 +398,7 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 	int fail = 0;
 	FLT result = 0.0;
 
-	printf("f = %f\n", freq);
+//	printf("f = %f\n", freq);
 	old_multiplier2 = multiplier2;
 	int consistent_with_current_frequency = 0;
 	consistent_with_current_frequency = lingot_core_frequencies_related(freq,
@@ -425,7 +420,7 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 
 			if (++hits_counter >= nhits_to_lock) {
 				locked = 1;
-				printf("locked to frequency %f\n", current_frequency);
+//				printf("locked to frequency %f\n", current_frequency);
 			}
 		} else {
 			hits_counter = 0;
@@ -434,9 +429,9 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 
 //		result = freq;
 	} else {
-		printf("c = %i, f = %f, cf = %f, multiplier = %f, multiplier2 = %f\n",
-				consistent_with_current_frequency, freq, current_frequency,
-				multiplier, multiplier2);
+//		printf("c = %i, f = %f, cf = %f, multiplier = %f, multiplier2 = %f\n",
+//				consistent_with_current_frequency, freq, current_frequency,
+//				multiplier, multiplier2);
 
 		if (consistent_with_current_frequency) {
 			if (multiplier2 == 1.0) {
@@ -450,14 +445,14 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 							freq * multiplier);
 				} else {
 //					result = freq * multiplier;
-					printf("hop detected!\n");
+//					printf("hop detected!\n");
 //					current_frequency = result;
 
 					if (multiplier2 == old_multiplier2) {
 						if (++rehits_counter >= nhits_to_relock) {
 							result = freq * multiplier;
 							current_frequency = result;
-							printf("relock!! to %f\n", freq);
+//							printf("relock!! to %f\n", freq);
 							rehits_counter = 0;
 							fail = 0;
 						}
@@ -476,7 +471,7 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 				current_frequency = 0.0;
 				locked = 0;
 				hits_counter = 0;
-				printf("unlocked\n");
+//				printf("unlocked\n");
 				result = 0.0;
 			}
 		} else {
@@ -484,8 +479,8 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 		}
 	}
 
-	if (result != 0.0)
-		printf("result = %f\n", result);
+//	if (result != 0.0)
+//		printf("result = %f\n", result);
 	return result;
 }
 
