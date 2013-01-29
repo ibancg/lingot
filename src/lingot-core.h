@@ -76,10 +76,12 @@ struct _LingotCore {
 
 	pthread_mutex_t temporal_buffer_mutex;
 
-
-	// TODO: remove
-	FLT markers[10];
+#	ifdef DRAW_MARKERS
+	int markers[20];
+	int markers2[20];
 	short markers_size;
+	short markers_size2;
+#	endif
 };
 
 //----------------------------------------------------------------

@@ -75,6 +75,8 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 	static const FLT f1 = 1000;
 	static const FLT alpha0 = 0.99;
 	static const FLT alpha1 = 1;
+
+	// TODO: precompute
 	const FLT freqPenaltyA = (alpha0 - alpha1) / (f0 - f1);
 	const FLT freqPenaltyB = -(alpha0 * f1 - f0 * alpha1) / (f0 - f1);
 
@@ -82,13 +84,13 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 }
 
 // search the fundamental peak given the spd and its 2nd derivative
-FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
-		LingotComplex* const fft, const FLT* noise, int N, int n_peaks,
-		int lowest_index, int highest_index, short peak_half_width,
-		FLT delta_f_fft, FLT min_snr, FLT min_q, FLT min_freq, LingotCore* core,
-		short* divisor) {
+FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
+		LingotComplex* const fft, int N, int n_peaks, int lowest_index,
+		int highest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
+		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
 	register unsigned int i, j, m;
 	int p_index[n_peaks];
+	FLT magnitude[n_peaks];
 
 	// at this moment there are no peaks.
 	for (i = 0; i < n_peaks; i++)
@@ -104,9 +106,23 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 	short n_found_peaks = 0;
 
 	// I'll get the n_peaks maximum peaks with SNR above the required.
-	for (i = lowest_index; i < highest_index; i++)
-		if ((spl[i] - noise[i] > min_snr)
-				&& lingot_signal_is_peak(spl, i, peak_half_width)) {
+	for (i = lowest_index; i < highest_index; i++) {
+
+		FLT factor = 1.0;
+
+		if (freq != 0.0) {
+
+			FLT f = i * delta_f_fft;
+			if (fabs(f / freq - round(f / freq)) < 0.07) { // TODO: tol conf
+				factor = 1.5; // TODO: tol conf
+			}
+
+		}
+
+		FLT snri = snr[i] * factor;
+
+		if ((snri > min_snr)
+				&& lingot_signal_is_peak(snr, i, peak_half_width)) {
 
 			// search a place in the maximums buffer, if it doesn't exists, the
 			// lower maximum is candidate to be replaced.
@@ -119,23 +135,30 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 
 				// if there is no place, finds the smallest peak as a candidate
 				// to be substituted.
-				if (spl[p_index[j]] < spl[p_index[m]]) {
+				if (magnitude[j] < magnitude[m]) {
 					m = j;
 				}
 			}
 
 			if (p_index[m] == -1) {
 				p_index[m] = i; // there is a place
-			} else if (spl[i] > spl[p_index[m]]) {
+				magnitude[m] = snri;
+			} else if (snr[i] > snr[p_index[m]]) {
 				p_index[m] = i; // if greater
+				magnitude[m] = snri;
 			}
 
 			if (n_found_peaks < n_peaks) {
 				n_found_peaks++;
 			}
 		}
+	}
 
 	qsort(p_index, n_found_peaks, sizeof(int), &lingot_signal_compare_int);
+
+#ifdef DRAW_MARKERS
+	core->markers_size = 0;
+#endif
 
 	FLT freq_interpolated[n_found_peaks];
 	for (i = 0; i < n_found_peaks; i++) {
@@ -144,10 +167,14 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 						+ lingot_signal_fft_bin_interpolate_quinn2(
 								fft[p_index[i] - 1], fft[p_index[i]],
 								fft[p_index[i] + 1]));
+
+#ifdef DRAW_MARKERS
+		core->markers[core->markers_size++] = p_index[i];
+#endif
 	}
 
-	// maximum ratio error
-	static const FLT ratioTol = 0.04; // TODO
+// maximum ratio error
+	static const FLT ratioTol = 0.02; // TODO
 	static const short max_divisor = 4;
 
 	short tone_index = 0;
@@ -163,7 +190,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 	FLT bestF = 0;
 	short bestDivisor = 1;
 
-	// possible ground frequencies
+// possible ground frequencies
 	for (tone_index = 0; tone_index < n_found_peaks; tone_index++) {
 		for (div = 1; div <= max_divisor; div++) {
 			groundFreq = freq_interpolated[tone_index] / div;
@@ -182,8 +209,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 				FLT q = 0.0;
 				for (i = 0; i < n_indices_related; i++) {
 					// add up contributions to the quality factor
-					q += (spl[p_index[indices_related[i]]]
-							- noise[p_index[indices_related[i]]])
+					q += snr[p_index[indices_related[i]]]
 							* lingot_signal_frequency_penalty(groundFreq);
 				}
 
@@ -205,6 +231,15 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 							n_indices_related * sizeof(short));
 					bestDivisor = round(f / groundFreq);
 					bestF = f;
+
+#ifdef DRAW_MARKERS
+					core->markers_size2 = 0;
+					for (i = 0; i < n_indices_related; i++) {
+						core->markers2[core->markers_size2++] =
+								p_index[indices_related[i]];
+					}
+#endif
+
 //					printf("%d\n", n_indices_related);
 				}
 
@@ -227,9 +262,11 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 //		printf("q < mq!!\n");
 	}
 
+#ifdef DRAW_MARKERS
 	if (bestF == 0.0) {
-		core->markers_size = 0;
+		core->markers_size2 = 0;
 	}
+#endif
 
 	*divisor = bestDivisor;
 	return bestF;
@@ -239,7 +276,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* spl,
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 		FLT* noise_level) {
 
-	// low pass IIR filter.
+// low pass IIR filter.
 	const FLT c = 0.1;
 	const FLT filter_a[] = { 1.0, c - 1.0 };
 	const FLT filter_b[] = { c };

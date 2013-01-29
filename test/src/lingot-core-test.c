@@ -68,4 +68,12 @@ void lingot_core_test() {
 	assert(rel == 1);
 	assert(multiplier == 1.0);
 	assert(multiplier2 == 0.2);
+
+
+	rel = lingot_core_frequencies_related(97.959328, 48.977020, 15.0,
+			&multiplier, &multiplier2);
+	assert(rel == 1);
+	assert(multiplier == 1.0);
+	assert(multiplier2 == 2.0);
+
 }

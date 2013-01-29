@@ -128,7 +128,7 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_TEMPORAL_WINDOW,
 			"TEMPORAL_WINDOW", "seconds", 0.0, 15.00, 0);
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_NOISE_THRESHOLD,
-			"NOISE_THRESHOLD", "dB", 0.0, 100.0, 0);
+			"NOISE_THRESHOLD", "dB", 0.0, 40.0, 0);
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_CALCULATION_RATE, "CALCULATION_RATE", "Hz", 1.0,
 			30.00, 0);
@@ -191,14 +191,14 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
 	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "default");
 
-	config->sample_rate = 44100; // Hz
-	config->oversampling = 25;
-	config->root_frequency_error = 0; // Hz
-	config->min_frequency = 15; // Hz
+	config->sample_rate = 48000; // Hz
+	config->oversampling = 23;
+	config->root_frequency_error = 0.0; // Hz
+	config->min_frequency = 40.0; // Hz
 	config->fft_size = 512; // samples
-	config->temporal_window = 0.32; // seconds
-	config->calculation_rate = 20; // Hz
-	config->visualization_rate = 30; // Hz
+	config->temporal_window = 0.25; // seconds
+	config->calculation_rate = 20.0; // Hz
+	config->visualization_rate = 30.0; // Hz
 	config->noise_threshold_db = 20.0; // dB
 
 	config->peak_number = 3; // peaks
