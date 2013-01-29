@@ -120,7 +120,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
 	gboolean visible = gtk_check_menu_item_get_active(
-			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item));
+			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item) );
 
 	GtkAllocation alloc;
 	gtk_widget_get_allocation(frame->win, &alloc);
@@ -280,7 +280,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
 		if (more_messages) {
 			GtkWindow* parent = GTK_WINDOW((frame->config_dialog != NULL )?
-			frame->config_dialog->win : frame->win);
+					frame->config_dialog->win : frame->win);
 			GtkButtonsType buttonsType;
 
 			char message[2000];
@@ -317,8 +317,8 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 							((message_type == WARNING) ?
 									_("Warning") : _("Info") ));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
-					gtk_window_get_icon(GTK_WINDOW(frame->win)));
-			gtk_dialog_run(GTK_DIALOG(message_dialog));
+					gtk_window_get_icon(GTK_WINDOW(frame->win) ));
+			gtk_dialog_run(GTK_DIALOG(message_dialog) );
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 
@@ -357,13 +357,13 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
 		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
 		config = lingot_config_new();
 		lingot_config_load(config, filename);
 		g_free(filename);
@@ -400,13 +400,13 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
 		if (filechooser_config_last_folder != NULL )
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
 		lingot_config_save(frame->conf, filename);
 		g_free(filename);
 	}
@@ -891,11 +891,6 @@ static const int gain = 40;
 FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 		FLT min, FLT max) {
 	FLT signal = frame->core->SPL[i];
-	if (showSNR) {
-		signal -= frame->core->noise_level[i];
-	} else {
-		signal += gain;
-	}
 	if (signal < min) {
 		signal = min;
 	} else if (signal > max) {
@@ -906,12 +901,7 @@ FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 
 FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, int i, FLT min,
 		FLT max) {
-	FLT noise;
-	if (!showSNR) {
-		noise = frame->core->noise_level[i] + gain;
-	} else {
-		noise = frame->conf->noise_threshold_db;
-	}
+	FLT noise = frame->conf->noise_threshold_db;
 	if (noise < min) {
 		noise = min;
 	} else if (noise > max) {
@@ -1180,6 +1170,41 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_fill_preserve(cr);
 //		cairo_restore(cr);
 		cairo_stroke(cr);
+
+#ifdef DRAW_MARKERS
+		cairo_set_source_rgba(cr, 1.0, 1.0, 0.13, 1.0);
+		cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+		cairo_set_line_width(cr, 10.0);
+
+		for (i = 0; i < frame->core->markers_size2; i++) {
+
+			x = index_density * frame->core->markers2[i];
+			y = -spectrum_db_density
+					* lingot_gui_mainframe_get_signal(frame,
+							frame->core->markers2[i], spectrum_min_db,
+							spectrum_max_db); // dB.
+			cairo_move_to(cr, x, y);
+			cairo_rel_line_to(cr, 0, 0);
+			cairo_stroke(cr);
+		}
+
+		cairo_set_line_width(cr, 4.0);
+		cairo_set_source_rgba(cr, 0.13, 0.13, 1.0, 1.0);
+
+		for (i = 0; i < frame->core->markers_size; i++) {
+
+			x = index_density * frame->core->markers[i];
+			y = -spectrum_db_density
+					* lingot_gui_mainframe_get_signal(frame,
+							frame->core->markers[i], spectrum_min_db,
+							spectrum_max_db); // dB.
+			cairo_move_to(cr, x, y);
+			cairo_rel_line_to(cr, 0, 0);
+			cairo_stroke(cr);
+		}
+		cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+		cairo_set_line_width(cr, 1.0);
+#endif
 
 		if (frame->core->freq != 0.0) {
 

@@ -66,8 +66,10 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->hamming_window_fft = NULL;
 	core->antialiasing_filter = NULL;
 
-	// TODO
+#ifdef DRAW_MARKERS
 	core->markers_size = 0;
+	core->markers_size2 = 0;
+#endif
 
 	int requested_sample_rate = conf->sample_rate;
 
@@ -389,17 +391,21 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 	static FLT current_frequency = -1.0;
 	static int hits_counter = 0;
 	static int rehits_counter = 0;
-	static const int nhits_to_lock = 5;
+	static int rehits_up_counter = 0;
+	static const int nhits_to_lock = 4;
 	static const int nhits_to_unlock = 5;
-	static const int nhits_to_relock = 5;
+	static const int nhits_to_relock = 6;
+	static const int nhits_to_relock_up = 8;
 	FLT multiplier = 0.0;
 	FLT multiplier2 = 0.0;
+	static FLT old_multiplier = 0.0;
 	static FLT old_multiplier2 = 0.0;
 	int fail = 0;
 	FLT result = 0.0;
 
-//	printf("f = %f\n", freq);
-	old_multiplier2 = multiplier2;
+#ifdef DRAW_MARKERS
+	printf("f = %f\n", freq);
+#endif
 	int consistent_with_current_frequency = 0;
 	consistent_with_current_frequency = lingot_core_frequencies_related(freq,
 			current_frequency, minFrequency, &multiplier, &multiplier2);
@@ -420,7 +426,10 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 
 			if (++hits_counter >= nhits_to_lock) {
 				locked = 1;
-//				printf("locked to frequency %f\n", current_frequency);
+#ifdef DRAW_MARKERS
+				printf("locked to frequency %f\n", current_frequency);
+#endif
+				hits_counter = 0;
 			}
 		} else {
 			hits_counter = 0;
@@ -434,25 +443,64 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 //				multiplier, multiplier2);
 
 		if (consistent_with_current_frequency) {
-			if (multiplier2 == 1.0) {
+			if (fabs(multiplier2 - 1.0) < 1e-5) {
 				result = freq * multiplier;
 				current_frequency = result;
 				rehits_counter = 0;
+
+				if (fabs(multiplier - 1.0) > 1e-5) {
+					if (fabs(multiplier - old_multiplier) < 1e-5) {
+#ifdef DRAW_MARKERS
+						printf("SEIN!!!! %f!\n", multiplier);
+#endif
+						if (++rehits_up_counter >= nhits_to_relock_up) {
+							result = freq;
+							current_frequency = result;
+#ifdef DRAW_MARKERS
+							printf("relock UP!! to %f\n\n\n", freq);
+#endif
+							rehits_up_counter = 0;
+							fail = 0;
+						}
+					} else {
+						rehits_up_counter = 0;
+					}
+				} else {
+					rehits_up_counter = 0;
+				}
 			} else {
+				rehits_up_counter = 0;
+#ifdef DRAW_MARKERS
+				printf("%f!\n", multiplier2);
+#endif
+				if (fabs(multiplier2 - 0.5) < 1e-5) {
+					hits_counter--;
+				}
 				fail = 1;
 				if (freq * multiplier < minFrequency) {
+#ifdef DRAW_MARKERS
 					printf("warning freq * mul = %f < min\n",
 							freq * multiplier);
+#endif
 				} else {
 //					result = freq * multiplier;
 //					printf("hop detected!\n");
 //					current_frequency = result;
 
-					if (multiplier2 == old_multiplier2) {
+#ifdef DRAW_MARKERS
+					printf("(%f == %f)?\n", multiplier2, old_multiplier2);
+#endif
+					if (fabs(multiplier2 - old_multiplier2) < 1e-5) {
+#ifdef DRAW_MARKERS
+						printf("match for relock, %f == %f\n", multiplier2,
+								old_multiplier2);
+#endif
 						if (++rehits_counter >= nhits_to_relock) {
 							result = freq * multiplier;
 							current_frequency = result;
-//							printf("relock!! to %f\n", freq);
+#ifdef DRAW_MARKERS
+							printf("relock!! to %f\n", freq);
+#endif
 							rehits_counter = 0;
 							fail = 0;
 						}
@@ -471,13 +519,18 @@ static FLT lingot_core_frequency_locker(FLT freq, FLT minFrequency) {
 				current_frequency = 0.0;
 				locked = 0;
 				hits_counter = 0;
-//				printf("unlocked\n");
+#ifdef DRAW_MARKERS
+				printf("unlocked\n");
+#endif
 				result = 0.0;
 			}
 		} else {
 			hits_counter = 0;
 		}
 	}
+
+	old_multiplier = multiplier;
+	old_multiplier2 = multiplier2;
 
 //	if (result != 0.0)
 //		printf("result = %f\n", result);
@@ -529,20 +582,29 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	lingot_signal_compute_noise_level(core->SPL, spd_size,
 			noise_filter_width_samples, core->noise_level);
+	for (i = 0; i < spd_size; i++) {
+		core->SPL[i] -= core->noise_level[i];
+	}
 
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
 					* conf->fft_size);
-	unsigned int highest_index = (unsigned int) ceil(0.85 * conf->fft_size / 2);
+	unsigned int highest_index = (unsigned int) ceil(0.95 * conf->fft_size / 2);
 
 // TODO: min SNR
 	short divisor = 1;
-	static const short nPeaks = 8;
+	short nPeaks = 8;
 	const short peakHalfWidth = (conf->fft_size > 256) ? 2 : 1; // conf->peak_half_width
-	const FLT minQ = conf->peak_rejection_relation_db;
-	const FLT minSNR = 0.6 * minQ;
+	FLT minQ = conf->noise_threshold_db;
+	FLT minSNR = 0.4 * minQ;
+
+//	if (core->freq != 0.0) {
+//		minQ *= 1.0;
+//		minSNR *= 0.8;
+//		nPeaks = 5;
+//	}
 	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
-			core->fftplan->fft_out, core->noise_level, conf->fft_size / 2,
+			0.5 *core->freq, core->fftplan->fft_out, conf->fft_size / 2,
 			nPeaks, lowest_index, highest_index, peakHalfWidth, delta_f_FFT,
 			minSNR, minQ, conf->min_frequency, core, &divisor);
 
