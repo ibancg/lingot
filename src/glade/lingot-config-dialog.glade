@@ -522,7 +522,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Quick adjusments on the dynamic response and the signal levels.</property>
+                <property name="tooltip_text" translatable="yes">Quick adjustments on the dynamic response and the signal levels.</property>
                 <property name="label" translatable="yes">Adjustments</property>
               </object>
               <packing>
