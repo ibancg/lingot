@@ -716,17 +716,18 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 			d0_SPD_old = d0_SPD;
 //			lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
 //					conf->temporal_buffer_size, wk, &d0_SPD, &d1_SPD, &d2_SPD);
-			lingot_fft_spd_diffs_eval(core->windowed_fft_buffer, // TODO
+			lingot_fft_spd_diffs_eval(core->windowed_fft_buffer, // TODO: iterate over this buffer?
 					conf->fft_size, wk, &d0_SPD, &d1_SPD, &d2_SPD);
 
 			wkm1 = wk - d1_SPD / d2_SPD;
 //			printf(" -> (%f,%g,%g,%g)", wkm1 * w2f, d0_SPD, d1_SPD, d2_SPD);
 
-			if (d0_SPD < d0_SPD_old) {
-				printf("!!!", d0_SPD, d0_SPD_old);
+			// TODO
+//			if (d0_SPD < d0_SPD_old) {
+//				printf("!!!", d0_SPD, d0_SPD_old);
 //				wkm1 = 0.0;
 //				break;
-			}
+//			}
 
 		}
 //		printf("\n");
