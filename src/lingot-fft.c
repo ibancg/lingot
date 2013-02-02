@@ -141,11 +141,38 @@ void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 	}
 }
 
-void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1,
-		FLT* out_d2) {
+/* Spectral Power Distribution esteem, selectively in frequency, by DFT.
+ transforms signal in of N1 samples from frequency wi, with sample
+ separation of dw rads, storing the result on buffer out with N2 samples. */
+void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
+	FLT Xr, Xi;
+	FLT wn;
+	const FLT N1_2 = N1 * N1;
+	int i, n;
+
+	for (i = 0; i < N2; i++) {
+
+		Xr = 0.0;
+		Xi = 0.0;
+
+		for (n = 0; n < N1; n++) { // O(n1*n2)  :(
+
+			wn = (wi + dw * i) * n;
+			Xr = Xr + cos(wn) * in[n];
+			Xi = Xi - sin(wn) * in[n];
+		}
+
+		out[i] = (Xr * Xr + Xi * Xi) / N1_2; // normalized squared module.
+	}
+}
+
+void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d0,
+		FLT* out_d1, FLT* out_d2) {
 	FLT x_cos_wn;
 	FLT x_sin_wn;
-	register int n;
+	const FLT N2 = N * N;
+
+	int n;
 
 	FLT SUM_x_sin_wn = 0.0;
 	FLT SUM_x_cos_wn = 0.0;
@@ -168,6 +195,7 @@ void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1,
 	}
 
 	FLT N_2 = N * N;
+	*out_d0 = (SUM_x_cos_wn * SUM_x_cos_wn + SUM_x_sin_wn * SUM_x_sin_wn) / N2;
 	*out_d1 = 2.0
 			* (SUM_x_sin_wn * SUM_x_n_cos_wn - SUM_x_cos_wn * SUM_x_n_sin_wn)
 			/ N_2;

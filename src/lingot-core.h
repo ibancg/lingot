@@ -39,7 +39,7 @@ typedef struct _LingotCore LingotCore;
 struct _LingotCore {
 
 	//  -- shared data --
-	FLT freq; // analog frequency calculated.
+	FLT freq; // computed analog frequency.
 	FLT* SPL; // visual portion of FFT.
 	//  -- shared data --
 
@@ -58,8 +58,10 @@ struct _LingotCore {
 
 	// spectral power distribution esteem.
 	FLT* spd_fft;
-	FLT* diff2_spd_fft;
 	FLT* noise_level;
+	FLT* spd_dft;
+	FLT* diff2_spd_fft;
+	
 
 	LingotFFTPlan* fftplan;
 
