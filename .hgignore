@@ -75,3 +75,5 @@ syntax: regexp
 \.gz$
 syntax: regexp
 ^test/Debug$
+syntax: regexp
+^Lingot\.creator\.user$

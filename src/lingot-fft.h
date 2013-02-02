@@ -57,8 +57,11 @@ void lingot_fft_plan_destroy(LingotFFTPlan*);
 // Full Spectral Power Distribution (SPD) esteem.
 void lingot_fft_compute_dft_and_spd(LingotFFTPlan*, FLT* out, int n_out);
 
+// Spectral Power Distribution (SPD) evaluation at a given frequency.
+void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
+
 // Evaluates first and second SPD derivatives at frequency w.
-void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d1,
-		FLT* out_d2);
+void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d0,
+		FLT* out_d1, FLT* out_d2);
 
 #endif
