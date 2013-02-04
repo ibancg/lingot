@@ -703,36 +703,67 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		FLT wk = -1.0e5;
 		FLT wkm1 = w;
 		// first iterator set to the current approximation.
-		FLT d0_SPD, d1_SPD, d2_SPD;
+		FLT d0_SPD = 0.0;
+		FLT d1_SPD = 0.0;
+		FLT d2_SPD = 0.0;
 		FLT d0_SPD_old = 0.0;
 
-//		printf("NR iter: ");
+//		printf("NR iter: %f ", w * w2f);
 
-		for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-8);
+		for (k = 0; (k < conf->max_nr_iter) && (fabs(wk - wkm1) > 1.0e-4);
 				k++) {
 			wk = wkm1;
 
-			// ! we use the WHOLE temporal window for bigger precission.
 			d0_SPD_old = d0_SPD;
-//			lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
-//					conf->temporal_buffer_size, wk, &d0_SPD, &d1_SPD, &d2_SPD);
 			lingot_fft_spd_diffs_eval(core->windowed_fft_buffer, // TODO: iterate over this buffer?
 					conf->fft_size, wk, &d0_SPD, &d1_SPD, &d2_SPD);
 
 			wkm1 = wk - d1_SPD / d2_SPD;
 //			printf(" -> (%f,%g,%g,%g)", wkm1 * w2f, d0_SPD, d1_SPD, d2_SPD);
 
-			// TODO
-//			if (d0_SPD < d0_SPD_old) {
+			if (d0_SPD < d0_SPD_old) {
 //				printf("!!!", d0_SPD, d0_SPD_old);
-//				wkm1 = 0.0;
-//				break;
-//			}
+				wkm1 = 0.0;
+				break;
+			}
 
 		}
 //		printf("\n");
 
-		w = wkm1; // frequency in rads.
+		if (wkm1 > 0.0) {
+			w = wkm1; // frequency in rads.
+			wk = -1.0e5;
+			d0_SPD = 0.0;
+//			printf("NR2 iter: %f ", w * w2f);
+
+			for (k = 0;
+					(k <= 1)
+							|| ((k < conf->max_nr_iter)
+									&& (fabs(wk - wkm1) > 1.0e-4)); k++) {
+				wk = wkm1;
+
+				// ! we use the WHOLE temporal window for bigger precision.
+				d0_SPD_old = d0_SPD;
+				lingot_fft_spd_diffs_eval(core->windowed_temporal_buffer,
+						conf->temporal_buffer_size, wk, &d0_SPD, &d1_SPD,
+						&d2_SPD);
+
+				wkm1 = wk - d1_SPD / d2_SPD;
+//				printf(" -> (%f,%g,%g,%g)", wkm1 * w2f, d0_SPD, d1_SPD, d2_SPD);
+
+				if (d0_SPD < d0_SPD_old) {
+//					printf("!!!");
+					wkm1 = 0.0;
+					break;
+				}
+
+			}
+//			printf("\n");
+
+			if (wkm1 > 0.0) {
+				w = wkm1; // frequency in rads.
+			}
+		}
 	}
 
 	FLT freq =
