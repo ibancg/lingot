@@ -26,6 +26,26 @@ AM_GLIB_GNU_GETTEXT
 AM_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
+AC_CHECK_HEADERS([fcntl.h])
+AC_CHECK_HEADERS([langinfo.h])
+AC_CHECK_HEADERS([libintl.h])
+AC_CHECK_HEADERS([sys/ioctl.h])
+AC_CHECK_HEADERS([sys/time.h])
+AC_CHECK_FUNCS([floor])
+AC_CHECK_FUNCS([gettimeofday])
+AC_CHECK_FUNCS([memmove])
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([mkdir])
+AC_CHECK_FUNCS([pow])
+AC_CHECK_FUNCS([rint])
+AC_CHECK_FUNCS([setlocale])
+AC_CHECK_FUNCS([sqrt])
+AC_CHECK_FUNCS([strchr])
+AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([strerror])
+AC_CHECK_FUNCS([strrchr])
+AC_CHECK_FUNCS([strcasecmp])
+AC_FUNC_MALLOC
 
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0])
 AC_SUBST(GTK_CFLAGS)

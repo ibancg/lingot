@@ -185,7 +185,15 @@ void lingot_config_copy(LingotConfig* dst, LingotConfig* src) {
 
 void lingot_config_restore_default_values(LingotConfig* config) {
 
+#if defined(DEFAULT_AUDIO_SYSTEM_OSS)
+	config->audio_system = AUDIO_SYSTEM_OSS;
+#elif defined(DEFAULT_AUDIO_SYSTEM_JACK)
+	config->audio_system = AUDIO_SYSTEM_JACK;
+#elif defined(DEFAULT_AUDIO_SYSTEM_PULSEAUDIO)
+	config->audio_system = AUDIO_SYSTEM_PULSEAUDIO;
+#else
 	config->audio_system = AUDIO_SYSTEM_ALSA;
+#endif
 	sprintf(config->audio_dev[AUDIO_SYSTEM_OSS], "%s", "/dev/dsp");
 	sprintf(config->audio_dev[AUDIO_SYSTEM_ALSA], "%s", "default");
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
