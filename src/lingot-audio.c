@@ -224,6 +224,7 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 
 // function invoked when the audio thread must be cancelled
 void lingot_audio_cancel(LingotAudioHandler* audio) {
+	// TODO: avoid
 	fprintf(stderr, "warning: cancelling audio thread\n");
 	switch (audio->audio_system) {
 	case AUDIO_SYSTEM_PULSEAUDIO:
@@ -243,7 +244,7 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 
 	gettimeofday(&tout_abs, NULL);
 	tout.tv_sec = 0;
-	tout.tv_usec = 100000;
+	tout.tv_usec = 500000;
 
 	if (audio->running == 1) {
 		audio->running = 0;

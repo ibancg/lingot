@@ -57,13 +57,10 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	ss.channels = 1;
 	ss.rate = sample_rate;
 
-//	pa_buffer_attr buff;
-//	const unsigned int iBlockLen = audio->read_buffer_size;
-////		buff.tlength = iBlockLen;
-////		buff.minreq = iBlockLen;
-//	buff.maxlength = -1;
-////		buff.prebuf = -1;
-//	buff.fragsize = iBlockLen;
+	pa_buffer_attr buff;
+	const unsigned int iBlockLen = audio->read_buffer_size;
+	buff.maxlength = -1;
+	buff.fragsize = iBlockLen;
 
 	const char* device_name = device;
 	if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -77,7 +74,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 			"record", // Description of our stream.
 			&ss, // sample format.
 			NULL, // Use default channel map
-			NULL, //
+			&buff, //
 			&error);
 
 	if (!audio->pa_client) {

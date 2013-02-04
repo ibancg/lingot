@@ -26,6 +26,10 @@
 									<listOptionValue builtIn="false" value="JACK"/>
 									<listOptionValue builtIn="false" value="ALSA"/>
 									<listOptionValue builtIn="false" value="DRAW_MARKERS"/>
+									<listOptionValue builtIn="false" value="DEFAULT_AUDIO_SYSTEM_ALSA"/>
+								</option>
+								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.2030930612" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" valueType="undefDefinedSymbols">
+									<listOptionValue builtIn="false" value="SEIN"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.536031661" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

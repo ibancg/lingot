@@ -632,7 +632,6 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
-LIBOBJS
 PACKAGE_MENU_DIR
 NO_PREFIX_PACKAGE_MENU_DIR
 PACKAGE_HELP_DIR
@@ -660,6 +659,7 @@ GTK_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+LIBOBJS
 OTOOL64
 OTOOL
 LIPO
@@ -14137,6 +14137,287 @@ _ACEOF
   LIBS="-lm $LIBS"
 
 fi
+
+for ac_header in fcntl.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
+if test "x$ac_cv_header_fcntl_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_FCNTL_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in langinfo.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "langinfo.h" "ac_cv_header_langinfo_h" "$ac_includes_default"
+if test "x$ac_cv_header_langinfo_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LANGINFO_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in libintl.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "libintl.h" "ac_cv_header_libintl_h" "$ac_includes_default"
+if test "x$ac_cv_header_libintl_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBINTL_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in sys/ioctl.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_ioctl_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SYS_IOCTL_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in sys/time.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "sys/time.h" "ac_cv_header_sys_time_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_time_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SYS_TIME_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_func in floor
+do :
+  ac_fn_c_check_func "$LINENO" "floor" "ac_cv_func_floor"
+if test "x$ac_cv_func_floor" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_FLOOR 1
+_ACEOF
+
+fi
+done
+
+for ac_func in gettimeofday
+do :
+  ac_fn_c_check_func "$LINENO" "gettimeofday" "ac_cv_func_gettimeofday"
+if test "x$ac_cv_func_gettimeofday" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETTIMEOFDAY 1
+_ACEOF
+
+fi
+done
+
+for ac_func in memmove
+do :
+  ac_fn_c_check_func "$LINENO" "memmove" "ac_cv_func_memmove"
+if test "x$ac_cv_func_memmove" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_MEMMOVE 1
+_ACEOF
+
+fi
+done
+
+for ac_func in memset
+do :
+  ac_fn_c_check_func "$LINENO" "memset" "ac_cv_func_memset"
+if test "x$ac_cv_func_memset" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_MEMSET 1
+_ACEOF
+
+fi
+done
+
+for ac_func in mkdir
+do :
+  ac_fn_c_check_func "$LINENO" "mkdir" "ac_cv_func_mkdir"
+if test "x$ac_cv_func_mkdir" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_MKDIR 1
+_ACEOF
+
+fi
+done
+
+for ac_func in pow
+do :
+  ac_fn_c_check_func "$LINENO" "pow" "ac_cv_func_pow"
+if test "x$ac_cv_func_pow" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_POW 1
+_ACEOF
+
+fi
+done
+
+for ac_func in rint
+do :
+  ac_fn_c_check_func "$LINENO" "rint" "ac_cv_func_rint"
+if test "x$ac_cv_func_rint" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_RINT 1
+_ACEOF
+
+fi
+done
+
+for ac_func in setlocale
+do :
+  ac_fn_c_check_func "$LINENO" "setlocale" "ac_cv_func_setlocale"
+if test "x$ac_cv_func_setlocale" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETLOCALE 1
+_ACEOF
+
+fi
+done
+
+for ac_func in sqrt
+do :
+  ac_fn_c_check_func "$LINENO" "sqrt" "ac_cv_func_sqrt"
+if test "x$ac_cv_func_sqrt" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SQRT 1
+_ACEOF
+
+fi
+done
+
+for ac_func in strchr
+do :
+  ac_fn_c_check_func "$LINENO" "strchr" "ac_cv_func_strchr"
+if test "x$ac_cv_func_strchr" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STRCHR 1
+_ACEOF
+
+fi
+done
+
+for ac_func in strdup
+do :
+  ac_fn_c_check_func "$LINENO" "strdup" "ac_cv_func_strdup"
+if test "x$ac_cv_func_strdup" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STRDUP 1
+_ACEOF
+
+fi
+done
+
+for ac_func in strerror
+do :
+  ac_fn_c_check_func "$LINENO" "strerror" "ac_cv_func_strerror"
+if test "x$ac_cv_func_strerror" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STRERROR 1
+_ACEOF
+
+fi
+done
+
+for ac_func in strrchr
+do :
+  ac_fn_c_check_func "$LINENO" "strrchr" "ac_cv_func_strrchr"
+if test "x$ac_cv_func_strrchr" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STRRCHR 1
+_ACEOF
+
+fi
+done
+
+for ac_func in strcasecmp
+do :
+  ac_fn_c_check_func "$LINENO" "strcasecmp" "ac_cv_func_strcasecmp"
+if test "x$ac_cv_func_strcasecmp" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STRCASECMP 1
+_ACEOF
+
+fi
+done
+
+for ac_header in stdlib.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
+if test "x$ac_cv_header_stdlib_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STDLIB_H 1
+_ACEOF
+
+fi
+
+done
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU libc compatible malloc" >&5
+$as_echo_n "checking for GNU libc compatible malloc... " >&6; }
+if ${ac_cv_func_malloc_0_nonnull+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "$cross_compiling" = yes; then :
+  ac_cv_func_malloc_0_nonnull=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#if defined STDC_HEADERS || defined HAVE_STDLIB_H
+# include <stdlib.h>
+#else
+char *malloc ();
+#endif
+
+int
+main ()
+{
+return ! malloc (0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_func_malloc_0_nonnull=yes
+else
+  ac_cv_func_malloc_0_nonnull=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_func_malloc_0_nonnull" >&5
+$as_echo "$ac_cv_func_malloc_0_nonnull" >&6; }
+if test $ac_cv_func_malloc_0_nonnull = yes; then :
+
+$as_echo "#define HAVE_MALLOC 1" >>confdefs.h
+
+else
+  $as_echo "#define HAVE_MALLOC 0" >>confdefs.h
+
+   case " $LIBOBJS " in
+  *" malloc.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS malloc.$ac_objext"
+ ;;
+esac
+
+
+$as_echo "#define malloc rpl_malloc" >>confdefs.h
+
+fi
+
 
 
 
