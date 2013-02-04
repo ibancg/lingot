@@ -47,7 +47,13 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(device, O_RDONLY);
-	audio->read_buffer_size = 128; // TODO: size up
+	if (sample_rate >= 44100) {
+		audio->read_buffer_size = 1024;
+	} else if (sample_rate >= 22050) {
+		audio->read_buffer_size = 512;
+	} else {
+		audio->read_buffer_size = 256;
+	}
 	strcpy(audio->device, device);
 
 	try {

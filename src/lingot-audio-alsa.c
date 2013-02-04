@@ -41,7 +41,14 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 	audio = malloc(sizeof(LingotAudioHandler));
 	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
-	audio->read_buffer_size = 128; // TODO: size up
+
+	if (sample_rate >= 44100) {
+		audio->read_buffer_size = 1024;
+	} else if (sample_rate >= 22050) {
+		audio->read_buffer_size = 512;
+	} else {
+		audio->read_buffer_size = 256;
+	}
 
 	// ALSA allocates some mem to load its config file when we call
 	// snd_card_next. Now that we're done getting the info, let's tell ALSA
