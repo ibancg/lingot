@@ -42,7 +42,13 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	strcpy(audio->device, "");
 	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_PULSEAUDIO;
-	audio->read_buffer_size = 128; // TODO: size up
+	if (sample_rate >= 44100) {
+		audio->read_buffer_size = 2048;
+	} else if (sample_rate >= 22050) {
+		audio->read_buffer_size = 1024;
+	} else {
+		audio->read_buffer_size = 512;
+	}
 
 	int error;
 
@@ -51,13 +57,13 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	ss.channels = 1;
 	ss.rate = sample_rate;
 
-	pa_buffer_attr buff;
-	const unsigned int iBlockLen = audio->read_buffer_size;
-//		buff.tlength = iBlockLen;
-//		buff.minreq = iBlockLen;
-	buff.maxlength = -1;
-//		buff.prebuf = -1;
-	buff.fragsize = iBlockLen;
+//	pa_buffer_attr buff;
+//	const unsigned int iBlockLen = audio->read_buffer_size;
+////		buff.tlength = iBlockLen;
+////		buff.minreq = iBlockLen;
+//	buff.maxlength = -1;
+////		buff.prebuf = -1;
+//	buff.fragsize = iBlockLen;
 
 	const char* device_name = device;
 	if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -71,7 +77,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 			"record", // Description of our stream.
 			&ss, // sample format.
 			NULL, // Use default channel map
-			&buff, //
+			NULL, //
 			&error);
 
 	if (!audio->pa_client) {
@@ -185,7 +191,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 	properties->sample_rates[1] = 11025;
 	properties->sample_rates[2] = 22050;
 	properties->sample_rates[3] = 44100;
-	properties->sample_rates[4] = 48000;
+	properties->sample_rates[4] = 48000; // TODO
 
 	struct device_name_node_t* device_names_first =
 			(struct device_name_node_t*) malloc(

@@ -191,7 +191,7 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
 	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "default");
 
-	config->sample_rate = 48000; // Hz
+	config->sample_rate = 44100; // Hz
 	config->oversampling = 23;
 	config->root_frequency_error = 0.0; // Hz
 	config->min_frequency = 40.0; // Hz
