@@ -36,7 +36,7 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
 	char error_message[1000];
-	unsigned int channels = 1;
+	static const unsigned int channels = 1;
 
 	audio = malloc(sizeof(LingotAudioHandler));
 	audio->read_buffer = NULL;
@@ -131,7 +131,7 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 		audio->read_buffer = malloc(
 				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 		memset(audio->read_buffer, 0,
-				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 	}catch {
 		if (audio->capture_handle != NULL )
 			snd_pcm_close(audio->capture_handle);
