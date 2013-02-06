@@ -31,6 +31,12 @@
 #include <pulse/pulseaudio.h>
 #endif
 
+static double samplerate_estimator = 0.0;
+static unsigned long read_samples = 0;
+static double elapsed_time = 0.0;
+
+static const int channels = 1;
+
 LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
@@ -41,6 +47,10 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
 	audio->read_buffer = NULL;
+
+//	sample_rate = 44100;
+	audio->real_sample_rate = sample_rate;
+
 	audio->audio_system = AUDIO_SYSTEM_PULSEAUDIO;
 	if (sample_rate >= 44100) {
 		audio->read_buffer_size = 2048;
@@ -54,11 +64,15 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	pa_sample_spec ss;
 	ss.format = PA_SAMPLE_S16LE;
-	ss.channels = 1;
+	ss.channels = channels;
 	ss.rate = sample_rate;
 
+	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate,
+			ss.format);
+
 	pa_buffer_attr buff;
-	const unsigned int iBlockLen = audio->read_buffer_size;
+	const unsigned int iBlockLen = channels * audio->read_buffer_size
+			* sizeof(SAMPLE_TYPE);
 	buff.maxlength = -1;
 	buff.fragsize = iBlockLen;
 
@@ -71,7 +85,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 			"Lingot", // Our application's name.
 			PA_STREAM_RECORD, //
 			device_name, //
-			"record", // Description of our stream.
+			"Lingot record thread", // Description of our stream.
 			&ss, // sample format.
 			NULL, // Use default channel map
 			&buff, //
@@ -85,11 +99,10 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 		free(audio);
 		audio = NULL;
 	} else {
-		audio->real_sample_rate = sample_rate;
 		audio->read_buffer = malloc(
-				ss.channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 		memset(audio->read_buffer, 0,
-				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
 	}
 
 #	else
@@ -122,18 +135,62 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 #	ifdef PULSEAUDIO
 	int error;
 
-	if (pa_simple_read(audio->pa_client, audio->read_buffer,
-			audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error) < 0) {
+	int result = pa_simple_read(audio->pa_client, audio->read_buffer,
+			channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error);
+
+//	printf("result = %i\n", result);
+	if (result < 0) {
 		char buff[100];
 		sprintf(buff, "%s\n%s", _("Read from audio interface failed."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 	} else {
+
 		samples_read = audio->read_buffer_size;
-		int i;
-		for (i = 0; i < audio->read_buffer_size; i++) {
-			audio->flt_read_buffer[i] = audio->read_buffer[i];
+		int i, j;
+		for (i = 0, j = 0; j < audio->read_buffer_size; i += channels, j++) {
+			audio->flt_read_buffer[j] = audio->read_buffer[i];
 		}
+
+		struct timeval tdiff, t_abs;
+		static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
+		static FILE* fid = 0x0;
+
+//		if (fid == 0x0) {
+//			fid = fopen("/tmp/dump.txt", "w");
+//		}
+
+		gettimeofday(&t_abs, NULL );
+
+		if ((t_abs_old.tv_sec != 0) || (t_abs_old.tv_usec != 0)) {
+
+			for (read_samples = 0; read_samples < audio->read_buffer_size;
+					read_samples++) {
+				if (audio->flt_read_buffer[read_samples] == 0.0) {
+					break;
+				}
+//				fprintf(fid, "%f ", audio->flt_read_buffer[read_samples]);
+//				printf("%f ", audio->flt_read_buffer[read_samples]);
+			}
+//			fprintf(fid, "\n");
+//			printf("\n");
+			timersub(&t_abs, &t_abs_old, &tdiff);
+//			read_samples = audio->read_buffer_size;
+			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
+			static const double c = 0.9;
+			samplerate_estimator = c * samplerate_estimator
+					+ (1 - c) * (read_samples / elapsed_time);
+			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
+					samplerate_estimator, read_samples, elapsed_time);
+
+		}
+		t_abs_old = t_abs;
+
+		// TODO: remove
+		for (i = 0, j = 0; j < audio->read_buffer_size; i += channels, j++) {
+			audio->read_buffer[i] = 0;
+		}
+
 	}
 
 #	endif
@@ -328,6 +385,13 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
 
 	char buff[512];
 	sprintf(buff, "%s <%s>", i->description, i->name);
+
+	printf("%s <%s>\n", i->description, i->name);
+	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
+	printf("\t%i channels, rate %i, format %i\n", i->sample_spec.channels,
+			i->sample_spec.rate, i->sample_spec.format);
+	printf("\tlags %i\n", i->flags);
+
 	struct device_name_node_t* new_name_node =
 			(struct device_name_node_t*) malloc(
 					sizeof(struct device_name_node_t*));
