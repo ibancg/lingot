@@ -27,6 +27,12 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
+#ifdef ALSA
+//snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16_LE;
+snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
+//snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
+#endif
+
 LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 
 	LingotAudioHandler* audio = NULL;
@@ -43,11 +49,11 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
 
 	if (sample_rate >= 44100) {
-		audio->read_buffer_size = 1024;
+		audio->read_buffer_size_samples = 1024;
 	} else if (sample_rate >= 22050) {
-		audio->read_buffer_size = 512;
+		audio->read_buffer_size_samples = 512;
 	} else {
-		audio->read_buffer_size = 256;
+		audio->read_buffer_size_samples = 256;
 	}
 
 	// ALSA allocates some mem to load its config file when we call
@@ -91,7 +97,7 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 		}
 
 		if ((err = snd_pcm_hw_params_set_format(audio->capture_handle,
-				hw_params, SND_PCM_FORMAT_S16_LE)) < 0) {
+				hw_params, sample_format)) < 0) {
 			sprintf(error_message, "%s\n%s", _("Cannot set sample format."),
 					snd_strerror(err));
 			throw(error_message);
@@ -128,10 +134,12 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 			throw(error_message);
 		}
 
-		audio->read_buffer = malloc(
-				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0,
-				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+		audio->bytes_per_sample = snd_pcm_format_size(sample_format, 1);
+		audio->read_buffer_size_bytes = channels
+				* audio->read_buffer_size_samples * audio->bytes_per_sample;
+
+		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
+		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 	}catch {
 		if (audio->capture_handle != NULL )
 			snd_pcm_close(audio->capture_handle);
@@ -155,16 +163,15 @@ void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 #	ifdef ALSA
 	if (audio != NULL ) {
 		snd_pcm_close(audio->capture_handle);
-		free(audio->read_buffer);
 	}
 #	endif
 }
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
-	int samples_read = 0;
+	int samples_read = -1;
 #	ifdef ALSA
 	samples_read = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
-			audio->read_buffer_size);
+			audio->read_buffer_size_samples);
 
 	if (samples_read < 0) {
 		char buff[100];
@@ -174,8 +181,30 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	} else {
 		int i;
 		// float point conversion
-		for (i = 0; i < samples_read; i++) {
-			audio->flt_read_buffer[i] = audio->read_buffer[i];
+		switch (sample_format) {
+		case SND_PCM_FORMAT_S16_LE: {
+			int16_t* read_buffer = (int16_t*) audio->read_buffer;
+			for (i = 0; i < samples_read; i++) {
+				audio->flt_read_buffer[i] = read_buffer[i];
+			}
+			break;
+		}
+		case SND_PCM_FORMAT_FLOAT: {
+			float* read_buffer = (float*) audio->read_buffer;
+			for (i = 0; i < samples_read; i++) {
+				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+			}
+			break;
+		}
+		case SND_PCM_FORMAT_FLOAT64: {
+			double* read_buffer = (double*) audio->read_buffer;
+			for (i = 0; i < samples_read; i++) {
+				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
 
