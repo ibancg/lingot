@@ -28,7 +28,7 @@
 #include "lingot-msg.h"
 
 #ifdef ALSA
-//snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16_LE;
+//snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
 snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
 #endif
@@ -182,7 +182,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 		int i;
 		// float point conversion
 		switch (sample_format) {
-		case SND_PCM_FORMAT_S16_LE: {
+		case SND_PCM_FORMAT_S16: {
 			int16_t* read_buffer = (int16_t*) audio->read_buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i];
