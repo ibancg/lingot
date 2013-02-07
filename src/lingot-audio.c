@@ -134,7 +134,7 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 		static double elapsed_time = 0.0;
 
 		struct timeval tdiff, t_abs;
-		static struct timeval t_abs_old = {.tv_sec = 0, .tv_usec = 0};
+		static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
 		static FILE* fid = 0x0;
 
 		if (fid == 0x0) {
@@ -156,7 +156,7 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
 			static const double c = 0.9;
 			samplerate_estimator = c * samplerate_estimator
-			+ (1 - c) * (read_samples / elapsed_time);
+					+ (1 - c) * (read_samples / elapsed_time);
 			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
 					samplerate_estimator, read_samples, elapsed_time);
 

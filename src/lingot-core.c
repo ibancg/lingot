@@ -41,7 +41,7 @@
 #include "lingot-msg.h"
 
 int
-lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg);
+lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg);
 
 void lingot_core_run_computation_thread(LingotCore* core);
 
@@ -235,7 +235,7 @@ void lingot_core_destroy(LingotCore* core) {
 
 // reads a new piece of signal from audio source, applies filtering and
 // decimation and appends it to the buffer
-int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg) {
+int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 
 	unsigned int i, decimation_output_index; // loop variables.
 	int decimation_output_len;
@@ -244,7 +244,7 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	LingotCore* core = (LingotCore*) arg;
 	const LingotConfig* conf = core->conf;
 
-	memcpy(core->flt_read_buffer, read_buffer, read_buffer_size * sizeof(FLT));
+	memcpy(core->flt_read_buffer, read_buffer, samples_read * sizeof(FLT));
 //	double omega = 2.0 * M_PI * 100.0;
 //	double T = 1.0 / conf->sample_rate;
 //	static double t = 0.0;
@@ -266,12 +266,25 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	// |bxxxbxxxbxxxbxxxbxxxbxxxbxxx|
 	//  ----------------------------
 	//
-	// <----------------------------> read_buffer_size*oversampling
+	// <----------------------------> samples_read
 	//
 
 	decimation_output_len = 1
-			+ (read_buffer_size - (decimation_input_index + 1))
+			+ (samples_read - (decimation_input_index + 1))
 					/ conf->oversampling;
+
+//#define DUMP
+
+#ifdef DUMP
+	static FILE* fid0 = 0x0;
+	if (fid0 == 0x0) {
+		fid0 = fopen("/tmp/dump_pre_filter.txt", "w");
+	}
+
+	for (i = 0; i < samples_read; i++) {
+		fprintf(fid0, "%f ", core->flt_read_buffer[i]);
+	}
+#endif
 
 	pthread_mutex_lock(&core->temporal_buffer_mutex);
 
@@ -290,7 +303,7 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	//  ------------------------------------------
 	// | xxxxxxxxxxxxxxxxxxxxxx | yyyyy | aaaaaaa |
 	//  ------------------------------------------
-	//                                    <------> read_buffer_size
+	//                                    <------> samples_read/oversampling
 	//                           <---------------> fft_size
 	//  <----------------------------------------> temporal_buffer_size
 	//
@@ -301,9 +314,9 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	//  ------------------------------------------
 	//
 
-	// decimation with lowpass filtering
+	// decimation with low-pass filtering
 
-	/* we decimate the read signal and put it at the end of the buffer. */
+	/* we decimate the signal and append it at the end of the buffer. */
 	if (conf->oversampling > 1) {
 
 		decimation_in = core->flt_read_buffer;
@@ -311,22 +324,23 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 				- decimation_output_len];
 
 		// low pass filter to avoid aliasing.
-		lingot_filter_filter(core->antialiasing_filter, read_buffer_size,
+		lingot_filter_filter(core->antialiasing_filter, samples_read,
 				decimation_in, decimation_in);
 
 		// compression.
-		for (decimation_output_index = 0;
-				decimation_input_index < read_buffer_size;
+		for (decimation_output_index = 0; decimation_input_index < samples_read;
 				decimation_output_index++, decimation_input_index +=
-						conf->oversampling)
+						conf->oversampling) {
 			decimation_out[decimation_output_index] =
 					decimation_in[decimation_input_index];
-		decimation_input_index -= read_buffer_size;
-	} else
+		}
+		decimation_input_index -= samples_read;
+	} else {
 		memcpy(
 				&core->temporal_buffer[conf->temporal_buffer_size
 						- decimation_output_len], core->flt_read_buffer,
 				decimation_output_len * sizeof(FLT));
+	}
 	//
 	//  ------------------------------------------
 	// | xxxxxxxxxxxxxxxxyyyyaa | aaaaa | bbbbbbb |
@@ -334,6 +348,25 @@ int lingot_core_read_callback(FLT* read_buffer, int read_buffer_size, void *arg)
 	//
 
 	pthread_mutex_unlock(&core->temporal_buffer_mutex);
+
+#ifdef DUMP
+	static FILE* fid1 = 0x0;
+	static FILE* fid2 = 0x0;
+
+	if (fid1 == 0x0) {
+		fid1 = fopen("/tmp/dump_post_filter.txt", "w");
+		fid2 = fopen("/tmp/dump_post.txt", "w");
+	}
+
+	for (i = 0; i < samples_read; i++) {
+		fprintf(fid1, "%f ", core->flt_read_buffer[i]);
+	}
+	decimation_out = &core->temporal_buffer[conf->temporal_buffer_size
+			- decimation_output_len];
+	for (i = 0; i < decimation_output_len; i++) {
+		fprintf(fid2, "%f ", decimation_out[i]);
+	}
+#endif
 
 	return 0;
 }

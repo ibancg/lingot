@@ -61,8 +61,8 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	int error;
 
-	ss.format = PA_SAMPLE_S16LE;
-//	ss.format = PA_SAMPLE_FLOAT32;
+//	ss.format = PA_SAMPLE_S16LE;
+	ss.format = PA_SAMPLE_FLOAT32;
 	ss.channels = channels;
 	ss.rate = sample_rate;
 
