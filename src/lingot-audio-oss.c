@@ -45,7 +45,12 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 #	ifdef OSS
 
 	int channels = 1;
-	int format = AFMT_S16_LE; // TODO
+#	ifdef AFMT_S16_NE
+	int format = AFMT_S16_NE;
+#	else
+	int format = AFMT_S16_LE;
+#	endif
+
 	char error_message[100];
 	const char* exception;
 
@@ -158,7 +163,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 		samples_read = bytes_read / audio->bytes_per_sample;
 		// float point conversion
 		int i;
-		const short* read_buffer = (short*) audio->read_buffer;
+		const int16_t* read_buffer = (int16_t*) audio->read_buffer;
 		for (i = 0; i < samples_read; i++) {
 			audio->flt_read_buffer[i] = read_buffer[i];
 		}
