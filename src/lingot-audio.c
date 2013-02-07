@@ -57,7 +57,7 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		break;
 	}
 
-	if (result != NULL) {
+	if (result != NULL ) {
 		// audio source read in floating point format.
 		result->flt_read_buffer = malloc(
 				result->read_buffer_size * sizeof(FLT));
@@ -73,7 +73,7 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 }
 
 void lingot_audio_destroy(LingotAudioHandler* audio) {
-	if (audio != NULL) {
+	if (audio != NULL ) {
 
 		free(audio->flt_read_buffer);
 
@@ -102,8 +102,7 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 int lingot_audio_read(LingotAudioHandler* audio) {
 	int result = -1;
 
-	if (audio != NULL
-	)
+	if (audio != NULL ) {
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			result = lingot_audio_oss_read(audio);
@@ -119,6 +118,41 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 			result = -1;
 			break;
 		}
+
+		static double samplerate_estimator = 0.0;
+		static unsigned long read_samples = 0;
+		static double elapsed_time = 0.0;
+
+		struct timeval tdiff, t_abs;
+		static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
+		static FILE* fid = 0x0;
+
+		if (fid == 0x0) {
+			fid = fopen("/tmp/dump.txt", "w");
+		}
+
+		gettimeofday(&t_abs, NULL );
+
+		if ((t_abs_old.tv_sec != 0) || (t_abs_old.tv_usec != 0)) {
+
+			int i;
+			for (i = 0; i < audio->read_buffer_size; i++) {
+				fprintf(fid, "%f ", audio->flt_read_buffer[i]);
+				printf("%f ", audio->flt_read_buffer[i]);
+			}
+			printf("\n");
+			timersub(&t_abs, &t_abs_old, &tdiff);
+			read_samples = audio->read_buffer_size;
+			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
+			static const double c = 0.9;
+			samplerate_estimator = c * samplerate_estimator
+					+ (1 - c) * (read_samples / elapsed_time);
+			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
+					samplerate_estimator, read_samples, elapsed_time);
+
+		}
+		t_abs_old = t_abs;
+	}
 
 	return result;
 }
@@ -154,19 +188,17 @@ void lingot_audio_audio_system_properties_destroy(
 		LingotAudioSystemProperties* properties) {
 
 	int i;
-	if (properties->devices != NULL) {
+	if (properties->devices != NULL ) {
 		for (i = 0; i < properties->n_devices; i++) {
-			if (properties->devices[i] != NULL) {
+			if (properties->devices[i] != NULL ) {
 				free(properties->devices[i]);
 			}
 		}
 	}
 
-	if (properties->sample_rates != NULL
-	)
+	if (properties->sample_rates != NULL )
 		free(properties->sample_rates);
-	if (properties->devices != NULL
-	)
+	if (properties->devices != NULL )
 		free(properties->devices);
 }
 
@@ -206,8 +238,8 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 
 		// detached thread.
 		//  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-		pthread_mutex_init(&audio->thread_input_read_mutex, NULL);
-		pthread_cond_init(&audio->thread_input_read_cond, NULL);
+		pthread_mutex_init(&audio->thread_input_read_mutex, NULL );
+		pthread_cond_init(&audio->thread_input_read_cond, NULL );
 		pthread_attr_init(&audio->thread_input_read_attr);
 		pthread_create(&audio->thread_input_read,
 				&audio->thread_input_read_attr,
@@ -242,7 +274,7 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 	struct timeval tout, tout_abs;
 	struct timespec tout_tspec;
 
-	gettimeofday(&tout_abs, NULL);
+	gettimeofday(&tout_abs, NULL );
 	tout.tv_sec = 0;
 	tout.tv_usec = 500000;
 
