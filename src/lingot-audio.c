@@ -60,9 +60,9 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 	if (result != NULL ) {
 		// audio source read in floating point format.
 		result->flt_read_buffer = malloc(
-				result->read_buffer_size * sizeof(FLT));
+				result->read_buffer_size_samples * sizeof(FLT));
 		memset(result->flt_read_buffer, 0,
-				result->read_buffer_size * sizeof(FLT));
+				result->read_buffer_size_samples * sizeof(FLT));
 		result->process_callback = process_callback;
 		result->process_callback_arg = process_callback_arg;
 		result->interrupted = 0;
@@ -74,8 +74,6 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 
 void lingot_audio_destroy(LingotAudioHandler* audio) {
 	if (audio != NULL ) {
-
-		free(audio->flt_read_buffer);
 
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
@@ -95,36 +93,48 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 			break;
 		}
 
+		if (audio->flt_read_buffer != 0x0) {
+			free(audio->flt_read_buffer);
+			audio->flt_read_buffer = 0x0;
+		}
+		if (audio->read_buffer != 0x0) {
+			free(audio->read_buffer);
+			audio->read_buffer = 0x0;
+		}
+
 		free(audio);
 	}
 }
 
 int lingot_audio_read(LingotAudioHandler* audio) {
-	int result = -1;
+	int samples_read = -1;
 
 	if (audio != NULL ) {
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
-			result = lingot_audio_oss_read(audio);
+			samples_read = lingot_audio_oss_read(audio);
 			break;
 		case AUDIO_SYSTEM_ALSA:
-			result = lingot_audio_alsa_read(audio);
+			samples_read = lingot_audio_alsa_read(audio);
 			break;
 		case AUDIO_SYSTEM_PULSEAUDIO:
-			result = lingot_audio_pulseaudio_read(audio);
+			samples_read = lingot_audio_pulseaudio_read(audio);
 			break;
 		default:
 			perror("unknown audio system\n");
-			result = -1;
+			samples_read = -1;
 			break;
 		}
 
+//#		define RATE_ESTIMATOR
+
+#		ifdef RATE_ESTIMATOR
 		static double samplerate_estimator = 0.0;
 		static unsigned long read_samples = 0;
 		static double elapsed_time = 0.0;
 
 		struct timeval tdiff, t_abs;
-		static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
+		static struct timeval t_abs_old = {.tv_sec = 0, .tv_usec = 0};
 		static FILE* fid = 0x0;
 
 		if (fid == 0x0) {
@@ -136,25 +146,27 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 		if ((t_abs_old.tv_sec != 0) || (t_abs_old.tv_usec != 0)) {
 
 			int i;
-			for (i = 0; i < audio->read_buffer_size; i++) {
+			for (i = 0; i < samples_read; i++) {
 				fprintf(fid, "%f ", audio->flt_read_buffer[i]);
 				printf("%f ", audio->flt_read_buffer[i]);
 			}
 			printf("\n");
 			timersub(&t_abs, &t_abs_old, &tdiff);
-			read_samples = audio->read_buffer_size;
+			read_samples = samples_read;
 			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
 			static const double c = 0.9;
 			samplerate_estimator = c * samplerate_estimator
-					+ (1 - c) * (read_samples / elapsed_time);
+			+ (1 - c) * (read_samples / elapsed_time);
 			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
 					samplerate_estimator, read_samples, elapsed_time);
 
 		}
 		t_abs_old = t_abs;
+#		endif
+
 	}
 
-	return result;
+	return samples_read;
 }
 
 LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(

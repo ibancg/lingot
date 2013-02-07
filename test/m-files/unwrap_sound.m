@@ -1,14 +1,14 @@
 fs = 44100;
 T = 1/fs;
 
-x = load('/tmp/dump_alsa_44100_mic.txt');
+x = load('/tmp/dump.txt');
 x2 = unwrap(x/32768*pi)*32768/pi;
 
 t = (0:length(x)-1)*T;
 f = (0:length(x)-1)*(fs/length(x));
 
 t0 = 1;
-t1 = 200;
+t1 = length(t);
 figure(1);
 plot(t(t0:t1), x(t0:t1), 'b.-');
 hold on;

@@ -29,9 +29,6 @@
 // floating point precission.
 #define FLT                  double
 
-#define SAMPLE_TYPE          int16_t
-#define SAMPLE_FORMAT        AFMT_S16_LE
-
 #define CONFIG_DIR_NAME           ".lingot/"
 #define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
 extern char CONFIG_FILE_NAME[];

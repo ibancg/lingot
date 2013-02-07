@@ -38,9 +38,14 @@
 #include "lingot-config.h"
 
 typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
-		int read_buffer_size, void *arg);
+		int read_buffer_size_samples, void *arg);
 
 typedef struct _LingotAudioHandler LingotAudioHandler;
+
+#define FLT_SAMPLE_SCALE	32768
+
+// TODO: this is now hardcoded
+#define OSS
 
 struct _LingotAudioHandler {
 
@@ -50,6 +55,9 @@ struct _LingotAudioHandler {
 	LingotAudioProcessCallback process_callback;
 	void* process_callback_arg;
 
+#	ifdef OSS
+	int dsp; // file handler.
+#	endif
 #	ifdef ALSA
 	snd_pcm_t *capture_handle;
 #	endif
@@ -61,14 +69,19 @@ struct _LingotAudioHandler {
 #	ifdef PULSEAUDIO
 	pa_simple *pa_client;
 #	endif
+#	if !defined(OSS) && !defined(ALSA) && !defined(PULSEAUDIO) && !defined(JACK)
+#	error "No audio system has been enabled"
+#	endif
 
-	int dsp; // file handler.
-	int read_buffer_size;
-	SAMPLE_TYPE* read_buffer;
+	int read_buffer_size_samples;
+	int read_buffer_size_bytes;
+
+	void* read_buffer;
 	FLT* flt_read_buffer;
 
-	//	char error_message[100];
 	unsigned int real_sample_rate;
+
+	short bytes_per_sample;
 
 	// pthread-related  member variables
 	pthread_t thread_input_read;

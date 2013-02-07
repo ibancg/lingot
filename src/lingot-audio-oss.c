@@ -20,6 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "lingot-msg.h"
+#include "lingot-defs.h"
+#include "lingot-audio-oss.h"
+#include "lingot-i18n.h"
+
+#ifdef OSS
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -30,33 +36,34 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "lingot-msg.h"
-#include "lingot-defs.h"
-#include "lingot-audio-oss.h"
-#include "lingot-i18n.h"
+#endif
 
 LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
+	LingotAudioHandler* audio = NULL;
+
+#	ifdef OSS
+
 	int channels = 1;
-	int format = SAMPLE_FORMAT;
+	int format = AFMT_S16_LE; // TODO
 	char error_message[100];
 	const char* exception;
 
-	LingotAudioHandler* audio = malloc(sizeof(LingotAudioHandler));
+	audio = malloc(sizeof(LingotAudioHandler));
 
 	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(device, O_RDONLY);
 	if (sample_rate >= 44100) {
-		audio->read_buffer_size = 1024;
+		audio->read_buffer_size_samples = 1024;
 	} else if (sample_rate >= 22050) {
-		audio->read_buffer_size = 512;
+		audio->read_buffer_size_samples = 512;
 	} else {
-		audio->read_buffer_size = 256;
+		audio->read_buffer_size_samples = 256;
 	}
 	strcpy(audio->device, device);
 
-	try {
+	try
+	{
 
 		if (audio->dsp < 0) {
 			sprintf(error_message, _("Cannot open audio device '%s'.\n%s"),
@@ -102,10 +109,12 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		}
 
 		audio->real_sample_rate = sample_rate;
-		audio->read_buffer = malloc(
-				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0,
-				audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+		audio->bytes_per_sample = 2;
+		audio->read_buffer_size_bytes = audio->read_buffer_size_samples
+				* audio->bytes_per_sample;
+
+		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
+		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 
 	}catch {
 		lingot_msg_add_error_with_code(exception, errno);
@@ -113,22 +122,31 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		free(audio);
 		audio = NULL;
 	}
+#	else
+	lingot_msg_add_error(
+			_("The application has not been built with OSS support"));
+#	endif
 
 	return audio;
 }
 
 void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
-	if (audio != NULL) {
-		close(audio->dsp);
-		free(audio->read_buffer);
+#ifdef OSS
+	if (audio != NULL ) {
+		if (audio->dsp >= 0) {
+			close(audio->dsp);
+			audio->dsp = -1;
+		}
 	}
+#endif
 }
 
 int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 
+#ifdef OSS
 	int bytes_read = read(audio->dsp, audio->read_buffer,
-			audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+			audio->read_buffer_size_bytes);
 
 	if (bytes_read < 0) {
 		char buff[100];
@@ -137,13 +155,15 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 		lingot_msg_add_error(buff);
 	} else {
 
-		samples_read = bytes_read / sizeof(SAMPLE_TYPE);
+		samples_read = bytes_read / audio->bytes_per_sample;
 		// float point conversion
 		int i;
+		const short* read_buffer = (short*) audio->read_buffer;
 		for (i = 0; i < samples_read; i++) {
-			audio->flt_read_buffer[i] = audio->read_buffer[i];
+			audio->flt_read_buffer[i] = read_buffer[i];
 		}
 	}
+#endif
 
 	return samples_read;
 }

@@ -121,9 +121,9 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
-				core->audio->read_buffer_size * sizeof(FLT));
+				core->audio->read_buffer_size_samples * sizeof(FLT));
 		memset(core->flt_read_buffer, 0,
-				core->audio->read_buffer_size * sizeof(FLT));
+				core->audio->read_buffer_size_samples * sizeof(FLT));
 
 		// stored samples.
 		core->temporal_buffer = malloc(
@@ -195,6 +195,7 @@ void lingot_core_destroy(LingotCore* core) {
 	if (core->audio != NULL ) {
 		lingot_fft_plan_destroy(core->fftplan);
 		lingot_audio_destroy(core->audio);
+		core->audio = 0x0;
 
 		free(core->spd_fft);
 		free(core->noise_level);
