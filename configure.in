@@ -26,10 +26,8 @@ AM_GLIB_GNU_GETTEXT
 AM_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
-AC_CHECK_HEADERS([fcntl.h])
 AC_CHECK_HEADERS([langinfo.h])
 AC_CHECK_HEADERS([libintl.h])
-AC_CHECK_HEADERS([sys/ioctl.h])
 AC_CHECK_HEADERS([sys/time.h])
 AC_CHECK_FUNCS([floor])
 AC_CHECK_FUNCS([gettimeofday])
@@ -50,6 +48,26 @@ AC_FUNC_MALLOC
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+
+useoss=yes
+
+AC_ARG_ENABLE(
+  oss,
+  AC_HELP_STRING([--enable-oss], [use OSS @<:@default=yes@:>@]),
+  [
+    if test "x$enableval" = "xno"; then
+      useoss=no
+    fi
+  ])
+
+if test "x$useoss" = "xyes"; then
+	AC_CHECK_HEADERS([fcntl.h])
+	AC_CHECK_HEADERS([sys/ioctl.h])
+	AC_SUBST(OSS_CFLAGS)
+	AC_SUBST(OSS_LIBS)
+	CFLAGS="$CFLAGS -DOSS"
+fi
+
 
 usealsa=yes
 

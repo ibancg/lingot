@@ -23,7 +23,6 @@
 #ifndef __LINGOT_DEFS_H__
 #define __LINGOT_DEFS_H__
 
-#include <sys/types.h>
 #include "../config.h"
 
 // floating point precission.

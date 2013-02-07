@@ -654,6 +654,8 @@ HAVE_JACK_FALSE
 HAVE_JACK_TRUE
 ALSA_LIBS
 ALSA_CFLAGS
+OSS_LIBS
+OSS_CFLAGS
 GTK_LIBS
 GTK_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -833,6 +835,7 @@ enable_fast_install
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_oss
 enable_alsa
 enable_jack
 enable_pulseaudio
@@ -1486,6 +1489,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-oss            use OSS [default=yes]
   --enable-alsa           use ALSA [default=yes]
   --enable-jack           use JACK [default=yes]
   --enable-pulseaudio     use PulseAudio [default=yes]
@@ -14138,18 +14142,6 @@ _ACEOF
 
 fi
 
-for ac_header in fcntl.h
-do :
-  ac_fn_c_check_header_mongrel "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
-if test "x$ac_cv_header_fcntl_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_FCNTL_H 1
-_ACEOF
-
-fi
-
-done
-
 for ac_header in langinfo.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "langinfo.h" "ac_cv_header_langinfo_h" "$ac_includes_default"
@@ -14168,18 +14160,6 @@ do :
 if test "x$ac_cv_header_libintl_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_LIBINTL_H 1
-_ACEOF
-
-fi
-
-done
-
-for ac_header in sys/ioctl.h
-do :
-  ac_fn_c_check_header_mongrel "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_ioctl_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_SYS_IOCTL_H 1
 _ACEOF
 
 fi
@@ -14632,6 +14612,49 @@ $as_echo "yes" >&6; }
 
 fi
 
+
+
+useoss=yes
+
+# Check whether --enable-oss was given.
+if test "${enable_oss+set}" = set; then :
+  enableval=$enable_oss;
+    if test "x$enableval" = "xno"; then
+      useoss=no
+    fi
+
+fi
+
+
+if test "x$useoss" = "xyes"; then
+	for ac_header in fcntl.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
+if test "x$ac_cv_header_fcntl_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_FCNTL_H 1
+_ACEOF
+
+fi
+
+done
+
+	for ac_header in sys/ioctl.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_ioctl_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SYS_IOCTL_H 1
+_ACEOF
+
+fi
+
+done
+
+
+
+	CFLAGS="$CFLAGS -DOSS"
+fi
 
 
 usealsa=yes

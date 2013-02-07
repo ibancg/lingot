@@ -44,9 +44,6 @@ typedef struct _LingotAudioHandler LingotAudioHandler;
 
 #define FLT_SAMPLE_SCALE	32768
 
-// TODO: this is now hardcoded
-#define OSS
-
 struct _LingotAudioHandler {
 
 	int audio_system;
