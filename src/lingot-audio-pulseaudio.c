@@ -31,11 +31,8 @@
 #include <pulse/pulseaudio.h>
 #endif
 
-static double samplerate_estimator = 0.0;
-static unsigned long read_samples = 0;
-static double elapsed_time = 0.0;
-
 static const int channels = 1;
+static pa_sample_spec ss;
 
 LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
@@ -62,19 +59,20 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 
 	int error;
 
-	pa_sample_spec ss;
-	ss.format = PA_SAMPLE_S16LE;
+	ss.format = PA_SAMPLE_FLOAT32LE;
 	ss.channels = channels;
 	ss.rate = sample_rate;
 
 	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate,
 			ss.format);
 
+	const size_t sample_size = pa_sample_size(&ss);
+	const unsigned int block_size = channels * audio->read_buffer_size
+			* sample_size;
+
 	pa_buffer_attr buff;
-	const unsigned int iBlockLen = channels * audio->read_buffer_size
-			* sizeof(SAMPLE_TYPE);
 	buff.maxlength = -1;
-	buff.fragsize = iBlockLen;
+	buff.fragsize = block_size;
 
 	const char* device_name = device;
 	if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -99,10 +97,8 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 		free(audio);
 		audio = NULL;
 	} else {
-		audio->read_buffer = malloc(
-				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
-		memset(audio->read_buffer, 0,
-				channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE));
+		audio->read_buffer = malloc(block_size);
+		memset(audio->read_buffer, 0, block_size);
 	}
 
 #	else
@@ -135,8 +131,12 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 #	ifdef PULSEAUDIO
 	int error;
 
+	const size_t sample_size = pa_sample_size(&ss);
+	const unsigned int block_size = channels * audio->read_buffer_size
+			* sample_size;
+
 	int result = pa_simple_read(audio->pa_client, audio->read_buffer,
-			channels * audio->read_buffer_size * sizeof(SAMPLE_TYPE), &error);
+			block_size, &error);
 
 //	printf("result = %i\n", result);
 	if (result < 0) {
@@ -148,47 +148,23 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
 		samples_read = audio->read_buffer_size;
 		int i, j;
-		for (i = 0, j = 0; j < audio->read_buffer_size; i += channels, j++) {
-			audio->flt_read_buffer[j] = audio->read_buffer[i];
-		}
-
-		struct timeval tdiff, t_abs;
-		static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
-		static FILE* fid = 0x0;
-
-//		if (fid == 0x0) {
-//			fid = fopen("/tmp/dump.txt", "w");
-//		}
-
-		gettimeofday(&t_abs, NULL );
-
-		if ((t_abs_old.tv_sec != 0) || (t_abs_old.tv_usec != 0)) {
-
-			for (read_samples = 0; read_samples < audio->read_buffer_size;
-					read_samples++) {
-				if (audio->flt_read_buffer[read_samples] == 0.0) {
-					break;
-				}
-//				fprintf(fid, "%f ", audio->flt_read_buffer[read_samples]);
-//				printf("%f ", audio->flt_read_buffer[read_samples]);
+		switch (ss.format) {
+		case PA_SAMPLE_S16LE:
+			for (i = 0, j = 0; j < audio->read_buffer_size;
+					i += channels, j++) {
+				audio->flt_read_buffer[j] = audio->read_buffer[i];
 			}
-//			fprintf(fid, "\n");
-//			printf("\n");
-			timersub(&t_abs, &t_abs_old, &tdiff);
-//			read_samples = audio->read_buffer_size;
-			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
-			static const double c = 0.9;
-			samplerate_estimator = c * samplerate_estimator
-					+ (1 - c) * (read_samples / elapsed_time);
-			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
-					samplerate_estimator, read_samples, elapsed_time);
-
+			break;
+		case PA_SAMPLE_FLOAT32LE: {
+			float* float_read_buffer = (float*) audio->read_buffer;
+			for (i = 0, j = 0; j < audio->read_buffer_size;
+					i += channels, j++) {
+				audio->flt_read_buffer[j] = float_read_buffer[i];
+			}
+			break;
 		}
-		t_abs_old = t_abs;
-
-		// TODO: remove
-		for (i = 0, j = 0; j < audio->read_buffer_size; i += channels, j++) {
-			audio->read_buffer[i] = 0;
+		default:
+			break;
 		}
 
 	}
