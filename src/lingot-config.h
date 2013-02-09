@@ -108,6 +108,7 @@ struct _LingotConfig {
 	FLT root_frequency_error; // deviation of the above root frequency.
 
 	FLT min_frequency; // minimum valid frequency.
+	FLT max_frequency; // maximum frequency we want to tune.
 
 	unsigned int fft_size; // number of samples of the FFT.
 

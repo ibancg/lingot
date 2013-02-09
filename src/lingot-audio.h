@@ -42,7 +42,7 @@ typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
 
 typedef struct _LingotAudioHandler LingotAudioHandler;
 
-#define FLT_SAMPLE_SCALE	32768
+#define FLT_SAMPLE_SCALE	32767.0
 
 struct _LingotAudioHandler {
 

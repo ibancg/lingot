@@ -34,9 +34,9 @@
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-#define N_OPTIONS 21
+#define N_MAX_OPTIONS 30
 
-LingotConfigParameterSpec parameters[N_OPTIONS];
+LingotConfigParameterSpec parameters[N_MAX_OPTIONS];
 unsigned int parameters_count = 0;
 
 const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio", NULL };
@@ -202,7 +202,9 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	config->sample_rate = 44100; // Hz
 	config->oversampling = 21;
 	config->root_frequency_error = 0.0; // Hz
-	config->min_frequency = 40.0; // Hz
+	config->min_frequency = 82.407; // Hz (E2)
+	config->max_frequency = 329.6276; // Hz (E4)
+
 	config->fft_size = 512; // samples
 	config->temporal_window = 0.25; // seconds
 	config->calculation_rate = 20.0; // Hz
@@ -277,14 +279,14 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 					NULL, //
 					&config->peak_half_width };
 
-	memcpy(params, c_params, N_OPTIONS * sizeof(void*));
+	memcpy(params, c_params, N_MAX_OPTIONS * sizeof(void*));
 }
 
 void lingot_config_save(LingotConfig* config, char* filename) {
 	unsigned int i;
 	FILE* fp;
 	char* lc_all;
-	void* params[N_OPTIONS]; // parameter pointer array.
+	void* params[N_MAX_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
 	char buff[80];
 
@@ -306,7 +308,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	fprintf(fp, "# Config file automatically created by lingot %s\n\n",
 			VERSION);
 
-	for (i = 0; i < N_OPTIONS; i++) {
+	for (i = 0; i < parameters_count; i++) {
 		if (!parameters[i].deprecated) {
 
 			//option = options[i];
@@ -370,7 +372,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	char* char_buffer_pointer;
 	const static char* delim = " \t=\n";
 	const static char* delim2 = " \t\n";
-	void* params[N_OPTIONS]; // parameter pointer array.
+	void* params[N_MAX_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
 	int reading_scale = 0;
 	char* nl;
@@ -531,13 +533,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		}
 
-		for (option_index = 0; option_index < N_OPTIONS; option_index++) {
+		for (option_index = 0; option_index < parameters_count; option_index++) {
 			if (!strcmp(char_buffer_pointer, parameters[option_index].name)) {
 				break; // found token.
 			}
 		}
 
-		if (option_index == N_OPTIONS) {
+		if (option_index == N_MAX_OPTIONS) {
 			fprintf(stderr,
 					"warning: parse error at line %i: unknown keyword %s\n",
 					line, char_buffer_pointer);
