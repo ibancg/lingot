@@ -286,6 +286,10 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 	gtk_spin_button_set_value(dialog->root_frequency_error,
 			conf->root_frequency_error);
 	gtk_spin_button_set_value(dialog->temporal_window, conf->temporal_window);
+
+	gtk_entry_set_text(GTK_ENTRY(
+				gtk_bin_get_child(GTK_BIN(dialog->temporal_window))), "SEIN" );
+
 	gtk_spin_button_set_value(dialog->dft_number, conf->dft_number);
 	gtk_spin_button_set_value(dialog->dft_size, conf->dft_size);
 	gtk_spin_button_set_value(dialog->peak_number, conf->peak_number);
