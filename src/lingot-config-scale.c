@@ -97,6 +97,7 @@ void lingot_config_scale_destroy(LingotScale* scale) {
 void lingot_config_scale_restore_default_values(LingotScale* scale) {
 
 	unsigned short int i;
+	// TODO: i18n
 	static char* tone_string[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G",
 			"G#", "A", "A#", "B", };
 

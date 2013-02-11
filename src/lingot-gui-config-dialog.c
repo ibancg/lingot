@@ -173,11 +173,6 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 	}
 }
 
-void lingot_gui_config_dialog_callback_change_deviation(GtkWidget *widget,
-		LingotConfigDialog *dialog) {
-	gtk_widget_queue_draw(GTK_WIDGET(dialog->scale_treeview) );
-}
-
 void lingot_gui_config_dialog_set_audio_system(GtkComboBoxText* combo,
 		audio_system_t audio_system) {
 	const char* token = audio_system_t_to_str(audio_system);
@@ -284,11 +279,13 @@ void lingot_gui_config_dialog_set_frequency(GtkComboBoxText* combo,
 		static char buffer[20];
 		sprintf(buffer, "");
 
+		// TODO: iterate over the scale, not the combo
 		if (gtk_tree_model_get_iter_first(model, &iter)) {
 			do {
 				gtk_tree_model_get(model, &iter, 0, &item, -1);
 				frequency_item = lingot_gui_config_dialog_get_frequency(item);
 				if (fabs(frequency - frequency_item) < 1e-1) {
+
 					// TODO: note name
 					sprintf(buffer, "%s", item);
 					break;
@@ -306,28 +303,62 @@ void lingot_gui_config_dialog_set_frequency(GtkComboBoxText* combo,
 	}
 }
 
-void lingot_gui_config_dialog_callback_change_scale(LingotConfigDialog *dialog) {
+// TODO
+//void lingot_gui_config_dialog_change_min_frequency(GtkComboBoxText* combo, ) {
+//
+//}
+
+gboolean lingot_gui_config_dialog_populate_frequency_combos(gpointer data) {
 
 	// TODO: only when necessary
 	printf("lingot_gui_config_dialog_callback_change_scale()...\n");
 
-	char buff[10];
-	char* text = gtk_combo_box_text_get_active_text(dialog->input_system);
-	audio_system_t audio_system = str_to_audio_system_t(text);
-	free(text);
+	static char buff[100];
 
-	GtkListStore* model = GTK_LIST_STORE(gtk_combo_box_get_model(
-					GTK_COMBO_BOX(dialog->minimum_frequency)));
-	gtk_list_store_clear(model);
+	LingotConfigDialog* dialog = (LingotConfigDialog*) data;
 
-	const char* notes[] = { "A2 <110.0>", "A3 <220.0>", "A4 <440.0>" };
+	// Unset the model first and perform the operation over a new Combo to avoid
+	// bug 673079 in gnome: https://bugzilla.gnome.org/show_bug.cgi?id=673079
+	// TODO: another way?
+	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->minimum_frequency), NULL );
+	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->maximum_frequency), NULL );
+
+	GtkComboBoxText* combo =
+			GTK_COMBO_BOX_TEXT(gtk_combo_box_text_new_with_entry());
+
+	LingotConfig* config = dialog->conf;
+
 	int i;
-	for (i = 0; i < 50; i++) {
-		sprintf(buff, "%s", notes[i % 3]);
-		gtk_combo_box_text_append_text(dialog->minimum_frequency, buff);
+	int octave_index;
+	for (i = 0; i < config->scale->notes; i++) {
+		for (octave_index = 1; octave_index <= 6; octave_index++) {
+			sprintf(buff,
+					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
+					12, config->scale->note_name[i], 7, octave_index);
+			gtk_combo_box_text_append_text(combo, buff);
+		}
 	}
 
+	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->minimum_frequency),
+			gtk_combo_box_get_model(GTK_COMBO_BOX(combo) ));
+	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->maximum_frequency),
+			gtk_combo_box_get_model(GTK_COMBO_BOX(combo) ));
+	gtk_widget_destroy(GTK_WIDGET(combo) );
 	printf("ok ... lingot_gui_config_dialog_callback_change_scale()\n");
+	return 0;
+}
+
+// TODO: name
+void lingot_gui_config_dialog_callback_notebook_switch_tab(
+		GtkNotebook *notebook, GtkWidget *page, guint page_num,
+		gpointer user_data) {
+
+	if ((page_num == 2) && scale_modified) {
+		scale_modified = FALSE;
+		// TODO: better way of doing this?
+		g_timeout_add(100.0, lingot_gui_config_dialog_populate_frequency_combos,
+				user_data);
+	}
 }
 
 void lingot_gui_config_dialog_combo_select_value(GtkWidget* combo, int value) {
@@ -389,7 +420,6 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->sample_rate))), buff);
 
 	lingot_gui_config_dialog_scale_rewrite(dialog, conf->scale);
-	lingot_gui_config_dialog_callback_change_scale(dialog);
 }
 
 void lingot_gui_config_dialog_destroy(LingotConfigDialog* dialog) {
@@ -596,14 +626,25 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->minimum_frequency =
 				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder,
 								"minimum_frequency"));
-		// TODO
-		dialog->maximum_frequency =
-				GTK_COMBO_BOX(gtk_builder_get_object(builder,
-								"maximum_frequency"));
 		dialog->notebook = GTK_NOTEBOOK(gtk_builder_get_object(builder,
 						"notebook1"));
-		dialog->max_frequency = GTK_ENTRY(gtk_builder_get_object(builder,
-						"max_frequency"));
+		dialog->maximum_frequency =
+				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder,
+								"maximum_frequency"));
+		GList* cell_list = gtk_cell_layout_get_cells(
+				GTK_CELL_LAYOUT(dialog->minimum_frequency) );
+		if (cell_list && cell_list->data) {
+			gtk_cell_layout_set_attributes(
+					GTK_CELL_LAYOUT(dialog->minimum_frequency), cell_list->data,
+					"markup", 0, NULL );
+		}
+		cell_list = gtk_cell_layout_get_cells(
+				GTK_CELL_LAYOUT(dialog->maximum_frequency) );
+		if (cell_list && cell_list->data) {
+			gtk_cell_layout_set_attributes(
+					GTK_CELL_LAYOUT(dialog->maximum_frequency), cell_list->data,
+					"markup", 0, NULL );
+		}
 
 		lingot_gui_config_dialog_scale_show(dialog, builder);
 
@@ -619,8 +660,18 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 				G_CALLBACK (lingot_gui_config_dialog_callback_change_sample_rate),
 				dialog);
 		g_signal_connect( dialog->root_frequency_error, "value_changed",
-				G_CALLBACK (lingot_gui_config_dialog_callback_change_deviation),
+				G_CALLBACK (lingot_gui_config_dialog_scale_callback_change_deviation),
 				dialog);
+		g_signal_connect( dialog->notebook, "switch-page",
+				G_CALLBACK (lingot_gui_config_dialog_callback_notebook_switch_tab),
+				dialog);
+		// TODO
+//		g_signal_connect( dialog->minimum_frequency, "value_changed",
+//				G_CALLBACK (lingot_gui_config_dialog_change_min_frequency),
+//				dialog);
+//		g_signal_connect( dialog->maximum_frequency, "value_changed",
+//				G_CALLBACK (lingot_gui_config_dialog_change_max_frequency),
+//				dialog);
 
 		g_signal_connect( gtk_builder_get_object(builder, "button_default"),
 				"clicked",
