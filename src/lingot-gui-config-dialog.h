@@ -48,11 +48,10 @@ struct _LingotConfigDialog {
 	GtkSpinButton* peak_number;
 	GtkSpinButton* peak_halfwidth;
 	GtkComboBoxText* minimum_frequency;
-	GtkComboBox* maximum_frequency;
+	GtkComboBoxText* maximum_frequency;
 	GtkHScale* rejection_peak_relation;
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
-	GtkEntry* max_frequency;
 
 	GtkNotebook* notebook;
 
