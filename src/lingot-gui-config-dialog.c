@@ -45,6 +45,9 @@ audio_system_t lingot_gui_config_dialog_get_audio_system(GtkComboBoxText* combo)
 void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
 		const gchar* device_name);
 
+static const unsigned short frequency_combo_n_octaves = 6;
+static const unsigned short frequency_combo_first_octave = 1;
+
 /* button press event attention routine. */
 
 void lingot_gui_config_dialog_callback_button_cancel(GtkButton *button,
@@ -267,35 +270,34 @@ double lingot_gui_config_dialog_get_frequency(const gchar* str) {
 	return result;
 }
 
-void lingot_gui_config_dialog_set_frequency(GtkComboBoxText* combo,
-		double frequency) {
+void lingot_gui_config_dialog_set_frequency(LingotConfigDialog* dialog,
+		GtkComboBoxText* combo, double frequency) {
 
 	if (frequency >= 0.0) {
-		GtkTreeModel* model = GTK_TREE_MODEL(gtk_combo_box_get_model(
-						GTK_COMBO_BOX(combo)));
-		GtkTreeIter iter;
-		const gchar* item;
-		double frequency_item;
 		static char buffer[20];
-		sprintf(buffer, "");
 
 		// TODO: iterate over the scale, not the combo
-		if (gtk_tree_model_get_iter_first(model, &iter)) {
-			do {
-				gtk_tree_model_get(model, &iter, 0, &item, -1);
-				frequency_item = lingot_gui_config_dialog_get_frequency(item);
-				if (fabs(frequency - frequency_item) < 1e-1) {
+		double error_cents;
+		int closest_index = lingot_config_scale_get_closest_note_index(
+				dialog->conf->scale, frequency,
+				dialog->conf->root_frequency_error, &error_cents);
 
-					// TODO: note name
-					sprintf(buffer, "%s", item);
-					break;
-				}
-			} while (gtk_tree_model_iter_next(model, &iter));
-		}
-
-		if (!strcmp(buffer, "")) {
+		double freq2 = lingot_config_scale_get_frequency(dialog->conf->scale,
+				closest_index); // TODO: deviation
+		if (fabs(frequency - freq2) < 1e-1) {
+			int index = lingot_config_scale_get_note_index(dialog->conf->scale,
+					closest_index);
+			int octave = lingot_config_scale_get_octave(dialog->conf->scale,
+					closest_index) + 4;
+			// TODO: note name
+			sprintf(buffer, "%s %d <%0.2f>",
+					dialog->conf->scale->note_name[index], octave, frequency);
+		} else {
 			sprintf(buffer, "%0.2f", frequency);
 		}
+
+		printf("closest index to frequency %f is %d, freq %f\n", frequency,
+				closest_index, freq2);
 
 		printf("frequency name for %f = '%s'\n", frequency, buffer);
 		gtk_entry_set_text(GTK_ENTRY(gtk_bin_get_child(GTK_BIN(combo))),
@@ -303,19 +305,13 @@ void lingot_gui_config_dialog_set_frequency(GtkComboBoxText* combo,
 	}
 }
 
-// TODO
-//void lingot_gui_config_dialog_change_min_frequency(GtkComboBoxText* combo, ) {
-//
-//}
-
-gboolean lingot_gui_config_dialog_populate_frequency_combos(gpointer data) {
+void lingot_gui_config_dialog_populate_frequency_combos(
+		LingotConfigDialog* dialog) {
 
 	// TODO: only when necessary
 	printf("lingot_gui_config_dialog_callback_change_scale()...\n");
 
 	static char buff[100];
-
-	LingotConfigDialog* dialog = (LingotConfigDialog*) data;
 
 	// Unset the model first and perform the operation over a new Combo to avoid
 	// bug 673079 in gnome: https://bugzilla.gnome.org/show_bug.cgi?id=673079
@@ -331,7 +327,10 @@ gboolean lingot_gui_config_dialog_populate_frequency_combos(gpointer data) {
 	int i;
 	int octave_index;
 	for (i = 0; i < config->scale->notes; i++) {
-		for (octave_index = 1; octave_index <= 6; octave_index++) {
+		for (octave_index = frequency_combo_first_octave;
+				octave_index
+						< frequency_combo_first_octave
+								+ frequency_combo_n_octaves; octave_index++) {
 			sprintf(buff,
 					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
 					12, config->scale->note_name[i], 7, octave_index);
@@ -345,20 +344,37 @@ gboolean lingot_gui_config_dialog_populate_frequency_combos(gpointer data) {
 			gtk_combo_box_get_model(GTK_COMBO_BOX(combo) ));
 	gtk_widget_destroy(GTK_WIDGET(combo) );
 	printf("ok ... lingot_gui_config_dialog_callback_change_scale()\n");
-	return 0;
 }
 
-// TODO: name
-void lingot_gui_config_dialog_callback_notebook_switch_tab(
-		GtkNotebook *notebook, GtkWidget *page, guint page_num,
-		gpointer user_data) {
+void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
+		LingotConfigDialog *dialog) {
 
-	if ((page_num == 2) && scale_modified) {
-		scale_modified = FALSE;
-		// TODO: better way of doing this?
-		g_timeout_add(100.0, lingot_gui_config_dialog_populate_frequency_combos,
-				user_data);
+	int index = gtk_combo_box_get_active(GTK_COMBO_BOX(combo) );
+	if (index >= 0) {
+		int octave = frequency_combo_first_octave
+				+ (index % frequency_combo_n_octaves) - 4;
+		int local_index = index / frequency_combo_n_octaves;
+		int global_index = local_index + octave * dialog->conf->scale->notes;
+		double frequency = lingot_config_scale_get_frequency(
+				dialog->conf->scale, global_index); // TODO: deviation
+		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
+		printf("CHANGE global index %d, octave %d %d, local index %d, %d, %f\n",
+				global_index, octave,
+				lingot_config_scale_get_octave(dialog->conf->scale,
+						global_index), local_index, index, frequency);
 	}
+}
+
+void lingot_gui_config_dialog_change_min_frequency(GtkWidget *widget,
+		LingotConfigDialog *dialog) {
+	lingot_gui_config_dialog_change_combo_frequency(GTK_COMBO_BOX_TEXT(widget),
+			dialog);
+}
+
+void lingot_gui_config_dialog_change_max_frequency(GtkWidget *widget,
+		LingotConfigDialog *dialog) {
+	lingot_gui_config_dialog_change_combo_frequency(GTK_COMBO_BOX_TEXT(widget),
+			dialog);
 }
 
 void lingot_gui_config_dialog_combo_select_value(GtkWidget* combo, int value) {
@@ -409,9 +425,9 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			conf->peak_rejection_relation_db);
 	lingot_gui_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size),
 			(int) conf->fft_size);
-	lingot_gui_config_dialog_set_frequency(dialog->minimum_frequency,
+	lingot_gui_config_dialog_set_frequency(dialog, dialog->minimum_frequency,
 			conf->min_frequency);
-	lingot_gui_config_dialog_set_frequency(dialog->maximum_frequency,
+	lingot_gui_config_dialog_set_frequency(dialog, dialog->maximum_frequency,
 			conf->max_frequency);
 
 	char buff[10];
@@ -523,6 +539,8 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 		lingot_msg_add_warning(
 				_("The provided scale contains wide gaps in frequency that increase the gauge range and produce a loss of visual accuracy. Consider providing scales with at least 12 tones, or with a maximum distance between adjacent notes below 200 cents."));
 	}
+
+	lingot_gui_config_dialog_populate_frequency_combos(dialog);
 
 	return 1;
 }
@@ -662,16 +680,13 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		g_signal_connect( dialog->root_frequency_error, "value_changed",
 				G_CALLBACK (lingot_gui_config_dialog_scale_callback_change_deviation),
 				dialog);
-		g_signal_connect( dialog->notebook, "switch-page",
-				G_CALLBACK (lingot_gui_config_dialog_callback_notebook_switch_tab),
+
+		g_signal_connect( dialog->minimum_frequency, "changed",
+				G_CALLBACK (lingot_gui_config_dialog_change_min_frequency),
 				dialog);
-		// TODO
-//		g_signal_connect( dialog->minimum_frequency, "value_changed",
-//				G_CALLBACK (lingot_gui_config_dialog_change_min_frequency),
-//				dialog);
-//		g_signal_connect( dialog->maximum_frequency, "value_changed",
-//				G_CALLBACK (lingot_gui_config_dialog_change_max_frequency),
-//				dialog);
+		g_signal_connect( dialog->maximum_frequency, "changed",
+				G_CALLBACK (lingot_gui_config_dialog_change_max_frequency),
+				dialog);
 
 		g_signal_connect( gtk_builder_get_object(builder, "button_default"),
 				"clicked",
@@ -699,6 +714,9 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 				GTK_WIDGET(gtk_builder_get_object(builder, "scrolledwindow1"));
 		gtk_widget_show_all(scroll);
 		g_object_unref(builder);
+
+		lingot_gui_config_dialog_populate_frequency_combos(dialog);
+
 	} else {
 		if (config != NULL ) {
 			lingot_config_copy(frame->config_dialog->conf, config);

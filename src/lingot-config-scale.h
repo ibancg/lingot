@@ -51,5 +51,7 @@ void lingot_config_scale_restore_default_values(LingotScale* scale);
 int lingot_config_scale_get_note_index(const LingotScale* scale, int index);
 int lingot_config_scale_get_octave(const LingotScale* scale, int index);
 FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index);
+int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
+		FLT freq, FLT deviation, FLT* error_cents);
 
 #endif /* LINGOT_CONFIG_SCALE_H_ */
