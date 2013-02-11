@@ -141,16 +141,16 @@ void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
 }
 
 int lingot_config_scale_get_octave(const LingotScale* scale, int index) {
-	int result = index / scale->notes;
+	int result = 0;
 	if (index < 0) {
-		result--;
+		result = ((index + 1) / scale->notes) - 1;
+	} else {
+		result = index / scale->notes;
 	}
-
 	return result;
 }
 
-int lingot_config_scale_get_note_index(const LingotScale* scale,
-		int index) {
+int lingot_config_scale_get_note_index(const LingotScale* scale, int index) {
 	int index2 = index % scale->notes;
 	if (index2 < 0) {
 		index2 += scale->notes;
@@ -169,6 +169,69 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
 			* pow(2.0,
 					lingot_config_scale_get_absolute_offset(scale, index)
 							/ 1200.0);
+}
+
+// TODO: test
+int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
+		FLT freq, FLT deviation, FLT* error_cents) {
+
+	short note_index = 0;
+	short int index;
+
+	FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
+	int octave = 0;
+	if (offset < 0) {
+		octave = (((int) (offset) + 1) / 1200) - 1;
+	} else {
+		octave = ((int) (offset)) / 1200;
+	}
+	offset = fmod(offset, 1200.0);
+	if (offset < 0.0) {
+		offset += 1200.0;
+	}
+
+	index = floor(scale->notes * offset / 1200.0);
+
+	// TODO: bisection?, avoid loop?
+	FLT pitch_inf;
+	FLT pitch_sup;
+	int n = 0;
+	for (;;) {
+		n++;
+		pitch_inf = scale->offset_cents[index];
+		pitch_sup =
+				((index + 1) < scale->notes) ?
+						scale->offset_cents[index + 1] : 1200.0;
+
+		if (offset > pitch_sup) {
+			index++;
+			continue;
+		}
+
+		if (offset < pitch_inf) {
+			index--;
+			continue;
+		}
+
+		break;
+	};
+
+	if (fabs(offset - pitch_inf) < fabs(offset - pitch_sup)) {
+		note_index = index;
+		*error_cents = offset - pitch_inf;
+	} else {
+		note_index = index + 1;
+		*error_cents = offset - pitch_sup;
+	}
+
+	if (note_index == scale->notes) {
+		note_index = 0;
+		octave++;
+	}
+
+	note_index += octave * scale->notes;
+
+	return note_index;
 }
 
 int lingot_config_scale_parse_shift(char* char_buffer, double* cents,

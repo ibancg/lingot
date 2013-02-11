@@ -33,18 +33,9 @@ enum {
 	COLUMN_NAME = 0, COLUMN_SHIFT = 1, COLUMN_FREQUENCY = 2, NUM_COLUMNS = 3
 };
 
-gboolean scale_modified = FALSE;
-
-void lingot_gui_config_dialog_scale_set_modified() {
-
-	printf("modified!\n");
-	scale_modified = TRUE;
-}
-
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
 	gtk_widget_queue_draw(GTK_WIDGET(dialog->scale_treeview) );
-	lingot_gui_config_dialog_scale_set_modified();
 }
 
 void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
@@ -107,7 +98,6 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 
 	gtk_tree_store_set(model_store, &iter2, COLUMN_NAME, "?", COLUMN_SHIFT,
 			"1/1", COLUMN_FREQUENCY, freq, -1);
-	lingot_gui_config_dialog_scale_set_modified();
 }
 
 void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
@@ -151,7 +141,6 @@ void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
 	}
 	g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL );
 	g_list_free(list);
-	lingot_gui_config_dialog_scale_set_modified();
 }
 
 void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
@@ -303,7 +292,6 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 				break;
 			}
 
-	lingot_gui_config_dialog_scale_set_modified();
 }
 
 void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
@@ -515,7 +503,6 @@ void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
 		gtk_tree_store_set(store, &iter2, COLUMN_NAME, scale->note_name[i],
 				COLUMN_SHIFT, buff, COLUMN_FREQUENCY, freq, -1);
 	}
-	lingot_gui_config_dialog_scale_set_modified();
 }
 
 void lingot_gui_config_dialog_import_scl(gpointer data,
@@ -563,7 +550,6 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);
-	lingot_gui_config_dialog_scale_set_modified();
 	//g_free(filefilter);
 }
 

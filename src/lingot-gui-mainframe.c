@@ -142,66 +142,6 @@ void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 	lingot_gui_config_dialog_show(frame, NULL );
 }
 
-static short int lingot_gui_mainframe_get_closest_note_index(FLT freq,
-		const LingotScale* scale, FLT deviation, FLT* error_cents) {
-
-	short note_index = 0;
-	short int index;
-
-	FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
-	int octave = ((int) (offset)) / 1200;
-	if (offset < 0) {
-		octave--;
-	}
-	offset = fmod(offset, 1200.0);
-	if (offset < 0.0) {
-		offset += 1200.0;
-	}
-
-	index = floor(scale->notes * offset / 1200.0);
-
-	// TODO: bisection
-	FLT pitch_inf;
-	FLT pitch_sup;
-	int n = 0;
-	for (;;) {
-		n++;
-		pitch_inf = scale->offset_cents[index];
-		pitch_sup =
-				((index + 1) < scale->notes) ?
-						scale->offset_cents[index + 1] : 1200.0;
-
-		if (offset > pitch_sup) {
-			index++;
-			continue;
-		}
-
-		if (offset < pitch_inf) {
-			index--;
-			continue;
-		}
-
-		break;
-	};
-
-	if (fabs(offset - pitch_inf) < fabs(offset - pitch_sup)) {
-		note_index = index;
-		*error_cents = offset - pitch_inf;
-	} else {
-		note_index = index + 1;
-		*error_cents = offset - pitch_sup;
-	}
-
-	if (note_index == scale->notes) {
-		note_index = 0;
-		octave++;
-	}
-
-	note_index += octave * scale->notes;
-
-	return note_index;
-}
-
 /* timeout for gauge and labels visualization */
 gboolean lingot_gui_mainframe_callback_tout_visualization(gpointer data) {
 	unsigned int period;
@@ -254,8 +194,8 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 		FLT error_cents; // do not use, unfiltered
 		frequency = lingot_filter_filter_sample(frame->freq_filter,
 				frame->core->freq);
-		closest_note_index = lingot_gui_mainframe_get_closest_note_index(
-				frame->core->freq, frame->conf->scale,
+		closest_note_index = lingot_config_scale_get_closest_note_index(
+				frame->conf->scale, frame->core->freq,
 				frame->conf->root_frequency_error, &error_cents);
 		lingot_gauge_compute(frame->gauge, error_cents);
 	}

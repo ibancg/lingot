@@ -29,8 +29,6 @@ struct LingotConfigDialog;
 struct LingotScale;
 struct GtkBuilder;
 
-extern gboolean scale_modified;
-
 // initialize and show the components
 void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GtkBuilder*);
 
