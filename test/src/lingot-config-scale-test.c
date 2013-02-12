@@ -19,18 +19,33 @@
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef __LINGOT_TEST_H__
-#define __LINGOT_TEST_H__
 
-#include <assert.h>
-#include <stdio.h>
+#include "lingot-test.h"
 
-// unit testing functions
+#include "lingot-config-scale.h"
+#include "lingot-config.h"
 
-// time measurement
-void tic();
-double toc();
-void initTestCase(const char* name);
-void finishTestCase();
+void lingot_config_scale_test() {
 
-#endif
+	initTestCase("lingot_config_scale_test");
+
+	lingot_config_create_parameter_specs();
+	LingotConfig* config = lingot_config_new();
+	lingot_config_restore_default_values(config);
+	LingotScale* scale = config->scale;
+
+	double error_cents;
+	int note_index = 0;
+	int closest_note_index = 0;
+	closest_note_index = lingot_config_scale_get_closest_note_index(scale,
+			130.812782, 0.0, &error_cents);
+	printf("closest note %i\n", closest_note_index);
+	assert(closest_note_index == -12);
+	closest_note_index = lingot_config_scale_get_closest_note_index(scale,
+			130.81, 0.0, &error_cents);
+	assert(closest_note_index == -12);
+
+	lingot_config_destroy(config);
+
+	finishTestCase();
+}

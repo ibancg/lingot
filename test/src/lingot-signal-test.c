@@ -28,13 +28,12 @@
 
 #include "lingot-test.h"
 #include "lingot-complex.h"
-#include "lingot-complex.c"
 #include "lingot-filter.h"
-#include "lingot-filter.c"
 #include "lingot-signal.h"
-#include "lingot-signal.c"
 
-int lingot_signal_test() {
+void lingot_signal_test() {
+
+	initTestCase("lingot_signal_test");
 
 	int N = 16;
 	int i = 0;
@@ -151,5 +150,5 @@ int lingot_signal_test() {
 	free(spd);
 	free(noise);
 
-	return 0;
+	finishTestCase();
 }
