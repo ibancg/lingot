@@ -61,7 +61,6 @@ struct _LingotCore {
 	FLT* noise_level;
 	FLT* spd_dft;
 	FLT* diff2_spd_fft;
-	
 
 	LingotFFTPlan* fftplan;
 
@@ -97,6 +96,7 @@ void lingot_core_start(LingotCore*);
 // stop process
 void lingot_core_stop(LingotCore*);
 
-//int lingot_core_read(LingotCore* core);
+int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
+		FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
 
 #endif //__LINGOT_CORE_H__
