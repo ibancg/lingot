@@ -373,7 +373,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 
 // tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency
-static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
+int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 		FLT minFrequency, FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 
 	int result = 0;
@@ -394,7 +394,7 @@ static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 		FLT frac;
 		FLT error = -1.0;
 		for (divisor = 1; divisor <= maxDivisor; divisor++) {
-			if (minFrequency * divisor > minFrequency) {
+			if (minFrequency * divisor > smallFreq) {
 				break;
 			}
 
@@ -417,7 +417,7 @@ static int lingot_core_frequencies_related(FLT freq1, FLT freq2,
 		*mulFreq2ToFreq = 0.0;
 	}
 
-	//	printf("relation %f, %f = %i, e = %f\n", freq1, freq2, result, error);
+//	printf("relation %f, %f = %i\n", freq1, freq2, result);
 
 	return result;
 }
