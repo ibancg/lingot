@@ -21,59 +21,55 @@
  */
 
 #include <assert.h>
+#include <pthread.h>
 
 #include "errno.h"
 #include "lingot-audio.h"
-#include "lingot-audio.c"
 #include "lingot-audio-alsa.h"
-#include "lingot-audio-alsa.c"
 #include "lingot-audio-oss.h"
-#include "lingot-audio-oss.c"
 #include "lingot-audio-jack.h"
-#include "lingot-audio-jack.c"
 #include "lingot-audio-pulseaudio.h"
-#include "lingot-audio-pulseaudio.c"
 #include "lingot-fft.h"
-#include "lingot-fft.c"
 
 #include "lingot-core.h"
-#include "lingot-core.c"
 
 void lingot_core_test() {
 
-	FLT multiplier = 0.0;
+	initTestCase("lingot_core_test");
+	FLT multiplier1 = 0.0;
 	FLT multiplier2 = 0.0;
 
-	int rel = lingot_core_frequencies_related(100.0, 150.1, 20.0, &multiplier,
+	int rel = lingot_core_frequencies_related(100.0, 150.001, 20.0, &multiplier1,
 			&multiplier2);
 	assert(rel == 1);
-	assert(multiplier == 0.5);
+	assert(multiplier1 == 0.5);
 
-	rel = lingot_core_frequencies_related(100.0, 200.1, 20.0, &multiplier,
+	rel = lingot_core_frequencies_related(100.0, 200.01, 20.0, &multiplier1,
 			&multiplier2);
 	assert(rel == 1);
-	assert(multiplier == 1.0);
+	assert(multiplier1 == 1.0);
 
-	rel = lingot_core_frequencies_related(200.0, 100.1, 20.0, &multiplier,
+	rel = lingot_core_frequencies_related(200.0, 100.01, 20.0, &multiplier1,
 			&multiplier2);
 	assert(rel == 1);
-	assert(multiplier == 0.5);
+	assert(multiplier1 == 0.5);
 
-	rel = lingot_core_frequencies_related(100.0, 150.1, 70.0, &multiplier,
+	rel = lingot_core_frequencies_related(100.0, 150.001, 70.0, &multiplier1,
 			&multiplier2);
-	assert(rel == 1);
+	assert(rel == 0);
 
 	rel = lingot_core_frequencies_related(22.788177, 114.008917, 15.0,
-			&multiplier, &multiplier2);
+			&multiplier1, &multiplier2);
 	assert(rel == 1);
-	assert(multiplier == 1.0);
+	assert(multiplier1 == 1.0);
 	assert(multiplier2 == 0.2);
 
 
 	rel = lingot_core_frequencies_related(97.959328, 48.977020, 15.0,
-			&multiplier, &multiplier2);
+			&multiplier1, &multiplier2);
 	assert(rel == 1);
-	assert(multiplier == 1.0);
-	assert(multiplier2 == 2.0);
+	assert(multiplier1 == 0.5);
+	assert(multiplier2 == 1.0);
 
+	finishTestCase();
 }

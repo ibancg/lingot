@@ -20,17 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <assert.h>
-#include <math.h>
+#include "lingot-test.h"
 
-#include "lingot-msg.h"
-#include "lingot-msg.c"
 #include "lingot-config-scale.h"
-#include "lingot-config-scale.c"
 #include "lingot-config.h"
-#include "lingot-config.c"
 
-int lingot_config_test() {
+void lingot_config_test() {
+
+	initTestCase("lingot_config_test");
 
 	lingot_config_create_parameter_specs();
 	LingotConfig* config = lingot_config_new();
@@ -57,10 +54,8 @@ int lingot_config_test() {
 	assert((config->peak_rejection_relation_db == 20.0));
 	assert((config->dft_number == 2));
 	assert((config->dft_size == 15));
-	assert(config->gain == -21.9);
 
 	lingot_config_destroy(config);
 
-	puts("done.");
-	return 0;
+	finishTestCase();
 }

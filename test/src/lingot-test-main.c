@@ -20,13 +20,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-int lingot_config_test();
-int lingot_signal_test();
-int lingot_core_test();
+void lingot_config_test();
+void lingot_config_scale_test();
+void lingot_signal_test();
+void lingot_core_test();
+
+// TODO: lib?
+#include "lingot-complex.c"
+#include "lingot-msg.c"
+#include "lingot-config-scale.c"
+#include "lingot-config.c"
+#include "lingot-audio.c"
+#include "lingot-audio-alsa.c"
+#include "lingot-audio-oss.c"
+#include "lingot-audio-jack.c"
+#include "lingot-audio-pulseaudio.c"
+#include "lingot-fft.c"
+#include "lingot-core.c"
+#include "lingot-signal.c"
+#include "lingot-filter.c"
+
 
 int main(void) {
 
 	lingot_config_test();
+	lingot_config_scale_test();
 	lingot_signal_test();
 	lingot_core_test();
 

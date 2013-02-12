@@ -43,3 +43,11 @@ double toc() {
 	printf("Elapsed time: %g s.\n", result);
 	return result;
 }
+
+void initTestCase(const char* name) {
+	printf("***************** Init %s *****************\n", name);
+}
+
+void finishTestCase() {
+	printf("***************** Finished test case *****************\n");
+}
