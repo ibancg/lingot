@@ -30,7 +30,7 @@ void lingot_config_test() {
 	lingot_config_create_parameter_specs();
 	LingotConfig* config = lingot_config_new();
 
-	assert((config != NULL));
+	CU_ASSERT_PTR_NOT_NULL_FATAL(config);
 
 	lingot_config_load(config, "resources/lingot-001.conf");
 
