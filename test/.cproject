@@ -29,6 +29,7 @@
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.1666281080" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.904944388" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lingot/src}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/include"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.2133092227" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ALSA=1"/>
@@ -46,6 +47,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="asound"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pulse"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pulse-simple"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cunit"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1329865359" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

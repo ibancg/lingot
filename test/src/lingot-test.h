@@ -24,13 +24,12 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <CUnit/Basic.h>
 
 // unit testing functions
 
 // time measurement
 void tic();
 double toc();
-void initTestCase(const char* name);
-void finishTestCase();
 
 #endif

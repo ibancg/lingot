@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <assert.h>
-#include <pthread.h>
+#include "lingot-test.h"
 
 #include "errno.h"
 #include "lingot-audio.h"
@@ -35,41 +34,38 @@
 
 void lingot_core_test() {
 
-	initTestCase("lingot_core_test");
 	FLT multiplier1 = 0.0;
 	FLT multiplier2 = 0.0;
 
 	int rel = lingot_core_frequencies_related(100.0, 150.001, 20.0, &multiplier1,
 			&multiplier2);
-	assert(rel == 1);
-	assert(multiplier1 == 0.5);
+	CU_ASSERT_EQUAL(rel, 1);
+	CU_ASSERT_EQUAL(multiplier1, 0.5);
 
 	rel = lingot_core_frequencies_related(100.0, 200.01, 20.0, &multiplier1,
 			&multiplier2);
-	assert(rel == 1);
-	assert(multiplier1 == 1.0);
+	CU_ASSERT_EQUAL(rel, 1);
+	CU_ASSERT_EQUAL(multiplier1, 1.0);
 
 	rel = lingot_core_frequencies_related(200.0, 100.01, 20.0, &multiplier1,
 			&multiplier2);
-	assert(rel == 1);
-	assert(multiplier1 == 0.5);
+	CU_ASSERT_EQUAL(rel, 1);
+	CU_ASSERT_EQUAL(multiplier1, 0.5);
 
 	rel = lingot_core_frequencies_related(100.0, 150.001, 70.0, &multiplier1,
 			&multiplier2);
-	assert(rel == 0);
+	CU_ASSERT_EQUAL(rel, 0);
 
 	rel = lingot_core_frequencies_related(22.788177, 114.008917, 15.0,
 			&multiplier1, &multiplier2);
-	assert(rel == 1);
-	assert(multiplier1 == 1.0);
-	assert(multiplier2 == 0.2);
+	CU_ASSERT_EQUAL(rel, 1);
+	CU_ASSERT_EQUAL(multiplier1, 1.0);
+	CU_ASSERT_EQUAL(multiplier2, 0.2);
 
 
 	rel = lingot_core_frequencies_related(97.959328, 48.977020, 15.0,
 			&multiplier1, &multiplier2);
-	assert(rel == 1);
-	assert(multiplier1 == 0.5);
-	assert(multiplier2 == 1.0);
-
-	finishTestCase();
+	CU_ASSERT_EQUAL(rel, 1);
+	CU_ASSERT_EQUAL(multiplier1, 0.5);
+	CU_ASSERT_EQUAL(multiplier2, 1.0);
 }

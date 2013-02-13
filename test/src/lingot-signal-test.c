@@ -33,8 +33,6 @@
 
 void lingot_signal_test() {
 
-	initTestCase("lingot_signal_test");
-
 	int N = 16;
 	int i = 0;
 	int n = 5;
@@ -149,6 +147,4 @@ void lingot_signal_test() {
 
 	free(spd);
 	free(noise);
-
-	finishTestCase();
 }
