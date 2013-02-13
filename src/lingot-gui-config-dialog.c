@@ -255,7 +255,7 @@ void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
 // include the note name)
 double lingot_gui_config_dialog_get_frequency(const gchar* str) {
 	char* endptr;
-	const char* double_str = lingot_gui_config_dialog_get_audio_device(str);
+	const char* double_str = lingot_gui_config_dialog_get_string(str);
 	double result = strtod(double_str, &endptr);
 
 	if ((result == 0.0) && (endptr == double_str)) {
@@ -477,6 +477,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	LingotConfigParameterSpec sampleRateSpec = lingot_config_get_parameter_spec(
 			LINGOT_PARAMETER_ID_SAMPLE_RATE);
 
+	// TODO: generalize validation?
 	if ((sample_rate < sampleRateSpec.int_min)
 			|| (sample_rate > sampleRateSpec.int_max)) {
 		char buff[1000];
@@ -513,14 +514,26 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 			dialog->peak_halfwidth);
 	conf->peak_rejection_relation_db = gtk_range_get_value(GTK_RANGE(
 			dialog->rejection_peak_relation) );
-	conf->min_frequency =
-			lingot_gui_config_dialog_get_frequency(
-					gtk_entry_get_text(
-							GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->minimum_frequency))) ));
-	conf->max_frequency =
-			lingot_gui_config_dialog_get_frequency(
-					gtk_entry_get_text(
-							GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->maximum_frequency))) ));
+	double min_freq = lingot_gui_config_dialog_get_frequency(
+			gtk_entry_get_text(
+					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->minimum_frequency))) ));
+	double max_freq = lingot_gui_config_dialog_get_frequency(
+			gtk_entry_get_text(
+					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->maximum_frequency))) ));
+	const LingotConfigParameterSpec minimumFrequencySpec = lingot_config_get_parameter_spec(
+			LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY);
+	const LingotConfigParameterSpec maximumFrequencySpec = lingot_config_get_parameter_spec(
+			LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY);
+
+	if ((min_freq >= minimumFrequencySpec.float_min)
+			&& (min_freq <= minimumFrequencySpec.float_max)) {
+		conf->min_frequency = min_freq;
+	}
+	if ((max_freq >= maximumFrequencySpec.float_min)
+			&& (max_freq <= maximumFrequencySpec.float_max)) {
+		conf->max_frequency = max_freq;
+	}
+
 	text1 = gtk_combo_box_text_get_active_text(dialog->fft_size);
 	conf->fft_size = atoi(text1);
 	g_free(text1);

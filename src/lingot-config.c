@@ -63,46 +63,58 @@ audio_system_t str_to_audio_system_t(char* audio_system) {
 
 static void lingot_config_add_string_parameter_spec(LingotConfigParameterId id,
 		const char* name, unsigned int max_len, int deprecated) {
-	parameters[parameters_count].id = id;
-	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_STRING;
-	parameters[parameters_count].name = name;
-	parameters[parameters_count].units = NULL;
-	parameters[parameters_count].deprecated = deprecated;
-	parameters[parameters_count].str_max_len = max_len;
+	parameters[id].id = id;
+	parameters[id].type = LINGOT_PARAMETER_TYPE_STRING;
+	parameters[id].name = name;
+	parameters[id].units = NULL;
+	parameters[id].deprecated = deprecated;
+	parameters[id].str_max_len = max_len;
 	parameters_count++;
 }
 
 static void lingot_config_add_integer_parameter_spec(LingotConfigParameterId id,
 		const char* name, const char* units, int min, int max, int deprecated) {
-	parameters[parameters_count].id = id;
-	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_INTEGER;
-	parameters[parameters_count].name = name;
-	parameters[parameters_count].units = units;
-	parameters[parameters_count].deprecated = deprecated;
-	parameters[parameters_count].int_min = min;
-	parameters[parameters_count].int_max = max;
+	parameters[id].id = id;
+	parameters[id].type = LINGOT_PARAMETER_TYPE_INTEGER;
+	parameters[id].name = name;
+	parameters[id].units = units;
+	parameters[id].deprecated = deprecated;
+	parameters[id].int_min = min;
+	parameters[id].int_max = max;
 	parameters_count++;
 }
 
 static void lingot_config_add_double_parameter_spec(LingotConfigParameterId id,
 		const char* name, const char* units, double min, double max,
 		int deprecated) {
-	parameters[parameters_count].id = id;
-	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_FLOAT;
-	parameters[parameters_count].name = name;
-	parameters[parameters_count].units = units;
-	parameters[parameters_count].deprecated = deprecated;
-	parameters[parameters_count].float_min = min;
-	parameters[parameters_count].float_max = max;
+	parameters[id].id = id;
+	parameters[id].type = LINGOT_PARAMETER_TYPE_FLOAT;
+	parameters[id].name = name;
+	parameters[id].units = units;
+	parameters[id].deprecated = deprecated;
+	parameters[id].float_min = min;
+	parameters[id].float_max = max;
 	parameters_count++;
 }
 
 void lingot_config_create_parameter_specs() {
-	parameters[parameters_count].type = LINGOT_PARAMETER_ID_AUDIO_SYSTEM;
-	parameters[parameters_count].type = LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM;
-	parameters[parameters_count].name = "AUDIO_SYSTEM";
-	parameters[parameters_count].units = NULL;
-	parameters[parameters_count].deprecated = 0;
+
+	int i = 0;
+	for (i = 0; i < N_MAX_OPTIONS; i++) {
+		parameters[i].id = -1;
+		parameters[i].type = -1;
+		parameters[i].name = NULL;
+		parameters[i].units = NULL;
+		parameters[i].deprecated = 0;
+	}
+
+	parameters[LINGOT_PARAMETER_ID_AUDIO_SYSTEM].id =
+			LINGOT_PARAMETER_ID_AUDIO_SYSTEM;
+	parameters[LINGOT_PARAMETER_ID_AUDIO_SYSTEM].type =
+			LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM;
+	parameters[LINGOT_PARAMETER_ID_AUDIO_SYSTEM].name = "AUDIO_SYSTEM";
+	parameters[LINGOT_PARAMETER_ID_AUDIO_SYSTEM].units = NULL;
+	parameters[LINGOT_PARAMETER_ID_AUDIO_SYSTEM].deprecated = 0;
 	parameters_count++;
 
 	lingot_config_add_string_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV,
@@ -121,8 +133,6 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, "ROOT_FREQUENCY_ERROR",
 			"cents", -500.0, 500.0, 0);
-	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MIN_FREQUENCY,
-			"MIN_FREQUENCY", "Hz", 0.0, 22050.0, 0);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_FFT_SIZE,
 			"FFT_SIZE", "samples", 256, 4096, 0);
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_TEMPORAL_WINDOW,
@@ -147,10 +157,21 @@ void lingot_config_create_parameter_specs() {
 			"DFT_NUMBER", "DFTs", 0, 10, 0);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
 			"DFT_SIZE", "samples", 4, 100, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, "MINIMUM_FREQUENCY", "Hz",
+			0.0, 22050.0, 0);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, "MAXIMUM_FREQUENCY", "Hz",
+			0.0, 22050.0, 0);
+
+	// ----------- obsolete -----------
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_GAIN, "GAIN",
 			"dB", -90.0, 90.0, 1);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_ORDER,
 			"PEAK_ORDER", NULL, 0, 10, 1);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MIN_FREQUENCY,
+			"MIN_FREQUENCY", "Hz", 0.0, 22050.0, 1);
+
 }
 
 LingotConfigParameterSpec lingot_config_get_parameter_spec(
@@ -256,30 +277,65 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 
 // internal parameters mapped to each token in the config file.
 static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
-	void* c_params[] = { //
-			&config->audio_system, //
-					&config->audio_dev[AUDIO_SYSTEM_OSS], //
-					&config->audio_dev[AUDIO_SYSTEM_ALSA], //
-					&config->audio_dev[AUDIO_SYSTEM_JACK], //
-					&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], //
-					&config->sample_rate, //
-					&config->oversampling, //
-					&config->root_frequency_error, //
-					&config->min_frequency, //
-					&config->fft_size, //
-					&config->temporal_window, //
-					&config->noise_threshold_db, //
-					&config->calculation_rate, //
-					&config->visualization_rate, //
-					&config->peak_number, //
-					&config->peak_half_width, //
-					&config->peak_rejection_relation_db, //
-					&config->dft_number, //
-					&config->dft_size, //
-					NULL, //
-					&config->peak_half_width };
 
-	memcpy(params, c_params, N_MAX_OPTIONS * sizeof(void*));
+	typedef struct {
+		int id;
+		void* value;
+	} pair_t;
+
+	pair_t c_params[] = { //
+			{ .id = LINGOT_PARAMETER_ID_AUDIO_SYSTEM, .value =
+					&config->audio_system }, //
+					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV, .value =
+							&config->audio_dev[AUDIO_SYSTEM_OSS] }, //
+					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA, .value =
+							&config->audio_dev[AUDIO_SYSTEM_ALSA] }, //
+					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV_JACK, .value =
+							&config->audio_dev[AUDIO_SYSTEM_JACK] }, //
+					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, .value =
+							&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO] }, //
+					{ .id = LINGOT_PARAMETER_ID_SAMPLE_RATE, .value =
+							&config->sample_rate }, //
+					{ .id = LINGOT_PARAMETER_ID_OVERSAMPLING, .value =
+							&config->oversampling }, //
+					{ .id = LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, .value =
+							&config->root_frequency_error }, //
+					{ .id = LINGOT_PARAMETER_ID_MIN_FREQUENCY, .value =
+							&config->min_frequency }, //
+					{ .id = LINGOT_PARAMETER_ID_FFT_SIZE, .value =
+							&config->fft_size }, //
+					{ .id = LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, .value =
+							&config->temporal_window }, //
+					{ .id = LINGOT_PARAMETER_ID_NOISE_THRESHOLD, .value =
+							&config->noise_threshold_db }, //
+					{ .id = LINGOT_PARAMETER_ID_CALCULATION_RATE, .value =
+							&config->calculation_rate }, //
+					{ .id = LINGOT_PARAMETER_ID_VISUALIZATION_RATE, .value =
+							&config->visualization_rate }, //
+					{ .id = LINGOT_PARAMETER_ID_PEAK_NUMBER, .value =
+							&config->peak_number }, //
+					{ .id = LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, .value =
+							&config->peak_half_width }, //
+					{ .id = LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION,
+							.value = &config->peak_rejection_relation_db }, //
+					{ .id = LINGOT_PARAMETER_ID_DFT_NUMBER, .value =
+							&config->dft_number }, //
+					{ .id = LINGOT_PARAMETER_ID_DFT_SIZE, .value =
+							&config->dft_size }, //
+					{ .id = LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, .value =
+							&config->min_frequency }, //
+					{ .id = LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, .value =
+							&config->max_frequency }, //
+					{ .id = -1, .value = NULL }, // null terminated
+			};
+
+	int i = 0;
+	for (i = 0; i < parameters_count; i++) {
+		params[i] = NULL;
+	}
+	for (i = 0; c_params[i].id >= 0; i++) {
+		params[c_params[i].id] = c_params[i].value;
+	}
 }
 
 void lingot_config_save(LingotConfig* config, char* filename) {
@@ -533,13 +589,14 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		}
 
-		for (option_index = 0; option_index < parameters_count; option_index++) {
+		for (option_index = 0; option_index < parameters_count;
+				option_index++) {
 			if (!strcmp(char_buffer_pointer, parameters[option_index].name)) {
 				break; // found token.
 			}
 		}
 
-		if (option_index == N_MAX_OPTIONS) {
+		if (option_index == parameters_count) {
 			fprintf(stderr,
 					"warning: parse error at line %i: unknown keyword %s\n",
 					line, char_buffer_pointer);
@@ -590,6 +647,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			case LINGOT_PARAMETER_TYPE_INTEGER:
 				sscanf(char_buffer_pointer, "%d", &int_value);
 
+				// TODO: generalize validation?
 				if (parameters[option_index].id
 						== LINGOT_PARAMETER_ID_FFT_SIZE) {
 					if ((int_value != 256) && (int_value != 512)
