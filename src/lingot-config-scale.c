@@ -180,11 +180,7 @@ int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
 
 	FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
 	int octave = 0;
-	if (offset < 0) {
-		octave = (((int) (offset) + 1) / 1200) - 1;
-	} else {
-		octave = ((int) (offset)) / 1200;
-	}
+	octave = floor(offset / 1200);
 	offset = fmod(offset, 1200.0);
 	if (offset < 0.0) {
 		offset += 1200.0;
