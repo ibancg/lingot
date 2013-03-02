@@ -110,8 +110,13 @@ struct _LingotConfig {
 	//	root_frequency_reference_note_t root_frequency_referente_note;
 	FLT root_frequency_error; // deviation of the above root frequency.
 
-	FLT min_frequency; // minimum valid frequency.
-	FLT max_frequency; // maximum frequency we want to tune.
+	FLT min_frequency; // minimum frequency of the instrument.
+	FLT max_frequency; // maximum frequency of the instrument.
+
+	int optimize_internal_parameters;
+
+	FLT internal_min_frequency; // minimum valid frequency.
+	FLT internal_max_frequency; // maximum frequency we want to tune.
 
 	unsigned int fft_size; // number of samples of the FFT.
 

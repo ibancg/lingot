@@ -225,11 +225,12 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	config->root_frequency_error = 0.0; // Hz
 	config->min_frequency = 82.407; // Hz (E2)
 	config->max_frequency = 329.6276; // Hz (E4)
+	config->optimize_internal_parameters = 1;
 
 	config->fft_size = 512; // samples
 	config->temporal_window = 0.25; // seconds
-	config->calculation_rate = 20.0; // Hz
-	config->visualization_rate = 30.0; // Hz
+	config->calculation_rate = 15.0; // Hz
+	config->visualization_rate = 24.0; // Hz
 	config->noise_threshold_db = 20.0; // dB
 
 	config->peak_number = 3; // peaks
@@ -250,6 +251,35 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 void lingot_config_update_internal_params(LingotConfig* config) {
 
 	// derived parameters.
+
+	config->internal_min_frequency = 0.8 * config->min_frequency;
+	config->internal_max_frequency = 3.1 * config->max_frequency;
+
+	if (config->internal_min_frequency < 0) {
+		config->internal_min_frequency = 0;
+	}
+	if (config->internal_max_frequency < 500) {
+		config->internal_max_frequency = 500;
+	}
+	if (config->internal_max_frequency > 20000) {
+		config->internal_max_frequency = 20000;
+	}
+
+	config->oversampling = floor(
+			0.5 * config->sample_rate / config->internal_max_frequency);
+	if (config->oversampling < 1) {
+		config->oversampling = 1;
+	}
+
+	if (config->optimize_internal_parameters) {
+		config->fft_size = 512; // TODO
+		config->temporal_window = 1.0 * config->fft_size * config->oversampling
+				/ config->sample_rate;
+		if (config->temporal_window < 0.3) {
+			config->temporal_window = 0.3;
+		}
+	}
+
 	config->temporal_buffer_size = (unsigned int) ceil(
 			config->temporal_window * config->sample_rate
 					/ config->oversampling);
