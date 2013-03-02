@@ -32,15 +32,6 @@
 #include "lingot-complex.h"
 #include "lingot-core.h"
 
-// returns noise threshold at a given frequency w.
-FLT lingot_signal_get_noise_threshold(LingotConfig*, FLT w);
-
-// returns the maximum index.
-FLT lingot_signal_get_max(const FLT *buffer, int N, int* Mi);
-
-// returns the index of the peak that carries the fundamental freq.
-int lingot_signal_get_fundamental_peak(const LingotConfig*, FLT *x, FLT* y, int N);
-
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
 		LingotComplex* const fft, int N, int n_peaks, int lowest_index,
 		int highest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,

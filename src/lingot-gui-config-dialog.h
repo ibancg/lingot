@@ -52,6 +52,11 @@ struct _LingotConfigDialog {
 	GtkHScale* rejection_peak_relation;
 	GtkLabel* label_sample_rate1;
 	GtkLabel* label_sample_rate2;
+	GtkCheckButton* optimize_check_button;
+	GtkLabel* fft_size_label;
+	GtkLabel* fft_size_units_label;
+	GtkLabel* temporal_window_label;
+	GtkLabel* temporal_window_units_label;
 
 	GtkNotebook* notebook;
 

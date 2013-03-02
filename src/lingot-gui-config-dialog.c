@@ -377,6 +377,29 @@ void lingot_gui_config_dialog_change_max_frequency(GtkWidget *widget,
 			dialog);
 }
 
+// updates the enabled/disabled status of some widgets depending on the status of the check button
+static void lingot_gui_config_dialog_optimize_check_toggled_update(
+		LingotConfigDialog *dialog) {
+
+	gboolean enabled = !gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(dialog->optimize_check_button) );
+	GtkWidget* widgets[] = { GTK_WIDGET(dialog->fft_size_label),
+			GTK_WIDGET(dialog->fft_size),
+			GTK_WIDGET(dialog->fft_size_units_label),
+			GTK_WIDGET(dialog->temporal_window_label),
+			GTK_WIDGET(dialog->temporal_window),
+			GTK_WIDGET(dialog->temporal_window_units_label), 0x0 };
+	unsigned int i;
+	for (i = 0; widgets[i] != 0x0; i++) {
+		gtk_widget_set_sensitive(widgets[i], enabled);
+	}
+}
+
+void lingot_gui_config_dialog_optimize_check_toggled(GtkWidget *widget,
+		LingotConfigDialog *dialog) {
+	lingot_gui_config_dialog_optimize_check_toggled_update(dialog);
+}
+
 void lingot_gui_config_dialog_combo_select_value(GtkWidget* combo, int value) {
 
 	GtkTreeModel* model = gtk_combo_box_get_model(GTK_COMBO_BOX(combo) );
@@ -429,6 +452,9 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			conf->min_frequency);
 	lingot_gui_config_dialog_set_frequency(dialog, dialog->maximum_frequency,
 			conf->max_frequency);
+	gtk_toggle_button_set_active(
+			GTK_TOGGLE_BUTTON(dialog->optimize_check_button),
+			conf->optimize_internal_parameters);
 
 	char buff[10];
 	sprintf(buff, "%d", conf->sample_rate);
@@ -514,16 +540,22 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 			dialog->peak_halfwidth);
 	conf->peak_rejection_relation_db = gtk_range_get_value(GTK_RANGE(
 			dialog->rejection_peak_relation) );
-	double min_freq = lingot_gui_config_dialog_get_frequency(
-			gtk_entry_get_text(
-					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->minimum_frequency))) ));
-	double max_freq = lingot_gui_config_dialog_get_frequency(
-			gtk_entry_get_text(
-					GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->maximum_frequency))) ));
-	const LingotConfigParameterSpec minimumFrequencySpec = lingot_config_get_parameter_spec(
-			LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY);
-	const LingotConfigParameterSpec maximumFrequencySpec = lingot_config_get_parameter_spec(
-			LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY);
+	conf->optimize_internal_parameters = gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(dialog->optimize_check_button) );
+	double min_freq =
+			lingot_gui_config_dialog_get_frequency(
+					gtk_entry_get_text(
+							GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->minimum_frequency))) ));
+	double max_freq =
+			lingot_gui_config_dialog_get_frequency(
+					gtk_entry_get_text(
+							GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->maximum_frequency))) ));
+	const LingotConfigParameterSpec minimumFrequencySpec =
+			lingot_config_get_parameter_spec(
+					LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY);
+	const LingotConfigParameterSpec maximumFrequencySpec =
+			lingot_config_get_parameter_spec(
+					LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY);
 
 	if ((min_freq >= minimumFrequencySpec.float_min)
 			&& (min_freq <= minimumFrequencySpec.float_max)) {
@@ -657,11 +689,25 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->minimum_frequency =
 				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder,
 								"minimum_frequency"));
-		dialog->notebook = GTK_NOTEBOOK(gtk_builder_get_object(builder,
-						"notebook1"));
 		dialog->maximum_frequency =
 				GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder,
 								"maximum_frequency"));
+		dialog->notebook = GTK_NOTEBOOK(gtk_builder_get_object(builder,
+						"notebook1"));
+		dialog->optimize_check_button =
+				GTK_CHECK_BUTTON(gtk_builder_get_object(builder,
+								"optimize_check_button"));
+		dialog->fft_size_label = GTK_LABEL(gtk_builder_get_object(builder,
+						"fft_size_label"));
+		dialog->fft_size_units_label = GTK_LABEL(gtk_builder_get_object(builder,
+						"fft_size_units_label"));
+		dialog->temporal_window_label =
+				GTK_LABEL(gtk_builder_get_object(builder,
+								"temporal_window_label"));
+		dialog->temporal_window_units_label =
+				GTK_LABEL(gtk_builder_get_object(builder,
+								"temporal_window_units_label"));
+
 		GList* cell_list = gtk_cell_layout_get_cells(
 				GTK_CELL_LAYOUT(dialog->minimum_frequency) );
 		if (cell_list && cell_list->data) {
@@ -699,6 +745,9 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 				dialog);
 		g_signal_connect( dialog->maximum_frequency, "changed",
 				G_CALLBACK (lingot_gui_config_dialog_change_max_frequency),
+				dialog);
+		g_signal_connect( dialog->optimize_check_button, "toggled",
+				G_CALLBACK(lingot_gui_config_dialog_optimize_check_toggled),
 				dialog);
 
 		g_signal_connect( gtk_builder_get_object(builder, "button_default"),

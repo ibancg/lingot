@@ -110,14 +110,10 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		core->spd_fft = malloc(spd_size * sizeof(FLT));
 		core->noise_level = malloc(spd_size * sizeof(FLT));
 		core->SPL = malloc(spd_size * sizeof(FLT));
-		core->spd_dft = malloc((core->conf->dft_size) * sizeof(FLT));
-		core->diff2_spd_fft = malloc(core->conf->fft_size * sizeof(FLT)); // 2nd derivative from SPD.
 
 		memset(core->spd_fft, 0, spd_size * sizeof(FLT));
 		memset(core->noise_level, 0, spd_size * sizeof(FLT));
 		memset(core->SPL, 0, spd_size * sizeof(FLT));
-		memset(core->spd_dft, 0, core->conf->dft_size * sizeof(FLT));
-		memset(core->diff2_spd_fft, 0, core->conf->fft_size * sizeof(FLT));
 
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
@@ -202,8 +198,6 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->SPL);
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
-		free(core->spd_dft);
-		free(core->diff2_spd_fft);
 
 		if (core->hamming_window_fft != NULL ) {
 			free(core->hamming_window_temporal);
@@ -612,15 +606,6 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		if (core->SPL[i] < minSPL) {
 			core->SPL[i] = minSPL;
 		}
-	}
-
-	// truncated 2nd derivative esteem, to enhance peaks
-	core->diff2_spd_fft[0] = 0.0;
-	for (i = 1; i < spd_size - 1; i++) {
-		core->diff2_spd_fft[i] = 2.0 * core->SPL[i] - core->SPL[i - 1]
-				- core->SPL[i + 1]; // centred 2nd order derivative, to avoid group delay.
-		if (core->diff2_spd_fft[i] < 0.0)
-			core->diff2_spd_fft[i] = 0.0; // truncation
 	}
 
 	FLT noise_filter_width = 150.0; // hz
