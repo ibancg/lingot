@@ -187,7 +187,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 
 	// ignore continuous component
 	if (!frame->core->running || isnan(frame->core->freq)
-			|| (frame->core->freq < frame->conf->min_frequency)) {
+			|| (frame->core->freq < frame->conf->internal_min_frequency)) {
 		frequency = 0.0;
 		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
 	} else {

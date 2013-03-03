@@ -86,10 +86,10 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		if (requested_sample_rate != core->audio->real_sample_rate) {
 			conf->sample_rate = core->audio->real_sample_rate;
 			lingot_config_update_internal_params(conf);
-			sprintf(buff,
-					_("The requested sample rate is not available, the real sample rate has been set to %d Hz"),
-					core->audio->real_sample_rate);
-			lingot_msg_add_warning(buff);
+//			sprintf(buff,
+//					_("The requested sample rate is not available, the real sample rate has been set to %d Hz"),
+//					core->audio->real_sample_rate);
+//			lingot_msg_add_warning(buff);
 		}
 
 		if (conf->temporal_buffer_size < conf->fft_size) {
@@ -356,7 +356,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 		fprintf(fid1, "%f ", core->flt_read_buffer[i]);
 	}
 	decimation_out = &core->temporal_buffer[conf->temporal_buffer_size
-			- decimation_output_len];
+	- decimation_output_len];
 	for (i = 0; i < decimation_output_len; i++) {
 		fprintf(fid2, "%f ", decimation_out[i]);
 	}
@@ -367,8 +367,8 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 
 // tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency
-int lingot_core_frequencies_related(FLT freq1, FLT freq2,
-		FLT minFrequency, FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
+int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
+		FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 
 	int result = 0;
 	static const FLT tol = 5e-2; // TODO: tune
@@ -631,7 +631,8 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 //	}
 
 	unsigned int lowest_index = (unsigned int) ceil(
-			conf->min_frequency * (1.0 * conf->oversampling / conf->sample_rate)
+			conf->internal_min_frequency
+					* (1.0 * conf->oversampling / conf->sample_rate)
 					* conf->fft_size);
 	unsigned int highest_index = (unsigned int) ceil(0.95 * spd_size);
 
@@ -651,7 +652,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
 			0.5 * core->freq, core->fftplan->fft_out, spd_size, nPeaks,
 			lowest_index, highest_index, peakHalfWidth, index2f, minSNR, minQ,
-			conf->min_frequency, core, &divisor);
+			conf->internal_min_frequency, core, &divisor);
 
 	FLT w;
 	FLT w0 =
@@ -791,7 +792,8 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 					w * conf->sample_rate
 							/ (divisor * 2.0 * M_PI * conf->oversampling); // analog frequency in Hz.
 //	core->freq = freq;
-	core->freq = lingot_core_frequency_locker(freq, core->conf->min_frequency);
+	core->freq = lingot_core_frequency_locker(freq,
+			core->conf->internal_min_frequency);
 //	printf("-> %f\n", core->freq);
 }
 

@@ -107,7 +107,6 @@ struct _LingotConfig {
 	int sample_rate; // soundcard sample rate.
 	unsigned int oversampling; // oversampling factor.
 
-	//	root_frequency_reference_note_t root_frequency_referente_note;
 	FLT root_frequency_error; // deviation of the above root frequency.
 
 	FLT min_frequency; // minimum frequency of the instrument.
