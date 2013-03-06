@@ -126,8 +126,6 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_string_parameter_spec(
 			LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, "AUDIO_DEV_PULSEAUDIO",
 			512, 0);
-	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_SAMPLE_RATE,
-			"SAMPLE_RATE", "Hz", 100, 200000, 0);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_OVERSAMPLING,
 			"OVERSAMPLING", NULL, 1, 120, 0);
 	lingot_config_add_double_parameter_spec(
@@ -145,18 +143,6 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_VISUALIZATION_RATE, "VISUALIZATION_RATE", "Hz",
 			1.0, 40.00, 0);
-	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_NUMBER,
-			"PEAK_NUMBER", "samples", 1, 10, 0);
-	lingot_config_add_integer_parameter_spec(
-			LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, "PEAK_HALF_WIDTH", "samples",
-			1, 5, 0);
-	lingot_config_add_double_parameter_spec(
-			LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION,
-			"PEAK_REJECTION_RELATION", "dB", 0.0, 100.0, 0);
-	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_NUMBER,
-			"DFT_NUMBER", "DFTs", 0, 10, 0);
-	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
-			"DFT_SIZE", "samples", 4, 100, 0);
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, "MINIMUM_FREQUENCY", "Hz",
 			0.0, 22050.0, 0);
@@ -171,6 +157,20 @@ void lingot_config_create_parameter_specs() {
 			"PEAK_ORDER", NULL, 0, 10, 1);
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MIN_FREQUENCY,
 			"MIN_FREQUENCY", "Hz", 0.0, 22050.0, 1);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_SAMPLE_RATE,
+			"SAMPLE_RATE", "Hz", 100, 200000, 1);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_NUMBER,
+			"PEAK_NUMBER", "samples", 1, 10, 1);
+	lingot_config_add_integer_parameter_spec(
+			LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, "PEAK_HALF_WIDTH", "samples",
+			1, 5, 1);
+	lingot_config_add_double_parameter_spec(
+			LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION,
+			"PEAK_REJECTION_RELATION", "dB", 0.0, 100.0, 1);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_NUMBER,
+			"DFT_NUMBER", "DFTs", 0, 10, 1);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
+			"DFT_SIZE", "samples", 4, 100, 1);
 
 }
 
@@ -330,14 +330,10 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 							&config->audio_dev[AUDIO_SYSTEM_JACK] }, //
 					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, .value =
 							&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO] }, //
-					{ .id = LINGOT_PARAMETER_ID_SAMPLE_RATE, .value =
-							&config->sample_rate }, //
 					{ .id = LINGOT_PARAMETER_ID_OVERSAMPLING, .value =
 							&config->oversampling }, //
 					{ .id = LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, .value =
 							&config->root_frequency_error }, //
-					{ .id = LINGOT_PARAMETER_ID_MIN_FREQUENCY, .value =
-							&config->min_frequency }, //
 					{ .id = LINGOT_PARAMETER_ID_FFT_SIZE, .value =
 							&config->fft_size }, //
 					{ .id = LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, .value =
@@ -348,16 +344,6 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 							&config->calculation_rate }, //
 					{ .id = LINGOT_PARAMETER_ID_VISUALIZATION_RATE, .value =
 							&config->visualization_rate }, //
-					{ .id = LINGOT_PARAMETER_ID_PEAK_NUMBER, .value =
-							&config->peak_number }, //
-					{ .id = LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, .value =
-							&config->peak_half_width }, //
-					{ .id = LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION,
-							.value = &config->peak_rejection_relation_db }, //
-					{ .id = LINGOT_PARAMETER_ID_DFT_NUMBER, .value =
-							&config->dft_number }, //
-					{ .id = LINGOT_PARAMETER_ID_DFT_SIZE, .value =
-							&config->dft_size }, //
 					{ .id = LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, .value =
 							&config->min_frequency }, //
 					{ .id = LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, .value =
@@ -403,7 +389,6 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	for (i = 0; i < parameters_count; i++) {
 		if (!parameters[i].deprecated) {
 
-			//option = options[i];
 			param = params[i];
 
 			fprintf(fp, "%s = ", parameters[i].name);

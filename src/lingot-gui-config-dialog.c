@@ -438,20 +438,20 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	// TODO: value?
 	int sample_rate = 44100;
 
-	LingotConfigParameterSpec sampleRateSpec = lingot_config_get_parameter_spec(
-			LINGOT_PARAMETER_ID_SAMPLE_RATE);
-
-	// TODO: generalize validation?
-	if ((sample_rate < sampleRateSpec.int_min)
-			|| (sample_rate > sampleRateSpec.int_max)) {
-		char buff[1000];
-		sprintf(buff, "%s %i - %i %s", _("Sample rate out of range"),
-				sampleRateSpec.int_min, sampleRateSpec.int_max,
-				sampleRateSpec.units);
-		lingot_msg_add_error(buff);
-		gtk_notebook_set_current_page(dialog->notebook, 0);
-		return 0;
-	}
+//	LingotConfigParameterSpec sampleRateSpec = lingot_config_get_parameter_spec(
+//			LINGOT_PARAMETER_ID_SAMPLE_RATE);
+//
+//	// TODO: generalize validation?
+//	if ((sample_rate < sampleRateSpec.int_min)
+//			|| (sample_rate > sampleRateSpec.int_max)) {
+//		char buff[1000];
+//		sprintf(buff, "%s %i - %i %s", _("Sample rate out of range"),
+//				sampleRateSpec.int_min, sampleRateSpec.int_max,
+//				sampleRateSpec.units);
+//		lingot_msg_add_error(buff);
+//		gtk_notebook_set_current_page(dialog->notebook, 0);
+//		return 0;
+//	}
 
 	conf->audio_system = lingot_gui_config_dialog_get_audio_system(
 			dialog->input_system);
@@ -485,13 +485,15 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 			lingot_config_get_parameter_spec(
 					LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY);
 
-	if ((min_freq >= minimumFrequencySpec.float_min)
-			&& (min_freq <= minimumFrequencySpec.float_max)) {
-		conf->min_frequency = min_freq;
-	}
-	if ((max_freq >= maximumFrequencySpec.float_min)
-			&& (max_freq <= maximumFrequencySpec.float_max)) {
-		conf->max_frequency = max_freq;
+	if (min_freq <= max_freq) {
+		if ((min_freq >= minimumFrequencySpec.float_min)
+				&& (min_freq <= minimumFrequencySpec.float_max)) {
+			conf->min_frequency = min_freq;
+		}
+		if ((max_freq >= maximumFrequencySpec.float_min)
+				&& (max_freq <= maximumFrequencySpec.float_max)) {
+			conf->max_frequency = max_freq;
+		}
 	}
 
 	text1 = gtk_combo_box_text_get_active_text(dialog->fft_size);

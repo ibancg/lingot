@@ -187,7 +187,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 
 	// ignore continuous component
 	if (!frame->core->running || isnan(frame->core->freq)
-			|| (frame->core->freq < frame->conf->internal_min_frequency)) {
+			|| (frame->core->freq <= frame->conf->internal_min_frequency)) {
 		frequency = 0.0;
 		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
 	} else {
@@ -197,7 +197,9 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 		closest_note_index = lingot_config_scale_get_closest_note_index(
 				frame->conf->scale, frame->core->freq,
 				frame->conf->root_frequency_error, &error_cents);
-		lingot_gauge_compute(frame->gauge, error_cents);
+		if (!isnan(error_cents)) {
+			lingot_gauge_compute(frame->gauge, error_cents);
+		}
 	}
 
 	return 0;
