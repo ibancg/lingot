@@ -46,5 +46,7 @@ void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
 
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
 		LingotConfigDialog *dialog);
+void lingot_gui_config_dialog_scale_callback_change_octave(GtkWidget *widget,
+		LingotConfigDialog *dialog);
 
 #endif /* LINGOT_GUI_CONFIG_DIALOG_SCALE_H_ */

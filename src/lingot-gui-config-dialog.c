@@ -78,6 +78,7 @@ void lingot_gui_config_dialog_callback_button_default(GtkButton *button,
 		LingotConfigDialog* dialog) {
 	lingot_config_restore_default_values(dialog->conf);
 	lingot_gui_config_dialog_rewrite(dialog);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
 }
 
 void lingot_gui_config_dialog_callback_cancel(GtkWidget *widget,
@@ -617,6 +618,9 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->temporal_window_units_label =
 				GTK_LABEL(gtk_builder_get_object(builder,
 								"temporal_window_units_label"));
+		dialog->octave = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder,
+						"octave"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
 
 		GList* cell_list = gtk_cell_layout_get_cells(
 				GTK_CELL_LAYOUT(dialog->minimum_frequency) );
@@ -635,36 +639,39 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		lingot_gui_config_dialog_scale_show(dialog, builder);
 
-		g_signal_connect( dialog->input_system, "changed",
+		g_signal_connect(dialog->input_system, "changed",
 				G_CALLBACK (lingot_gui_config_dialog_callback_change_input_system),
 				dialog);
-		g_signal_connect( dialog->root_frequency_error, "value_changed",
+		g_signal_connect(dialog->root_frequency_error, "value_changed",
 				G_CALLBACK (lingot_gui_config_dialog_scale_callback_change_deviation),
 				dialog);
+		g_signal_connect(dialog->octave, "changed",
+				G_CALLBACK (lingot_gui_config_dialog_scale_callback_change_octave),
+				dialog);
 
-		g_signal_connect( dialog->minimum_frequency, "changed",
+		g_signal_connect(dialog->minimum_frequency, "changed",
 				G_CALLBACK (lingot_gui_config_dialog_change_min_frequency),
 				dialog);
-		g_signal_connect( dialog->maximum_frequency, "changed",
+		g_signal_connect(dialog->maximum_frequency, "changed",
 				G_CALLBACK (lingot_gui_config_dialog_change_max_frequency),
 				dialog);
-		g_signal_connect( dialog->optimize_check_button, "toggled",
+		g_signal_connect(dialog->optimize_check_button, "toggled",
 				G_CALLBACK(lingot_gui_config_dialog_optimize_check_toggled),
 				dialog);
 
-		g_signal_connect( gtk_builder_get_object(builder, "button_default"),
+		g_signal_connect(gtk_builder_get_object(builder, "button_default"),
 				"clicked",
 				G_CALLBACK(lingot_gui_config_dialog_callback_button_default),
 				dialog);
-		g_signal_connect( gtk_builder_get_object(builder, "button_apply"),
+		g_signal_connect(gtk_builder_get_object(builder, "button_apply"),
 				"clicked",
 				G_CALLBACK(lingot_gui_config_dialog_callback_button_apply),
 				dialog);
-		g_signal_connect( gtk_builder_get_object(builder, "button_accept"),
+		g_signal_connect(gtk_builder_get_object(builder, "button_accept"),
 				"clicked",
 				G_CALLBACK(lingot_gui_config_dialog_callback_button_ok),
 				dialog);
-		g_signal_connect( gtk_builder_get_object(builder, "button_cancel"),
+		g_signal_connect(gtk_builder_get_object(builder, "button_cancel"),
 				"clicked",
 				G_CALLBACK(lingot_gui_config_dialog_callback_button_cancel),
 				dialog);

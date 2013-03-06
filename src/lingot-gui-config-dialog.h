@@ -42,6 +42,7 @@ struct _LingotConfigDialog {
 	GtkSpinButton* root_frequency_error;
 	GtkComboBoxText* minimum_frequency;
 	GtkComboBoxText* maximum_frequency;
+	GtkComboBoxText* octave;
 	GtkCheckButton* optimize_check_button;
 	GtkLabel* fft_size_label;
 	GtkLabel* fft_size_units_label;
