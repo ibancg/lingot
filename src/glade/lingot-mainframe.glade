@@ -177,8 +177,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge).</property>
-                    <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings (try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge).</property>
+                    <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge (12 notes is a good option).</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                   </object>
@@ -226,8 +225,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="has_tooltip">True</property>
-                            <property name="tooltip_markup" translatable="yes">Estimated fundamental frequency in hertzs.</property>
-                            <property name="tooltip_text" translatable="yes">Estimated fundamental frequency in hertzs.</property>
+                            <property name="tooltip_text" translatable="yes">Estimated ground frequency in hertzs.</property>
                             <property name="label" translatable="yes">f = ---</property>
                           </object>
                           <packing>
@@ -308,8 +306,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_markup" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
-                <property name="tooltip_text" translatable="yes">This area shows the spectral power density of the captured signal. The fundamental frequency is shown with a red dot, and the noise threshold with a horizontal dotted yellow line. If you have a large FFT buffer (with more than 512 samples), you can browse through the whole spectrum with a horizontal scrollbar.</property>
+                <property name="tooltip_text" translatable="yes">This area shows the signal-to-noise ratio (SNR) of the captured signal. The ground frequency computed is shown with a red vertical line, and the noise threshold with a horizontal dotted yellow line.</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
               </object>
