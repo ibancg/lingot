@@ -620,15 +620,6 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	}
 
 	int Mi;
-//	// peaks searching in that signal.
-//	int Mi = lingot_signal_get_fundamental_peak(conf, core->spd_fft,
-//			core->diff2_spd_fft, (conf->fft_size >> 1)); // take the fundamental peak.
-//
-//	if (Mi == (signed) (conf->fft_size >> 1)) {
-//		core->freq = 0.0;
-//		pthread_mutex_unlock(&core->temporal_buffer_mutex);
-//		return;
-//	}
 
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->internal_min_frequency
@@ -636,23 +627,13 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 					* conf->fft_size);
 	unsigned int highest_index = (unsigned int) ceil(0.95 * spd_size);
 
-// TODO: min SNR
 	short divisor = 1;
-	short nPeaks = 8; // TODO: conf
-	const short peakHalfWidth = (conf->fft_size > 256) ? 2 : 1; // conf->peak_half_width
-	FLT minQ = conf->noise_threshold_db;
-	FLT minSNR = 0.5 * minQ;
-
-//	if (core->freq != 0.0) {
-//		minQ *= 1.0;
-//		minSNR *= 0.8;
-//		nPeaks = 5;
-//	}
-//	FLT f0 = w / (2 * M_PI * conf->oversampling / conf->sample_rate);
 	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
-			0.5 * core->freq, core->fftplan->fft_out, spd_size, nPeaks,
-			lowest_index, highest_index, peakHalfWidth, index2f, minSNR, minQ,
-			conf->internal_min_frequency, core, &divisor);
+			0.5 * core->freq, core->fftplan->fft_out, spd_size,
+			conf->peak_number, lowest_index, highest_index,
+			conf->peak_half_width, index2f, conf->min_SNR,
+			conf->min_overall_SNR, conf->internal_min_frequency, core,
+			&divisor);
 
 	FLT w;
 	FLT w0 =
@@ -661,44 +642,6 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 					2 * M_PI * f0 * conf->oversampling / conf->sample_rate;
 	w = w0;
 	Mi = floor(w / index2w);
-//	printf("Mi = %d\n", Mi);
-
-//	if (0 && (w != 0.0)) {
-//		w = (Mi - 1) * index2w;
-//		// frequency of sample previous to the peak
-//
-//		//  Approximation to fundamental frequency by selective DFTs
-//		// ---------------------------------------------------------
-//
-//		FLT d_w = index2w;
-//		printf("DFT iter: ");
-//		for (k = 0; k < conf->dft_number; k++) {
-//
-//			d_w = 2.0 * d_w / (conf->dft_size - 1); // resolution in rads.
-//
-//			if (k == 0) {
-//				lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size,
-//						w + d_w, d_w, &core->spd_dft[1], conf->dft_size - 2);
-//				core->spd_dft[0] = core->spd_fft[Mi - 1];
-//				core->spd_dft[conf->dft_size - 1] = core->spd_fft[Mi + 1]; // 2 samples known.
-//			} else
-//				lingot_fft_spd_eval(core->windowed_fft_buffer, conf->fft_size,
-//						w, d_w, core->spd_dft, conf->dft_size);
-//
-//			FLT M = lingot_signal_get_max(core->spd_dft, conf->dft_size, &Mi); // search the maximum.
-//			printf(" -> (%f,%g)", (w + (Mi * d_w)) * w2f, M);
-//
-//			if ((Mi == 0) || (Mi == (conf->dft_size - 1))) {
-//				printf("!!!");
-//				// TODO: abort search?
-//			}
-//
-//			w += (Mi - 1) * d_w; // previous sample to the peak.
-//		}
-//		printf("\n");
-//
-//		w += d_w; // DFT approximation.
-//	}
 
 	if (w != 0.0) {
 		// windowing

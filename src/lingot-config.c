@@ -126,8 +126,8 @@ void lingot_config_create_parameter_specs() {
 	lingot_config_add_string_parameter_spec(
 			LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, "AUDIO_DEV_PULSEAUDIO",
 			512, 0);
-	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_OVERSAMPLING,
-			"OVERSAMPLING", NULL, 1, 120, 0);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MIN_SNR,
+			"MIN_SNR", "dB", 0.0, 40.0, 0);
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, "ROOT_FREQUENCY_ERROR",
 			"cents", -500.0, 500.0, 0);
@@ -135,8 +135,6 @@ void lingot_config_create_parameter_specs() {
 			"FFT_SIZE", "samples", 256, 4096, 0);
 	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_TEMPORAL_WINDOW,
 			"TEMPORAL_WINDOW", "seconds", 0.0, 15.00, 0);
-	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_NOISE_THRESHOLD,
-			"NOISE_THRESHOLD", "dB", 0.0, 40.0, 0);
 	lingot_config_add_double_parameter_spec(
 			LINGOT_PARAMETER_ID_CALCULATION_RATE, "CALCULATION_RATE", "Hz", 1.0,
 			30.00, 0);
@@ -159,6 +157,8 @@ void lingot_config_create_parameter_specs() {
 			"MIN_FREQUENCY", "Hz", 0.0, 22050.0, 1);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_SAMPLE_RATE,
 			"SAMPLE_RATE", "Hz", 100, 200000, 1);
+	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_OVERSAMPLING,
+			"OVERSAMPLING", NULL, 1, 120, 1);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_PEAK_NUMBER,
 			"PEAK_NUMBER", "samples", 1, 10, 1);
 	lingot_config_add_integer_parameter_spec(
@@ -171,6 +171,8 @@ void lingot_config_create_parameter_specs() {
 			"DFT_NUMBER", "DFTs", 0, 10, 1);
 	lingot_config_add_integer_parameter_spec(LINGOT_PARAMETER_ID_DFT_SIZE,
 			"DFT_SIZE", "samples", 4, 100, 1);
+	lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_NOISE_THRESHOLD,
+			"NOISE_THRESHOLD", "dB", 0.0, 40.0, 1);
 
 }
 
@@ -231,14 +233,10 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	config->temporal_window = 0.25; // seconds
 	config->calculation_rate = 15.0; // Hz
 	config->visualization_rate = 24.0; // Hz
-	config->noise_threshold_db = 20.0; // dB
+	config->min_overall_SNR = 20.0; // dB
 
-	config->peak_number = 3; // peaks
+	config->peak_number = 8; // peaks
 	config->peak_half_width = 1; // samples
-	config->peak_rejection_relation_db = 20; // dB
-
-	config->dft_number = 2; // DFTs
-	config->dft_size = 15; // samples
 
 	//--------------------------------------------------------------------------
 
@@ -289,9 +287,9 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	config->temporal_buffer_size = (unsigned int) ceil(
 			config->temporal_window * config->sample_rate
 					/ config->oversampling);
-	config->peak_rejection_relation_nu = pow(10.0,
-			config->peak_rejection_relation_db / 10.0);
-	config->noise_threshold_nu = pow(10.0, config->noise_threshold_db / 10.0);
+
+	config->min_SNR = 0.5 * config->min_overall_SNR;
+	config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
 
 	LingotScale* scale = config->scale;
 	if (scale->notes == 1) {
@@ -330,16 +328,14 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 							&config->audio_dev[AUDIO_SYSTEM_JACK] }, //
 					{ .id = LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, .value =
 							&config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO] }, //
-					{ .id = LINGOT_PARAMETER_ID_OVERSAMPLING, .value =
-							&config->oversampling }, //
 					{ .id = LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, .value =
 							&config->root_frequency_error }, //
 					{ .id = LINGOT_PARAMETER_ID_FFT_SIZE, .value =
 							&config->fft_size }, //
 					{ .id = LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, .value =
 							&config->temporal_window }, //
-					{ .id = LINGOT_PARAMETER_ID_NOISE_THRESHOLD, .value =
-							&config->noise_threshold_db }, //
+					{ .id = LINGOT_PARAMETER_ID_MIN_SNR, .value =
+							&config->min_overall_SNR }, //
 					{ .id = LINGOT_PARAMETER_ID_CALCULATION_RATE, .value =
 							&config->calculation_rate }, //
 					{ .id = LINGOT_PARAMETER_ID_VISUALIZATION_RATE, .value =

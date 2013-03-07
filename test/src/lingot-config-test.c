@@ -44,14 +44,11 @@ void lingot_config_test() {
 	CU_ASSERT_EQUAL(config->sample_rate, 44100);
 	CU_ASSERT_EQUAL(config->fft_size, 512);
 	CU_ASSERT_EQUAL(config->temporal_window, ((FLT) 0.32));
-	CU_ASSERT_EQUAL(config->noise_threshold_db, 20.0);
+	CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
 	CU_ASSERT_EQUAL(config->calculation_rate, 20.0);
 	CU_ASSERT_EQUAL(config->visualization_rate, 30.0);
 	CU_ASSERT_EQUAL(config->peak_number, 3);
 	CU_ASSERT_EQUAL(config->peak_half_width, 1);
-	CU_ASSERT_EQUAL(config->peak_rejection_relation_db, 20.0);
-	CU_ASSERT_EQUAL(config->dft_number, 2);
-	CU_ASSERT_EQUAL(config->dft_size, 15);
 
 	lingot_config_destroy(config);
 }

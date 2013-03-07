@@ -1,4 +1,10 @@
 
+2013-03-07 Ibán Cereijo <ibancg@gmail.com>
+
+	* Simplified config dialog, now the user specifies the frequency range.
+	* Using unit tests with CUnit.
+
+
 2013-01-27 Ibán Cereijo <ibancg@gmail.com>
 
 	* Migration to GTK+ 3.0
