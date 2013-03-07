@@ -843,7 +843,7 @@ FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 
 FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, int i, FLT min,
 		FLT max) {
-	FLT noise = frame->conf->noise_threshold_db;
+	FLT noise = frame->conf->min_overall_SNR;
 	if (noise < min) {
 		noise = min;
 	} else if (noise > max) {

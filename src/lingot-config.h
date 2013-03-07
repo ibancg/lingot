@@ -33,25 +33,26 @@ typedef enum LingotConfigParameterId {
 	LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA, //
 	LINGOT_PARAMETER_ID_AUDIO_DEV_JACK, //
 	LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, //
-	LINGOT_PARAMETER_ID_SAMPLE_RATE, //
-	LINGOT_PARAMETER_ID_OVERSAMPLING, //
 	LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, //
 	LINGOT_PARAMETER_ID_FFT_SIZE, //
 	LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, //
-	LINGOT_PARAMETER_ID_NOISE_THRESHOLD, //
+	LINGOT_PARAMETER_ID_MIN_SNR, //
 	LINGOT_PARAMETER_ID_CALCULATION_RATE, //
 	LINGOT_PARAMETER_ID_VISUALIZATION_RATE, //
-	LINGOT_PARAMETER_ID_PEAK_NUMBER, //
-	LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, //
-	LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION, //
-	LINGOT_PARAMETER_ID_DFT_NUMBER, //
-	LINGOT_PARAMETER_ID_DFT_SIZE, //
-	LINGOT_PARAMETER_ID_PEAK_ORDER, //
 	LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, //
 	LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, //
 	// ------- obsolete ---------
 	LINGOT_PARAMETER_ID_MIN_FREQUENCY, //
 	LINGOT_PARAMETER_ID_GAIN, //
+	LINGOT_PARAMETER_ID_NOISE_THRESHOLD, //
+	LINGOT_PARAMETER_ID_SAMPLE_RATE, //
+	LINGOT_PARAMETER_ID_OVERSAMPLING, //
+	LINGOT_PARAMETER_ID_DFT_NUMBER, //
+	LINGOT_PARAMETER_ID_DFT_SIZE, //
+	LINGOT_PARAMETER_ID_PEAK_ORDER, //
+	LINGOT_PARAMETER_ID_PEAK_NUMBER, //
+	LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, //
+	LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION, //
 } LingotConfigParameterId;
 
 // configuration parameter type
@@ -127,8 +128,9 @@ struct _LingotConfig {
 	// samples stored in the temporal window (internal parameter).
 	unsigned int temporal_buffer_size;
 
-	FLT noise_threshold_db; // dB
-	FLT noise_threshold_nu; // natural units (internal parameter)
+	// minimum SNR required for the overall set of peaks and for each peak
+	FLT min_overall_SNR; // dB
+	FLT min_SNR; // dB
 
 	window_type_t window_type;
 
@@ -139,18 +141,6 @@ struct _LingotConfig {
 
 	// number of adjacent samples needed to consider a peak.
 	unsigned int peak_half_width;
-
-	/* maximum amplitude relation between principal and secondary peaks.
-	 The max peak doesn't has to be the fundamental frequency carrier if it
-	 has an amplitude relation with the fundamental considered peak lower than
-	 this parameter. */
-
-	FLT peak_rejection_relation_db; // dBs
-	FLT peak_rejection_relation_nu; // natural units (internal)
-
-	// DFT approximation
-	unsigned int dft_number; // number of DFTs.
-	unsigned int dft_size; // samples of each DFT.
 
 	// max iterations for Newton-Raphson algorithm.
 	unsigned int max_nr_iter;

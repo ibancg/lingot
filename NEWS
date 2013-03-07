@@ -1,11 +1,13 @@
 
-Lingot 0.9.2 (2013-xx-xx)
+Lingot 1.0.0 (2013-xx-xx)
 -------------------------
 
  * Added PulseAudio support.
  * Migration to GTK+ 3.0
  * Migration to graphic vectors with libcairo. Main window now resizable.
  * Modified the frequency finding algorithm.
+ * Modified the configuration: the user specifies now the frequency range of the
+   instrument, instead of providing low level parameters like the sample rate.
  * Implemented task #11284: audio devices autodetection.
  * Fixed #35183, #35220, #35221.
  * Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný).
