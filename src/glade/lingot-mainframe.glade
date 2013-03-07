@@ -177,7 +177,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with many notes, to have a higher resolution in this gauge (12 notes is a good option).</property>
+                    <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with an anough number of notes, to have a higher resolution in this gauge (12 notes per scale is a good option).</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                   </object>

@@ -181,80 +181,98 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkVBox" id="vbox2">
+              <object class="GtkGrid" id="grid1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="border_width">10</property>
+                <property name="row_spacing">10</property>
+                <property name="column_spacing">10</property>
                 <child>
-                  <object class="GtkTable" id="table1">
+                  <object class="GtkLabel" id="system1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="border_width">10</property>
-                    <property name="n_rows">2</property>
-                    <property name="n_columns">2</property>
-                    <property name="column_spacing">10</property>
-                    <property name="row_spacing">10</property>
-                    <child>
-                      <object class="GtkLabel" id="label5">
-                        <property name="visible">True</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Audio system</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label18">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Audio device</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="input_system">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Here you can pick the sound system.</property>
+                    <property name="tooltip_text" translatable="yes">Here you can pick the sound system.</property>
+                    <property name="hexpand">True</property>
+                    <property name="entry_text_column">0</property>
+                    <property name="id_column">1</property>
+                    <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="input_dev">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
+                    <property name="tooltip_text" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
+                    <property name="has_entry">True</property>
+                    <property name="entry_text_column">0</property>
+                    <property name="id_column">1</property>
+                    <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
+                    <child internal-child="entry">
+                      <object class="GtkEntry" id="comboboxtext-entry2">
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Audio device</property>
                       </object>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="y_options">GTK_FILL</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="input_dev">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
-                        <property name="has_entry">True</property>
-                        <property name="entry_text_column">0</property>
-                        <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="combobox-entry4">
-                            <property name="can_focus">True</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="y_options"/>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="input_system">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Here you can pick the sound system.</property>
-                        <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="y_options"/>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="system">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Audio system</property>
-                      </object>
-                      <packing>
-                        <property name="y_options"/>
-                      </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">10</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Select the audio source:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">2</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -274,76 +292,81 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTable" id="table3">
+              <object class="GtkGrid" id="grid4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="hexpand">True</property>
                 <property name="border_width">10</property>
-                <property name="n_rows">3</property>
-                <property name="n_columns">3</property>
                 <property name="column_spacing">10</property>
-                <property name="row_spacing">10</property>
                 <child>
                   <object class="GtkLabel" id="label10">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Calculation rate</property>
                   </object>
                   <packing>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label11">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Visualization rate</property>
-                  </object>
-                  <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label12">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Minimum SNR</property>
-                  </object>
-                  <packing>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="y_options"/>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label14">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Hz</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="label15">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Hz</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options">GTK_EXPAND</property>
-                    <property name="y_options"/>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label19">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Hz</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label14">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Visualization rate</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label11">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Minimum SNR</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -354,11 +377,74 @@
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="right_attach">3</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">15</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Adjust the following refresh rates:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">3</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label5">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">30</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Adjust the noise level:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">3</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHScale" id="noise_threshold">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you expirience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
+                    <property name="tooltip_text" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you expirience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
+                    <property name="adjustment">adjustment3</property>
+                    <property name="lower_stepper_sensitivity">on</property>
+                    <property name="round_digits">1</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHScale" id="visualization_rate">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Number of visualizations per second of the (last) computed frequency, error and spectrum. </property>
+                    <property name="tooltip_text" translatable="yes">Number of visualizations per second of the (last) computed frequency, error and spectrum. </property>
+                    <property name="adjustment">adjustment2</property>
+                    <property name="round_digits">1</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -366,44 +452,18 @@
                     <property name="width_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Number of calculations of the fundamental frequency per second.</property>
                     <property name="tooltip_text" translatable="yes">Number of calculations of the fundamental frequency per second.</property>
+                    <property name="hexpand">True</property>
                     <property name="adjustment">adjustment1</property>
+                    <property name="round_digits">1</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="y_options"/>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkHScale" id="visualization_rate">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Number of visualizations per second of the (last) computed frequency, error and spectrum. </property>
-                    <property name="adjustment">adjustment2</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="y_options"/>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkHScale" id="noise_threshold">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you expirience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
-                    <property name="adjustment">adjustment3</property>
-                    <property name="lower_stepper_sensitivity">on</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="y_options"/>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -424,283 +484,254 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTable" id="table4">
+              <object class="GtkGrid" id="table4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">10</property>
-                <property name="n_rows">2</property>
-                <property name="column_spacing">10</property>
                 <property name="row_spacing">10</property>
+                <property name="column_spacing">10</property>
                 <child>
-                  <object class="GtkFrame" id="frame1">
+                  <object class="GtkLabel" id="temporal_window_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Temporal window</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="temporal_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">This is the most recent amount of data considered for tuning. The longer it is, the more accuracy you can obtain, but also the dynamic response gets slower, regarding you are considering older parts of the signal. Also, if you raise this parameter, the computational cost increases. The size of the buffer, in samples (depending on the effective sample rate), must be greater than or equal to the FFT buffer size.</property>
+                    <property name="tooltip_text" translatable="yes">This is the most recent amount of data considered for tuning. The longer it is, the more accuracy you can obtain, but also the dynamic response gets slower, regarding you are considering older parts of the signal. Also, if you raise this parameter, the computational cost increases. The size of the buffer, in samples (depending on the effective sample rate), must be greater than or equal to the FFT buffer size.</property>
+                    <property name="invisible_char">●</property>
+                    <property name="xalign">1</property>
+                    <property name="invisible_char_set">True</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="adjustment">adjustment5</property>
+                    <property name="digits">3</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="temporal_window_units_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">seconds</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="fft_size_units_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">samples</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="fft_size_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">FFT size</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="fft_size">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it&amp;apos;s also computationally more expensive. Don&amp;apos;t use high values here unless you need to tune high frequencies.</property>
+                    <property name="tooltip_text" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it's also computationally more expensive. Don't use high values here unless you need to tune high frequencies.</property>
                     <property name="hexpand">True</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">none</property>
-                    <child>
-                      <object class="GtkAlignment" id="alignment1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="top_padding">4</property>
-                        <property name="left_padding">12</property>
-                        <child>
-                          <object class="GtkGrid" id="grid2">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="row_spacing">10</property>
-                            <property name="column_spacing">10</property>
-                            <child>
-                              <object class="GtkLabel" id="fft_size_units_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">samples</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="temporal_window_units_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">seconds</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="fft_size_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">FFT size</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="temporal_window_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Temporal window</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="fft_size">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it's also computationally more expensive. Don't use high values here unless you need to tune high frequencies.</property>
-                                <property name="hexpand">True</property>
-                                <property name="entry_text_column">0</property>
-                                <property name="id_column">1</property>
-                                <items>
-                                  <item translatable="yes">256</item>
-                                  <item translatable="yes">512</item>
-                                  <item translatable="yes">1024</item>
-                                  <item translatable="yes">2048</item>
-                                  <item translatable="yes">4096</item>
-                                </items>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="temporal_window">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">This is the most recent amount of data considered for tuning. The longer it is, the more accuracy you can obtain, but also the dynamic response gets slower, regarding you are considering older parts of the signal. Also, if you raise this parameter, the computational cost increases. The size of the buffer, in samples (depending on the effective sample rate), must be greater than or equal to the FFT buffer size.</property>
-                                <property name="invisible_char">●</property>
-                                <property name="xalign">1</property>
-                                <property name="invisible_char_set">True</property>
-                                <property name="primary_icon_activatable">False</property>
-                                <property name="secondary_icon_activatable">False</property>
-                                <property name="adjustment">adjustment5</property>
-                                <property name="digits">3</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkCheckButton" id="optimize_check_button">
-                        <property name="label" translatable="yes">Optimize parameters automatically</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
+                    <property name="entry_text_column">0</property>
+                    <property name="id_column">1</property>
+                    <items>
+                      <item translatable="yes">256</item>
+                      <item translatable="yes">512</item>
+                      <item translatable="yes">1024</item>
+                      <item translatable="yes">2048</item>
+                      <item translatable="yes">4096</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="optimize_check_button">
+                    <property name="label" translatable="yes">Optimize parameters automatically</property>
+                    <property name="use_action_appearance">False</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">Leave this option ON and Lingot will optimize some parameters for you.</property>
+                    <property name="tooltip_text" translatable="yes">Leave this option ON and Lingot will optimize some parameters for you.</property>
+                    <property name="margin_top">10</property>
+                    <property name="use_action_appearance">False</property>
+                    <property name="xalign">0</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">3</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label9">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="hexpand">True</property>
+                    <property name="xpad">20</property>
+                    <property name="label" translatable="yes">Minimum note</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label12">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">15</property>
+                    <property name="label" translatable="yes">Maimum note</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="minimum_frequency">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="wrap_width">6</property>
+                    <property name="has_entry">True</property>
+                    <property name="entry_text_column">0</property>
+                    <property name="id_column">1</property>
+                    <child internal-child="entry">
+                      <object class="GtkEntry" id="comboboxtext-entry">
                         <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Leave this option ON and Lingot will optimize some parameters for you.</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup" translatable="yes">This is the lowest frequency you want to tune in this instrument. You can put here either a frequency or select a note from the popup list.</property>
+                        <property name="tooltip_text" translatable="yes">This is the lowest frequency you want to tune in this instrument. You can put here either a frequency or select a note from the popup list.</property>
+                        <property name="invisible_char">●</property>
                       </object>
                     </child>
                   </object>
                   <packing>
+                    <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame" id="frame2">
+                  <object class="GtkComboBoxText" id="maximum_frequency">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="hexpand">True</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">none</property>
-                    <child>
-                      <object class="GtkAlignment" id="alignment2">
-                        <property name="visible">True</property>
+                    <property name="wrap_width">6</property>
+                    <property name="active">4</property>
+                    <property name="has_entry">True</property>
+                    <property name="entry_text_column">0</property>
+                    <property name="id_column">1</property>
+                    <child internal-child="entry">
+                      <object class="GtkEntry" id="comboboxtext-entry10">
                         <property name="can_focus">False</property>
-                        <property name="left_padding">12</property>
-                        <child>
-                          <object class="GtkGrid" id="grid_frequencies">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_top">5</property>
-                            <property name="hexpand">True</property>
-                            <property name="row_spacing">8</property>
-                            <property name="column_spacing">8</property>
-                            <child>
-                              <object class="GtkLabel" id="label36">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Minimum note</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label37">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Maimum note</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label6">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Hz</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label21">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Hz</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="minimum_frequency">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="wrap_width">6</property>
-                                <property name="has_entry">True</property>
-                                <property name="entry_text_column">0</property>
-                                <property name="id_column">1</property>
-                                <child internal-child="entry">
-                                  <object class="GtkEntry" id="comboboxtext-entry6">
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">This is the lowest frequency you want to tune in this instrument. You can put here either a frequency or select a note from the popup list.</property>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="maximum_frequency">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="wrap_width">6</property>
-                                <property name="active">4</property>
-                                <property name="has_entry">True</property>
-                                <property name="entry_text_column">0</property>
-                                <property name="id_column">1</property>
-                                <child internal-child="entry">
-                                  <object class="GtkEntry" id="comboboxtext-entry9">
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">This is the highest frequency you want to tune in this instrument. Try not to assign unnecessarily high values to this parameter, or you will not be making the most of your tuner. You can put here either a frequency or select a note from the popup list.</property>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label34">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Intrument frequency range</property>
                       </object>
                     </child>
                   </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label20">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Hz</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label22">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">10</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Intrument frequency range</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">3</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label6">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Hz</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -720,16 +751,17 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="vbox1">
+              <object class="GtkGrid" id="grid2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkGrid" id="grid3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="border_width">4</property>
-                    <property name="row_spacing">2</property>
-                    <property name="column_spacing">5</property>
+                    <property name="hexpand">True</property>
+                    <property name="border_width">10</property>
+                    <property name="row_spacing">10</property>
+                    <property name="column_spacing">10</property>
                     <child>
                       <object class="GtkLabel" id="label13">
                         <property name="visible">True</property>
@@ -772,7 +804,7 @@
                         <property name="label" translatable="yes">cents</property>
                       </object>
                       <packing>
-                        <property name="left_attach">4</property>
+                        <property name="left_attach">2</property>
                         <property name="top_attach">1</property>
                         <property name="width">1</property>
                         <property name="height">1</property>
@@ -793,7 +825,7 @@
                         <property name="adjustment">adjustment13</property>
                       </object>
                       <packing>
-                        <property name="left_attach">3</property>
+                        <property name="left_attach">1</property>
                         <property name="top_attach">1</property>
                         <property name="width">1</property>
                         <property name="height">1</property>
@@ -807,7 +839,7 @@
                         <property name="label" translatable="yes">Deviation</property>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
+                        <property name="left_attach">0</property>
                         <property name="top_attach">1</property>
                         <property name="width">1</property>
                         <property name="height">1</property>
@@ -820,7 +852,7 @@
                         <property name="label" translatable="yes">Octave</property>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
+                        <property name="left_attach">3</property>
                         <property name="top_attach">1</property>
                         <property name="width">1</property>
                         <property name="height">1</property>
@@ -830,6 +862,8 @@
                       <object class="GtkComboBoxText" id="octave">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip_markup" translatable="yes">Octave whose frequencies are being displayed in the table below. Change this parameter if you want to display the assigned frequencies in other octaves, but try to assign the frequencies always to the 4th octave (The 4th octave usually covers the frequencies from 261.63 Hz to 523.25 Hz).</property>
                         <property name="tooltip_text" translatable="yes">Octave whose frequencies are being displayed in the table below. Change this parameter if you want to display the assigned frequencies in other octaves, but try to assign the frequencies always to the 4th octave (The 4th octave usually covers the frequencies from 261.63 Hz to 523.25 Hz).</property>
                         <property name="active">0</property>
                         <property name="entry_text_column">0</property>
@@ -845,7 +879,7 @@
                         </items>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
+                        <property name="left_attach">4</property>
                         <property name="top_attach">1</property>
                         <property name="width">1</property>
                         <property name="height">1</property>
@@ -853,21 +887,25 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="padding">3</property>
-                    <property name="position">0</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="hbox2">
+                  <object class="GtkGrid" id="grid5">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkScrolledWindow" id="scrolledwindow1">
-                        <property name="height_request">220</property>
+                        <property name="height_request">260</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="border_width">6</property>
                         <property name="hscrollbar_policy">never</property>
                         <property name="shadow_type">out</property>
                         <child>
@@ -875,20 +913,22 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="padding">4</property>
-                        <property name="position">0</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="border_width">6</property>
                         <child>
                           <object class="GtkVButtonBox" id="vbuttonbox1">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="spacing">4</property>
                             <child>
                               <object class="GtkButton" id="button_scale_add">
                                 <property name="label" translatable="yes">Insert</property>
@@ -896,6 +936,8 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_markup" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
                                 <property name="tooltip_text" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
                                 <property name="use_action_appearance">False</property>
                               </object>
@@ -912,6 +954,8 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_markup" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
                                 <property name="tooltip_text" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
                                 <property name="use_action_appearance">False</property>
                               </object>
@@ -928,6 +972,8 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="tooltip_markup" translatable="yes">Imports the scale from an external .scl file, with the Scala project format (http://www.huygens-fokker.org/scala/)</property>
                                 <property name="tooltip_text" translatable="yes">Imports the scale from an external .scl file, with the Scala project format (http://www.huygens-fokker.org/scala/)</property>
                                 <property name="use_action_appearance">False</property>
                               </object>
@@ -949,22 +995,23 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">5</property>
-                        <property name="position">1</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="position">4</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child type="tab">
@@ -976,7 +1023,7 @@
                 <property name="label" translatable="yes">Scale</property>
               </object>
               <packing>
-                <property name="position">4</property>
+                <property name="position">3</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
