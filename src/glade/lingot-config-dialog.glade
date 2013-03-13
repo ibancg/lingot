@@ -248,7 +248,7 @@
                     <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
                     <child internal-child="entry">
                       <object class="GtkEntry" id="comboboxtext-entry2">
-                        <property name="can_focus">False</property>
+                        <property name="can_focus">True</property>
                       </object>
                     </child>
                   </object>
