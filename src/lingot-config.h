@@ -1,7 +1,9 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña.
+ * Copyright (C) 2004-2008  Jairo Chapela Martínez.
+
  *
  * This file is part of lingot.
  *
