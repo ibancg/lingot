@@ -1,7 +1,9 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2013  Ibán Cereijo Graña, Jairo Chapela Martínez.
+ * Copyright (C) 2004-2013  Ibán Cereijo Graña.
+ * Copyright (C) 2004-2008  Jairo Chapela Martínez.
+
  *
  * This file is part of lingot.
  *
@@ -109,7 +111,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 
 	gtk_show_about_dialog(NULL, "name", "Lingot", "version", VERSION,
 			"copyright",
-			"\xC2\xA9 2004-2013 Ibán Cereijo Graña\n\xC2\xA9 2004-2013 Jairo Chapela Martínez",
+			"\xC2\xA9 2004-2013 Ibán Cereijo Graña\n\xC2\xA9 2004-2008 Jairo Chapela Martínez",
 			"comments", _("Accurate and easy to use musical instrument tuner"),
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website", "http://lingot.nongnu.org/",

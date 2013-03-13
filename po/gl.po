@@ -1,5 +1,5 @@
 # Galician translations for Lingot.
-# Copyright (C) 2004-2013 Ibán Cereijo Graña, 2004-2013 Jairo Chapela Martínez
+# Copyright (C) 2004-2013 Ibán Cereijo Graña, 2004-2008 Jairo Chapela Martínez
 # This file is distributed under the same license as the lingot package.
 # Ibán Cereijo Graña <ibancg@gmail.com>, 2007-2011.
 #
