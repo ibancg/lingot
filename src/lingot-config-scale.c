@@ -250,9 +250,13 @@ int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 
 	int n = 0;
 	if (!char_buffer_pointer2) {
-		n = sscanf(char_buffer_pointer1, "%lf", cents);
-		if (!n) {
+		if (!char_buffer_pointer1) {
 			result = 0;
+		} else {
+			n = sscanf(char_buffer_pointer1, "%lf", cents);
+			if (!n) {
+				result = 0;
+			}
 		}
 	} else {
 		n = sscanf(char_buffer_pointer1, "%hd", &num);
@@ -395,7 +399,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 		result = 0;
 		char buff[1000];
 		snprintf(buff, sizeof(buff), "%s, line %i: %s",
-				_("Error opening scale file"), line, exception);
+		_("Error opening scale file"), line, exception);
 		lingot_msg_add_error(buff);
 	}
 
