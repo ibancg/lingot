@@ -73,24 +73,24 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 	{
 
 		if (audio->dsp < 0) {
-			sprintf(error_message, _("Cannot open audio device '%s'.\n%s"),
-					device, strerror(errno));
+			snprintf(error_message, sizeof(error_message),
+					_("Cannot open audio device '%s'.\n%s"), device,
+					strerror(errno));
 			throw(error_message);
 		}
 
 		//if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
 		if (ioctl(audio->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0) {
-			sprintf(error_message, "%s\n%s",
-					_("Error setting number of channels."),
-					strerror(errno));
+			snprintf(error_message, sizeof(error_message), "%s\n%s",
+			_("Error setting number of channels."), strerror(errno));
 			throw(error_message);
 		}
 
 		// sample size
 		//if (ioctl(audio->dsp, SOUND_PCM_SETFMT, &format) < 0)
 		if (ioctl(audio->dsp, SNDCTL_DSP_SETFMT, &format) < 0) {
-			sprintf(error_message, "%s\n%s",
-					_("Error setting bits per sample."), strerror(errno));
+			snprintf(error_message, sizeof(error_message), "%s\n%s",
+			_("Error setting bits per sample."), strerror(errno));
 			throw(error_message);
 		}
 
@@ -104,14 +104,14 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 		param |= 0x00ff0000;
 
 		if (ioctl(audio->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0) {
-			sprintf(error_message, "%s\n%s",
-					_("Error setting DMA buffer size."), strerror(errno));
+			snprintf(error_message, sizeof(error_message), "%s\n%s",
+			_("Error setting DMA buffer size."), strerror(errno));
 			throw(error_message);
 		}
 
 		if (ioctl(audio->dsp, SNDCTL_DSP_SPEED, &sample_rate) < 0) {
-			sprintf(error_message, "%s\n%s", _("Error setting sample rate."),
-					strerror(errno));
+			snprintf(error_message, sizeof(error_message), "%s\n%s",
+					_("Error setting sample rate."), strerror(errno));
 			throw(error_message);
 		}
 
@@ -139,7 +139,7 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
 #ifdef OSS
-	if (audio != NULL ) {
+	if (audio != NULL) {
 		if (audio->dsp >= 0) {
 			close(audio->dsp);
 			audio->dsp = -1;
@@ -156,9 +156,9 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 			audio->read_buffer_size_bytes);
 
 	if (bytes_read < 0) {
-		char buff[100];
-		sprintf(buff, "%s\n%s", _("Read from audio interface failed."),
-				strerror(errno));
+		char buff[512];
+		snprintf(buff, sizeof(buff), "%s\n%s",
+				_("Read from audio interface failed."), strerror(errno));
 		lingot_msg_add_error(buff);
 	} else {
 

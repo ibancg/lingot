@@ -95,8 +95,9 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 			&error);
 
 	if (!audio->pa_client) {
-		char buff[100];
-		sprintf(buff, "%s\n%s", _("Error creating PulseAudio client."),
+		char buff[512];
+		snprintf(buff, sizeof(buff), "%s\n%s",
+				_("Error creating PulseAudio client."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 		free(audio);
@@ -117,7 +118,7 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
 
 #	ifdef PULSEAUDIO
-	if (audio != NULL ) {
+	if (audio != NULL) {
 		if (audio->pa_client != 0x0) {
 			pa_simple_free(audio->pa_client);
 			audio->pa_client = 0x0;
@@ -141,8 +142,9 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
 //	printf("result = %i\n", result);
 	if (result < 0) {
-		char buff[100];
-		sprintf(buff, "%s\n%s", _("Read from audio interface failed."),
+		char buff[512];
+		snprintf(buff, sizeof(buff), "%s\n%s",
+				_("Read from audio interface failed."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 	} else {
@@ -229,8 +231,8 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 					sizeof(struct device_name_node_t));
 	struct device_name_node_t* device_names_last = device_names_first;
 	// the first record is the default source
-	char buff[100];
-	sprintf(buff, "%s <default>", _("Default Source"));
+	char buff[512];
+	snprintf(buff, sizeof(buff), "%s <default>", _("Default Source"));
 	device_names_first->name = strdup(buff);
 	device_names_first->next = NULL;
 
@@ -263,7 +265,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 			pa_context_set_state_callback(context,
 					lingot_audio_pulseaudio_context_state_callback,
 					&device_names_last);
-			if (pa_context_connect(context, server, 0, NULL ) < 0) {
+			if (pa_context_connect(context, server, 0, NULL) < 0) {
 				fprintf(stderr, "PulseAudio: pa_context_connect() failed: %s",
 						pa_strerror(pa_context_errno(context)));
 			} else if (pa_mainloop_run(m, &ret) < 0) {
@@ -289,7 +291,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 
 	if (!fail) {
 		struct device_name_node_t* name_node_current;
-		for (name_node_current = device_names_first; name_node_current != NULL ;
+		for (name_node_current = device_names_first; name_node_current != NULL;
 				name_node_current = name_node_current->next) {
 			properties->n_devices++;
 		}
@@ -310,7 +312,7 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 
 	// dispose the device names list
 	struct device_name_node_t* name_node_current;
-	for (name_node_current = device_names_first; name_node_current != NULL ;) {
+	for (name_node_current = device_names_first; name_node_current != NULL;) {
 		struct device_name_node_t* name_node_previous = name_node_current;
 		name_node_current = name_node_current->next;
 		free(name_node_previous);
@@ -336,7 +338,7 @@ static void lingot_audio_pulseaudio_drain() {
 	pa_operation *o;
 
 	if (!(o = pa_context_drain(context,
-			lingot_audio_pulseaudio_context_drain_complete, NULL )))
+			lingot_audio_pulseaudio_context_drain_complete, NULL)))
 		pa_context_disconnect(context);
 	else
 		pa_operation_unref(o);
@@ -361,7 +363,7 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
 			(struct device_name_node_t**) userdata;
 
 	char buff[512];
-	sprintf(buff, "%s <%s>", i->description, i->name);
+	snprintf(buff, sizeof(buff), "%s <%s>", i->description, i->name);
 
 	printf("%s <%s>\n", i->description, i->name);
 	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
