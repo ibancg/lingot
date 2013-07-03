@@ -52,7 +52,7 @@ const char* audio_system_t_to_str(audio_system_t audio_system) {
 audio_system_t str_to_audio_system_t(char* audio_system) {
 	audio_system_t result = -1;
 	int i;
-	for (i = 0; audio_systems[i] != NULL ; i++) {
+	for (i = 0; audio_systems[i] != NULL; i++) {
 		if (!strcmp(audio_system, audio_systems[i])) {
 			result = i;
 			break;
@@ -364,25 +364,25 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 	char* lc_all;
 	void* params[N_MAX_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	char buff[80];
+	char buff[512];
 
 	lingot_config_map_parameters(config, params);
 
-	lc_all = setlocale(LC_ALL, NULL );
+	lc_all = setlocale(LC_ALL, NULL);
 	// duplicate the string, as the next call to setlocale will destroy it
 	if (lc_all)
 		lc_all = strdup(lc_all);
 	setlocale(LC_ALL, "C");
 
-	if ((fp = fopen(filename, "w")) == NULL ) {
-		char buff[100];
-		sprintf(buff, "error saving config file %s ", filename);
+	if ((fp = fopen(filename, "w")) == NULL) {
+		char buff[512];
+		snprintf(buff, sizeof(buff), "error saving config file %s ", filename);
 		perror(buff);
 		return;
 	}
 
 	fprintf(fp, "# Config file automatically created by lingot %s\n\n",
-			VERSION);
+	VERSION);
 
 	for (i = 0; i < parameters_count; i++) {
 		if (!parameters[i].deprecated) {
@@ -406,7 +406,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 				break;
 			}
 
-			if (parameters[i].units != NULL ) {
+			if (parameters[i].units != NULL) {
 				fprintf(fp, " # %s", parameters[i].units);
 			}
 
@@ -463,8 +463,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	static const unsigned int max_line_size = 1024;
 	char char_buffer[max_line_size];
 
-	if ((fp = fopen(filename, "r")) == NULL ) {
-		sprintf(char_buffer,
+	if ((fp = fopen(filename, "r")) == NULL) {
+		snprintf(char_buffer, max_line_size,
 				"error opening config file %s, assuming default values ",
 				filename);
 		perror(char_buffer);
@@ -544,7 +544,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					// tokens into the line.
 					char_buffer_pointer = strtok(char_buffer, delim2);
 
-					if (char_buffer_pointer == NULL ) {
+					if (char_buffer_pointer == NULL) {
 						scale_errors = 1;
 						fprintf(stderr,
 								"error at line %i: error reading the scale\n",
@@ -555,7 +555,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					scale->note_name[i] = strdup(char_buffer_pointer);
 					char_buffer_pointer = strtok(NULL, delim2);
 
-					if (char_buffer_pointer == NULL ) {
+					if (char_buffer_pointer == NULL) {
 						scale_errors = 1;
 						fprintf(stderr,
 								"error at line %i: error reading the scale\n",
@@ -631,7 +631,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		param = params[option_index];
 
-		if (param != NULL ) {
+		if (param != NULL) {
 			// take the attribute value.
 			char_buffer_pointer = strtok(NULL, delim);
 
@@ -652,7 +652,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			case LINGOT_PARAMETER_TYPE_STRING:
 				if (strlen(char_buffer_pointer)
 						< parameters[option_index].str_max_len) {
-					sprintf(((char*) param), "%s", char_buffer_pointer);
+					snprintf(((char*) param), 512, "%s", char_buffer_pointer);
 				} else {
 					fprintf(stderr,
 							"error: parse error at line %i, '%s = %s': identifier too long (maximum length %d characters), assuming default value '%s'\n",
@@ -718,8 +718,8 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				if (audio_system_value != (audio_system_t) -1) {
 					*((audio_system_t*) param) = audio_system_value;
 				} else {
-					char buff[1000];
-					sprintf(buff,
+					char buff[250];
+					snprintf(buff, sizeof(buff),
 							_(
 									"Error parsing the configuration file, line %i: unrecognized audio system, assuming default value.\n"),
 							line);
@@ -734,7 +734,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 	fclose(fp);
 
-	if (scale != NULL ) {
+	if (scale != NULL) {
 		if (!scale_errors) {
 			config->scale = lingot_config_scale_new();
 			lingot_config_scale_copy(config->scale, scale);

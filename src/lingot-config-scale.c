@@ -62,27 +62,27 @@ void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes) 
 void lingot_config_scale_destroy(LingotScale* scale) {
 	unsigned short int i;
 
-	if (scale != NULL ) {
+	if (scale != NULL) {
 		for (i = 0; i < scale->notes; i++)
 			if (scale->note_name[i] != 0x0) {
 				free(scale->note_name[i]);
 			}
 
-		if (scale->offset_cents != NULL ) {
+		if (scale->offset_cents != NULL) {
 			free(scale->offset_cents);
 		}
 
-		if (scale->offset_ratios[0] != NULL ) {
+		if (scale->offset_ratios[0] != NULL) {
 			free(scale->offset_ratios[0]);
 		}
-		if (scale->offset_ratios[1] != NULL ) {
+		if (scale->offset_ratios[1] != NULL) {
 			free(scale->offset_ratios[1]);
 		}
 
-		if (scale->note_name != NULL ) {
+		if (scale->note_name != NULL) {
 			free(scale->note_name);
 		}
-		if (scale->name != NULL ) {
+		if (scale->name != NULL) {
 			free(scale->name);
 		}
 
@@ -175,7 +175,7 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
 
 // TODO: test
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
-		FLT freq, FLT deviation, FLT* error_cents) {
+FLT freq, FLT deviation, FLT* error_cents) {
 
 	short note_index = 0;
 	short int index;
@@ -240,11 +240,11 @@ int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 	short int num, den;
 	int result = 1;
 
-	if (numerator != NULL ) {
+	if (numerator != NULL) {
 		*numerator = -1;
 	}
 
-	if (denominator != NULL ) {
+	if (denominator != NULL) {
 		*denominator = -1;
 	}
 
@@ -264,10 +264,10 @@ int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 				result = 0;
 			} else {
 				*cents = 1200.0 * log2(1.0 * num / den);
-				if (numerator != NULL ) {
+				if (numerator != NULL) {
 					*numerator = num;
 				}
-				if (denominator != NULL ) {
+				if (denominator != NULL) {
 					*denominator = den;
 				}
 			}
@@ -308,9 +308,9 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
 	char char_buffer[MAX_LINE_SIZE];
 
-	if ((fp = fopen(filename, "r")) == NULL ) {
+	if ((fp = fopen(filename, "r")) == NULL) {
 		char buff[1000];
-		sprintf(buff, "%s\n%s", _("Error opening scale file."),
+		snprintf(buff, sizeof(buff), "%s\n%s", _("Error opening scale file."),
 				strerror(errno));
 		lingot_msg_add_error(buff);
 		return 0;
@@ -373,7 +373,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
 			char_buffer_pointer1 = strtok(char_buffer, delim);
 
-			if (char_buffer_pointer1 == NULL ) {
+			if (char_buffer_pointer1 == NULL) {
 				throw(error_note_number_msg);
 			}
 
@@ -394,8 +394,8 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	}catch {
 		result = 0;
 		char buff[1000];
-		sprintf(buff, "%s, line %i: %s", _("Error opening scale file"), line,
-				exception);
+		snprintf(buff, sizeof(buff), "%s, line %i: %s",
+				_("Error opening scale file"), line, exception);
 		lingot_msg_add_error(buff);
 	}
 

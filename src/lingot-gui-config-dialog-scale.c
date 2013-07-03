@@ -165,7 +165,7 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 	short int shift_numerator, shift_denominator;
 	gdouble shiftf2, freq2;
 	char* char_pointer;
-	char buff[80];
+	char buff[512];
 	const char* delim = " \t\n";
 	LingotConfigDialog* config_dialog = (LingotConfigDialog*) user_data;
 	int index;
@@ -504,7 +504,7 @@ void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
 			dialog->scale_treeview);
 	gtk_tree_store_clear(store);
 	GtkTreeIter iter2;
-	char buff[80];
+	char buff[512];
 
 	int i;
 	for (i = 0; i < scale->notes; i++) {
