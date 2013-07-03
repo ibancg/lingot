@@ -92,7 +92,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 
 	try
 	{
-		if (audio->jack_client == NULL ) {
+		if (audio->jack_client == NULL) {
 			throw(_("Unable to connect to JACK server"));
 		}
 
@@ -116,13 +116,13 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		//			audio->jack_client));
 
 		audio->jack_input_port = jack_port_register(audio->jack_client, "input",
-				JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+		JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
 
-		if ((audio->jack_input_port == NULL )) {
+		if ((audio->jack_input_port == NULL)) {
 			throw(_("No more JACK ports available"));
 		}
 
-		sprintf(audio->device, "%s", device);
+		snprintf(audio->device, sizeof(audio->device), "%s", device);
 
 	}catch {
 		free(audio);
@@ -130,7 +130,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		lingot_msg_add_error(exception);
 	}
 
-	if (audio != NULL ) {
+	if (audio != NULL) {
 		client = audio->jack_client;
 	}
 
@@ -143,7 +143,7 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 
 void lingot_audio_jack_destroy(LingotAudioHandler* audio) {
 #	ifdef JACK
-	if (audio != NULL ) {
+	if (audio != NULL) {
 		//jack_cycle_wait(audio->jack_client);
 		//		jack_deactivate(audio->jack_client);
 		jack_client_close(audio->jack_client);
@@ -191,10 +191,10 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 	try
 	{
-		if (client == NULL ) {
+		if (client == NULL) {
 			jack_client = jack_client_open(client_name, options, &status,
 					server_name);
-			if (jack_client == NULL ) {
+			if (jack_client == NULL) {
 				throw(_("Unable to connect to JACK server"));
 			}
 			if (status & JackServerStarted) {
@@ -218,23 +218,23 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 	properties->forced_sample_rate = 1;
 	properties->n_devices = 1;
-	if (ports != NULL ) {
+	if (ports != NULL) {
 		int i;
-		for (i = 0; ports[i] != NULL ; i++) {
+		for (i = 0; ports[i] != NULL; i++) {
 		}
 		properties->n_devices = i + 1;
 	}
 
 	properties->devices = (char**) malloc(
 			properties->n_devices * sizeof(char*));
-	char buff[100];
-	sprintf(buff, "%s <default>", _("Default Port"));
+	char buff[512];
+	snprintf(buff, sizeof(buff), "%s <default>", _("Default Port"));
 	properties->devices[0] = strdup(buff);
 
-	if (ports != NULL ) {
+	if (ports != NULL) {
 		if (properties->n_devices != 0) {
 			int i;
-			for (i = 0; ports[i] != NULL ; i++) {
+			for (i = 0; ports[i] != NULL; i++) {
 				properties->devices[i + 1] = strdup(ports[i]);
 			}
 		}
@@ -250,11 +250,11 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		properties->sample_rates[0] = sample_rate;
 	}
 
-	if (ports != NULL ) {
+	if (ports != NULL) {
 		jack_free(ports);
 	}
 
-	if (jack_client != NULL ) {
+	if (jack_client != NULL) {
 		jack_client_close(jack_client);
 	}
 
@@ -284,7 +284,7 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 
 		ports = jack_get_ports(audio->jack_client, NULL, NULL,
 				JackPortIsOutput);
-		if (ports == NULL ) {
+		if (ports == NULL) {
 			throw(_("No active capture ports"));
 		}
 
@@ -316,8 +316,9 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 		} else {
 			if (jack_connect(audio->jack_client, audio->device,
 					jack_port_name(audio->jack_input_port))) {
-				char buff[100];
-				sprintf(buff, _("Cannot connect to requested port '%s'"),
+				char buff[512];
+				snprintf(buff, sizeof(buff),
+						_("Cannot connect to requested port '%s'"),
 						audio->device);
 				throw(buff);
 			}
@@ -329,7 +330,7 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 		lingot_audio_jack_stop(audio);
 	}
 
-	if (ports != NULL ) {
+	if (ports != NULL) {
 		jack_free(ports);
 	}
 #	else
@@ -346,7 +347,7 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 	const char** ports = jack_get_ports(audio->jack_client, NULL, NULL,
 			JackPortIsOutput);
 
-	if (ports != NULL ) {
+	if (ports != NULL) {
 		int i, j = 0;
 
 		for (i = 0; i < MAX_LAST_PORTS; i++) {

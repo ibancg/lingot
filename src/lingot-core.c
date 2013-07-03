@@ -99,7 +99,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 					* conf->oversampling) / conf->sample_rate;
 			conf->temporal_buffer_size = conf->fft_size;
 			lingot_config_update_internal_params(conf);
-			sprintf(buff,
+			snprintf(buff, sizeof(buff),
 					_(
 							"The temporal buffer is smaller than FFT size. It has been increased to %0.3f seconds"),
 					conf->temporal_window);

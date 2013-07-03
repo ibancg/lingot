@@ -105,8 +105,8 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 	static const gchar* authors[] = { "Ibán Cereijo Graña <ibancg@gmail.com>",
 			"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL };
 
-	char buff[100];
-	sprintf(buff, "Matthew Blissett (%s)", _("Logo design"));
+	char buff[512];
+	snprintf(buff, sizeof(buff), "Matthew Blissett (%s)", _("Logo design"));
 	const gchar* artists[] = { buff, NULL };
 
 	gtk_show_about_dialog(NULL, "name", "Lingot", "version", VERSION,
@@ -116,13 +116,13 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website", "http://lingot.nongnu.org/",
 			"translator-credits", _("translator-credits"), "logo-icon-name",
-			"lingot-logo", NULL );
+			"lingot-logo", NULL);
 }
 
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
 	gboolean visible = gtk_check_menu_item_get_active(
-			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item) );
+			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item));
 
 	GtkAllocation alloc;
 	gtk_widget_get_allocation(frame->win, &alloc);
@@ -141,7 +141,7 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 
 void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 		LingotMainFrame* frame) {
-	lingot_gui_config_dialog_show(frame, NULL );
+	lingot_gui_config_dialog_show(frame, NULL);
 }
 
 /* timeout for gauge and labels visualization */
@@ -223,25 +223,32 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 				&error_code);
 
 		if (more_messages) {
-			GtkWindow* parent = GTK_WINDOW((frame->config_dialog != NULL )?
-					frame->config_dialog->win : frame->win);
+			GtkWindow* parent = GTK_WINDOW(
+					(frame->config_dialog != NULL) ?
+							frame->config_dialog->win : frame->win);
 			GtkButtonsType buttonsType;
 
 			char message[2000];
 			char* message_pointer = message;
 
-			message_pointer += sprintf(message_pointer, "%s", error_message);
+			message_pointer += snprintf(message_pointer,
+					(message - message_pointer) + sizeof(message), "%s",
+					error_message);
 
 			if (error_code == EBUSY) {
 				message_pointer +=
-						sprintf(message_pointer, "\n\n%s",
+						snprintf(message_pointer,
+								(message - message_pointer) + sizeof(message),
+								"\n\n%s",
 								_("Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
 			}
 
 			if ((message_type == ERROR) && !frame->core->running) {
 				buttonsType = GTK_BUTTONS_OK;
 				message_pointer +=
-						sprintf(message_pointer, "\n\n%s",
+						snprintf(message_pointer,
+								(message - message_pointer) + sizeof(message),
+								"\n\n%s",
 								_("The core is not running, you must check your configuration."));
 			} else {
 				buttonsType = GTK_BUTTONS_OK;
@@ -259,10 +266,11 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 					(message_type == ERROR) ?
 							_("Error") :
 							((message_type == WARNING) ?
-									_("Warning") : _("Info") ));
+							_("Warning") :
+															_("Info") ));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
-					gtk_window_get_icon(GTK_WINDOW(frame->win) ));
-			gtk_dialog_run(GTK_DIALOG(message_dialog) );
+					gtk_window_get_icon(GTK_WINDOW(frame->win)));
+			gtk_dialog_run(GTK_DIALOG(message_dialog));
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 
@@ -283,9 +291,9 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 void lingot_gui_mainframe_callback_open_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(
-			_("Open Configuration File"), GTK_WINDOW(frame->win),
+	_("Open Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL );
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
 	LingotConfig* config = NULL;
 	filefilter = gtk_file_filter_new();
@@ -296,18 +304,18 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	if (filechooser_config_last_folder != NULL ) {
+	if (filechooser_config_last_folder != NULL) {
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
-		if (filechooser_config_last_folder != NULL )
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		if (filechooser_config_last_folder != NULL)
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		config = lingot_config_new();
 		lingot_config_load(config, filename);
 		g_free(filename);
@@ -315,7 +323,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	gtk_widget_destroy(dialog);
 	//g_free(filefilter);
 
-	if (config != NULL ) {
+	if (config != NULL) {
 		lingot_gui_config_dialog_show(frame, config);
 	}
 }
@@ -323,9 +331,9 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 void lingot_gui_mainframe_callback_save_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-			_("Save Configuration File"), GTK_WINDOW(frame->win),
+	_("Save Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL );
+			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
 			TRUE);
 
@@ -339,18 +347,18 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
 	gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
-	if (filechooser_config_last_folder != NULL ) {
+	if (filechooser_config_last_folder != NULL) {
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),
 				filechooser_config_last_folder);
 	}
 
-	if (gtk_dialog_run(GTK_DIALOG(dialog) ) == GTK_RESPONSE_ACCEPT) {
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
-		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog) );
-		if (filechooser_config_last_folder != NULL )
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		if (filechooser_config_last_folder != NULL)
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
-				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog) ));
+				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		lingot_config_save(frame->conf, filename);
 		g_free(filename);
 	}
@@ -396,9 +404,9 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	LingotMainFrame* frame;
 	LingotConfig* conf;
 
-	if (filechooser_config_last_folder == NULL ) {
+	if (filechooser_config_last_folder == NULL) {
 		char buff[1000];
-		sprintf(buff, "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
+		snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
 		filechooser_config_last_folder = strdup(buff);
 	}
 
@@ -431,11 +439,11 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	// TODO: add dev condition to check for the file name in $PWD
 #	define FILE_NAME "lingot-mainframe.glade"
 	FILE* fd = fopen("src/glade/" FILE_NAME, "r");
-	if (fd != NULL ) {
+	if (fd != NULL) {
 		fclose(fd);
-		gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL );
+		gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL);
 	} else {
-		gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL );
+		gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL);
 	}
 #	undef FILE_NAME
 
@@ -833,7 +841,7 @@ static const int showSNR = 1;
 static const int gain = 40;
 
 FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
-		FLT min, FLT max) {
+FLT min, FLT max) {
 	FLT signal = frame->core->SPL[i];
 	if (signal < min) {
 		signal = min;
@@ -844,7 +852,7 @@ FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 }
 
 FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, int i, FLT min,
-		FLT max) {
+FLT max) {
 	FLT noise = frame->conf->min_overall_SNR;
 	if (noise < min) {
 		noise = min;
