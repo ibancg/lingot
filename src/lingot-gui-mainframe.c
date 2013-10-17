@@ -223,9 +223,9 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 				&error_code);
 
 		if (more_messages) {
-			GtkWindow* parent = GTK_WINDOW(
-					(frame->config_dialog != NULL) ?
-							frame->config_dialog->win : frame->win);
+			GtkWindow* parent =
+					GTK_WINDOW(
+							(frame->config_dialog != NULL) ? frame->config_dialog->win : frame->win);
 			GtkButtonsType buttonsType;
 
 			char message[2000];
@@ -240,7 +240,8 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 						snprintf(message_pointer,
 								(message - message_pointer) + sizeof(message),
 								"\n\n%s",
-								_("Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
+								_(
+										"Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
 			}
 
 			if ((message_type == ERROR) && !frame->core->running) {
@@ -249,7 +250,8 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 						snprintf(message_pointer,
 								(message - message_pointer) + sizeof(message),
 								"\n\n%s",
-								_("The core is not running, you must check your configuration."));
+								_(
+										"The core is not running, you must check your configuration."));
 			} else {
 				buttonsType = GTK_BUTTONS_OK;
 			}
@@ -266,8 +268,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 					(message_type == ERROR) ?
 							_("Error") :
 							((message_type == WARNING) ?
-							_("Warning") :
-															_("Info") ));
+									_("Warning") : _("Info")));
 			gtk_window_set_icon(GTK_WINDOW(message_dialog),
 					gtk_window_get_icon(GTK_WINDOW(frame->win)));
 			gtk_dialog_run(GTK_DIALOG(message_dialog));
@@ -291,7 +292,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 void lingot_gui_mainframe_callback_open_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(
-	_("Open Configuration File"), GTK_WINDOW(frame->win),
+			_("Open Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
@@ -331,14 +332,14 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 void lingot_gui_mainframe_callback_save_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
-	_("Save Configuration File"), GTK_WINDOW(frame->win),
+			_("Save Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
-			TRUE);
+	TRUE);
 
 	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog),
-			"untitled.conf");
+			_("untitled.conf"));
 	GtkFileFilter* filefilter = gtk_file_filter_new();
 
 	gtk_file_filter_set_name(filefilter,
