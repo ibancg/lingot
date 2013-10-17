@@ -83,7 +83,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 			conf->audio_dev[conf->audio_system], conf->sample_rate,
 			(LingotAudioProcessCallback) lingot_core_read_callback, core);
 
-	if (core->audio != NULL ) {
+	if (core->audio != NULL) {
 
 		if (requested_sample_rate != core->audio->real_sample_rate) {
 			conf->sample_rate = core->audio->real_sample_rate;
@@ -174,7 +174,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5,
 				0.9 / core->conf->oversampling);
 
-		pthread_mutex_init(&core->temporal_buffer_mutex, NULL );
+		pthread_mutex_init(&core->temporal_buffer_mutex, NULL);
 
 		// ------------------------------------------------------------
 
@@ -190,7 +190,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 /* Deallocate resources */
 void lingot_core_destroy(LingotCore* core) {
 
-	if (core->audio != NULL ) {
+	if (core->audio != NULL) {
 		lingot_fft_plan_destroy(core->fftplan);
 		lingot_audio_destroy(core->audio);
 		core->audio = 0x0;
@@ -201,23 +201,23 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
 
-		if (core->hamming_window_fft != NULL ) {
+		if (core->hamming_window_fft != NULL) {
 			free(core->hamming_window_temporal);
 		}
 
-		if (core->windowed_temporal_buffer != NULL ) {
+		if (core->windowed_temporal_buffer != NULL) {
 			free(core->windowed_temporal_buffer);
 		}
 
-		if (core->hamming_window_fft != NULL ) {
+		if (core->hamming_window_fft != NULL) {
 			free(core->hamming_window_fft);
 		}
 
-		if (core->windowed_fft_buffer != NULL ) {
+		if (core->windowed_fft_buffer != NULL) {
 			free(core->windowed_fft_buffer);
 		}
 
-		if (core->antialiasing_filter != NULL ) {
+		if (core->antialiasing_filter != NULL) {
 			lingot_filter_destroy(core->antialiasing_filter);
 		}
 
@@ -370,7 +370,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 // tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency
 int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
-		FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
+FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 
 	int result = 0;
 	static const FLT tol = 5e-2; // TODO: tune
@@ -748,12 +748,12 @@ void lingot_core_start(LingotCore* core) {
 	int audio_status = 0;
 	decimation_input_index = 0;
 
-	if (core->audio != NULL ) {
+	if (core->audio != NULL) {
 		audio_status = lingot_audio_start(core->audio);
 
 		if (audio_status == 0) {
-			pthread_mutex_init(&core->thread_computation_mutex, NULL );
-			pthread_cond_init(&core->thread_computation_cond, NULL );
+			pthread_mutex_init(&core->thread_computation_mutex, NULL);
+			pthread_cond_init(&core->thread_computation_cond, NULL);
 
 			pthread_attr_init(&core->thread_computation_attr);
 			pthread_create(&core->thread_computation,
@@ -778,7 +778,7 @@ void lingot_core_stop(LingotCore* core) {
 	struct timeval tout, tout_abs;
 	struct timespec tout_tspec;
 
-	gettimeofday(&tout_abs, NULL );
+	gettimeofday(&tout_abs, NULL);
 	tout.tv_sec = 0;
 	tout.tv_usec = 300000;
 
@@ -805,14 +805,12 @@ void lingot_core_stop(LingotCore* core) {
 		pthread_mutex_destroy(&core->thread_computation_mutex);
 		pthread_cond_destroy(&core->thread_computation_cond);
 
-		memset(core->SPL, 0,
-				((core->conf->fft_size > 256) ?
-						(core->conf->fft_size >> 1) : core->conf->fft_size)
-						* sizeof(FLT));
+		int spd_size = core->conf->fft_size / 2;
+		memset(core->SPL, 0, spd_size * sizeof(FLT));
 		core->freq = 0.0;
 	}
 
-	if (core->audio != NULL ) {
+	if (core->audio != NULL) {
 		lingot_audio_stop(core->audio);
 	}
 }
@@ -822,7 +820,7 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 	struct timeval tout, tout_abs;
 	struct timespec tout_tspec;
 
-	gettimeofday(&tout_abs, NULL );
+	gettimeofday(&tout_abs, NULL);
 	tout.tv_sec = 0;
 	tout.tv_usec = 1e6 / core->conf->calculation_rate;
 
@@ -836,12 +834,10 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 				&core->thread_computation_mutex, &tout_tspec);
 		pthread_mutex_unlock(&core->thread_computation_mutex);
 
-		if (core->audio != NULL ) {
+		if (core->audio != NULL) {
+			int spd_size = core->conf->fft_size / 2;
 			if (core->audio->interrupted) {
-				memset(core->SPL, 0,
-						((core->conf->fft_size > 256) ?
-								(core->conf->fft_size >> 1) :
-								core->conf->fft_size) * sizeof(FLT));
+				memset(core->SPL, 0, spd_size * sizeof(FLT));
 				core->freq = 0.0;
 				core->running = 0;
 			}
