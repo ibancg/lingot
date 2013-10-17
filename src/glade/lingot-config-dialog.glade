@@ -577,11 +577,11 @@
                     <property name="entry_text_column">0</property>
                     <property name="id_column">1</property>
                     <items>
-                      <item translatable="yes">256</item>
-                      <item translatable="yes">512</item>
-                      <item translatable="yes">1024</item>
-                      <item translatable="yes">2048</item>
-                      <item translatable="yes">4096</item>
+                      <item translatable="no">256</item>
+                      <item translatable="no">512</item>
+                      <item translatable="no">1024</item>
+                      <item translatable="no">2048</item>
+                      <item translatable="no">4096</item>
                     </items>
                   </object>
                   <packing>

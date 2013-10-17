@@ -100,13 +100,13 @@ void lingot_config_scale_restore_default_values(LingotScale* scale) {
 
 	unsigned short int i;
 	// TODO: i18n
-	static char* tone_string[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G",
-			"G#", "A", "A#", "B", };
+	const char* tone_string[] = { _("C"), _("C#"), _("D"), _("D#"), _("E"), _("F"), _(
+			"F#"), _("G"), _("G#"), _("A"), _("A#"), _("B"), };
 
 	lingot_config_scale_destroy(scale);
 
 	// default 12 tones equal-tempered scale hard-coded
-	scale->name = strdup("Default equal-tempered scale");
+	scale->name = strdup(_("Default equal-tempered scale"));
 	lingot_config_scale_allocate(scale, 12);
 
 	scale->base_frequency = MID_C_FREQUENCY;
@@ -399,7 +399,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 		result = 0;
 		char buff[1000];
 		snprintf(buff, sizeof(buff), "%s, line %i: %s",
-		_("Error opening scale file"), line, exception);
+				_("Error opening scale file"), line, exception);
 		lingot_msg_add_error(buff);
 	}
 
