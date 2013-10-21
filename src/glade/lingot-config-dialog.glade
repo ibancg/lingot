@@ -417,8 +417,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you expirience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
-                    <property name="tooltip_text" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you expirience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
+                    <property name="tooltip_markup" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you experience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
+                    <property name="tooltip_text" translatable="yes">Minimum signal-to-noise ratio to consider the captured signal as something relevant. Try to keep this level low, and raise it if you experience problems in very noisy environments. This level is depicted in the spectrum area as a yellow dotted line.</property>
                     <property name="adjustment">adjustment3</property>
                     <property name="lower_stepper_sensitivity">on</property>
                     <property name="round_digits">1</property>
@@ -869,13 +869,13 @@
                         <property name="entry_text_column">0</property>
                         <property name="id_column">1</property>
                         <items>
-                          <item translatable="yes">0</item>
-                          <item translatable="yes">1</item>
-                          <item translatable="yes">2</item>
-                          <item translatable="yes">3</item>
-                          <item translatable="yes">4</item>
-                          <item translatable="yes">5</item>
-                          <item translatable="yes">6</item>
+                          <item translatable="no">0</item>
+                          <item translatable="no">1</item>
+                          <item translatable="no">2</item>
+                          <item translatable="no">3</item>
+                          <item translatable="no">4</item>
+                          <item translatable="no">5</item>
+                          <item translatable="no">6</item>
                         </items>
                       </object>
                       <packing>
@@ -1042,65 +1042,5 @@
       <action-widget response="0">button_accept</action-widget>
       <action-widget response="0">button_cancel</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">A4 &lt;440.0&gt;</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="liststore2">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststore3">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">256</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">512</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">1024</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">2048</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">4096</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="liststore4">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststore5">
-    <columns>
-      <!-- column-name gchararray1 -->
-      <column type="gchararray"/>
-      <!-- column-name gchararray2 -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">E1</col>
-        <col id="1" translatable="yes">E2</col>
-      </row>
-    </data>
   </object>
 </interface>
