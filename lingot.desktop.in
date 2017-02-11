@@ -2,6 +2,7 @@
 Name=Lingot
 Comment=LINGOT Is Not a Guitar-Only Tuner
 Comment[cs]=(Nejen kytarová) ladička
+Comment[fr]=Un accordeur de guitare, mais pas que
 Exec=lingot
 Icon=@PACKAGE_PIXMAPS_DIR@/lingot-icon.svg
 Terminal=false
