@@ -175,11 +175,8 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	return samples_read;
 }
 
-LingotAudioSystemProperties* lingot_audio_oss_get_audio_system_properties(
-		audio_system_t audio_system) {
-
-	LingotAudioSystemProperties* result = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
+int lingot_audio_oss_get_audio_system_properties(
+		LingotAudioSystemProperties* result) {
 
 	// TODO
 	result->forced_sample_rate = 0;
@@ -194,6 +191,6 @@ LingotAudioSystemProperties* lingot_audio_oss_get_audio_system_properties(
 	result->sample_rates[3] = 44100;
 	result->sample_rates[4] = 48000;
 
-	return result;
+	return 0;
 }
 

@@ -104,27 +104,26 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 	audio_system_t audio_system = str_to_audio_system_t(text);
 	free(text);
 
-	LingotAudioSystemProperties* properties =
-			lingot_audio_get_audio_system_properties(audio_system);
+	LingotAudioSystemProperties properties;
 
-	if (properties != NULL) {
+	if (lingot_audio_get_audio_system_properties(&properties, audio_system) == 0) {
 		GtkListStore* input_dev_model = GTK_LIST_STORE(
 				gtk_combo_box_get_model(GTK_COMBO_BOX(dialog->input_dev)));
 		gtk_list_store_clear(input_dev_model);
 
-		if (properties->devices != NULL) {
+		if (properties.devices != NULL) {
 			int i;
-			for (i = 0; i < properties->n_devices; i++)
-				if (properties->devices[i] != NULL) {
+			for (i = 0; i < properties.n_devices; i++)
+				if (properties.devices[i] != NULL) {
 					gtk_combo_box_text_append_text(dialog->input_dev,
-							properties->devices[i]);
+							properties.devices[i]);
 				}
 		}
 
 		lingot_gui_config_dialog_set_audio_device(dialog->input_dev,
 				dialog->conf->audio_dev[audio_system]);
 
-		lingot_audio_audio_system_properties_destroy(properties);
+		lingot_audio_audio_system_properties_destroy(&properties);
 	} else {
 		gtk_entry_set_text(
 				GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->input_dev))), "");

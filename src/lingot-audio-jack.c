@@ -164,13 +164,10 @@ int lingot_audio_jack_read(LingotAudioHandler* audio) {
 #	endif
 }
 
-LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
-		audio_system_t audio_system) {
+int lingot_audio_jack_get_audio_system_properties(
+		LingotAudioSystemProperties* properties) {
 
-	LingotAudioSystemProperties* properties = NULL;
 #	ifdef JACK
-	properties = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
 
 	int sample_rate = -1;
 
@@ -258,12 +255,12 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		jack_client_close(jack_client);
 	}
 
+	return 0;
 #	else
 	lingot_msg_add_error(
 			_("The application has not been built with JACK support"));
+	return -1;
 #	endif
-
-	return properties;
 }
 
 int lingot_audio_jack_start(LingotAudioHandler* audio) {

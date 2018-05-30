@@ -170,31 +170,23 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 	return samples_read;
 }
 
-LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+int lingot_audio_get_audio_system_properties(
+		LingotAudioSystemProperties* properties,
 		audio_system_t audio_system) {
-	LingotAudioSystemProperties* result;
 
 	switch (audio_system) {
 	case AUDIO_SYSTEM_OSS:
-		result = lingot_audio_oss_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_oss_get_audio_system_properties(properties);
 	case AUDIO_SYSTEM_ALSA:
-		result = lingot_audio_alsa_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_alsa_get_audio_system_properties(properties);
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_jack_get_audio_system_properties(properties);
 	case AUDIO_SYSTEM_PULSEAUDIO:
-		result = lingot_audio_pulseaudio_get_audio_system_properties(
-				audio_system);
-		break;
+		return lingot_audio_pulseaudio_get_audio_system_properties(properties);
 	default:
 		perror("unknown audio system\n");
-		result = NULL;
-		break;
+		return -1;
 	}
-
-	return result;
 }
 
 void lingot_audio_audio_system_properties_destroy(

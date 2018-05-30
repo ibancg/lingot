@@ -30,7 +30,8 @@
 LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate);
 void lingot_audio_oss_destroy(LingotAudioHandler*);
 int lingot_audio_oss_read(LingotAudioHandler*);
-LingotAudioSystemProperties* lingot_audio_oss_get_audio_system_properties(
-		audio_system_t);
+
+int lingot_audio_oss_get_audio_system_properties(LingotAudioSystemProperties*);
+// Return status : 0 for OK, else -1.
 
 #endif

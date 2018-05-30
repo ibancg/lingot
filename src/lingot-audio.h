@@ -109,8 +109,11 @@ struct _LingotAudioSystemProperties {
 	char** devices; // devices
 };
 
-LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+int lingot_audio_get_audio_system_properties(
+		LingotAudioSystemProperties*,
 		audio_system_t audio_system);
+// Return status : 0 for OK, else -1.
+
 void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
 
 // creates an audio handler

@@ -216,11 +216,8 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	return samples_read;
 }
 
-LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
-		audio_system_t audio_system) {
-
-	LingotAudioSystemProperties* result = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
+int lingot_audio_alsa_get_audio_system_properties(
+		LingotAudioSystemProperties* result) {
 
 	result->forced_sample_rate = 0;
 	result->n_devices = 0;
@@ -405,6 +402,6 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 
 #	endif
 
-	return result;
+	return 0;
 }
 

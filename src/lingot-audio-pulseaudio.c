@@ -207,13 +207,10 @@ static void lingot_audio_pulseaudio_context_state_callback(pa_context *c,
 		void *userdata);
 #endif
 
-LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties(
-		audio_system_t audio_system) {
+int lingot_audio_pulseaudio_get_audio_system_properties(
+		LingotAudioSystemProperties* properties) {
 
-	LingotAudioSystemProperties* properties = NULL;
 #	ifdef PULSEAUDIO
-	properties = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
 
 	properties->forced_sample_rate = 0;
 	properties->n_devices = 0;
@@ -318,9 +315,10 @@ LingotAudioSystemProperties* lingot_audio_pulseaudio_get_audio_system_properties
 		free(name_node_previous);
 	}
 
+	return 0;
+#	else
+	return -1;
 #	endif
-
-	return properties;
 }
 
 #ifdef PULSEAUDIO
