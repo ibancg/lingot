@@ -5,6 +5,8 @@
 
 SUBDIRS = po src pixmaps
 
+ACLOCAL_AMFLAGS = -I m4
+
 lingotdocdir = ${docdir}
 lingotdoc_DATA = \
 	README\
@@ -23,7 +25,7 @@ lingotdoc_DATA = \
 
 EXTRA_DIST = $(lingotdoc_DATA)
 
-CLEANFILES =\
+DISTCLEANFILES = \
 	intltool-extract\
 	intltool-merge\
 	intltool-update
