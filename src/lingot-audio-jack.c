@@ -67,9 +67,7 @@ void lingot_audio_jack_shutdown(void* param) {
 }
 #endif
 
-LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
-
-	LingotAudioHandler* audio = NULL;
+void lingot_audio_jack_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
 #	ifdef JACK
 	const char* exception;
@@ -80,7 +78,6 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 	jack_options_t options = JackNoStartServer;
 	jack_status_t status;
 
-	audio = malloc(sizeof(LingotAudioHandler));
 	strcpy(audio->device, "");
 
 	audio->read_buffer = 0x0;
@@ -125,25 +122,24 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		snprintf(audio->device, sizeof(audio->device), "%s", device);
 
 	}catch {
-		free(audio);
-		audio = NULL;
+		audio->audio_system = -1;
 		lingot_msg_add_error(exception);
 	}
 
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_JACK) {
 		client = audio->jack_client;
 	}
 
 #	else
 	lingot_msg_add_error(
 			_("The application has not been built with JACK support"));
+	audio->audio_system = -1;
 #	endif
-	return audio;
 }
 
 void lingot_audio_jack_destroy(LingotAudioHandler* audio) {
 #	ifdef JACK
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_JACK) {
 		//jack_cycle_wait(audio->jack_client);
 		//		jack_deactivate(audio->jack_client);
 		jack_client_close(audio->jack_client);

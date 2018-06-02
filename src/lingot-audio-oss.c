@@ -40,9 +40,7 @@
 #include <stdlib.h>
 #endif
 
-LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
-
-	LingotAudioHandler* audio = NULL;
+void lingot_audio_oss_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
 #	ifdef OSS
 
@@ -55,8 +53,6 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 
 	char error_message[100];
 	const char* exception;
-
-	audio = malloc(sizeof(LingotAudioHandler));
 
 	audio->audio_system = AUDIO_SYSTEM_OSS;
 	audio->dsp = open(device, O_RDONLY);
@@ -126,20 +122,18 @@ LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate) {
 	}catch {
 		lingot_msg_add_error_with_code(exception, errno);
 		close(audio->dsp);
-		free(audio);
-		audio = NULL;
+		audio->audio_system = -1;
 	}
 #	else
 	lingot_msg_add_error(
 			_("The application has not been built with OSS support"));
+	audio->audio_system = -1;
 #	endif
-
-	return audio;
 }
 
 void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
 #ifdef OSS
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_OSS) {
 		if (audio->dsp >= 0) {
 			close(audio->dsp);
 			audio->dsp = -1;

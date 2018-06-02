@@ -38,13 +38,10 @@ static int channels = 1;
 static pa_sample_spec ss;
 #endif
 
-LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
-
-	LingotAudioHandler* audio = NULL;
+void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
 #	ifdef PULSEAUDIO
 
-	audio = malloc(sizeof(LingotAudioHandler));
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
 	audio->read_buffer = NULL;
@@ -100,25 +97,23 @@ LingotAudioHandler* lingot_audio_pulseaudio_new(char* device, int sample_rate) {
 				_("Error creating PulseAudio client."),
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
-		free(audio);
-		audio = NULL;
+		audio->audio_system = -1;
 	} else {
 		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
 		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 	}
 
 #	else
+	audio->audio_system = -1;
 	lingot_msg_add_error(
 			_("The application has not been built with PulseAudio support"));
 #	endif
-
-	return audio;
 }
 
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
 
 #	ifdef PULSEAUDIO
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_PULSEAUDIO) {
 		if (audio->pa_client != 0x0) {
 			pa_simple_free(audio->pa_client);
 			audio->pa_client = 0x0;

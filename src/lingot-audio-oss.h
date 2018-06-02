@@ -27,8 +27,11 @@
 
 #include "lingot-audio.h"
 
-LingotAudioHandler* lingot_audio_oss_new(char* device, int sample_rate);
+void lingot_audio_oss_new(LingotAudioHandler*, char* device, int sample_rate);
+// In case of failure, audio_system is set to -1.
+
 void lingot_audio_oss_destroy(LingotAudioHandler*);
+
 int lingot_audio_oss_read(LingotAudioHandler*);
 
 int lingot_audio_oss_get_audio_system_properties(LingotAudioSystemProperties*);

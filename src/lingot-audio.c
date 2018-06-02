@@ -37,28 +37,26 @@
 #include "lingot-audio-jack.h"
 #include "lingot-audio-pulseaudio.h"
 
-LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
+void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg) {
 
-	LingotAudioHandler* result = NULL;
-
 	switch (audio_system) {
 	case AUDIO_SYSTEM_OSS:
-		result = lingot_audio_oss_new(device, sample_rate);
+		lingot_audio_oss_new(result, device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_ALSA:
-		result = lingot_audio_alsa_new(device, sample_rate);
+		lingot_audio_alsa_new(result, device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_new(device, sample_rate);
+		lingot_audio_jack_new(result, device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_PULSEAUDIO:
-		result = lingot_audio_pulseaudio_new(device, sample_rate);
+		lingot_audio_pulseaudio_new(result, device, sample_rate);
 		break;
 	}
 
-	if (result != NULL ) {
+	if (result->audio_system != -1 ) {
 		// audio source read in floating point format.
 		result->flt_read_buffer = malloc(
 				result->read_buffer_size_samples * sizeof(FLT));
@@ -69,12 +67,10 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		result->interrupted = 0;
 		result->running = 0;
 	}
-
-	return result;
 }
 
 void lingot_audio_destroy(LingotAudioHandler* audio) {
-	if (audio != NULL ) {
+	if (audio->audio_system != -1) {
 
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
@@ -93,7 +89,6 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 			perror("unknown audio system\n");
 			break;
 		}
-
 		if (audio->flt_read_buffer != 0x0) {
 			free(audio->flt_read_buffer);
 			audio->flt_read_buffer = 0x0;
@@ -102,15 +97,14 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 			free(audio->read_buffer);
 			audio->read_buffer = 0x0;
 		}
-
-		free(audio);
+		audio->audio_system = -1;
 	}
 }
 
 int lingot_audio_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 
-	if (audio != NULL ) {
+	if (audio->audio_system != -1 ) {
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			samples_read = lingot_audio_oss_read(audio);

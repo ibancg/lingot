@@ -117,9 +117,11 @@ int lingot_audio_get_audio_system_properties(
 void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
 
 // creates an audio handler
-LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
+void lingot_audio_new(LingotAudioHandler*,
+		audio_system_t audio_system, char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg);
+// In case of failure, audio_system is set to -1 in the LingotAudioHandler struct.
 
 // destroys an audio handler
 void lingot_audio_destroy(LingotAudioHandler*);
