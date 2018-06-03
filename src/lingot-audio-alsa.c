@@ -392,7 +392,7 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 		}
 
 	}catch {
-		fprintf(stderr, exception);
+		fprintf(stderr, "%s", exception);
 	}
 
 	// dispose the device names list

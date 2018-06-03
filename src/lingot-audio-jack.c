@@ -213,7 +213,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		// here I throw a warning message because we are only ontaining the
 		// audio properties
 //		lingot_msg_add_warning(exception);
-		fprintf(stderr, exception);
+		fprintf(stderr, "%s", exception);
 	}
 
 	properties->forced_sample_rate = 1;
