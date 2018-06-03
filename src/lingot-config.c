@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,10 +42,12 @@
 LingotConfigParameterSpec parameters[N_MAX_OPTIONS];
 unsigned int parameters_count = 0;
 
-const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio", NULL };
+const char* audio_systems[] = { "OSS", "ALSA", "JACK", "PulseAudio"};
 
 // converts an audio_system_t to a string
 const char* audio_system_t_to_str(audio_system_t audio_system) {
+	assert (0 <= audio_system);
+	assert (audio_system * sizeof (char*) < sizeof (audio_systems));
 	return audio_systems[audio_system];
 }
 
@@ -52,7 +55,7 @@ const char* audio_system_t_to_str(audio_system_t audio_system) {
 audio_system_t str_to_audio_system_t(char* audio_system) {
 	audio_system_t result = -1;
 	int i;
-	for (i = 0; audio_systems[i] != NULL; i++) {
+	for (i = 0; i * sizeof (char*) < sizeof (audio_systems); i++) {
 		if (!strcmp(audio_system, audio_systems[i])) {
 			result = i;
 			break;
