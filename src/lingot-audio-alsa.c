@@ -21,6 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef ALSA
+
 #include <stdlib.h>
 
 #include "lingot-defs.h"
@@ -28,17 +30,14 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-#ifdef ALSA
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
 snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
-#endif
 
 static const unsigned int channels = 1;
 
 void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
-#	ifdef ALSA
 	const char* exception;
 	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
@@ -143,24 +142,16 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_r
 
 	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
-
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with ALSA support"));
-#	endif
 }
 
 void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
-#	ifdef ALSA
 	if (audio->audio_system == AUDIO_SYSTEM_ALSA) {
 		snd_pcm_close(audio->capture_handle);
 	}
-#	endif
 }
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
-#	ifdef ALSA
 	char buffer [channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
 
 	samples_read = snd_pcm_readi(audio->capture_handle, buffer,
@@ -201,9 +192,6 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 			break;
 		}
 	}
-
-#	endif
-
 	return samples_read;
 }
 
@@ -220,8 +208,6 @@ int lingot_audio_alsa_get_audio_system_properties(
 	result->sample_rates[2] = 22050;
 	result->sample_rates[3] = 44100;
 	result->sample_rates[4] = 48000;
-
-#	ifdef ALSA
 
 	int status;
 	int card_index = -1;
@@ -389,9 +375,7 @@ int lingot_audio_alsa_get_audio_system_properties(
 		name_node_current = name_node_current->next;
 		free(name_node_previous);
 	}
-
-#	endif
-
 	return 0;
 }
 
+#endif

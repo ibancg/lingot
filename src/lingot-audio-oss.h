@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef OSS
+
 #ifndef __LINGOT_AUDIO_OSS_H__
 #define __LINGOT_AUDIO_OSS_H__
 
@@ -37,4 +39,5 @@ int lingot_audio_oss_read(LingotAudioHandler*);
 int lingot_audio_oss_get_audio_system_properties(LingotAudioSystemProperties*);
 // Return status : 0 for OK, else -1.
 
+#endif
 #endif

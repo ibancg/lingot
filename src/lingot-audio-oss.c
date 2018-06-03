@@ -22,12 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef OSS
+
 #include "lingot-msg.h"
 #include "lingot-defs.h"
 #include "lingot-audio-oss.h"
 #include "lingot-i18n.h"
 
-#ifdef OSS
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -38,11 +39,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#endif
 
 void lingot_audio_oss_new(LingotAudioHandler* audio, char* device, int sample_rate) {
-
-#	ifdef OSS
 
 	int channels = 1;
 #	ifdef AFMT_S16_NE
@@ -118,28 +116,19 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, char* device, int sample_ra
 		close(audio->dsp);
 		audio->audio_system = -1;
 	}
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with OSS support"));
-	audio->audio_system = -1;
-#	endif
 }
 
 void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
-#ifdef OSS
 	if (audio->audio_system == AUDIO_SYSTEM_OSS) {
 		if (audio->dsp >= 0) {
 			close(audio->dsp);
 			audio->dsp = -1;
 		}
 	}
-#endif
 }
 
 int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
-
-#ifdef OSS
 	char buffer [audio->read_buffer_size_samples * audio->bytes_per_sample];
 
 	int bytes_read = read(audio->dsp, buffer, sizeof (buffer));
@@ -159,8 +148,6 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 			audio->flt_read_buffer[i] = read_buffer[i];
 		}
 	}
-#endif
-
 	return samples_read;
 }
 
@@ -182,3 +169,4 @@ int lingot_audio_oss_get_audio_system_properties(
 	return 0;
 }
 
+#endif

@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef PULSEAUDIO
+
 #ifndef __LINGOT_AUDIO_PULSEAUDIO_H__
 #define __LINGOT_AUDIO_PULSEAUDIO_H__
 
@@ -39,4 +41,5 @@ int lingot_audio_pulseaudio_get_audio_system_properties(LingotAudioSystemPropert
 
 void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio);
 
+#endif
 #endif

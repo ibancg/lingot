@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef JACK
+
 #ifndef __LINGOT_AUDIO_JACK_H__
 #define __LINGOT_AUDIO_JACK_H__
 
@@ -40,4 +42,5 @@ int lingot_audio_jack_get_audio_system_properties(LingotAudioSystemProperties*);
 int lingot_audio_jack_start(LingotAudioHandler*);
 void lingot_audio_jack_stop(LingotAudioHandler*);
 
+#endif
 #endif

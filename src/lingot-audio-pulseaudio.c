@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef PULSEAUDIO
+
 #include <stdio.h>
 
 #include "lingot-defs.h"
@@ -29,18 +31,12 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-#ifdef PULSEAUDIO
 #include <pulse/pulseaudio.h>
-#endif
 
-#ifdef PULSEAUDIO
 static int channels = 1;
 static pa_sample_spec ss;
-#endif
 
 void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sample_rate) {
-
-#	ifdef PULSEAUDIO
 
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
@@ -96,30 +92,20 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 		lingot_msg_add_error_with_code(buff, error);
 		audio->audio_system = -1;
 	}
-
-#	else
-	audio->audio_system = -1;
-	lingot_msg_add_error(
-			_("The application has not been built with PulseAudio support"));
-#	endif
 }
 
 void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
-
-#	ifdef PULSEAUDIO
 	if (audio->audio_system == AUDIO_SYSTEM_PULSEAUDIO) {
 		if (audio->pa_client != 0x0) {
 			pa_simple_free(audio->pa_client);
 			audio->pa_client = 0x0;
 		}
 	}
-#	endif
 }
 
 int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
 	int samples_read = -1;
-#	ifdef PULSEAUDIO
 	int error;
 	char buffer[channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
 
@@ -157,21 +143,14 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 		}
 
 	}
-
-#	endif
-
 	return samples_read;
 }
 
 void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio) {
-#ifdef PULSEAUDIO
 	// warning: memory leak?
 	// TODO: avoid it by using the async API
 	audio->pa_client = 0x0;
-#endif
 }
-
-#ifdef PULSEAUDIO
 
 // linked list struct for storing the capture device names
 struct device_name_node_t {
@@ -191,12 +170,9 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
 		const pa_source_info *i, int is_last, void *userdata);
 static void lingot_audio_pulseaudio_context_state_callback(pa_context *c,
 		void *userdata);
-#endif
 
 int lingot_audio_pulseaudio_get_audio_system_properties(
 		LingotAudioSystemProperties* properties) {
-
-#	ifdef PULSEAUDIO
 
 	properties->forced_sample_rate = 0;
 	properties->n_devices = 0;
@@ -301,12 +277,7 @@ int lingot_audio_pulseaudio_get_audio_system_properties(
 	}
 
 	return 0;
-#	else
-	return -1;
-#	endif
 }
-
-#ifdef PULSEAUDIO
 
 static void lingot_audio_pulseaudio_mainloop_quit(int ret) {
 	mainloop_api->quit(mainloop_api, ret);
