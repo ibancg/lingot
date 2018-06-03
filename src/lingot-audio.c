@@ -183,18 +183,14 @@ void lingot_audio_audio_system_properties_destroy(
 		LingotAudioSystemProperties* properties) {
 
 	int i;
-	if (properties->devices != NULL ) {
+	if (properties->devices != NULL) {
 		for (i = 0; i < properties->n_devices; i++) {
 			if (properties->devices[i] != NULL ) {
 				free(properties->devices[i]);
 			}
 		}
-	}
-
-	if (properties->sample_rates != NULL )
-		free(properties->sample_rates);
-	if (properties->devices != NULL )
 		free(properties->devices);
+	}
 }
 
 void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {

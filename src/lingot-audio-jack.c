@@ -233,11 +233,8 @@ int lingot_audio_jack_get_audio_system_properties(
 
 	if (sample_rate == -1) {
 		properties->n_sample_rates = 0;
-		properties->sample_rates = NULL;
 	} else {
 		properties->n_sample_rates = 1;
-		properties->sample_rates = malloc(
-				properties->n_sample_rates * sizeof(int));
 		properties->sample_rates[0] = sample_rate;
 	}
 

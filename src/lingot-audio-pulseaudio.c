@@ -202,7 +202,6 @@ int lingot_audio_pulseaudio_get_audio_system_properties(
 	properties->n_devices = 0;
 	properties->devices = NULL;
 	properties->n_sample_rates = 5;
-	properties->sample_rates = malloc(properties->n_sample_rates * sizeof(int));
 	properties->sample_rates[0] = 8000;
 	properties->sample_rates[1] = 11025;
 	properties->sample_rates[2] = 22050;

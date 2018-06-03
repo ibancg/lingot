@@ -215,7 +215,6 @@ int lingot_audio_alsa_get_audio_system_properties(
 	result->devices = NULL;
 
 	result->n_sample_rates = 5;
-	result->sample_rates = malloc(result->n_sample_rates * sizeof(int));
 	result->sample_rates[0] = 8000;
 	result->sample_rates[1] = 11025;
 	result->sample_rates[2] = 22050;

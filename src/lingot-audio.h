@@ -100,7 +100,7 @@ struct _LingotAudioSystemProperties {
 	int forced_sample_rate; // tells whether the sample rate can be changed
 
 	int n_sample_rates; // number of available sample rates
-	int* sample_rates; // sample rates
+	int sample_rates [5]; // sample rates
 
 	int n_devices; // number of available devices
 	char** devices; // devices
