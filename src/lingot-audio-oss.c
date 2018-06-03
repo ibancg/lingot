@@ -113,12 +113,6 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, char* device, int sample_ra
 
 		audio->real_sample_rate = sample_rate;
 		audio->bytes_per_sample = 2;
-		audio->read_buffer_size_bytes = audio->read_buffer_size_samples
-				* audio->bytes_per_sample;
-
-		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
-		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
-
 	}catch {
 		lingot_msg_add_error_with_code(exception, errno);
 		close(audio->dsp);
@@ -146,8 +140,9 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 
 #ifdef OSS
-	int bytes_read = read(audio->dsp, audio->read_buffer,
-			audio->read_buffer_size_bytes);
+	char buffer [audio->read_buffer_size_samples * audio->bytes_per_sample];
+
+	int bytes_read = read(audio->dsp, buffer, sizeof (buffer));
 
 	if (bytes_read < 0) {
 		char buff[512];
@@ -159,7 +154,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
 		samples_read = bytes_read / audio->bytes_per_sample;
 		// float point conversion
 		int i;
-		const int16_t* read_buffer = (int16_t*) audio->read_buffer;
+		const int16_t* read_buffer = (int16_t*) buffer;
 		for (i = 0; i < samples_read; i++) {
 			audio->flt_read_buffer[i] = read_buffer[i];
 		}

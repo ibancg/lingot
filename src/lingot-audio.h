@@ -73,9 +73,6 @@ struct _LingotAudioHandler {
 #	endif
 
 	int read_buffer_size_samples;
-	int read_buffer_size_bytes;
-
-	void* read_buffer;
 	FLT* flt_read_buffer;
 
 	unsigned int real_sample_rate;

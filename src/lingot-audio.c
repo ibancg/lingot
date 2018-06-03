@@ -93,10 +93,6 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
 			free(audio->flt_read_buffer);
 			audio->flt_read_buffer = 0x0;
 		}
-		if (audio->read_buffer != 0x0) {
-			free(audio->read_buffer);
-			audio->read_buffer = 0x0;
-		}
 		audio->audio_system = -1;
 	}
 }

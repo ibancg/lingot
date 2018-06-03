@@ -34,6 +34,8 @@ snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
 #endif
 
+static const unsigned int channels = 1;
+
 void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
 #	ifdef ALSA
@@ -41,9 +43,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_r
 	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
 	char error_message[1000];
-	static const unsigned int channels = 1;
 
-	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
 
 	if (sample_rate >= 44100) {
@@ -134,11 +134,6 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_r
 		}
 
 		audio->bytes_per_sample = snd_pcm_format_size(sample_format, 1);
-		audio->read_buffer_size_bytes = channels
-				* audio->read_buffer_size_samples * audio->bytes_per_sample;
-
-		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
-		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 	}catch {
 		if (audio->capture_handle != NULL)
 			snd_pcm_close(audio->capture_handle);
@@ -166,7 +161,9 @@ void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 #	ifdef ALSA
-	samples_read = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
+	char buffer [channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+
+	samples_read = snd_pcm_readi(audio->capture_handle, buffer,
 			audio->read_buffer_size_samples);
 
 	if (samples_read < 0) {
@@ -180,21 +177,21 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 		// float point conversion
 		switch (sample_format) {
 		case SND_PCM_FORMAT_S16: {
-			int16_t* read_buffer = (int16_t*) audio->read_buffer;
+			int16_t* read_buffer = (int16_t*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i];
 			}
 			break;
 		}
 		case SND_PCM_FORMAT_FLOAT: {
-			float* read_buffer = (float*) audio->read_buffer;
+			float* read_buffer = (float*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
 			}
 			break;
 		}
 		case SND_PCM_FORMAT_FLOAT64: {
-			double* read_buffer = (double*) audio->read_buffer;
+			double* read_buffer = (double*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
 			}

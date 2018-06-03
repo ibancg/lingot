@@ -80,8 +80,6 @@ void lingot_audio_jack_new(LingotAudioHandler* audio, char* device, int sample_r
 
 	strcpy(audio->device, "");
 
-	audio->read_buffer = 0x0;
-	audio->read_buffer_size_bytes = -1;
 	audio->bytes_per_sample = -1;
 	audio->audio_system = AUDIO_SYSTEM_JACK;
 	audio->jack_client = jack_client_open(client_name, options, &status,

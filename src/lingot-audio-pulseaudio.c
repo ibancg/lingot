@@ -44,7 +44,6 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
-	audio->read_buffer = NULL;
 
 //	sample_rate = 44100;
 	audio->real_sample_rate = sample_rate;
@@ -69,12 +68,10 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 			ss.format);
 
 	audio->bytes_per_sample = pa_sample_size(&ss);
-	audio->read_buffer_size_bytes = channels * audio->read_buffer_size_samples
-			* audio->bytes_per_sample;
 
 	pa_buffer_attr buff;
 	buff.maxlength = -1;
-	buff.fragsize = audio->read_buffer_size_bytes;
+	buff.fragsize = channels * audio->read_buffer_size_samples * audio->bytes_per_sample;
 
 	const char* device_name = device;
 	if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -98,9 +95,6 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 				pa_strerror(error));
 		lingot_msg_add_error_with_code(buff, error);
 		audio->audio_system = -1;
-	} else {
-		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
-		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 	}
 
 #	else
@@ -127,13 +121,10 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 #	ifdef PULSEAUDIO
 	int error;
+	char buffer[channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
 
-	const size_t sample_size = pa_sample_size(&ss);
-	const unsigned int block_size = channels * audio->read_buffer_size_samples
-			* sample_size;
-
-	int result = pa_simple_read(audio->pa_client, audio->read_buffer,
-			block_size, &error);
+	int result = pa_simple_read(audio->pa_client, buffer,
+			sizeof(buffer), &error);
 
 //	printf("result = %i\n", result);
 	if (result < 0) {
@@ -148,14 +139,14 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 		int i;
 		switch (ss.format) {
 		case PA_SAMPLE_S16LE: {
-			int16_t* read_buffer = (int16_t*) audio->read_buffer;
+			int16_t* read_buffer = (int16_t*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i];
 			}
 			break;
 		}
 		case PA_SAMPLE_FLOAT32: {
-			float* read_buffer = (float*) audio->read_buffer;
+			float* read_buffer = (float*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
 			}
