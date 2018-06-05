@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=Lingot
+GenericName=Musical instrument tuner
+Keywords=frequency;note;gauge
 Comment=LINGOT Is Not a Guitar-Only Tuner
 Comment[cs]=(Nejen kytarová) ladička
 Comment[fr]=Un accordeur de guitare, mais pas que

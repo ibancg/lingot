@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef JACK
+
 #include <stdio.h>
 
 #include "lingot-defs.h"
@@ -29,7 +31,6 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-#ifdef JACK
 #include <jack/jack.h>
 
 // persistent JACK client to obtain hardware parameters
@@ -65,13 +66,8 @@ void lingot_audio_jack_shutdown(void* param) {
 	audio->interrupted = 1;
 	pthread_mutex_unlock(&stop_mutex);
 }
-#endif
 
-LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
-
-	LingotAudioHandler* audio = NULL;
-
-#	ifdef JACK
+void lingot_audio_jack_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 	const char* exception;
 //	const char **ports = NULL;
 	const char *client_name = "lingot";
@@ -80,11 +76,8 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 	jack_options_t options = JackNoStartServer;
 	jack_status_t status;
 
-	audio = malloc(sizeof(LingotAudioHandler));
 	strcpy(audio->device, "");
 
-	audio->read_buffer = 0x0;
-	audio->read_buffer_size_bytes = -1;
 	audio->bytes_per_sample = -1;
 	audio->audio_system = AUDIO_SYSTEM_JACK;
 	audio->jack_client = jack_client_open(client_name, options, &status,
@@ -125,53 +118,34 @@ LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate) {
 		snprintf(audio->device, sizeof(audio->device), "%s", device);
 
 	}catch {
-		free(audio);
-		audio = NULL;
+		audio->audio_system = -1;
 		lingot_msg_add_error(exception);
 	}
 
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_JACK) {
 		client = audio->jack_client;
 	}
-
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with JACK support"));
-#	endif
-	return audio;
 }
 
 void lingot_audio_jack_destroy(LingotAudioHandler* audio) {
-#	ifdef JACK
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_JACK) {
 		//jack_cycle_wait(audio->jack_client);
 		//		jack_deactivate(audio->jack_client);
 		jack_client_close(audio->jack_client);
 		client = NULL;
 	}
-#	endif
 }
 
 int lingot_audio_jack_read(LingotAudioHandler* audio) {
-#	ifdef JACK
 	register int i;
 	float* in = jack_port_get_buffer(audio->jack_input_port, audio->nframes);
 	for (i = 0; i < audio->nframes; i++)
 		audio->flt_read_buffer[i] = in[i] * FLT_SAMPLE_SCALE;
 	return 0;
-#	else
-	return -1;
-#	endif
 }
 
-LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
-		audio_system_t audio_system) {
-
-	LingotAudioSystemProperties* properties = NULL;
-#	ifdef JACK
-	properties = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
-
+int lingot_audio_jack_get_audio_system_properties(
+		LingotAudioSystemProperties* properties) {
 	int sample_rate = -1;
 
 	const char *client_name = "lingot-get-audio-properties";
@@ -213,7 +187,7 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		// here I throw a warning message because we are only ontaining the
 		// audio properties
 //		lingot_msg_add_warning(exception);
-		fprintf(stderr, exception);
+		fprintf(stderr, "%s", exception);
 	}
 
 	properties->forced_sample_rate = 1;
@@ -242,11 +216,8 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 
 	if (sample_rate == -1) {
 		properties->n_sample_rates = 0;
-		properties->sample_rates = NULL;
 	} else {
 		properties->n_sample_rates = 1;
-		properties->sample_rates = malloc(
-				properties->n_sample_rates * sizeof(int));
 		properties->sample_rates[0] = sample_rate;
 	}
 
@@ -258,18 +229,11 @@ LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
 		jack_client_close(jack_client);
 	}
 
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with JACK support"));
-#	endif
-
-	return properties;
+	return 0;
 }
 
 int lingot_audio_jack_start(LingotAudioHandler* audio) {
 	int result = 0;
-
-#   ifdef JACK
 	int index = 0;
 	const char **ports = NULL;
 	const char* exception;
@@ -333,16 +297,11 @@ int lingot_audio_jack_start(LingotAudioHandler* audio) {
 	if (ports != NULL) {
 		jack_free(ports);
 	}
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with JACK support"));
-#	endif
 
 	return result;
 }
 
 void lingot_audio_jack_stop(LingotAudioHandler* audio) {
-#	ifdef JACK
 	//jack_cycle_wait(audio->jack_client);
 	const char** ports = jack_get_ports(audio->jack_client, NULL, NULL,
 			JackPortIsOutput);
@@ -365,8 +324,6 @@ void lingot_audio_jack_stop(LingotAudioHandler* audio) {
 	pthread_mutex_lock(&stop_mutex);
 	jack_deactivate(audio->jack_client);
 	pthread_mutex_unlock(&stop_mutex);
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with JACK support"));
-#	endif
 }
+
+#endif

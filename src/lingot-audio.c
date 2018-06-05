@@ -21,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,29 +37,49 @@
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-jack.h"
 #include "lingot-audio-pulseaudio.h"
+#include "lingot-i18n.h"
+#include "lingot-msg.h"
 
-LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
+void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg) {
 
-	LingotAudioHandler* result = NULL;
-
 	switch (audio_system) {
 	case AUDIO_SYSTEM_OSS:
-		result = lingot_audio_oss_new(device, sample_rate);
+		lingot_audio_oss_new(result, device, sample_rate);
 		break;
 	case AUDIO_SYSTEM_ALSA:
-		result = lingot_audio_alsa_new(device, sample_rate);
+#	ifdef ALSA
+		lingot_audio_alsa_new(result, device, sample_rate);
+#	else
+		lingot_msg_add_error(
+			_("The application has not been built with ALSA support"));
+		result->audio_system = -1;
+#	endif
 		break;
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_new(device, sample_rate);
+#	ifdef JACK
+		lingot_audio_jack_new(result, device, sample_rate);
+#	else
+		lingot_msg_add_error(
+			_("The application has not been built with JACK support"));
+		result->audio_system = -1;
+#	endif
 		break;
+#	ifdef PULSEAUDIO
 	case AUDIO_SYSTEM_PULSEAUDIO:
-		result = lingot_audio_pulseaudio_new(device, sample_rate);
+		lingot_audio_pulseaudio_new(result, device, sample_rate);
+#	else
+		lingot_msg_add_error(
+			_("The application has not been built with PULSEAUDIO support"));
+		result->audio_system = -1;
+#	endif
 		break;
+	default:
+		assert (0);
 	}
 
-	if (result != NULL ) {
+	if (result->audio_system != -1 ) {
 		// audio source read in floating point format.
 		result->flt_read_buffer = malloc(
 				result->read_buffer_size_samples * sizeof(FLT));
@@ -69,62 +90,59 @@ LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
 		result->interrupted = 0;
 		result->running = 0;
 	}
-
-	return result;
 }
 
 void lingot_audio_destroy(LingotAudioHandler* audio) {
-	if (audio != NULL ) {
-
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_OSS:
 			lingot_audio_oss_destroy(audio);
 			break;
+#	ifdef ALSA
 		case AUDIO_SYSTEM_ALSA:
 			lingot_audio_alsa_destroy(audio);
 			break;
+#	endif
+#	ifdef JACK
 		case AUDIO_SYSTEM_JACK:
 			lingot_audio_jack_destroy(audio);
 			break;
+#	endif
+#	ifdef PULSEAUDIO
 		case AUDIO_SYSTEM_PULSEAUDIO:
 			lingot_audio_pulseaudio_destroy(audio);
 			break;
+#	endif
 		default:
-			perror("unknown audio system\n");
-			break;
+			assert (0);
 		}
-
 		if (audio->flt_read_buffer != 0x0) {
 			free(audio->flt_read_buffer);
 			audio->flt_read_buffer = 0x0;
 		}
-		if (audio->read_buffer != 0x0) {
-			free(audio->read_buffer);
-			audio->read_buffer = 0x0;
-		}
-
-		free(audio);
-	}
+		audio->audio_system = -1;
 }
 
 int lingot_audio_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
 
-	if (audio != NULL ) {
 		switch (audio->audio_system) {
+#		ifdef OSS
 		case AUDIO_SYSTEM_OSS:
 			samples_read = lingot_audio_oss_read(audio);
 			break;
+#		endif
+#		ifdef ALSA
 		case AUDIO_SYSTEM_ALSA:
 			samples_read = lingot_audio_alsa_read(audio);
 			break;
+#		endif
+#		ifdef PULSEAUDIO
 		case AUDIO_SYSTEM_PULSEAUDIO:
 			samples_read = lingot_audio_pulseaudio_read(audio);
 			break;
+#		endif
 		default:
-			perror("unknown audio system\n");
-			samples_read = -1;
-			break;
+			assert (0);
 		}
 
 //#		define RATE_ESTIMATOR
@@ -165,54 +183,47 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 		t_abs_old = t_abs;
 #		endif
 
-	}
-
 	return samples_read;
 }
 
-LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+int lingot_audio_get_audio_system_properties(
+		LingotAudioSystemProperties* properties,
 		audio_system_t audio_system) {
-	LingotAudioSystemProperties* result;
 
 	switch (audio_system) {
+#	ifdef OSS
 	case AUDIO_SYSTEM_OSS:
-		result = lingot_audio_oss_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_oss_get_audio_system_properties(properties);
+#	endif
+#	ifdef ALSA
 	case AUDIO_SYSTEM_ALSA:
-		result = lingot_audio_alsa_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_alsa_get_audio_system_properties(properties);
+#	endif
+#	ifdef ALSA
 	case AUDIO_SYSTEM_JACK:
-		result = lingot_audio_jack_get_audio_system_properties(audio_system);
-		break;
+		return lingot_audio_jack_get_audio_system_properties(properties);
+#	endif
+#	ifdef OSS
 	case AUDIO_SYSTEM_PULSEAUDIO:
-		result = lingot_audio_pulseaudio_get_audio_system_properties(
-				audio_system);
-		break;
+		return lingot_audio_pulseaudio_get_audio_system_properties(properties);
+#	endif
 	default:
-		perror("unknown audio system\n");
-		result = NULL;
-		break;
+		assert (0);
 	}
-
-	return result;
 }
 
 void lingot_audio_audio_system_properties_destroy(
 		LingotAudioSystemProperties* properties) {
 
 	int i;
-	if (properties->devices != NULL ) {
+	if (properties->devices != NULL) {
 		for (i = 0; i < properties->n_devices; i++) {
 			if (properties->devices[i] != NULL ) {
 				free(properties->devices[i]);
 			}
 		}
-	}
-
-	if (properties->sample_rates != NULL )
-		free(properties->sample_rates);
-	if (properties->devices != NULL )
 		free(properties->devices);
+	}
 }
 
 void lingot_audio_run_reading_thread(LingotAudioHandler* audio) {
@@ -244,7 +255,11 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 
 	switch (audio->audio_system) {
 	case AUDIO_SYSTEM_JACK:
+#	ifdef JACK
 		result = lingot_audio_jack_start(audio);
+#	else
+		assert (0);
+#	endif
 		break;
 	default:
 		pthread_attr_init(&audio->thread_input_read_attr);
@@ -295,7 +310,11 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 		audio->running = 0;
 		switch (audio->audio_system) {
 		case AUDIO_SYSTEM_JACK:
+#		ifdef JACK
 			lingot_audio_jack_stop(audio);
+#		else
+			assert (0);
+#		endif
 			break;
 //		case AUDIO_SYSTEM_PULSEAUDIO:
 //			pthread_join(audio->thread_input_read, &thread_result);

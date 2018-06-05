@@ -73,9 +73,6 @@ struct _LingotAudioHandler {
 #	endif
 
 	int read_buffer_size_samples;
-	int read_buffer_size_bytes;
-
-	void* read_buffer;
 	FLT* flt_read_buffer;
 
 	unsigned int real_sample_rate;
@@ -103,20 +100,25 @@ struct _LingotAudioSystemProperties {
 	int forced_sample_rate; // tells whether the sample rate can be changed
 
 	int n_sample_rates; // number of available sample rates
-	int* sample_rates; // sample rates
+	int sample_rates [5]; // sample rates
 
 	int n_devices; // number of available devices
 	char** devices; // devices
 };
 
-LingotAudioSystemProperties* lingot_audio_get_audio_system_properties(
+int lingot_audio_get_audio_system_properties(
+		LingotAudioSystemProperties*,
 		audio_system_t audio_system);
+// Return status : 0 for OK, else -1.
+
 void lingot_audio_audio_system_properties_destroy(LingotAudioSystemProperties*);
 
 // creates an audio handler
-LingotAudioHandler* lingot_audio_new(audio_system_t audio_system, char* device,
+void lingot_audio_new(LingotAudioHandler*,
+		audio_system_t audio_system, char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg);
+// In case of failure, audio_system is set to -1 in the LingotAudioHandler struct.
 
 // destroys an audio handler
 void lingot_audio_destroy(LingotAudioHandler*);

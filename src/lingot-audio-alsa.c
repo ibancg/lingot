@@ -21,6 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef ALSA
+
 #include <stdlib.h>
 
 #include "lingot-defs.h"
@@ -28,25 +30,19 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-#ifdef ALSA
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
 snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 //snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
-#endif
 
-LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
+static const unsigned int channels = 1;
 
-	LingotAudioHandler* audio = NULL;
+void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_rate) {
 
-#	ifdef ALSA
 	const char* exception;
 	snd_pcm_hw_params_t* hw_params = NULL;
 	int err;
 	char error_message[1000];
-	static const unsigned int channels = 1;
 
-	audio = malloc(sizeof(LingotAudioHandler));
-	audio->read_buffer = NULL;
 	audio->audio_system = AUDIO_SYSTEM_ALSA;
 
 	if (sample_rate >= 44100) {
@@ -137,42 +133,28 @@ LingotAudioHandler* lingot_audio_alsa_new(char* device, int sample_rate) {
 		}
 
 		audio->bytes_per_sample = snd_pcm_format_size(sample_format, 1);
-		audio->read_buffer_size_bytes = channels
-				* audio->read_buffer_size_samples * audio->bytes_per_sample;
-
-		audio->read_buffer = malloc(audio->read_buffer_size_bytes);
-		memset(audio->read_buffer, 0, audio->read_buffer_size_bytes);
 	}catch {
 		if (audio->capture_handle != NULL)
 			snd_pcm_close(audio->capture_handle);
-		free(audio);
-		audio = NULL;
+		audio->audio_system = -1;
 		lingot_msg_add_error_with_code(exception, -err);
 	}
 
 	if (hw_params != NULL)
 		snd_pcm_hw_params_free(hw_params);
-
-#	else
-	lingot_msg_add_error(
-			_("The application has not been built with ALSA support"));
-#	endif
-
-	return audio;
 }
 
 void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
-#	ifdef ALSA
-	if (audio != NULL) {
+	if (audio->audio_system == AUDIO_SYSTEM_ALSA) {
 		snd_pcm_close(audio->capture_handle);
 	}
-#	endif
 }
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	int samples_read = -1;
-#	ifdef ALSA
-	samples_read = snd_pcm_readi(audio->capture_handle, audio->read_buffer,
+	char buffer [channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+
+	samples_read = snd_pcm_readi(audio->capture_handle, buffer,
 			audio->read_buffer_size_samples);
 
 	if (samples_read < 0) {
@@ -186,21 +168,21 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 		// float point conversion
 		switch (sample_format) {
 		case SND_PCM_FORMAT_S16: {
-			int16_t* read_buffer = (int16_t*) audio->read_buffer;
+			int16_t* read_buffer = (int16_t*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i];
 			}
 			break;
 		}
 		case SND_PCM_FORMAT_FLOAT: {
-			float* read_buffer = (float*) audio->read_buffer;
+			float* read_buffer = (float*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
 			}
 			break;
 		}
 		case SND_PCM_FORMAT_FLOAT64: {
-			double* read_buffer = (double*) audio->read_buffer;
+			double* read_buffer = (double*) buffer;
 			for (i = 0; i < samples_read; i++) {
 				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
 			}
@@ -210,31 +192,22 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 			break;
 		}
 	}
-
-#	endif
-
 	return samples_read;
 }
 
-LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
-		audio_system_t audio_system) {
-
-	LingotAudioSystemProperties* result = (LingotAudioSystemProperties*) malloc(
-			1 * sizeof(LingotAudioSystemProperties));
+int lingot_audio_alsa_get_audio_system_properties(
+		LingotAudioSystemProperties* result) {
 
 	result->forced_sample_rate = 0;
 	result->n_devices = 0;
 	result->devices = NULL;
 
 	result->n_sample_rates = 5;
-	result->sample_rates = malloc(result->n_sample_rates * sizeof(int));
 	result->sample_rates[0] = 8000;
 	result->sample_rates[1] = 11025;
 	result->sample_rates[2] = 22050;
 	result->sample_rates[3] = 44100;
 	result->sample_rates[4] = 48000;
-
-#	ifdef ALSA
 
 	int status;
 	int card_index = -1;
@@ -392,7 +365,7 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 		}
 
 	}catch {
-		fprintf(stderr, exception);
+		fprintf(stderr, "%s", exception);
 	}
 
 	// dispose the device names list
@@ -402,9 +375,7 @@ LingotAudioSystemProperties* lingot_audio_alsa_get_audio_system_properties(
 		name_node_current = name_node_current->next;
 		free(name_node_previous);
 	}
-
-#	endif
-
-	return result;
+	return 0;
 }
 
+#endif

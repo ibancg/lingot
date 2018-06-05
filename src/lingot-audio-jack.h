@@ -22,17 +22,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef JACK
+
 #ifndef __LINGOT_AUDIO_JACK_H__
 #define __LINGOT_AUDIO_JACK_H__
 
 #include "lingot-audio.h"
 
-LingotAudioHandler* lingot_audio_jack_new(char* device, int sample_rate);
+void lingot_audio_jack_new(LingotAudioHandler*, char* device, int sample_rate);
+// In case of failure, audio_system is set to -1.
+
 void lingot_audio_jack_destroy(LingotAudioHandler*);
+
 int lingot_audio_jack_read(LingotAudioHandler*);
-LingotAudioSystemProperties* lingot_audio_jack_get_audio_system_properties(
-		audio_system_t);
+
+int lingot_audio_jack_get_audio_system_properties(LingotAudioSystemProperties*);
+// Return status : 0 for OK, else -1.
+
 int lingot_audio_jack_start(LingotAudioHandler*);
 void lingot_audio_jack_stop(LingotAudioHandler*);
 
+#endif
 #endif

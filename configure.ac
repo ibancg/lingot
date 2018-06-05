@@ -3,14 +3,15 @@ dnl Created by Anjuta - will be overwritten
 dnl If you don't want it to overwrite it,
 dnl 	Please disable it in the Anjuta project configuration
 
-AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(lingot, 0.9.2b8)
-AM_CONFIG_HEADER(config.h)
+AC_INIT([Lingot], [0.9.2b8])
+AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE
+AC_CONFIG_HEADERS([config.h])
 AM_MAINTAINER_MODE
 
 AC_ISC_POSIX
 AC_PROG_CC
-AM_PROG_CC_STDC
+AC_PROG_CC_STDC
 AC_HEADER_STDC
 
 AC_PROG_INTLTOOL([0.23])
@@ -23,7 +24,7 @@ dnl Languages which your application supports
 ALL_LINGUAS="ca cs de es gl it pt_BR sv zh_CN fr"
 AM_GLIB_GNU_GETTEXT
 
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
 AC_CHECK_HEADERS([langinfo.h])
@@ -234,7 +235,7 @@ AC_DEFINE([PACKAGE_PIXMAPS_DIR], [pixmaps], [Pixmaps])
 AC_DEFINE([PACKAGE_SRC_DIR], [src], [Source])
 
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
 src/Makefile
@@ -242,4 +243,5 @@ src/glade/Makefile
 pixmaps/Makefile
 lingot.desktop
 ])
+AC_OUTPUT
 

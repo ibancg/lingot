@@ -56,7 +56,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 	core->conf = conf;
 	core->running = 0;
-	core->audio = NULL;
 	core->spd_fft = NULL;
 	core->noise_level = NULL;
 	core->SPL = NULL;
@@ -79,18 +78,18 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		conf->sample_rate = 0;
 	}
 
-	core->audio = lingot_audio_new(conf->audio_system,
+	lingot_audio_new(&core->audio, conf->audio_system,
 			conf->audio_dev[conf->audio_system], conf->sample_rate,
 			(LingotAudioProcessCallback) lingot_core_read_callback, core);
 
-	if (core->audio != NULL) {
+	if (core->audio.audio_system != -1) {
 
-		if (requested_sample_rate != core->audio->real_sample_rate) {
-			conf->sample_rate = core->audio->real_sample_rate;
+		if (requested_sample_rate != core->audio.real_sample_rate) {
+			conf->sample_rate = core->audio.real_sample_rate;
 			lingot_config_update_internal_params(conf);
 //			sprintf(buff,
 //					_("The requested sample rate is not available, the real sample rate has been set to %d Hz"),
-//					core->audio->real_sample_rate);
+//					core->audio.real_sample_rate);
 //			lingot_msg_add_warning(buff);
 		}
 
@@ -119,9 +118,9 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 
 		// audio source read in floating point format.
 		core->flt_read_buffer = malloc(
-				core->audio->read_buffer_size_samples * sizeof(FLT));
+				core->audio.read_buffer_size_samples * sizeof(FLT));
 		memset(core->flt_read_buffer, 0,
-				core->audio->read_buffer_size_samples * sizeof(FLT));
+				core->audio.read_buffer_size_samples * sizeof(FLT));
 
 		// stored samples.
 		core->temporal_buffer = malloc(
@@ -190,10 +189,9 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 /* Deallocate resources */
 void lingot_core_destroy(LingotCore* core) {
 
-	if (core->audio != NULL) {
+	if (core->audio.audio_system != -1) {
 		lingot_fft_plan_destroy(core->fftplan);
-		lingot_audio_destroy(core->audio);
-		core->audio = 0x0;
+		lingot_audio_destroy(&core->audio);
 
 		free(core->spd_fft);
 		free(core->noise_level);
@@ -748,8 +746,8 @@ void lingot_core_start(LingotCore* core) {
 	int audio_status = 0;
 	decimation_input_index = 0;
 
-	if (core->audio != NULL) {
-		audio_status = lingot_audio_start(core->audio);
+	if (core->audio.audio_system != -1) {
+		audio_status = lingot_audio_start(&core->audio);
 
 		if (audio_status == 0) {
 			pthread_mutex_init(&core->thread_computation_mutex, NULL);
@@ -763,8 +761,7 @@ void lingot_core_start(LingotCore* core) {
 			core->running = 1;
 		} else {
 			core->running = 0;
-			lingot_audio_destroy(core->audio);
-			core->audio = 0x0;
+			lingot_audio_destroy(&core->audio);
 		}
 
 	}
@@ -810,8 +807,8 @@ void lingot_core_stop(LingotCore* core) {
 		core->freq = 0.0;
 	}
 
-	if (core->audio != NULL) {
-		lingot_audio_stop(core->audio);
+	if (core->audio.audio_system != -1) {
+		lingot_audio_stop(&core->audio);
 	}
 }
 
@@ -834,9 +831,9 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 				&core->thread_computation_mutex, &tout_tspec);
 		pthread_mutex_unlock(&core->thread_computation_mutex);
 
-		if (core->audio != NULL) {
+		if (core->audio.audio_system != -1) {
 			int spd_size = core->conf->fft_size / 2;
-			if (core->audio->interrupted) {
+			if (core->audio.interrupted) {
 				memset(core->SPL, 0, spd_size * sizeof(FLT));
 				core->freq = 0.0;
 				core->running = 0;

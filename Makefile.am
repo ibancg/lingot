@@ -5,6 +5,8 @@
 
 SUBDIRS = po src pixmaps
 
+ACLOCAL_AMFLAGS = -I m4
+
 lingotdocdir = ${docdir}
 lingotdoc_DATA = \
 	README\
@@ -23,7 +25,7 @@ lingotdoc_DATA = \
 
 EXTRA_DIST = $(lingotdoc_DATA)
 
-CLEANFILES =\
+DISTCLEANFILES = \
 	intltool-extract\
 	intltool-merge\
 	intltool-update
@@ -31,7 +33,7 @@ CLEANFILES =\
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop
 
-
+dist_man_MANS := lingot.1
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:
