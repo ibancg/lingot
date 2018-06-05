@@ -33,7 +33,7 @@ DISTCLEANFILES = \
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop
 
-
+dist_man_MANS := lingot.1
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:
