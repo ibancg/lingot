@@ -231,7 +231,7 @@ void lingot_core_destroy(LingotCore* core) {
 // decimation and appends it to the buffer
 int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 
-	unsigned int i, decimation_output_index; // loop variables.
+	unsigned int decimation_output_index; // loop variables.
 	int decimation_output_len;
 	FLT* decimation_in;
 	FLT* decimation_out;
@@ -574,9 +574,9 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	const LingotConfig* conf = core->conf;
 	const FLT index2f = ((FLT) conf->sample_rate)
 			/ (conf->oversampling * conf->fft_size); // FFT resolution in Hz.
-	const FLT index2w = 2.0 * M_PI / conf->fft_size; // FFT resolution in rads.
-	const FLT f2w = 2 * M_PI * conf->oversampling / conf->sample_rate;
-	const FLT w2f = 1.0 / f2w;
+//	const FLT index2w = 2.0 * M_PI / conf->fft_size; // FFT resolution in rads.
+//	const FLT f2w = 2 * M_PI * conf->oversampling / conf->sample_rate;
+//	const FLT w2f = 1.0 / f2w;
 
 // ----------------- TRANSFORMATION TO FREQUENCY DOMAIN ----------------
 
@@ -619,8 +619,6 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 		core->SPL[i] -= core->noise_level[i];
 	}
 
-	int Mi;
-
 	unsigned int lowest_index = (unsigned int) ceil(
 			conf->internal_min_frequency
 					* (1.0 * conf->oversampling / conf->sample_rate)
@@ -641,7 +639,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 					0.0 :
 					2 * M_PI * f0 * conf->oversampling / conf->sample_rate;
 	w = w0;
-	Mi = floor(w / index2w);
+//	int Mi = floor(w / index2w);
 
 	if (w != 0.0) {
 		// windowing

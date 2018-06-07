@@ -570,8 +570,10 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->input_system = GTK_COMBO_BOX_TEXT(
 				gtk_builder_get_object(builder, "input_system"));
 
+#ifdef OSS
 		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_OSS));
+#endif
 #ifdef ALSA
 		gtk_combo_box_text_append_text(dialog->input_system,
 				audio_system_t_to_str(AUDIO_SYSTEM_ALSA));

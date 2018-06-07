@@ -237,7 +237,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
 				FLT highest_harmonic_magnitude = 0.0;
 				FLT q = 0.0;
 				FLT f = 0.0;
-				FLT snrsum = 0.0;
+//				FLT snrsum = 0.0;
 				for (i = 0; i < n_indices_related; i++) {
 					// add up contributions to the quality factor
 					q += snr[p_index[indices_related[i]]]

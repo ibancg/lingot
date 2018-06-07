@@ -38,4 +38,4 @@ depcomp
 install-sh
 ltmain.sh
 missing
-
+test/Debug/

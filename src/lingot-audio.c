@@ -44,9 +44,19 @@ void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,ch
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg) {
 
+#	if !defined(OSS) && !defined(ALSA) && !defined(JACK) && !defined(PULSEAUDIO)
+#	error "No audio system has been defined"
+#	endif
+
 	switch (audio_system) {
+#	ifdef OSS
 	case AUDIO_SYSTEM_OSS:
 		lingot_audio_oss_new(result, device, sample_rate);
+#	else
+		lingot_msg_add_error(
+			_("The application has not been built with ALSA support"));
+		result->audio_system = -1;
+#	endif
 		break;
 	case AUDIO_SYSTEM_ALSA:
 #	ifdef ALSA
@@ -94,9 +104,11 @@ void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,ch
 
 void lingot_audio_destroy(LingotAudioHandler* audio) {
 		switch (audio->audio_system) {
+#	ifdef OSS
 		case AUDIO_SYSTEM_OSS:
 			lingot_audio_oss_destroy(audio);
 			break;
+#	endif
 #	ifdef ALSA
 		case AUDIO_SYSTEM_ALSA:
 			lingot_audio_alsa_destroy(audio);
@@ -199,17 +211,19 @@ int lingot_audio_get_audio_system_properties(
 	case AUDIO_SYSTEM_ALSA:
 		return lingot_audio_alsa_get_audio_system_properties(properties);
 #	endif
-#	ifdef ALSA
+#	ifdef JACK
 	case AUDIO_SYSTEM_JACK:
 		return lingot_audio_jack_get_audio_system_properties(properties);
 #	endif
-#	ifdef OSS
+#	ifdef PULSEAUDIO
 	case AUDIO_SYSTEM_PULSEAUDIO:
 		return lingot_audio_pulseaudio_get_audio_system_properties(properties);
 #	endif
 	default:
 		assert (0);
 	}
+
+	return -1;
 }
 
 void lingot_audio_audio_system_properties_destroy(

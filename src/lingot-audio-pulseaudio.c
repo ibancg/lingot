@@ -25,6 +25,7 @@
 #ifdef PULSEAUDIO
 
 #include <stdio.h>
+#include <string.h>
 
 #include "lingot-defs.h"
 #include "lingot-audio-pulseaudio.h"
@@ -33,7 +34,7 @@
 
 #include <pulse/pulseaudio.h>
 
-static int channels = 1;
+static int num_channels = 1;
 static pa_sample_spec ss;
 
 void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sample_rate) {
@@ -57,7 +58,7 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 
 //	ss.format = PA_SAMPLE_S16NE;
 	ss.format = PA_SAMPLE_FLOAT32; // TODO: config?
-	ss.channels = channels;
+	ss.channels = num_channels;
 	ss.rate = sample_rate;
 
 	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate,
@@ -67,7 +68,7 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 
 	pa_buffer_attr buff;
 	buff.maxlength = -1;
-	buff.fragsize = channels * audio->read_buffer_size_samples * audio->bytes_per_sample;
+	buff.fragsize = num_channels * audio->read_buffer_size_samples * audio->bytes_per_sample;
 
 	const char* device_name = device;
 	if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -107,7 +108,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
 	int samples_read = -1;
 	int error;
-	char buffer[channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+	char buffer[num_channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
 
 	int result = pa_simple_read(audio->pa_client, buffer,
 			sizeof(buffer), &error);
