@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2013  Ibán Cereijo Graña.
+ * Copyright (C) 2004-2018  Ibán Cereijo Graña.
  * Copyright (C) 2004-2008  Jairo Chapela Martínez.
 
  *
@@ -525,7 +525,7 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		LingotConfigDialog* config_dialog) {
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(_("Open Scale File"),
 			GTK_WINDOW(config_dialog->win), GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
+			"_Cancel", GTK_RESPONSE_CANCEL, "_Open",
 			GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
 	filefilter = gtk_file_filter_new();

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2013  Ibán Cereijo Graña.
+ * Copyright (C) 2004-2018  Ibán Cereijo Graña.
  * Copyright (C) 2004-2008  Jairo Chapela Martínez.
 
  *
@@ -111,7 +111,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 
 	gtk_show_about_dialog(NULL, "name", "Lingot", "version", VERSION,
 			"copyright",
-			"\xC2\xA9 2004-2013 Ibán Cereijo Graña\n\xC2\xA9 2004-2008 Jairo Chapela Martínez",
+			"\xC2\xA9 2004-2018 Ibán Cereijo Graña\n\xC2\xA9 2004-2008 Jairo Chapela Martínez",
 			"comments", _("Accurate and easy to use musical instrument tuner"),
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website", "http://lingot.nongnu.org/",
@@ -293,8 +293,8 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(
 			_("Open Configuration File"), GTK_WINDOW(frame->win),
-			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+			GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
+			"_Open", GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
 	LingotConfig* config = NULL;
 	filefilter = gtk_file_filter_new();
@@ -333,8 +333,8 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 		LingotMainFrame* frame) {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
 			_("Save Configuration File"), GTK_WINDOW(frame->win),
-			GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+			GTK_FILE_CHOOSER_ACTION_SAVE, "_Cancel", GTK_RESPONSE_CANCEL,
+			"_Save", GTK_RESPONSE_ACCEPT, NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
 	TRUE);
 
@@ -837,9 +837,6 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 
 	cairo_destroy(cr);
 }
-
-static const int showSNR = 1;
-static const int gain = 40;
 
 FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 FLT min, FLT max) {

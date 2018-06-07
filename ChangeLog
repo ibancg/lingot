@@ -1,4 +1,11 @@
 
+2018-06-03 Ibán Cereijo <ibancg@gmail.com>
+
+	* Updating to GTK+ 3.10
+	* Fixed some memory leaks and reduced dynamic memory allocation (thanks to Nicolas Boulenguez)
+
+
+
 2013-03-07 Ibán Cereijo <ibancg@gmail.com>
 
 	* Simplified config dialog, now the user specifies the frequency range.

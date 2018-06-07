@@ -28,6 +28,7 @@ config.h.in
 config.sub
 config.log
 config.status
+config.guess
 aclocal.m4
 autom4te.cache/
 configure

@@ -1,9 +1,9 @@
 
-Lingot 1.0.0 (2013-xx-xx)
+Lingot 1.0.0 (2018-xx-xx)
 -------------------------
 
  * Added PulseAudio support.
- * Migration to GTK+ 3.0
+ * Migration to GTK+ 3.10
  * Migration to graphic vectors with libcairo. Main window now resizable.
  * Modified the frequency finding algorithm.
  * Modified the configuration: the user specifies now the frequency range of the
@@ -17,6 +17,7 @@ Lingot 1.0.0 (2013-xx-xx)
  * Fixed bug #643435 in debian
  * Enhanced some error messages.
  * Fixed potential error when reading from OSS and ALSA.
+ * Fixed memory leaks and improved memory management (thanks to Nicolas Boulenguez).
 
 
 Lingot 0.9.1 (2011-08-22)
