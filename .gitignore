@@ -3,6 +3,7 @@
 *.gmo
 *~
 *.orig
+m4/
 libtool
 lingot.desktop
 lingot-github.*
@@ -23,8 +24,17 @@ src/glade/Makefile
 src/glade/Makefile.in
 stamp-h1
 config.h
+config.h.in
+config.sub
 config.log
 config.status
 aclocal.m4
 autom4te.cache/
+configure
 compile
+INSTALL
+depcomp
+install-sh
+ltmain.sh
+missing
+
