@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.10"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">1</property>
     <property name="upper">30</property>
@@ -61,29 +62,6 @@
     <property name="value">0.32000000000000001</property>
     <property name="step_increment">0.01</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment6">
-    <property name="lower">1</property>
-    <property name="upper">120</property>
-    <property name="value">1</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment7">
-    <property name="upper">22050</property>
-    <property name="step_increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment8">
-    <property name="upper">50</property>
-    <property name="value">29.199999999999999</property>
-    <property name="step_increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment9">
-    <property name="lower">1</property>
-    <property name="upper">5</property>
-    <property name="value">1</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
   <object class="GtkDialog" id="dialog1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -91,10 +69,14 @@
     <property name="title" translatable="yes">lingot configuration</property>
     <property name="window_position">center-always</property>
     <property name="type_hint">normal</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox5">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area5">
@@ -104,12 +86,10 @@
             <child>
               <object class="GtkButton" id="button_default">
                 <property name="label" translatable="yes">Default</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Resets the built-in settings, without applying them.</property>
-                <property name="use_action_appearance">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -120,12 +100,10 @@
             <child>
               <object class="GtkButton" id="button_apply">
                 <property name="label">gtk-apply</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Apply the current changes to the running tuner, but doesn't modify the configuration file.</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -137,12 +115,10 @@
             <child>
               <object class="GtkButton" id="button_accept">
                 <property name="label">gtk-ok</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Apply the current changes and modify the congifuration file.</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -154,12 +130,10 @@
             <child>
               <object class="GtkButton" id="button_cancel">
                 <property name="label">gtk-cancel</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Rolls back all the previous applied changes and closes the configuration dialog.</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -193,13 +167,12 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
+                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Audio system</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -212,8 +185,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -224,15 +195,11 @@
                     <property name="tooltip_markup" translatable="yes">Here you can pick the sound system.</property>
                     <property name="tooltip_text" translatable="yes">Here you can pick the sound system.</property>
                     <property name="hexpand">True</property>
-                    <property name="entry_text_column">0</property>
-                    <property name="id_column">1</property>
                     <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -243,8 +210,6 @@
                     <property name="tooltip_markup" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
                     <property name="tooltip_text" translatable="yes">Choose the audio device if you have more than one. If you are using JACK, you can also connect Lingot to a desired source with an external JACK control application.</property>
                     <property name="has_entry">True</property>
-                    <property name="entry_text_column">0</property>
-                    <property name="id_column">1</property>
                     <signal name="changed" handler="on_combobox_input_architecture_changed" swapped="no"/>
                     <child internal-child="entry">
                       <object class="GtkEntry" id="comboboxtext-entry2">
@@ -255,8 +220,6 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -265,14 +228,13 @@
                     <property name="can_focus">False</property>
                     <property name="margin_top">10</property>
                     <property name="margin_bottom">5</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Select the audio source:</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
                     <property name="width">2</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -310,8 +272,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -324,8 +284,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -337,8 +295,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -351,8 +307,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -365,8 +319,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -378,8 +330,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -387,14 +337,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">15</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Adjust the following refresh rates:</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
                     <property name="width">3</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -402,18 +351,17 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">30</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Adjust the noise level:</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">3</property>
                     <property name="width">3</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHScale" id="noise_threshold">
+                  <object class="GtkScale" id="noise_threshold">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_tooltip">True</property>
@@ -426,12 +374,10 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHScale" id="visualization_rate">
+                  <object class="GtkScale" id="visualization_rate">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_tooltip">True</property>
@@ -443,12 +389,10 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHScale" id="calculation_rate">
+                  <object class="GtkScale" id="calculation_rate">
                     <property name="width_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -462,8 +406,6 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -500,8 +442,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">5</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -513,7 +453,6 @@
                     <property name="tooltip_text" translatable="yes">This is the most recent amount of data considered for tuning. The longer it is, the more accuracy you can obtain, but also the dynamic response gets slower, regarding you are considering older parts of the signal. Also, if you raise this parameter, the computational cost increases. The size of the buffer, in samples (depending on the effective sample rate), must be greater than or equal to the FFT buffer size.</property>
                     <property name="invisible_char">●</property>
                     <property name="xalign">1</property>
-                    <property name="invisible_char_set">True</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="adjustment">adjustment5</property>
@@ -522,8 +461,6 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">5</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -535,8 +472,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">5</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -548,8 +483,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -562,8 +495,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -574,43 +505,36 @@
                     <property name="tooltip_markup" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it&amp;apos;s also computationally more expensive. Don&amp;apos;t use high values here unless you need to tune high frequencies.</property>
                     <property name="tooltip_text" translatable="yes">The FFT buffer gives Lingot a first look to the spectrum. Higher values can help Lingot to hook up the correct peak, but it's also computationally more expensive. Don't use high values here unless you need to tune high frequencies.</property>
                     <property name="hexpand">True</property>
-                    <property name="entry_text_column">0</property>
-                    <property name="id_column">1</property>
                     <items>
-                      <item translatable="no">256</item>
-                      <item translatable="no">512</item>
-                      <item translatable="no">1024</item>
-                      <item translatable="no">2048</item>
-                      <item translatable="no">4096</item>
+                      <item id="&lt;Enter ID&gt;">256</item>
+                      <item>512</item>
+                      <item>1024</item>
+                      <item>2048</item>
+                      <item>4096</item>
                     </items>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">4</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="optimize_check_button">
                     <property name="label" translatable="yes">Optimize parameters automatically</property>
-                    <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_markup" translatable="yes">Leave this option ON and Lingot will optimize some parameters for you.</property>
                     <property name="tooltip_text" translatable="yes">Leave this option ON and Lingot will optimize some parameters for you.</property>
+                    <property name="halign">start</property>
                     <property name="margin_top">10</property>
-                    <property name="use_action_appearance">False</property>
-                    <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">3</property>
                     <property name="width">3</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -619,14 +543,11 @@
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
                     <property name="hexpand">True</property>
-                    <property name="xpad">20</property>
                     <property name="label" translatable="yes">Minimum note</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -634,13 +555,11 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">15</property>
-                    <property name="label" translatable="yes">Maimum note</property>
+                    <property name="label" translatable="yes">Maximum note</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -648,10 +567,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
-                    <property name="wrap_width">6</property>
                     <property name="has_entry">True</property>
-                    <property name="entry_text_column">0</property>
-                    <property name="id_column">1</property>
                     <child internal-child="entry">
                       <object class="GtkEntry" id="comboboxtext-entry">
                         <property name="can_focus">True</property>
@@ -665,19 +581,14 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkComboBoxText" id="maximum_frequency">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="wrap_width">6</property>
                     <property name="active">4</property>
                     <property name="has_entry">True</property>
-                    <property name="entry_text_column">0</property>
-                    <property name="id_column">1</property>
                     <child internal-child="entry">
                       <object class="GtkEntry" id="comboboxtext-entry10">
                         <property name="can_focus">True</property>
@@ -687,8 +598,6 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -701,8 +610,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -710,14 +617,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">10</property>
-                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Intrument frequency range</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
                     <property name="width">3</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -729,8 +635,6 @@
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -766,14 +670,13 @@
                       <object class="GtkLabel" id="label13">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="xalign">0.47999998927116394</property>
+                        <property name="hexpand">False</property>
                         <property name="label" translatable="yes">Name</property>
+                        <property name="xalign">0.47999998927116394</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">0</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
@@ -785,7 +688,6 @@
                         <property name="tooltip_text" translatable="yes">Scale name, only for your information.</property>
                         <property name="hexpand">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="secondary_icon_activatable">False</property>
                       </object>
@@ -793,21 +695,17 @@
                         <property name="left_attach">1</property>
                         <property name="top_attach">0</property>
                         <property name="width">4</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="label8">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="ypad">1</property>
                         <property name="label" translatable="yes">cents</property>
                       </object>
                       <packing>
                         <property name="left_attach">2</property>
                         <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
@@ -819,7 +717,6 @@
                         <property name="tooltip_text" translatable="yes">Applies a shift in frequency to all the notes defined in the table below.</property>
                         <property name="invisible_char">●</property>
                         <property name="xalign">1</property>
-                        <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="secondary_icon_activatable">False</property>
                         <property name="adjustment">adjustment13</property>
@@ -827,8 +724,6 @@
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
@@ -841,8 +736,6 @@
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
@@ -854,8 +747,6 @@
                       <packing>
                         <property name="left_attach">3</property>
                         <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
@@ -866,31 +757,25 @@
                         <property name="tooltip_markup" translatable="yes">Octave whose frequencies are being displayed in the table below. Change this parameter if you want to display the assigned frequencies in other octaves, but try to assign the frequencies always to the 4th octave (The 4th octave usually covers the frequencies from 261.63 Hz to 523.25 Hz).</property>
                         <property name="tooltip_text" translatable="yes">Octave whose frequencies are being displayed in the table below. Change this parameter if you want to display the assigned frequencies in other octaves, but try to assign the frequencies always to the 4th octave (The 4th octave usually covers the frequencies from 261.63 Hz to 523.25 Hz).</property>
                         <property name="active">0</property>
-                        <property name="entry_text_column">0</property>
-                        <property name="id_column">1</property>
                         <items>
-                          <item translatable="no">0</item>
-                          <item translatable="no">1</item>
-                          <item translatable="no">2</item>
-                          <item translatable="no">3</item>
-                          <item translatable="no">4</item>
-                          <item translatable="no">5</item>
-                          <item translatable="no">6</item>
+                          <item>0</item>
+                          <item>1</item>
+                          <item>2</item>
+                          <item>3</item>
+                          <item>4</item>
+                          <item>5</item>
+                          <item>6</item>
                         </items>
                       </object>
                       <packing>
                         <property name="left_attach">4</property>
                         <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -915,31 +800,29 @@
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">0</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkVBox" id="vbox3">
+                      <object class="GtkBox" id="vbox3">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkVButtonBox" id="vbuttonbox1">
+                          <object class="GtkButtonBox" id="vbuttonbox1">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
                             <property name="spacing">4</property>
                             <child>
                               <object class="GtkButton" id="button_scale_add">
                                 <property name="label" translatable="yes">Insert</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="has_tooltip">True</property>
                                 <property name="tooltip_markup" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
                                 <property name="tooltip_text" translatable="yes">Adds a new note to the list, just above the selected line, or appends it to the end if no line is selected. Is not possible to add a note before the reference (the first) one. You can also use the Insert key on the table beside.</property>
-                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -950,14 +833,12 @@
                             <child>
                               <object class="GtkButton" id="button_scale_del">
                                 <property name="label" translatable="yes">Delete</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="has_tooltip">True</property>
                                 <property name="tooltip_markup" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
                                 <property name="tooltip_text" translatable="yes">Deletes the selected notes. The reference note, i.e., the first one, cannot be removed. You can also use the Delete key on the table beside.</property>
-                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -968,14 +849,12 @@
                             <child>
                               <object class="GtkButton" id="button_scale_import">
                                 <property name="label" translatable="yes">Import</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="has_tooltip">True</property>
                                 <property name="tooltip_markup" translatable="yes">Imports the scale from an external .scl file, with the Scala project format (http://www.huygens-fokker.org/scala/)</property>
                                 <property name="tooltip_text" translatable="yes">Imports the scale from an external .scl file, with the Scala project format (http://www.huygens-fokker.org/scala/)</property>
-                                <property name="use_action_appearance">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -997,16 +876,12 @@
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">0</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>
@@ -1019,7 +894,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Lingot is an universal tuner, it can tune any instrument according to the scale you define here.</property>
-                <property name="xpad">1</property>
                 <property name="label" translatable="yes">Scale</property>
               </object>
               <packing>
@@ -1042,5 +916,28 @@
       <action-widget response="0">button_accept</action-widget>
       <action-widget response="0">button_cancel</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkAdjustment" id="adjustment6">
+    <property name="lower">1</property>
+    <property name="upper">120</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment7">
+    <property name="upper">22050</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment8">
+    <property name="upper">50</property>
+    <property name="value">29.199999999999999</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment9">
+    <property name="lower">1</property>
+    <property name="upper">5</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
   </object>
 </interface>

@@ -280,11 +280,11 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 
 	int i;
 	int octave_index;
-	for (i = 0; i < config->scale->notes; i++) {
-		for (octave_index = frequency_combo_first_octave;
-				octave_index
-						< frequency_combo_first_octave
-								+ frequency_combo_n_octaves; octave_index++) {
+	for (octave_index = frequency_combo_first_octave;
+			octave_index
+					< frequency_combo_first_octave
+							+ frequency_combo_n_octaves; octave_index++) {
+		for (i = 0; i < config->scale->notes; i++) {
 			snprintf(buff, sizeof(buff),
 					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
 					12, config->scale->note_name[i], 7, octave_index);
@@ -554,10 +554,9 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		FILE* fd = fopen("src/glade/" FILE_NAME, "r");
 		if (fd != NULL) {
 			fclose(fd);
-			gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL);
+            gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL);
 		} else {
-			gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME,
-			NULL);
+            gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL);
 		}
 #		undef FILE_NAME
 
@@ -589,11 +588,11 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->input_dev = GTK_COMBO_BOX_TEXT(
 				gtk_builder_get_object(builder, "input_dev"));
 
-		dialog->calculation_rate = GTK_HSCALE(
+        dialog->calculation_rate = GTK_SCALE(
 				gtk_builder_get_object(builder, "calculation_rate"));
-		dialog->visualization_rate = GTK_HSCALE(
+        dialog->visualization_rate = GTK_SCALE(
 				gtk_builder_get_object(builder, "visualization_rate"));
-		dialog->noise_threshold = GTK_HSCALE(
+        dialog->noise_threshold = GTK_SCALE(
 				gtk_builder_get_object(builder, "noise_threshold"));
 		dialog->fft_size = GTK_COMBO_BOX_TEXT(
 				gtk_builder_get_object(builder, "fft_size"));
