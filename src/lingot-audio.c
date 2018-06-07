@@ -54,7 +54,7 @@ void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,ch
 		lingot_audio_oss_new(result, device, sample_rate);
 #	else
 		lingot_msg_add_error(
-			_("The application has not been built with ALSA support"));
+			_("The application has not been built with OSS support"));
 		result->audio_system = -1;
 #	endif
 		break;
@@ -269,11 +269,11 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 
 	switch (audio->audio_system) {
 	case AUDIO_SYSTEM_JACK:
-#	ifdef JACK
+#		ifdef JACK
 		result = lingot_audio_jack_start(audio);
-#	else
+#		else
 		assert (0);
-#	endif
+#		endif
 		break;
 	default:
 		pthread_attr_init(&audio->thread_input_read_attr);
