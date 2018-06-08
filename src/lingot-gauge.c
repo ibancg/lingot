@@ -68,19 +68,16 @@ LingotGauge* lingot_gauge_new(FLT initial_position) {
 			* (q + 2.0 * GAUGE_RATE), GAUGE_RATE * GAUGE_RATE };
 	const FLT b[] = { k };
 
-	LingotGauge* gauge = malloc(sizeof(LingotGauge));
-
-	gauge->filter = lingot_filter_new(2, 0, a, b);
+	lingot_filter_new(&gauge->filter, 2, 0, a, b);
 	lingot_gauge_compute(gauge, initial_position);
 	return gauge;
 }
 
 void lingot_gauge_destroy(LingotGauge* gauge) {
-	lingot_filter_destroy(gauge->filter);
+	lingot_filter_destroy(&gauge->filter);
 	free(gauge);
 }
 
 void lingot_gauge_compute(LingotGauge* gauge, FLT sample) {
-	gauge->position = lingot_filter_filter_sample(gauge->filter, sample);
+	gauge->position = lingot_filter_filter_sample(&gauge.filter, sample);
 }
-

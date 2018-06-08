@@ -191,10 +191,10 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 	if (!frame->core->running || isnan(frame->core->freq)
 			|| (frame->core->freq <= frame->conf->internal_min_frequency)) {
 		frequency = 0.0;
-		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
+		lingot_gauge_compute(&frame->gauge, frame->conf->gauge_rest_value);
 	} else {
 		FLT error_cents; // do not use, unfiltered
-		frequency = lingot_filter_filter_sample(frame->freq_filter,
+		frequency = lingot_filter_filter_sample(&frame->freq_filter,
 				frame->core->freq);
 		closest_note_index = lingot_config_scale_get_closest_note_index(
 				frame->conf->scale, frame->core->freq,
@@ -427,7 +427,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	FLT freq_filter_a[] = { 1.0, -0.5 };
 	FLT freq_filter_b[] = { 0.5 };
 
-	frame->freq_filter = lingot_filter_new(1, 0, freq_filter_a, freq_filter_b);
+	lingot_filter_new(&frame->freq_filter, 1, 0, freq_filter_a, freq_filter_b);
 
 	// ---------------------------------------------------
 
@@ -555,7 +555,7 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 	lingot_core_destroy(frame->core);
 
 	lingot_gauge_destroy(frame->gauge);
-	lingot_filter_destroy(frame->freq_filter);
+	lingot_filter_destroy(&frame->freq_filter);
 	lingot_config_destroy(frame->conf);
 	if (frame->config_dialog)
 		lingot_gui_config_dialog_destroy(frame->config_dialog);

@@ -31,10 +31,9 @@
 #define max(a,b) (((a)<(b))?(b):(a))
 
 // given each polynomial order and coefs, with optional initial status.
-LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
+void lingot_filter_new(LingotFilter* filter, unsigned int Na, unsigned int Nb, const FLT* a,
 		const FLT* b) {
 	unsigned int i;
-	LingotFilter* filter = malloc(sizeof(LingotFilter));
 	filter->N = max(Na, Nb);
 
 	filter->a = malloc((filter->N + 1) * sizeof(FLT));
@@ -54,8 +53,6 @@ LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
 		filter->a[i] /= a[0]; // polynomial normalization.
 		filter->b[i] /= a[0];
 	}
-
-	return filter;
 }
 
 void lingot_filter_reset(LingotFilter* filter) {
@@ -69,8 +66,6 @@ void lingot_filter_destroy(LingotFilter* filter) {
 	free(filter->a);
 	free(filter->b);
 	free(filter->s);
-
-	free(filter);
 }
 
 // Digital Filter Implementation II, in & out overlapables.
@@ -124,7 +119,7 @@ void lingot_filter_vector_product(int n, LingotComplex* vector,
 }
 
 // Chebyshev filters
-LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
+void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FLT wc) {
 	int i; // loops
 	int k;
 	int p;
@@ -250,5 +245,5 @@ LingotFilter* lingot_filter_cheby_design(unsigned int n, FLT Rp, FLT wc) {
 		b[i] *= gain[0];
 	}
 
-	return lingot_filter_new(n, n, a, b);
+	lingot_filter_new(filter, n, n, a, b);
 }

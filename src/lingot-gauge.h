@@ -36,7 +36,7 @@ typedef struct _LingotGauge LingotGauge;
 
 struct _LingotGauge
   {
-    LingotFilter* filter;
+    LingotFilter filter;
     FLT position;
   };
 

@@ -34,9 +34,7 @@
  digital filtering implementation.
  */
 
-typedef struct _LingotFilter LingotFilter;
-
-struct _LingotFilter {
+typedef struct {
 
 	FLT* a;
 	FLT* b; // coefs
@@ -44,9 +42,9 @@ struct _LingotFilter {
 
 	unsigned int N;
 
-};
+} LingotFilter;
 
-LingotFilter* lingot_filter_new(unsigned int Na, unsigned int Nb, const FLT* a,
+void lingot_filter_new(LingotFilter*, unsigned int Na, unsigned int Nb, const FLT* a,
 		const FLT* b);
 
 void lingot_filter_reset(LingotFilter* filter);
@@ -55,7 +53,7 @@ void lingot_filter_reset(LingotFilter* filter);
  * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple
  * with cutoff pi*wc radians.
  */
-LingotFilter* lingot_filter_cheby_design(unsigned int order, FLT Rp, FLT wc);
+void lingot_filter_cheby_design(LingotFilter*, unsigned int order, FLT Rp, FLT wc);
 
 void lingot_filter_destroy(LingotFilter*);
 

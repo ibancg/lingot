@@ -51,7 +51,7 @@ struct _LingotMainFrame {
 
 	GtkWidget* labelsbox;
 
-	LingotFilter* freq_filter;
+	LingotFilter freq_filter;
 
 	LingotGauge* gauge;
 

@@ -64,7 +64,7 @@ struct _LingotCore {
 
 	LingotFFTPlan* fftplan;
 
-	LingotFilter* antialiasing_filter; // antialiasing filter for decimation.
+	LingotFilter antialiasing_filter; // antialiasing filter for decimation.
 
 	int running;
 

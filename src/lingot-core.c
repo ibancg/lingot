@@ -170,7 +170,7 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 		 * it doesn't matter due to the analysis is made on the signal
 		 * power distribution (only magnitude).
 		 */
-		core->antialiasing_filter = lingot_filter_cheby_design(8, 0.5,
+		lingot_filter_cheby_design(&core->antialiasing_filter, 8, 0.5,
 				0.9 / core->conf->oversampling);
 
 		pthread_mutex_init(&core->temporal_buffer_mutex, NULL);
@@ -215,9 +215,7 @@ void lingot_core_destroy(LingotCore* core) {
 			free(core->windowed_fft_buffer);
 		}
 
-		if (core->antialiasing_filter != NULL) {
-			lingot_filter_destroy(core->antialiasing_filter);
-		}
+		lingot_filter_destroy(&core->antialiasing_filter);
 
 		pthread_mutex_destroy(&core->temporal_buffer_mutex);
 	}
@@ -318,7 +316,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 				- decimation_output_len];
 
 		// low pass filter to avoid aliasing.
-		lingot_filter_filter(core->antialiasing_filter, samples_read,
+		lingot_filter_filter(&core->antialiasing_filter, samples_read,
 				decimation_in, decimation_in);
 
 		// compression.
