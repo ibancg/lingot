@@ -150,7 +150,7 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 		memset(core->windowed_fft_buffer, 0,
 				core->conf->fft_size * sizeof(FLT));
 
-		core->fftplan = lingot_fft_plan_create(core->windowed_fft_buffer,
+		lingot_fft_plan_create(&core->fftplan, core->windowed_fft_buffer,
 				core->conf->fft_size);
 
 		/*
@@ -187,7 +187,7 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 void lingot_core_destroy(LingotCore* core) {
 
 	if (core->audio.audio_system != -1) {
-		lingot_fft_plan_destroy(core->fftplan);
+		lingot_fft_plan_destroy(&core->fftplan);
 		lingot_audio_destroy(&core->audio);
 
 		free(core->spd_fft);
@@ -591,7 +591,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	int spd_size = (conf->fft_size / 2);
 
 	// FFT
-	lingot_fft_compute_dft_and_spd(core->fftplan, core->spd_fft, spd_size);
+	lingot_fft_compute_dft_and_spd(&core->fftplan, core->spd_fft, spd_size);
 
 	static const FLT minSPL = -200;
 	for (i = 0; i < spd_size; i++) {
@@ -620,7 +620,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 
 	short divisor = 1;
 	FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
-			0.5 * core->freq, core->fftplan->fft_out, spd_size,
+			0.5 * core->freq, core->fftplan.fft_out, spd_size,
 			conf->peak_number, lowest_index, highest_index,
 			conf->peak_half_width, index2f, conf->min_SNR,
 			conf->min_overall_SNR, conf->internal_min_frequency, core,

@@ -60,7 +60,7 @@ typedef struct {
 	FLT* spd_fft;
 	FLT* noise_level;
 
-	LingotFFTPlan* fftplan;
+	LingotFFTPlan fftplan;
 
 	LingotFilter antialiasing_filter; // antialiasing filter for decimation.
 
