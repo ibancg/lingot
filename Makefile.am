@@ -28,7 +28,9 @@ EXTRA_DIST = $(lingotdoc_DATA)
 DISTCLEANFILES = \
 	intltool-extract\
 	intltool-merge\
-	intltool-update
+	intltool-update\
+	intl\
+	m4
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop

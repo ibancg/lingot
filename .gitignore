@@ -3,6 +3,7 @@
 *.gmo
 *~
 *.orig
+*.m4
 m4/
 libtool
 lingot.desktop
