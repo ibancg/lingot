@@ -12,6 +12,7 @@ src/.deps
 src/lingot
 po/Makefile
 po/Makefile.in
+po/Makefile.in.in
 po/POTFILES
 po/stamp-it
 Makefile
@@ -39,3 +40,4 @@ install-sh
 ltmain.sh
 missing
 test/Debug/
+test/.settings
