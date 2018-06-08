@@ -36,9 +36,7 @@
 
 #include "lingot-fft.h"
 
-typedef struct _LingotCore LingotCore;
-
-struct _LingotCore {
+typedef struct {
 
 	//  -- shared data --
 	FLT freq; // computed analog frequency.
@@ -83,11 +81,11 @@ struct _LingotCore {
 	short markers_size;
 	short markers_size2;
 #	endif
-};
+} LingotCore;
 
 //----------------------------------------------------------------
 
-LingotCore* lingot_core_new(LingotConfig*);
+void lingot_core_new(LingotCore*, LingotConfig*);
 void lingot_core_destroy(LingotCore*);
 
 // start process

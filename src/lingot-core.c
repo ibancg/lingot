@@ -49,10 +49,9 @@ void lingot_core_run_computation_thread(LingotCore* core);
 
 int decimation_input_index = 0;
 
-LingotCore* lingot_core_new(LingotConfig* conf) {
+void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 
 	char buff[1000];
-	LingotCore* core = malloc(sizeof(LingotCore));
 
 	core->conf = conf;
 	core->running = 0;
@@ -65,7 +64,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	core->windowed_fft_buffer = NULL;
 	core->hamming_window_temporal = NULL;
 	core->hamming_window_fft = NULL;
-	core->antialiasing_filter = NULL;
 
 #ifdef DRAW_MARKERS
 	core->markers_size = 0;
@@ -181,7 +179,6 @@ LingotCore* lingot_core_new(LingotConfig* conf) {
 	}
 
 	core->freq = 0.0;
-	return core;
 }
 
 // -----------------------------------------------------------------------
@@ -219,8 +216,6 @@ void lingot_core_destroy(LingotCore* core) {
 
 		pthread_mutex_destroy(&core->temporal_buffer_mutex);
 	}
-
-	free(core);
 }
 
 // -----------------------------------------------------------------------

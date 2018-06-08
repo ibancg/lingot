@@ -55,7 +55,7 @@ struct _LingotMainFrame {
 
 	LingotGauge gauge;
 
-	LingotCore* core;
+	LingotCore core;
 
 	GtkWidget* win;
 
