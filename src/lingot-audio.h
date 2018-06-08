@@ -42,11 +42,9 @@
 typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
 		int read_buffer_size_samples, void *arg);
 
-typedef struct _LingotAudioHandler LingotAudioHandler;
-
 #define FLT_SAMPLE_SCALE	32767.0
 
-struct _LingotAudioHandler {
+typedef struct {
 
 	int audio_system;
 	char device[100];
@@ -91,11 +89,9 @@ struct _LingotAudioHandler {
 	// indicates whether the thread was interrupted (by the audio server, not
 	// by the user)
 	int interrupted;
-};
+} LingotAudioHandler;
 
-typedef struct _LingotAudioSystemProperties LingotAudioSystemProperties;
-
-struct _LingotAudioSystemProperties {
+typedef struct {
 
 	int forced_sample_rate; // tells whether the sample rate can be changed
 
@@ -104,7 +100,7 @@ struct _LingotAudioSystemProperties {
 
 	int n_devices; // number of available devices
 	char** devices; // devices
-};
+} LingotAudioSystemProperties;
 
 int lingot_audio_get_audio_system_properties(
 		LingotAudioSystemProperties*,
