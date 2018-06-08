@@ -186,19 +186,15 @@ LingotConfigParameterSpec lingot_config_get_parameter_spec(
 	return parameters[(int) id];
 }
 
-LingotConfig* lingot_config_new() {
-
-	LingotConfig* config = malloc(sizeof(LingotConfig));
+void lingot_config_new(LingotConfig* config) {
 
 	config->max_nr_iter = 10; // iterations
 	config->window_type = HAMMING;
 	lingot_config_scale_new(&config->scale);
-	return config;
 }
 
 void lingot_config_destroy(LingotConfig* config) {
 	lingot_config_scale_destroy(&config->scale);
-	free(config);
 }
 
 void lingot_config_copy(LingotConfig* dst, LingotConfig* src) {

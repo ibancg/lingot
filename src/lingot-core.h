@@ -66,7 +66,7 @@ typedef struct {
 
 	int running;
 
-	LingotConfig* conf; // configuration structure
+	LingotConfig conf; // configuration structure
 
 	pthread_t thread_computation;
 	pthread_attr_t thread_computation_attr;

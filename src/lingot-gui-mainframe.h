@@ -63,7 +63,7 @@ struct _LingotMainFrame {
 	GdkColor spectrum_color;
 
 	LingotConfigDialog* config_dialog;
-	LingotConfig* conf;
+	LingotConfig conf;
 
 	// timer uids
 	guint visualization_timer_uid;
