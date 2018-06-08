@@ -1,5 +1,5 @@
 # Swedish messages for lingot
-# Copyright (C) 2007-2009  Ibán Cereijo Graña, Jairo Chapela Martínez.
+# Copyright (C) 2007-2009  Iban Cereijo, Jairo Chapela.
 # This file is distributed under the same license as the lingot package.
 # John Gustafsson <jamminjohn@users.sourceforge.net>, 2008-2009.
 #

@@ -1,8 +1,8 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Ibán Cereijo Graña.
- * Copyright (C) 2004-2008  Jairo Chapela Martínez.
+ * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
  * This file is part of lingot.
@@ -102,8 +102,8 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
 }
 
 void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
-	static const gchar* authors[] = { "Ibán Cereijo Graña <ibancg@gmail.com>",
-			"Jairo Chapela Martínez <jairochapela@gmail.com>", NULL };
+	static const gchar* authors[] = { "Iban Cereijo <ibancg@gmail.com>",
+			"Jairo Chapela <jairochapela@gmail.com>", NULL };
 
 	char buff[512];
 	snprintf(buff, sizeof(buff), "Matthew Blissett (%s)", _("Logo design"));
@@ -111,7 +111,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 
 	gtk_show_about_dialog(NULL, "name", "Lingot", "version", VERSION,
 			"copyright",
-			"\xC2\xA9 2004-2018 Ibán Cereijo Graña\n\xC2\xA9 2004-2008 Jairo Chapela Martínez",
+			"\xC2\xA9 2004-2018 Iban Cereijo\n\xC2\xA9 2004-2008 Jairo Chapela",
 			"comments", _("Accurate and easy to use musical instrument tuner"),
 			"authors", authors, "artists", artists, "website-label",
 			"http://lingot.nongnu.org/", "website", "http://lingot.nongnu.org/",

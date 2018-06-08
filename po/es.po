@@ -1,8 +1,8 @@
 # Spanish translations for Lingot.
-# Copyright (C) 2004-2013 Ibán Cereijo Graña, 2004-2008 Jairo Chapela Martínez
+# Copyright (C) 2004-2013 Iban Cereijo, 2004-2008 Jairo Chapela
 # This file is distributed under the same license as the lingot package.
-# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
-# Ibán Cereijo Graña <ibancg@gmail.com>, 2007-2011.
+# Jairo Chapela <jairochapela@gmail.com>, 2007.
+# Iban Cereijo <ibancg@gmail.com>, 2007-2011.
 #
 msgid ""
 msgstr ""
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-17 18:41+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
-"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
+"Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"

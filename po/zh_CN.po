@@ -1,7 +1,7 @@
 # Chinese/China translation of lingot.
 # Copyright (C) 2009 THE lingot'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the lingot package.
-# Jairo Chapela Martínez <jairochapela@gmail.com>, 2007.
+# Jairo Chapela <jairochapela@gmail.com>, 2007.
 # Careone <careoneagain@gmail.com>, 2009.
 #
 #

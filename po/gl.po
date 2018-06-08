@@ -1,7 +1,7 @@
 # Galician translations for Lingot.
-# Copyright (C) 2004-2013 Ibán Cereijo Graña, 2004-2008 Jairo Chapela Martínez
+# Copyright (C) 2004-2013 Iban Cereijo, 2004-2008 Jairo Chapela
 # This file is distributed under the same license as the lingot package.
-# Ibán Cereijo Graña <ibancg@gmail.com>, 2007-2011.
+# Iban Cereijo <ibancg@gmail.com>, 2007-2011.
 #
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-02 15:39+0100\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
-"Last-Translator: Ibán Cereijo <ibancg@gmail.com>\n"
+"Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid ""
 "Rolls back all the previous applied changes and closes the configuration "
 "dialog."
 msgstr ""
-"Anula los cambios aplicados previamente e pecha o diálogo de configuración."
+"Anula os cambios aplicados previamente e pecha o diálogo de configuración."
 
 #: ../src/glade/lingot-config-dialog.glade.h:7
 msgid "Audio system"
@@ -76,9 +76,9 @@ msgstr ""
 "Escolla aquí a tasa de mostreo hardware. Dámoslle algúns exemplos, pero pode "
 "escoller calqueira outra. Percátese de que, dependendo do sistema de audio "
 "seleccionado e/ou o dispositivo, non todas as frecuencias estarán "
-"dispoñibles. De calquer xeito, vostede pode achegarse á frecuencia desexada "
+"dispoñibles. De calquera xeito, vostede pode achegarse á frecuencia desexada "
 "combinando este parámetro có factor de sobremostreo (pestaña 'Básico'). Se "
-"usa JACK, non poderá modificar este campo, pero podderá facelo externamente "
+"usa JACK, non poderá modificar este campo, pero poderá facelo externamente "
 "na configuración do servidor JACK."
 
 #: ../src/glade/lingot-config-dialog.glade.h:12
@@ -719,7 +719,7 @@ msgstr "Afinador de instrumentos preciso e fácil de usar"
 
 #: ../src/lingot-gui-mainframe.c:116
 msgid "translator-credits"
-msgstr "Ibán Cereijo Graña <ibancg@gmail.com>"
+msgstr "Iban Cereijo <ibancg@gmail.com>"
 
 #: ../src/lingot-gui-mainframe.c:294
 msgid ""
