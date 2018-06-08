@@ -200,7 +200,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 				frame->conf->scale, frame->core->freq,
 				frame->conf->root_frequency_error, &error_cents);
 		if (!isnan(error_cents)) {
-			lingot_gauge_compute(frame->gauge, error_cents);
+			lingot_gauge_compute(&frame->gauge, error_cents);
 		}
 	}
 
@@ -419,7 +419,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	conf = frame->conf;
 	lingot_config_load(conf, CONFIG_FILE_NAME);
 
-	frame->gauge = lingot_gauge_new(conf->gauge_rest_value); // gauge in rest situation
+	lingot_gauge_new(&frame->gauge, conf->gauge_rest_value); // gauge in rest situation
 
 	// ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -554,7 +554,7 @@ void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 	lingot_core_stop(frame->core);
 	lingot_core_destroy(frame->core);
 
-	lingot_gauge_destroy(frame->gauge);
+	lingot_gauge_destroy(&frame->gauge);
 	lingot_filter_destroy(&frame->freq_filter);
 	lingot_config_destroy(frame->conf);
 	if (frame->config_dialog)
@@ -816,7 +816,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	cairo_set_source_surface(cr, gauge_background, 0, 0);
 	cairo_paint(cr);
 
-	const double normalized_error = frame->gauge->position
+	const double normalized_error = frame->gauge.position
 			/ frame->conf->scale->max_offset_rounded;
 	const double angle = 2.0 * normalized_error * overtureAngle;
 	cairo_set_line_width(cr, gaugeStroke);
@@ -1237,7 +1237,7 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 		note_string =
 				frame->conf->scale->note_name[lingot_config_scale_get_note_index(
 						frame->conf->scale, closest_note_index)];
-		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
+		sprintf(error_string, "e = %+2.0f cents", frame->gauge.position);
 		sprintf(freq_string, "f = %6.2f Hz", frequency);
 		sprintf(octave_string, "%d",
 				lingot_config_scale_get_octave(frame->conf->scale,

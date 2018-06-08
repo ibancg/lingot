@@ -24,7 +24,7 @@
 
 #include "lingot-gauge.h"
 
-LingotGauge* lingot_gauge_new(FLT initial_position) {
+void lingot_gauge_new(LingotGauge* gauge, FLT initial_position) {
 
 	//
 	// ----- ERROR GAUGE FILTER CONFIGURATION -----
@@ -70,14 +70,12 @@ LingotGauge* lingot_gauge_new(FLT initial_position) {
 
 	lingot_filter_new(&gauge->filter, 2, 0, a, b);
 	lingot_gauge_compute(gauge, initial_position);
-	return gauge;
 }
 
 void lingot_gauge_destroy(LingotGauge* gauge) {
 	lingot_filter_destroy(&gauge->filter);
-	free(gauge);
 }
 
 void lingot_gauge_compute(LingotGauge* gauge, FLT sample) {
-	gauge->position = lingot_filter_filter_sample(&gauge.filter, sample);
+	gauge->position = lingot_filter_filter_sample(&gauge->filter, sample);
 }

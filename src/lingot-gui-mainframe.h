@@ -53,7 +53,7 @@ struct _LingotMainFrame {
 
 	LingotFilter freq_filter;
 
-	LingotGauge* gauge;
+	LingotGauge gauge;
 
 	LingotCore* core;
 

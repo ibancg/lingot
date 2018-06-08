@@ -32,15 +32,12 @@
  * Implements the dynamic behaviour of the gauge with a digital filter.
  */
 
-typedef struct _LingotGauge LingotGauge;
-
-struct _LingotGauge
-  {
+typedef struct {
     LingotFilter filter;
     FLT position;
-  };
+  } LingotGauge;;
 
-LingotGauge* lingot_gauge_new(FLT);
+void lingot_gauge_new(LingotGauge*, FLT);
 void lingot_gauge_destroy(LingotGauge*);
 void lingot_gauge_compute(LingotGauge*, FLT);
 
