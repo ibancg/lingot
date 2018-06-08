@@ -96,13 +96,13 @@ void lingot_signal_test() {
 	}
 	printf("] \n");
 
-	double m;
-
-	tic();
-//	m = lingot_signal_quick_select(spd, 512);
-	toc();
-
-	printf("m = %f\n", m);
+	//	double m;
+	//
+	//	tic();
+	//	m = lingot_signal_quick_select(spd, 512);
+	//	toc();
+	//
+	//	printf("m = %f\n", m);
 
 	printf("S = [");
 	for (i = 0; i < N; i++) {
@@ -110,11 +110,11 @@ void lingot_signal_test() {
 	}
 	printf("] \n");
 
-	tic();
+//	tic();
 //	m = lingot_signal_quick_select(spd, 512);
-	toc();
+//	toc();
 
-	printf("m = %f\n", m);
+//	printf("m = %f\n", m);
 
 	printf("S = [");
 	for (i = 0; i < N; i++) {

@@ -221,7 +221,7 @@ double lingot_gui_config_dialog_get_frequency(const gchar* str) {
 		result = -1.0;
 	}
 
-	printf("frequency '%s' = %f\n", str, result);
+//	printf("frequency '%s' = %f\n", str, result);
 	return result;
 }
 
@@ -250,10 +250,10 @@ void lingot_gui_config_dialog_set_frequency(LingotConfigDialog* dialog,
 			snprintf(buffer, sizeof(buffer), "%0.2f", frequency);
 		}
 
-		printf("closest index to frequency %f is %d, freq %f\n", frequency,
-				closest_index, freq2);
-
-		printf("frequency name for %f = '%s'\n", frequency, buffer);
+//		printf("closest index to frequency %f is %d, freq %f\n", frequency,
+//				closest_index, freq2);
+//
+//		printf("frequency name for %f = '%s'\n", frequency, buffer);
 		gtk_entry_set_text(GTK_ENTRY(gtk_bin_get_child(GTK_BIN(combo))),
 				buffer);
 	}
@@ -263,7 +263,7 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 		LingotConfigDialog* dialog) {
 
 	// TODO: only when necessary
-	printf("lingot_gui_config_dialog_callback_change_scale()...\n");
+//	printf("lingot_gui_config_dialog_callback_change_scale()...\n");
 
 	static char buff[512];
 
@@ -297,7 +297,7 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->maximum_frequency),
 			gtk_combo_box_get_model(GTK_COMBO_BOX(combo)));
 	gtk_widget_destroy(GTK_WIDGET(combo));
-	printf("ok ... lingot_gui_config_dialog_callback_change_scale()\n");
+//	printf("ok ... lingot_gui_config_dialog_callback_change_scale()\n");
 }
 
 void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
@@ -312,10 +312,10 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 		double frequency = lingot_config_scale_get_frequency(
 				dialog->conf->scale, global_index); // TODO: deviation
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
-		printf("CHANGE global index %d, octave %d %d, local index %d, %d, %f\n",
-				global_index, octave,
-				lingot_config_scale_get_octave(dialog->conf->scale,
-						global_index), local_index, index, frequency);
+//		printf("CHANGE global index %d, octave %d %d, local index %d, %d, %f\n",
+//				global_index, octave,
+//				lingot_config_scale_get_octave(dialog->conf->scale,
+//						global_index), local_index, index, frequency);
 	}
 }
 

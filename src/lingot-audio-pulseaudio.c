@@ -61,8 +61,7 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sa
 	ss.channels = num_channels;
 	ss.rate = sample_rate;
 
-	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate,
-			ss.format);
+//	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate, ss.format);
 
 	audio->bytes_per_sample = pa_sample_size(&ss);
 
@@ -320,11 +319,11 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
 	char buff[512];
 	snprintf(buff, sizeof(buff), "%s <%s>", i->description, i->name);
 
-	printf("%s <%s>\n", i->description, i->name);
-	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
-	printf("\t%i channels, rate %i, format %i\n", i->sample_spec.channels,
-			i->sample_spec.rate, i->sample_spec.format);
-	printf("\tlags %i\n", i->flags);
+//	printf("%s <%s>\n", i->description, i->name);
+//	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
+//	printf("\t%i channels, rate %i, format %i\n", i->sample_spec.channels,
+//			i->sample_spec.rate, i->sample_spec.format);
+//	printf("\tlags %i\n", i->flags);
 
 	struct device_name_node_t* new_name_node =
 			(struct device_name_node_t*) malloc(

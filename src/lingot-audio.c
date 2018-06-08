@@ -179,17 +179,17 @@ int lingot_audio_read(LingotAudioHandler* audio) {
 			int i;
 			for (i = 0; i < samples_read; i++) {
 				fprintf(fid, "%f ", audio->flt_read_buffer[i]);
-				printf("%f ", audio->flt_read_buffer[i]);
+//				printf("%f ", audio->flt_read_buffer[i]);
 			}
-			printf("\n");
+//			printf("\n");
 			timersub(&t_abs, &t_abs_old, &tdiff);
 			read_samples = samples_read;
 			elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
 			static const double c = 0.9;
 			samplerate_estimator = c * samplerate_estimator
 					+ (1 - c) * (read_samples / elapsed_time);
-			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
-					samplerate_estimator, read_samples, elapsed_time);
+//			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
+//					samplerate_estimator, read_samples, elapsed_time);
 
 		}
 		t_abs_old = t_abs;

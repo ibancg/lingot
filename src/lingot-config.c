@@ -274,8 +274,8 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 		config->oversampling = 1;
 	}
 
-	printf("config: sample rate = %i\n", config->sample_rate);
-	printf("config: oversampling = %i\n", config->oversampling);
+//	printf("config: sample rate = %i\n", config->sample_rate);
+//	printf("config: oversampling = %i\n", config->oversampling);
 	if (config->optimize_internal_parameters) {
 		// TODO: tune this parameters
 		config->fft_size = 512;
