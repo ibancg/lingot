@@ -192,21 +192,18 @@ LingotConfig* lingot_config_new() {
 
 	config->max_nr_iter = 10; // iterations
 	config->window_type = HAMMING;
-	config->scale = lingot_config_scale_new();
+	lingot_config_scale_new(&config->scale);
 	return config;
 }
 
 void lingot_config_destroy(LingotConfig* config) {
-	lingot_config_scale_destroy(config->scale);
-	free(config->scale);
+	lingot_config_scale_destroy(&config->scale);
 	free(config);
 }
 
 void lingot_config_copy(LingotConfig* dst, LingotConfig* src) {
-	LingotScale* dst_scale = dst->scale;
 	*dst = *src;
-	dst->scale = dst_scale;
-	lingot_config_scale_copy(dst->scale, src->scale);
+	lingot_config_scale_copy(&dst->scale, &src->scale);
 }
 
 //----------------------------------------------------------------------------
@@ -245,7 +242,7 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 
 	//--------------------------------------------------------------------------
 
-	lingot_config_scale_restore_default_values(config->scale);
+	lingot_config_scale_restore_default_values(&config->scale);
 	lingot_config_update_internal_params(config);
 }
 
@@ -296,20 +293,19 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 	config->min_SNR = 0.5 * config->min_overall_SNR;
 	config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
 
-	LingotScale* scale = config->scale;
-	if (scale->notes == 1) {
-		scale->max_offset_rounded = 1200.0;
+	if (config->scale.notes == 1) {
+		config->scale.max_offset_rounded = 1200.0;
 	} else {
 		int i;
 		FLT max_offset = 0.0;
-		for (i = 1; i < scale->notes; i++) {
-			max_offset = MAX(max_offset, scale->offset_cents[i]
-					- scale->offset_cents[i - 1]);
+		for (i = 1; i < config->scale.notes; i++) {
+			max_offset = MAX(max_offset, config->scale.offset_cents[i]
+					- config->scale.offset_cents[i - 1]);
 		}
-		scale->max_offset_rounded = max_offset;
+		config->scale.max_offset_rounded = max_offset;
 	}
 
-	config->gauge_rest_value = -0.45 * scale->max_offset_rounded;
+	config->gauge_rest_value = -0.45 * config->scale.max_offset_rounded;
 }
 
 //----------------------------------------------------------------------------
@@ -419,16 +415,16 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 
 	fprintf(fp, "\n");
 	fprintf(fp, "SCALE = {\n");
-	fprintf(fp, "NAME = %s\n", config->scale->name);
-	fprintf(fp, "BASE_FREQUENCY = %f\n", config->scale->base_frequency);
-	fprintf(fp, "NOTE_COUNT = %d\n", config->scale->notes);
+	fprintf(fp, "NAME = %s\n", config->scale.name);
+	fprintf(fp, "BASE_FREQUENCY = %f\n", config->scale.base_frequency);
+	fprintf(fp, "NOTE_COUNT = %d\n", config->scale.notes);
 	fprintf(fp, "NOTES = {\n");
 
-	for (i = 0; i < config->scale->notes; i++) {
-		lingot_config_scale_format_shift(buff, config->scale->offset_cents[i],
-				config->scale->offset_ratios[0][i],
-				config->scale->offset_ratios[1][i]);
-		fprintf(fp, "%s\t%s\n", config->scale->note_name[i], buff);
+	for (i = 0; i < config->scale.notes; i++) {
+		lingot_config_scale_format_shift(buff, config->scale.offset_cents[i],
+				config->scale.offset_ratios[0][i],
+				config->scale.offset_ratios[1][i]);
+		fprintf(fp, "%s\t%s\n", config->scale.note_name[i], buff);
 	}
 
 	fprintf(fp, "}\n"), fprintf(fp, "}\n"),
@@ -443,6 +439,8 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 
 //----------------------------------------------------------------------------
 
+typedef enum { rs_not_yet, rs_reading, rs_done } reading_scale_step_t;
+
 void lingot_config_load(LingotConfig* config, char* filename) {
 	FILE* fp;
 	int line;
@@ -452,11 +450,11 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 	const static char* delim2 = " \t\n";
 	void* params[N_MAX_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
-	int reading_scale = 0;
+	reading_scale_step_t reading_scale = rs_not_yet;
 	char* nl;
 	int parse_errors = 0;
 	int scale_errors = 0;
-	LingotScale* scale = NULL;
+	LingotScale scale;
 
 	// restore default values for non specified parameters
 	lingot_config_restore_default_values(config);
@@ -495,13 +493,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			continue; // blank line.
 		}
 
-		if (!strcmp(char_buffer_pointer, "SCALE")) {
-			reading_scale = 1;
-			scale = lingot_config_scale_new();
+		if (reading_scale == rs_not_yet && !strcmp(char_buffer_pointer, "SCALE")) {
+			reading_scale = rs_reading;
+			lingot_config_scale_new(&scale);
 			continue;
 		}
 
-		if (reading_scale) {
+		if (reading_scale == rs_reading) {
 
 			if (!strcmp(char_buffer_pointer, "NAME")) {
 				char_buffer_pointer += 4;
@@ -517,24 +515,24 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				nl = strrchr(char_buffer_pointer, '\n');
 				if (nl)
 					*nl = '\0';
-				scale->name = strdup(char_buffer_pointer);
+				scale.name = strdup(char_buffer_pointer);
 				continue;
 			}
 			if (!strcmp(char_buffer_pointer, "BASE_FREQUENCY")) {
 				char_buffer_pointer = strtok(NULL, delim);
-				sscanf(char_buffer_pointer, "%lg", &scale->base_frequency);
+				sscanf(char_buffer_pointer, "%lg", &scale.base_frequency);
 				continue;
 			}
 			if (!strcmp(char_buffer_pointer, "NOTE_COUNT")) {
 				char_buffer_pointer = strtok(NULL, delim);
-				sscanf(char_buffer_pointer, "%hu", &scale->notes);
-				lingot_config_scale_allocate(scale, scale->notes);
+				sscanf(char_buffer_pointer, "%hu", &scale.notes);
+				lingot_config_scale_allocate(&scale, scale.notes);
 				continue;
 			}
 
 			if (!strcmp(char_buffer_pointer, "NOTES")) {
 				int i = 0;
-				for (i = 0; i < scale->notes; i++) {
+				for (i = 0; i < scale.notes; i++) {
 					line++;
 					if (!fgets(char_buffer, max_line_size, fp)) {
 						scale_errors = 1;
@@ -555,7 +553,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 						break;
 					}
 
-					scale->note_name[i] = strdup(char_buffer_pointer);
+					scale.note_name[i] = strdup(char_buffer_pointer);
 					char_buffer_pointer = strtok(NULL, delim2);
 
 					if (char_buffer_pointer == NULL) {
@@ -567,14 +565,14 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					}
 
 					if (!lingot_config_scale_parse_shift(char_buffer_pointer,
-							&scale->offset_cents[i],
-							&scale->offset_ratios[0][i],
-							&scale->offset_ratios[1][i])) {
+							&scale.offset_cents[i],
+							&scale.offset_ratios[0][i],
+							&scale.offset_ratios[1][i])) {
 						scale_errors = 1;
 					} else {
 
-						if ((scale->offset_cents[i] < 0)
-								|| (scale->offset_cents[i] >= 1200)) {
+						if ((scale.offset_cents[i] < 0)
+								|| (scale.offset_cents[i] >= 1200)) {
 							scale_errors = 1;
 							fprintf(stderr,
 									"error at line %i: the notes in the scale must be equal or higher than 1/1 (0 cents) and lower than 2/1 (1200 cents)\n",
@@ -582,14 +580,14 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 						}
 
 						if (i == 0) {
-							if (scale->offset_cents[i] != 0.0) {
+							if (scale.offset_cents[i] != 0.0) {
 								scale_errors = 1;
 								fprintf(stderr,
 										"error at line %i: the first note in the scale must be 1/1 (0 cents shift)\n",
 										line);
 							}
-						} else if (scale->offset_cents[i]
-								<= scale->offset_cents[i - 1]) {
+						} else if (scale.offset_cents[i]
+								<= scale.offset_cents[i - 1]) {
 							scale_errors = 1;
 							fprintf(stderr,
 									"error at line %i: the notes in the scale must be well ordered\n",
@@ -605,7 +603,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			}
 
 			if (!strcmp(char_buffer_pointer, "}")) {
-				reading_scale = 0;
+				reading_scale = rs_done;
 				continue;
 			}
 
@@ -737,14 +735,13 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 	fclose(fp);
 
-	if (scale != NULL) {
+	if (reading_scale != rs_not_yet) {
 		if (!scale_errors) {
-			config->scale = lingot_config_scale_new();
-			lingot_config_scale_copy(config->scale, scale);
+			lingot_config_scale_new(&config->scale);
+			lingot_config_scale_copy(&config->scale, &scale);
 		}
 
-		lingot_config_scale_destroy(scale);
-		free(scale);
+		lingot_config_scale_destroy(&scale);
 	}
 
 	if (parse_errors || scale_errors) {

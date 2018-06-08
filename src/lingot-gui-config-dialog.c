@@ -229,19 +229,19 @@ void lingot_gui_config_dialog_set_frequency(LingotConfigDialog* dialog,
 
 		double error_cents;
 		int closest_index = lingot_config_scale_get_closest_note_index(
-				dialog->conf->scale, frequency,
+				&dialog->conf->scale, frequency,
 				dialog->conf->root_frequency_error, &error_cents);
 
-		double freq2 = lingot_config_scale_get_frequency(dialog->conf->scale,
+		double freq2 = lingot_config_scale_get_frequency(&dialog->conf->scale,
 				closest_index); // TODO: deviation
 		if (fabs(frequency - freq2) < 1e-1) {
-			int index = lingot_config_scale_get_note_index(dialog->conf->scale,
+			int index = lingot_config_scale_get_note_index(&dialog->conf->scale,
 					closest_index);
-			int octave = lingot_config_scale_get_octave(dialog->conf->scale,
+			int octave = lingot_config_scale_get_octave(&dialog->conf->scale,
 					closest_index) + 4;
 			// TODO: note name
 			snprintf(buffer, sizeof(buffer), "%s %d <%0.2f>",
-					dialog->conf->scale->note_name[index], octave, frequency);
+					dialog->conf->scale.note_name[index], octave, frequency);
 		} else {
 			snprintf(buffer, sizeof(buffer), "%0.2f", frequency);
 		}
@@ -275,14 +275,14 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 
 	int i;
 	int octave_index;
-	for (i = 0; i < config->scale->notes; i++) {
+	for (i = 0; i < config->scale.notes; i++) {
 		for (octave_index = frequency_combo_first_octave;
 				octave_index
 						< frequency_combo_first_octave
 								+ frequency_combo_n_octaves; octave_index++) {
 			snprintf(buff, sizeof(buff),
 					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
-					12, config->scale->note_name[i], 7, octave_index);
+					12, config->scale.note_name[i], 7, octave_index);
 			gtk_combo_box_text_append_text(combo, buff);
 		}
 	}
@@ -302,8 +302,8 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 		// the base frequency of the scale corresponds to octave 4, typically C4
 		int octave = frequency_combo_first_octave + (index % frequency_combo_n_octaves) - 4;
 		int local_index = index / frequency_combo_n_octaves;
-		int global_index = local_index + octave * dialog->conf->scale->notes;
-		double frequency = lingot_config_scale_get_frequency(dialog->conf->scale, global_index);
+		int global_index = local_index + octave * dialog->conf->scale.notes;
+		double frequency = lingot_config_scale_get_frequency(&dialog->conf->scale, global_index);
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
 	}
 }
@@ -390,7 +390,7 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			GTK_TOGGLE_BUTTON(dialog->optimize_check_button),
 			conf->optimize_internal_parameters);
 
-	lingot_gui_config_dialog_scale_rewrite(dialog, conf->scale);
+	lingot_gui_config_dialog_scale_rewrite(dialog, &conf->scale);
 }
 
 void lingot_gui_config_dialog_destroy(LingotConfigDialog* dialog) {
@@ -408,7 +408,7 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 
 	// validation
 
-	if (!lingot_gui_config_dialog_scale_validate(dialog, conf->scale)) {
+	if (!lingot_gui_config_dialog_scale_validate(dialog, &conf->scale)) {
 		return 0;
 	}
 
@@ -496,16 +496,15 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	g_free(text1);
 	conf->sample_rate = sample_rate;
 
-	LingotScale* scale = conf->scale;
-	lingot_config_scale_destroy(scale);
+        lingot_config_scale_destroy(&conf->scale);
 
-	lingot_gui_config_dialog_scale_apply(dialog, scale);
+	lingot_gui_config_dialog_scale_apply(dialog, &conf->scale);
 
 	lingot_config_update_internal_params(conf);
 
 	lingot_gui_mainframe_change_config(dialog->mainframe, conf);
 
-	if (scale->max_offset_rounded > 200) {
+	if (conf->scale.max_offset_rounded > 200) {
 		lingot_msg_add_warning(
 				_("The provided scale contains wide gaps in frequency that increase the gauge range and produce a loss of visual accuracy. Consider providing scales with at least 12 tones, or with a maximum distance between adjacent notes below 200 cents."));
 	}

@@ -197,7 +197,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 		frequency = lingot_filter_filter_sample(&frame->freq_filter,
 				frame->core.freq);
 		closest_note_index = lingot_config_scale_get_closest_note_index(
-				frame->conf->scale, frame->core.freq,
+				&frame->conf->scale, frame->core.freq,
 				frame->conf->root_frequency_error, &error_cents);
 		if (!isnan(error_cents)) {
 			lingot_gauge_compute(&frame->gauge, error_cents);
@@ -682,7 +682,7 @@ static void lingot_gui_mainframe_draw_gauge_background(
 	cairo_stroke(cr);
 
 	// cent tics
-	const double maxOffsetRounded = frame->conf->scale->max_offset_rounded;
+	const double maxOffsetRounded = frame->conf->scale.max_offset_rounded;
 	const static int maxMinorDivisions = 20;
 	double centsPerMinorDivision = maxOffsetRounded / maxMinorDivisions;
 	const double base = pow(10.0, floor(log10(centsPerMinorDivision)));
@@ -817,7 +817,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	cairo_paint(cr);
 
 	const double normalized_error = frame->gauge.position
-			/ frame->conf->scale->max_offset_rounded;
+			/ frame->conf->scale.max_offset_rounded;
 	const double angle = 2.0 * normalized_error * overtureAngle;
 	cairo_set_line_width(cr, gaugeStroke);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
@@ -1235,12 +1235,12 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 		strcpy(octave_string, "");
 	} else {
 		note_string =
-				frame->conf->scale->note_name[lingot_config_scale_get_note_index(
-						frame->conf->scale, closest_note_index)];
+				frame->conf->scale.note_name[lingot_config_scale_get_note_index(
+						&frame->conf->scale, closest_note_index)];
 		sprintf(error_string, "e = %+2.0f cents", frame->gauge.position);
 		sprintf(freq_string, "f = %6.2f Hz", frequency);
 		sprintf(octave_string, "%d",
-				lingot_config_scale_get_octave(frame->conf->scale,
+				lingot_config_scale_get_octave(&frame->conf->scale,
 						closest_note_index) + 4);
 	}
 

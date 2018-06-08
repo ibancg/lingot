@@ -154,7 +154,7 @@ struct _LingotConfig {
 
 	//----------------------------------------------------------------------------
 
-	LingotScale* scale;
+	LingotScale scale;
 };
 
 // converts an audio_system_t to a string
