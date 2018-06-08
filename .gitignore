@@ -6,6 +6,7 @@
 *.m4
 m4/
 libtool
+intltool-*.in
 lingot.desktop
 lingot-github.*
 .settings/

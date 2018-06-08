@@ -38,7 +38,12 @@ If you are building a release, just type:
 
 If you are building a development version obtained from our VCS:
 
- > libtoolize && aclocal && autoheader && autoconf && automake --add-missing
+ > libtoolize
+ > intltoolize
+ > aclocal
+ > autoheader
+ > autoconf 
+ > automake --add-missing
  > ./configure
  > make install
 
