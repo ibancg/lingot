@@ -486,10 +486,8 @@ void lingot_gui_config_dialog_scale_apply(LingotConfigDialog* dialog,
 	lingot_config_scale_allocate(scale, rows);
 
 	do {
-		gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT,
-				&shift_char, -1);
-		lingot_config_scale_parse_shift(shift_char, &shift, &shift_num,
-				&shift_den);
+		gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT, &shift_char, -1);
+		lingot_config_scale_parse_shift(shift_char, &shift, &shift_num, &shift_den);
 		free(shift_char);
 
 		scale->note_name[i] = name;

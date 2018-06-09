@@ -99,9 +99,10 @@ void lingot_config_scale_destroy(LingotScale* scale) {
 void lingot_config_scale_restore_default_values(LingotScale* scale) {
 
 	unsigned short int i;
-	// TODO: i18n
-	const char* tone_string[] = { _("C"), _("C#"), _("D"), _("D#"), _("E"), _("F"), _(
-			"F#"), _("G"), _("G#"), _("A"), _("A#"), _("B"), };
+	const char* tone_string[] = {
+			_("C"), _("C#"), _("D"), _("D#"), _("E"), _("F"),
+			_("F#"), _("G"), _("G#"), _("A"), _("A#"), _("B"),
+	};
 
 	lingot_config_scale_destroy(scale);
 
@@ -144,26 +145,19 @@ void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
 
 int lingot_config_scale_get_octave(const LingotScale* scale, int index) {
 	int result = 0;
-	if (index < 0) {
-		result = ((index + 1) / scale->notes) - 1;
-	} else {
-		result = index / scale->notes;
-	}
-	return result;
+	return (index < 0) ?
+			((index + 1) / scale->notes) - 1 :
+			index / scale->notes;
 }
 
 int lingot_config_scale_get_note_index(const LingotScale* scale, int index) {
-	int index2 = index % scale->notes;
-	if (index2 < 0) {
-		index2 += scale->notes;
-	}
-	return index2;
+	int r = index % scale->notes;
+	return r < 0 ? r + scale->notes : r;
 }
 
 FLT lingot_config_scale_get_absolute_offset(const LingotScale* scale, int index) {
 	return lingot_config_scale_get_octave(scale, index) * 1200.0
-			+ scale->offset_cents[lingot_config_scale_get_note_index(scale,
-					index)];
+			+ scale->offset_cents[lingot_config_scale_get_note_index(scale, index)];
 }
 
 FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
@@ -173,7 +167,6 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
 							/ 1200.0);
 }
 
-// TODO: test
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
 FLT freq, FLT deviation, FLT* error_cents) {
 
@@ -395,7 +388,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 			sprintf(char_buffer, "%d", i + 1);
 			scale->note_name[i] = strdup(char_buffer);
 		}
-	}catch {
+	} catch {
 		result = 0;
 		char buff[1000];
 		snprintf(buff, sizeof(buff), "%s, line %i: %s",

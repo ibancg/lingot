@@ -259,7 +259,6 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 		LingotConfigDialog* dialog) {
 
 	// TODO: only when necessary
-//	printf("lingot_gui_config_dialog_callback_change_scale()...\n");
 
 	static char buff[512];
 
@@ -293,7 +292,6 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 	gtk_combo_box_set_model(GTK_COMBO_BOX(dialog->maximum_frequency),
 			gtk_combo_box_get_model(GTK_COMBO_BOX(combo)));
 	gtk_widget_destroy(GTK_WIDGET(combo));
-//	printf("ok ... lingot_gui_config_dialog_callback_change_scale()\n");
 }
 
 void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
@@ -301,18 +299,12 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 
 	int index = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
 	if (index >= 0) {
-//		int octave = frequency_combo_first_octave
-//				+ (index / dialog->conf->scale->notes) - 4;
-//		int local_index = index % dialog->conf->scale->notes;
+		// the base frequency of the scale corresponds to octave 4, tipically C4
 		int global_index = index - (4 - frequency_combo_first_octave)*
 				dialog->conf->scale->notes;
 		double frequency = lingot_config_scale_get_frequency(
-				dialog->conf->scale, global_index); // TODO: deviation
+				dialog->conf->scale, global_index);
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
-//		printf("CHANGE global index %d, octave %d %d, local index %d, %d, %f\n",
-//				global_index, octave,
-//				lingot_config_scale_get_octave(dialog->conf->scale,
-//						global_index), local_index, index, frequency);
 	}
 }
 

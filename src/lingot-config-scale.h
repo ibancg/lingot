@@ -30,16 +30,16 @@
 typedef struct _LingotScale LingotScale;
 
 struct _LingotScale {
-	char* name; // name of the scale
-	unsigned short int notes; // number of notes
-	FLT* offset_cents; // offset in cents
-	short int* offset_ratios[2]; // offset in ratios (pairs of integers)
-	FLT base_frequency; // frequency of the first note
-	char** note_name; // note names
+	char* name; 					// name of the scale
+	unsigned short int notes; 		// number of notes
+	FLT* offset_cents; 				// offset in cents
+	short int* offset_ratios[2]; 	// offset in ratios (pairs of integers)
+	FLT base_frequency; 			// frequency of the first note (tipically C4)
+	char** note_name; 				// note names
 
 	// -- internal parameters --
 
-	FLT max_offset_rounded; // round version of maximum offset in cents
+	FLT max_offset_rounded; 		// round version of maximum offset in cents
 };
 
 LingotScale* lingot_config_scale_new();
@@ -50,9 +50,22 @@ int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
 void lingot_config_scale_format_shift(char*, double, short int, short int);
 void lingot_config_scale_copy(LingotScale* dst, LingotScale* src);
 void lingot_config_scale_restore_default_values(LingotScale* scale);
+
+// Gets the note index within the range [0, num notes)
 int lingot_config_scale_get_note_index(const LingotScale* scale, int index);
+
+// Gets an octave number from the note index
+// Octave 0 starts at index 0
 int lingot_config_scale_get_octave(const LingotScale* scale, int index);
+
+// Gets the frequency of a given note in the scale.
+// The final absolute frequency depends on the base_frequency configured for
+// the scale, which corresponds to note index 0.
+// Tipically, the base frequency is C4, so in order to get C1 in a 12-note scale,
+// we need to pass -36 here as note index
 FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index);
+
+
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
 		FLT freq, FLT deviation, FLT* error_cents);
 

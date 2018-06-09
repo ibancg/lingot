@@ -28,33 +28,29 @@
 #include <math.h>
 #include "lingot-defs.h"
 
-// single complex arithmetic  :)
+// single ... complex arithmetic  :)
 
 typedef FLT LingotComplex[2];
 
 /**
- * Addition. All parameters are overlapables.
+ * Addition. All parameters can overlap.
  */
-void lingot_complex_add(const LingotComplex a, const LingotComplex b,
-		LingotComplex c);
+void lingot_complex_add(const LingotComplex a, const LingotComplex b, LingotComplex c);
 
 /**
- * Substraction. All parameters are overlapables.
+ * Subtraction. All parameters can overlap.
  */
-void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
-		LingotComplex c);
+void lingot_complex_sub(const LingotComplex a, const LingotComplex b, LingotComplex c);
 
 /**
- * Multiplication. Parameters not overlapable.
+ * Multiplication. Parameters cannot overlap.
  */
-void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
-		LingotComplex c);
+void lingot_complex_mul(const LingotComplex a, const LingotComplex b, LingotComplex c);
 
 /**
- * Division. Parameters not overlapable.
+ * Division. Parameters cannot overlap.
  */
-void lingot_complex_div(const LingotComplex a, const LingotComplex b,
-		LingotComplex c);
+void lingot_complex_div(const LingotComplex a, const LingotComplex b, LingotComplex c);
 
 /**
  * Computes a *= b
