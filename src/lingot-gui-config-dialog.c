@@ -275,11 +275,11 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 
 	int i;
 	int octave_index;
-	for (octave_index = frequency_combo_first_octave;
-			octave_index
-					< frequency_combo_first_octave
-							+ frequency_combo_n_octaves; octave_index++) {
-		for (i = 0; i < config->scale->notes; i++) {
+	for (i = 0; i < config->scale->notes; i++) {
+		for (octave_index = frequency_combo_first_octave;
+				octave_index
+						< frequency_combo_first_octave
+								+ frequency_combo_n_octaves; octave_index++) {
 			snprintf(buff, sizeof(buff),
 					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
 					12, config->scale->note_name[i], 7, octave_index);
@@ -299,11 +299,11 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 
 	int index = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
 	if (index >= 0) {
-		// the base frequency of the scale corresponds to octave 4, tipically C4
-		int global_index = index - (4 - frequency_combo_first_octave)*
-				dialog->conf->scale->notes;
-		double frequency = lingot_config_scale_get_frequency(
-				dialog->conf->scale, global_index);
+		// the base frequency of the scale corresponds to octave 4, typically C4
+		int octave = frequency_combo_first_octave + (index % frequency_combo_n_octaves) - 4;
+		int local_index = index / frequency_combo_n_octaves;
+		int global_index = local_index + octave * dialog->conf->scale->notes;
+		double frequency = lingot_config_scale_get_frequency(dialog->conf->scale, global_index);
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
 	}
 }
@@ -608,7 +608,11 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 				gtk_builder_get_object(builder, "temporal_window_units_label"));
 		dialog->octave = GTK_COMBO_BOX_TEXT(
 				gtk_builder_get_object(builder, "octave"));
+
 		gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
+
+		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->minimum_frequency), 6);
+		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->maximum_frequency), 6);
 
 		GList* cell_list = gtk_cell_layout_get_cells(
 				GTK_CELL_LAYOUT(dialog->minimum_frequency));
