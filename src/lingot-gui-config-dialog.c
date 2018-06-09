@@ -167,11 +167,7 @@ static const gchar* lingot_gui_config_dialog_get_string(const gchar* str) {
 		token = strtok(NULL, delim);
 	}
 
-	if (token != 0x0) {
-		strcpy(buffer, token);
-	} else {
-		strcpy(buffer, str);
-	}
+	strcpy(buffer, token ? token : str);
 	free(str_);
 	return buffer;
 }
@@ -305,10 +301,11 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 
 	int index = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
 	if (index >= 0) {
-		int octave = frequency_combo_first_octave
-				+ (index % frequency_combo_n_octaves) - 4;
-		int local_index = index / frequency_combo_n_octaves;
-		int global_index = local_index + octave * dialog->conf->scale->notes;
+//		int octave = frequency_combo_first_octave
+//				+ (index / dialog->conf->scale->notes) - 4;
+//		int local_index = index % dialog->conf->scale->notes;
+		int global_index = index - (4 - frequency_combo_first_octave)*
+				dialog->conf->scale->notes;
 		double frequency = lingot_config_scale_get_frequency(
 				dialog->conf->scale, global_index); // TODO: deviation
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
@@ -542,8 +539,7 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		dialog->conf_old = lingot_config_new();
 
 		// config copy
-		lingot_config_copy(dialog->conf,
-				(config == NULL) ? frame->conf : config);
+		lingot_config_copy(dialog->conf, (config == NULL) ? frame->conf : config);
 		lingot_config_copy(dialog->conf_old, frame->conf);
 
 		GtkBuilder* builder = gtk_builder_new();
@@ -640,16 +636,13 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		lingot_gui_config_dialog_scale_show(dialog, builder);
 
 		g_signal_connect(dialog->input_system, "changed",
-				G_CALLBACK(
-						lingot_gui_config_dialog_callback_change_input_system),
+				G_CALLBACK(lingot_gui_config_dialog_callback_change_input_system),
 				dialog);
 		g_signal_connect(dialog->root_frequency_error, "value_changed",
-				G_CALLBACK(
-						lingot_gui_config_dialog_scale_callback_change_deviation),
+				G_CALLBACK(lingot_gui_config_dialog_scale_callback_change_deviation),
 				dialog);
 		g_signal_connect(dialog->octave, "changed",
-				G_CALLBACK(
-						lingot_gui_config_dialog_scale_callback_change_octave),
+				G_CALLBACK(lingot_gui_config_dialog_scale_callback_change_octave),
 				dialog);
 
 		g_signal_connect(dialog->minimum_frequency, "changed",
