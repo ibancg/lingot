@@ -36,7 +36,7 @@ snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 
 static const unsigned int channels = 1;
 
-void lingot_audio_alsa_new(LingotAudioHandler* audio, char* device, int sample_rate) {
+void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
 
 	const char* exception;
 	snd_pcm_hw_params_t* hw_params = NULL;

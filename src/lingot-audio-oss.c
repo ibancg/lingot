@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void lingot_audio_oss_new(LingotAudioHandler* audio, char* device, int sample_rate) {
+void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
 
 	int channels = 1;
 #	ifdef AFMT_S16_NE
