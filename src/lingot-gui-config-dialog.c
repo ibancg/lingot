@@ -610,8 +610,8 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
 
-		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->minimum_frequency), 6);
-		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->maximum_frequency), 6);
+		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->minimum_frequency), frequency_combo_n_octaves);
+		gtk_combo_box_set_wrap_width(GTK_COMBO_BOX(dialog->maximum_frequency), frequency_combo_n_octaves);
 
 		GList* cell_list = gtk_cell_layout_get_cells(
 				GTK_CELL_LAYOUT(dialog->minimum_frequency));
