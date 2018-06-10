@@ -28,9 +28,11 @@
 void lingot_config_scale_test() {
 
 	lingot_config_create_parameter_specs();
-	LingotConfig* config = lingot_config_new();
+	LingotConfig _config;
+	LingotConfig* config = &_config;
+	lingot_config_new(config);
 	lingot_config_restore_default_values(config);
-	LingotScale* scale = config->scale;
+	LingotScale* scale = &config->scale;
 
 	CU_ASSERT_EQUAL(lingot_config_scale_get_octave(scale, 0), 0);
 	CU_ASSERT_EQUAL(lingot_config_scale_get_octave(scale, 1), 0);

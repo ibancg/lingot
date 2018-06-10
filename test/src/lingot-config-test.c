@@ -28,7 +28,9 @@
 void lingot_config_test() {
 
 	lingot_config_create_parameter_specs();
-	LingotConfig* config = lingot_config_new();
+	LingotConfig _config;
+	LingotConfig* config = &_config;
+	lingot_config_new(config);
 
 	CU_ASSERT_PTR_NOT_NULL_FATAL(config);
 
@@ -67,23 +69,23 @@ void lingot_config_test() {
 	CU_ASSERT_EQUAL(config->min_frequency, 82.41);
 	CU_ASSERT_EQUAL(config->max_frequency, 329.63);
 
-	CU_ASSERT(!strcmp(config->scale->name, "Default equal-tempered scale"));
-	CU_ASSERT_EQUAL(config->scale->notes, 12);
-	CU_ASSERT_EQUAL(config->scale->base_frequency, 261.625565);
-	CU_ASSERT(!strcmp(config->scale->note_name[1], "C#"));
-	CU_ASSERT(!strcmp(config->scale->note_name[11], "B"));
+	CU_ASSERT(!strcmp(config->scale.name, "Default equal-tempered scale"));
+	CU_ASSERT_EQUAL(config->scale.notes, 12);
+	CU_ASSERT_EQUAL(config->scale.base_frequency, 261.625565);
+	CU_ASSERT(!strcmp(config->scale.note_name[1], "C#"));
+	CU_ASSERT(!strcmp(config->scale.note_name[11], "B"));
 
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[0][0], 1);
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[1][0], 1); // defined as ratio
-	CU_ASSERT_EQUAL(config->scale->offset_cents[0], 0.0);
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[0][0], 1);
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[1][0], 1); // defined as ratio
+	CU_ASSERT_EQUAL(config->scale.offset_cents[0], 0.0);
 
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[0][1], -1);
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[1][1], -1); // not defined as ratio
-	CU_ASSERT_EQUAL(config->scale->offset_cents[1], 100.0);  // defined as shift in cents
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[0][1], -1);
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[1][1], -1); // not defined as ratio
+	CU_ASSERT_EQUAL(config->scale.offset_cents[1], 100.0);  // defined as shift in cents
 
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[0][11], -1);
-	CU_ASSERT_EQUAL(config->scale->offset_ratios[1][11], -1); // not defined as ratio
-	CU_ASSERT_EQUAL(config->scale->offset_cents[11], 1100.0); // defined as shift in cents
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[0][11], -1);
+	CU_ASSERT_EQUAL(config->scale.offset_ratios[1][11], -1); // not defined as ratio
+	CU_ASSERT_EQUAL(config->scale.offset_cents[11], 1100.0); // defined as shift in cents
 
 	lingot_config_destroy(config);
 }
