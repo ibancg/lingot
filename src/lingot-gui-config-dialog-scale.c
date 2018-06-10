@@ -554,13 +554,13 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		}
 
 		// TODO
-		LingotScale scale;
-                lingot_config_scale_new(&scale);
-		if (lingot_config_scale_load_scl(&scale, filename)) {
-			lingot_gui_config_dialog_scale_rewrite(config_dialog, &scale);
+		LingotScale* scale = lingot_config_scale_new();
+		if (lingot_config_scale_load_scl(scale, filename)) {
+			lingot_gui_config_dialog_scale_rewrite(config_dialog, scale);
 		}
 
-		lingot_config_scale_destroy(&scale);
+		lingot_config_scale_destroy(scale);
+		free(scale);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);

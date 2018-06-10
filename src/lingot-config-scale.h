@@ -27,7 +27,9 @@
 
 #include "lingot-defs.h"
 
-typedef struct {
+typedef struct _LingotScale LingotScale;
+
+struct _LingotScale {
 	char* name; 					// name of the scale
 	unsigned short int notes; 		// number of notes
 	FLT* offset_cents; 				// offset in cents
@@ -38,9 +40,9 @@ typedef struct {
 	// -- internal parameters --
 
 	FLT max_offset_rounded; 		// round version of maximum offset in cents
-} LingotScale;
+};
 
-void lingot_config_scale_new(LingotScale*);
+LingotScale* lingot_config_scale_new();
 void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes);
 void lingot_config_scale_destroy(LingotScale* scale);
 int lingot_config_scale_load_scl(LingotScale* scale, char* filename);

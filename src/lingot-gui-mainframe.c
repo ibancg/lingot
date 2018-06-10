@@ -150,7 +150,7 @@ gboolean lingot_gui_mainframe_callback_tout_visualization(gpointer data) {
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
-	period = 1000 / frame->conf.visualization_rate;
+	period = 1000 / frame->conf->visualization_rate;
 	frame->visualization_timer_uid = g_timeout_add(period,
 			lingot_gui_mainframe_callback_tout_visualization, frame);
 
@@ -166,7 +166,7 @@ gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(
 
 	LingotMainFrame* frame = (LingotMainFrame*) data;
 
-	period = 1000 / frame->conf.calculation_rate;
+	period = 1000 / frame->conf->calculation_rate;
 	frame->freq_computation_timer_uid = g_timeout_add(period,
 			lingot_gui_mainframe_callback_tout_spectrum_computation_display,
 			frame);
@@ -174,7 +174,7 @@ gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(
 	gtk_widget_queue_draw(frame->spectrum_area);
 	lingot_gui_mainframe_draw_labels(frame);
 //	lingot_gui_mainframe_draw_spectrum_and_labels(frame);
-	//lingot_core_compute_fundamental_fequency(&frame->core);
+	//lingot_core_compute_fundamental_fequency(frame->core);
 	return 0;
 }
 
@@ -188,19 +188,19 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 			lingot_gui_mainframe_callback_gauge_computation, frame);
 
 	// ignore continuous component
-	if (!frame->core.running || isnan(frame->core.freq)
-			|| (frame->core.freq <= frame->conf.internal_min_frequency)) {
+	if (!frame->core->running || isnan(frame->core->freq)
+			|| (frame->core->freq <= frame->conf->internal_min_frequency)) {
 		frequency = 0.0;
-		lingot_gauge_compute(&frame->gauge, frame->conf.gauge_rest_value);
+		lingot_gauge_compute(frame->gauge, frame->conf->gauge_rest_value);
 	} else {
 		FLT error_cents; // do not use, unfiltered
-		frequency = lingot_filter_filter_sample(&frame->freq_filter,
-				frame->core.freq);
+		frequency = lingot_filter_filter_sample(frame->freq_filter,
+				frame->core->freq);
 		closest_note_index = lingot_config_scale_get_closest_note_index(
-				&frame->conf.scale, frame->core.freq,
-				frame->conf.root_frequency_error, &error_cents);
+				frame->conf->scale, frame->core->freq,
+				frame->conf->root_frequency_error, &error_cents);
 		if (!isnan(error_cents)) {
-			lingot_gauge_compute(&frame->gauge, error_cents);
+			lingot_gauge_compute(frame->gauge, error_cents);
 		}
 	}
 
@@ -244,7 +244,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 										"Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
 			}
 
-			if ((message_type == ERROR) && !frame->core.running) {
+			if ((message_type == ERROR) && !frame->core->running) {
 				buttonsType = GTK_BUTTONS_OK;
 				message_pointer +=
 						snprintf(message_pointer,
@@ -275,7 +275,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 			gtk_widget_destroy(message_dialog);
 			free(error_message);
 
-//			if ((message_type == ERROR) && !frame->core.running) {
+//			if ((message_type == ERROR) && !frame->core->running) {
 //				lingot_gui_mainframe_callback_config_dialog(NULL, frame);
 //			}
 
@@ -296,8 +296,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 			GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
 			"_Open", GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filefilter;
-	char config_used = 0;
-	LingotConfig config;
+	LingotConfig* config = NULL;
 	filefilter = gtk_file_filter_new();
 
 	gtk_file_filter_set_name(filefilter,
@@ -318,16 +317,15 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
 				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
-		lingot_config_new(&config);
-		lingot_config_load(&config, filename);
-		config_used = 1;
+		config = lingot_config_new();
+		lingot_config_load(config, filename);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);
 	//g_free(filefilter);
 
-	if (config_used) {
-		lingot_gui_config_dialog_show(frame, &config);
+	if (config != NULL) {
+		lingot_gui_config_dialog_show(frame, config);
 	}
 }
 
@@ -362,7 +360,7 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
 				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
-		lingot_config_save(&frame->conf, filename);
+		lingot_config_save(frame->conf, filename);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);
@@ -405,6 +403,7 @@ void lingot_gui_mainframe_callback_window_resize(GtkWidget *widget,
 void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	LingotMainFrame* frame;
+	LingotConfig* conf;
 
 	if (filechooser_config_last_folder == NULL) {
 		char buff[1000];
@@ -416,11 +415,11 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	frame->config_dialog = NULL;
 
-	LingotConfig* const conf = &frame->conf;
-	lingot_config_new(conf);
+	frame->conf = lingot_config_new();
+	conf = frame->conf;
 	lingot_config_load(conf, CONFIG_FILE_NAME);
 
-	lingot_gauge_new(&frame->gauge, conf->gauge_rest_value); // gauge in rest situation
+	frame->gauge = lingot_gauge_new(conf->gauge_rest_value); // gauge in rest situation
 
 	// ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -428,7 +427,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	FLT freq_filter_a[] = { 1.0, -0.5 };
 	FLT freq_filter_b[] = { 0.5 };
 
-	lingot_filter_new(&frame->freq_filter, 1, 0, freq_filter_a, freq_filter_b);
+	frame->freq_filter = lingot_filter_new(1, 0, freq_filter_a, freq_filter_b);
 
 	// ---------------------------------------------------
 
@@ -542,8 +541,8 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 	frame->error_dispatcher_uid = g_timeout_add(period,
 			lingot_gui_mainframe_callback_error_dispatcher, frame);
 
-	lingot_core_new(&frame->core, conf);
-	lingot_core_start(&frame->core);
+	frame->core = lingot_core_new(conf);
+	lingot_core_start(frame->core);
 
 	g_object_unref(builder);
 
@@ -552,12 +551,12 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
-	lingot_core_stop(&frame->core);
-	lingot_core_destroy(&frame->core);
+	lingot_core_stop(frame->core);
+	lingot_core_destroy(frame->core);
 
-	lingot_gauge_destroy(&frame->gauge);
-	lingot_filter_destroy(&frame->freq_filter);
-	lingot_config_destroy(&frame->conf);
+	lingot_gauge_destroy(frame->gauge);
+	lingot_filter_destroy(frame->freq_filter);
+	lingot_config_destroy(frame->conf);
 	if (frame->config_dialog)
 		lingot_gui_config_dialog_destroy(frame->config_dialog);
 
@@ -683,7 +682,7 @@ static void lingot_gui_mainframe_draw_gauge_background(
 	cairo_stroke(cr);
 
 	// cent tics
-	const double maxOffsetRounded = frame->conf.scale.max_offset_rounded;
+	const double maxOffsetRounded = frame->conf->scale->max_offset_rounded;
 	const static int maxMinorDivisions = 20;
 	double centsPerMinorDivision = maxOffsetRounded / maxMinorDivisions;
 	const double base = pow(10.0, floor(log10(centsPerMinorDivision)));
@@ -817,8 +816,8 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 	cairo_set_source_surface(cr, gauge_background, 0, 0);
 	cairo_paint(cr);
 
-	const double normalized_error = frame->gauge.position
-			/ frame->conf.scale.max_offset_rounded;
+	const double normalized_error = frame->gauge->position
+			/ frame->conf->scale->max_offset_rounded;
 	const double angle = 2.0 * normalized_error * overtureAngle;
 	cairo_set_line_width(cr, gaugeStroke);
 	cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
@@ -841,7 +840,7 @@ void lingot_gui_mainframe_draw_gauge(const LingotMainFrame* frame) {
 
 FLT lingot_gui_mainframe_get_signal(const LingotMainFrame* frame, int i,
 FLT min, FLT max) {
-	FLT signal = frame->core.SPL[i];
+	FLT signal = frame->core->SPL[i];
 	if (signal < min) {
 		signal = min;
 	} else if (signal > max) {
@@ -852,7 +851,7 @@ FLT min, FLT max) {
 
 FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, int i, FLT min,
 FLT max) {
-	FLT noise = frame->conf.min_overall_SNR;
+	FLT noise = frame->conf->min_overall_SNR;
 	if (noise < min) {
 		noise = min;
 	} else if (noise > max) {
@@ -944,8 +943,8 @@ void lingot_gui_mainframe_draw_spectrum_background(const LingotMainFrame* frame)
 	cairo_stroke(cr);
 
 	// choose scale factor
-	const FLT spectrum_max_frequency = 0.5 * frame->conf.sample_rate
-			/ frame->conf.oversampling;
+	const FLT spectrum_max_frequency = 0.5 * frame->conf->sample_rate
+			/ frame->conf->oversampling;
 
 	// scale factors (in KHz) to draw the grid. We will choose the smaller
 	// factor that respects the minimum_grid_width
@@ -1047,9 +1046,9 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 	cairo_set_source_surface(cr, spectrum_background, 0, 0);
 	cairo_paint(cr);
 
-	// TODO: change access to frame->core.X
+	// TODO: change access to frame->core->X
 	// spectrum drawing.
-	if (frame->core.running) {
+	if (frame->core->running) {
 
 		cairo_set_line_width(cr, 1.0);
 		cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
@@ -1058,7 +1057,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		FLT y = -1;
 
 		const int min_index = 0;
-		const int max_index = frame->conf.fft_size / 2;
+		const int max_index = frame->conf->fft_size / 2;
 
 		FLT index_density = spectrum_inner_x / max_index;
 		// TODO: step
@@ -1127,12 +1126,12 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 		cairo_set_line_width(cr, 10.0);
 
-		for (i = 0; i < frame->core.markers_size2; i++) {
+		for (i = 0; i < frame->core->markers_size2; i++) {
 
-			x = index_density * frame->core.markers2[i];
+			x = index_density * frame->core->markers2[i];
 			y = -spectrum_db_density
 					* lingot_gui_mainframe_get_signal(frame,
-							frame->core.markers2[i], spectrum_min_db,
+							frame->core->markers2[i], spectrum_min_db,
 							spectrum_max_db); // dB.
 			cairo_move_to(cr, x, y);
 			cairo_rel_line_to(cr, 0, 0);
@@ -1142,12 +1141,12 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_set_line_width(cr, 4.0);
 		cairo_set_source_rgba(cr, 0.13, 0.13, 1.0, 1.0);
 
-		for (i = 0; i < frame->core.markers_size; i++) {
+		for (i = 0; i < frame->core->markers_size; i++) {
 
-			x = index_density * frame->core.markers[i];
+			x = index_density * frame->core->markers[i];
 			y = -spectrum_db_density
 					* lingot_gui_mainframe_get_signal(frame,
-							frame->core.markers[i], spectrum_min_db,
+							frame->core->markers[i], spectrum_min_db,
 							spectrum_max_db); // dB.
 			cairo_move_to(cr, x, y);
 			cairo_rel_line_to(cr, 0, 0);
@@ -1157,7 +1156,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_set_line_width(cr, 1.0);
 #endif
 
-		if (frame->core.freq != 0.0) {
+		if (frame->core->freq != 0.0) {
 
 			cairo_set_dash(cr, dashed1, len1, 0);
 
@@ -1168,16 +1167,16 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 			cairo_set_line_width(cr, 1.0);
 
 			// index of closest sample to fundamental frequency.
-			x = index_density * frame->core.freq * frame->conf.fft_size
-					* frame->conf.oversampling / frame->conf.sample_rate;
+			x = index_density * frame->core->freq * frame->conf->fft_size
+					* frame->conf->oversampling / frame->conf->sample_rate;
 			cairo_move_to(cr, x, 0);
 			cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
 			cairo_stroke(cr);
 
 //			i = (int) rint(
-//					frame->core.freq * frame->conf.fft_size
-//							* frame->conf.oversampling
-//							/ frame->conf.sample_rate);
+//					frame->core->freq * frame->conf->fft_size
+//							* frame->conf->oversampling
+//							/ frame->conf->sample_rate);
 //			y = -spectrum_db_density
 //					* lingot_gui_mainframe_get_signal(frame, i, spectrum_min_db,
 //							spectrum_max_db); // dB.
@@ -1236,12 +1235,12 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 		strcpy(octave_string, "");
 	} else {
 		note_string =
-				frame->conf.scale.note_name[lingot_config_scale_get_note_index(
-						&frame->conf.scale, closest_note_index)];
-		sprintf(error_string, "e = %+2.0f cents", frame->gauge.position);
+				frame->conf->scale->note_name[lingot_config_scale_get_note_index(
+						frame->conf->scale, closest_note_index)];
+		sprintf(error_string, "e = %+2.0f cents", frame->gauge->position);
 		sprintf(freq_string, "f = %6.2f Hz", frequency);
 		sprintf(octave_string, "%d",
-				lingot_config_scale_get_octave(&frame->conf.scale,
+				lingot_config_scale_get_octave(frame->conf->scale,
 						closest_note_index) + 4);
 	}
 
@@ -1267,17 +1266,17 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 		LingotConfig* conf) {
-	lingot_core_stop(&frame->core);
-	lingot_core_destroy(&frame->core);
+	lingot_core_stop(frame->core);
+	lingot_core_destroy(frame->core);
 
 	// dup.
-	lingot_config_copy(&frame->conf, conf);
+	lingot_config_copy(frame->conf, conf);
 
-	lingot_core_new(&frame->core, &frame->conf);
+	frame->core = lingot_core_new(frame->conf);
 	lingot_gui_mainframe_draw_gauge_background(frame);
 	lingot_gui_mainframe_draw_spectrum_background(frame);
-	lingot_core_start(&frame->core);
+	lingot_core_start(frame->core);
 
 	// some parameters may have changed
-	lingot_config_copy(conf, &frame->conf);
+	lingot_config_copy(conf, frame->conf);
 }

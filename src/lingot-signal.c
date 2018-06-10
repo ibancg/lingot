@@ -325,18 +325,16 @@ void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
 	const FLT c = 0.1;
 	const FLT filter_a[] = { 1.0, c - 1.0 };
 	const FLT filter_b[] = { c };
-	static char initialized = 0;
-	static LingotFilter filter;
+	static LingotFilter* filter = 0x0;
 
-	if (! initialized) {
-		initialized = 1;
-		lingot_filter_new(&filter, 1, 0, filter_a, filter_b);
+	if (filter == 0x0) {
+		filter = lingot_filter_new(1, 0, filter_a, filter_b);
 	}
 
-	lingot_filter_reset(&filter);
+	lingot_filter_reset(filter);
 
-	lingot_filter_filter(&filter, cbuffer_size, spd, noise_level);
-	lingot_filter_filter(&filter, N, spd, noise_level);
+	lingot_filter_filter(filter, cbuffer_size, spd, noise_level);
+	lingot_filter_filter(filter, N, spd, noise_level);
 
 }
 

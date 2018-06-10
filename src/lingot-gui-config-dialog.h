@@ -59,8 +59,8 @@ struct _LingotConfigDialog {
 	GtkEntry* scale_name;
 	GtkTreeView* scale_treeview;
 
-	LingotConfig conf; // provisional configuration.
-	LingotConfig conf_old; // restoration point for cancel.
+	LingotConfig* conf; // provisional configuration.
+	LingotConfig* conf_old; // restoration point for cancel.
 
 	LingotMainFrame* mainframe;
 

@@ -98,9 +98,11 @@ typedef enum window_type_t {
 	HAMMING = 2
 } window_type_t;
 
+typedef struct _LingotConfig LingotConfig;
+
 // Configuration struct. Determines the tuner behaviour.
 // Some parameters are internal only.
-typedef struct {
+struct _LingotConfig {
 
 	audio_system_t audio_system;
 
@@ -152,8 +154,8 @@ typedef struct {
 
 	//----------------------------------------------------------------------------
 
-	LingotScale scale;
-} LingotConfig;
+	LingotScale* scale;
+};
 
 // converts an audio_system_t to a string
 const char* audio_system_t_to_str(audio_system_t audio_system);
@@ -164,7 +166,7 @@ void lingot_config_create_parameter_specs();
 LingotConfigParameterSpec lingot_config_get_parameter_spec(
 		LingotConfigParameterId id);
 
-void lingot_config_new(LingotConfig*);
+LingotConfig* lingot_config_new();
 void lingot_config_destroy(LingotConfig*);
 void lingot_config_copy(LingotConfig* dst, LingotConfig* src);
 

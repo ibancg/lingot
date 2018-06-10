@@ -37,8 +37,9 @@
  DTFT functions.
  */
 
-void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, int n) {
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n) {
 
+	LingotFFTPlan* result = malloc(sizeof(LingotFFTPlan));
 	result->n = n;
 	result->in = in;
 
@@ -63,6 +64,7 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, int n) {
 	memset(result->fft_out, 0, n * sizeof(LingotComplex));
 #endif
 
+	return result;
 }
 
 void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
@@ -74,6 +76,8 @@ void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
 	free(plan->fft_out);
 	free(plan->wn);
 #endif
+
+	free(plan);
 }
 
 #ifndef LIBFFTW

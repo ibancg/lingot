@@ -37,7 +37,9 @@
 
 # include "lingot-complex.h"
 
-typedef struct {
+typedef struct _LingotFFTPlan LingotFFTPlan;
+
+struct _LingotFFTPlan {
 
 	int n;
 	FLT* in;
@@ -49,9 +51,9 @@ typedef struct {
 	LingotComplex* wn;
 #endif
 	LingotComplex* fft_out; // complex signal in freq.
-} LingotFFTPlan;
+};
 
-void lingot_fft_plan_create(LingotFFTPlan*, FLT* in, int n);
+LingotFFTPlan* lingot_fft_plan_create(FLT* in, int n);
 void lingot_fft_plan_destroy(LingotFFTPlan*);
 
 // Full Spectral Power Distribution (SPD) esteem.

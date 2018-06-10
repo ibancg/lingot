@@ -13,24 +13,24 @@ lingotdoc_DATA = \
 	COPYING\
 	AUTHORS\
 	ChangeLog\
+	INSTALL\
 	NEWS\
 	TODO\
 	THANKS\
 	MAINTAINERS\
-	src/lingot-logo.xpm
+	src/lingot-logo.xpm\
+	intltool-extract.in\
+	intltool-merge.in\
+	intltool-update.in
 
 EXTRA_DIST = $(lingotdoc_DATA)
 
 DISTCLEANFILES = \
-	intltool-extract.in\
 	intltool-extract\
-	intltool-merge.in\
 	intltool-merge\
-	intltool-update.in\
 	intltool-update\
-	intl/*\
-	m4/*\
-	po/Makefile.in.in
+	intl\
+	m4
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop

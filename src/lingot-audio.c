@@ -40,7 +40,7 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system, const char* device,
+void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system,char* device,
 		int sample_rate, LingotAudioProcessCallback process_callback,
 		void *process_callback_arg) {
 

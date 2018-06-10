@@ -61,10 +61,10 @@ void lingot_gui_config_dialog_callback_button_ok(GtkButton *button,
 		LingotConfigDialog* dialog) {
 	if (lingot_gui_config_dialog_apply(dialog)) {
 		// dumps the current config to the config file
-		lingot_config_save(&dialog->conf, CONFIG_FILE_NAME);
+		lingot_config_save(dialog->conf, CONFIG_FILE_NAME);
 		// establish the current config as the old config, so the close rollback
 		// will do nothing.
-		lingot_config_copy(&dialog->conf_old, &dialog->conf);
+		lingot_config_copy(dialog->conf_old, dialog->conf);
 		lingot_gui_config_dialog_close(dialog);
 	}
 }
@@ -78,20 +78,20 @@ void lingot_gui_config_dialog_callback_button_apply(GtkButton *button,
 
 void lingot_gui_config_dialog_callback_button_default(GtkButton *button,
 		LingotConfigDialog* dialog) {
-	lingot_config_restore_default_values(&dialog->conf);
+	lingot_config_restore_default_values(dialog->conf);
 	lingot_gui_config_dialog_rewrite(dialog);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
 }
 
 void lingot_gui_config_dialog_callback_cancel(GtkWidget *widget,
 		LingotConfigDialog* dialog) {
-	//lingot_mainframe_change_config(dialog->mainframe, &dialog->conf_old); // restore old configuration.
+	//lingot_mainframe_change_config(dialog->mainframe, dialog->conf_old); // restore old configuration.
 	lingot_gui_config_dialog_close(dialog);
 }
 
 void lingot_gui_config_dialog_callback_close(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-	lingot_gui_mainframe_change_config(dialog->mainframe, &dialog->conf_old); // restore old configuration.
+	lingot_gui_mainframe_change_config(dialog->mainframe, dialog->conf_old); // restore old configuration.
 	gtk_widget_destroy(dialog->win);
 	lingot_gui_config_dialog_destroy(dialog);
 }
@@ -121,7 +121,7 @@ void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		}
 
 		lingot_gui_config_dialog_set_audio_device(dialog->input_dev,
-				dialog->conf.audio_dev[audio_system]);
+				dialog->conf->audio_dev[audio_system]);
 
 		lingot_audio_audio_system_properties_destroy(&properties);
 	} else {
@@ -229,19 +229,19 @@ void lingot_gui_config_dialog_set_frequency(LingotConfigDialog* dialog,
 
 		double error_cents;
 		int closest_index = lingot_config_scale_get_closest_note_index(
-				&dialog->conf.scale, frequency,
-				dialog->conf.root_frequency_error, &error_cents);
+				dialog->conf->scale, frequency,
+				dialog->conf->root_frequency_error, &error_cents);
 
-		double freq2 = lingot_config_scale_get_frequency(&dialog->conf.scale,
+		double freq2 = lingot_config_scale_get_frequency(dialog->conf->scale,
 				closest_index); // TODO: deviation
 		if (fabs(frequency - freq2) < 1e-1) {
-			int index = lingot_config_scale_get_note_index(&dialog->conf.scale,
+			int index = lingot_config_scale_get_note_index(dialog->conf->scale,
 					closest_index);
-			int octave = lingot_config_scale_get_octave(&dialog->conf.scale,
+			int octave = lingot_config_scale_get_octave(dialog->conf->scale,
 					closest_index) + 4;
 			// TODO: note name
 			snprintf(buffer, sizeof(buffer), "%s %d <%0.2f>",
-					dialog->conf.scale.note_name[index], octave, frequency);
+					dialog->conf->scale->note_name[index], octave, frequency);
 		} else {
 			snprintf(buffer, sizeof(buffer), "%0.2f", frequency);
 		}
@@ -271,18 +271,18 @@ void lingot_gui_config_dialog_populate_frequency_combos(
 	GtkComboBoxText* combo = GTK_COMBO_BOX_TEXT(
 			gtk_combo_box_text_new_with_entry());
 
-	const LingotConfig* const config = &dialog->conf;
+	LingotConfig* config = dialog->conf;
 
 	int i;
 	int octave_index;
-	for (i = 0; i < config->scale.notes; i++) {
+	for (i = 0; i < config->scale->notes; i++) {
 		for (octave_index = frequency_combo_first_octave;
 				octave_index
 						< frequency_combo_first_octave
 								+ frequency_combo_n_octaves; octave_index++) {
 			snprintf(buff, sizeof(buff),
 					"<span font_desc=\"%d\">%s</span><span font_desc=\"%d\">%i</span>",
-					12, config->scale.note_name[i], 7, octave_index);
+					12, config->scale->note_name[i], 7, octave_index);
 			gtk_combo_box_text_append_text(combo, buff);
 		}
 	}
@@ -302,8 +302,8 @@ void lingot_gui_config_dialog_change_combo_frequency(GtkComboBoxText *combo,
 		// the base frequency of the scale corresponds to octave 4, typically C4
 		int octave = frequency_combo_first_octave + (index % frequency_combo_n_octaves) - 4;
 		int local_index = index / frequency_combo_n_octaves;
-		int global_index = local_index + octave * dialog->conf.scale.notes;
-		double frequency = lingot_config_scale_get_frequency(&dialog->conf.scale, global_index);
+		int global_index = local_index + octave * dialog->conf->scale->notes;
+		double frequency = lingot_config_scale_get_frequency(dialog->conf->scale, global_index);
 		lingot_gui_config_dialog_set_frequency(dialog, combo, frequency);
 	}
 }
@@ -360,7 +360,7 @@ void lingot_gui_config_dialog_combo_select_value(GtkWidget* combo, int value) {
 }
 
 void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
-	LingotConfig* const conf = &dialog->conf;
+	LingotConfig* conf = dialog->conf;
 
 	lingot_gui_config_dialog_set_audio_system(dialog->input_system,
 			conf->audio_system);
@@ -390,13 +390,13 @@ void lingot_gui_config_dialog_rewrite(LingotConfigDialog* dialog) {
 			GTK_TOGGLE_BUTTON(dialog->optimize_check_button),
 			conf->optimize_internal_parameters);
 
-	lingot_gui_config_dialog_scale_rewrite(dialog, &conf->scale);
+	lingot_gui_config_dialog_scale_rewrite(dialog, conf->scale);
 }
 
 void lingot_gui_config_dialog_destroy(LingotConfigDialog* dialog) {
 	dialog->mainframe->config_dialog = NULL;
-	lingot_config_destroy(&dialog->conf);
-	lingot_config_destroy(&dialog->conf_old);
+	lingot_config_destroy(dialog->conf);
+	lingot_config_destroy(dialog->conf_old);
 	free(dialog);
 }
 
@@ -404,11 +404,11 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 
 	gchar* text1;
 	const gchar* text2;
-	LingotConfig* const conf = &dialog->conf;
+	LingotConfig* conf = dialog->conf;
 
 	// validation
 
-	if (!lingot_gui_config_dialog_scale_validate(dialog, &conf->scale)) {
+	if (!lingot_gui_config_dialog_scale_validate(dialog, conf->scale)) {
 		return 0;
 	}
 
@@ -496,15 +496,16 @@ int lingot_gui_config_dialog_apply(LingotConfigDialog* dialog) {
 	g_free(text1);
 	conf->sample_rate = sample_rate;
 
-        lingot_config_scale_destroy(&conf->scale);
+	LingotScale* scale = conf->scale;
+	lingot_config_scale_destroy(scale);
 
-	lingot_gui_config_dialog_scale_apply(dialog, &conf->scale);
+	lingot_gui_config_dialog_scale_apply(dialog, scale);
 
 	lingot_config_update_internal_params(conf);
 
 	lingot_gui_mainframe_change_config(dialog->mainframe, conf);
 
-	if (conf->scale.max_offset_rounded > 200) {
+	if (scale->max_offset_rounded > 200) {
 		lingot_msg_add_warning(
 				_("The provided scale contains wide gaps in frequency that increase the gauge range and produce a loss of visual accuracy. Consider providing scales with at least 12 tones, or with a maximum distance between adjacent notes below 200 cents."));
 	}
@@ -526,12 +527,12 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 		LingotConfigDialog* dialog = malloc(sizeof(LingotConfigDialog));
 
 		dialog->mainframe = frame;
-		lingot_config_new(&dialog->conf);
-		lingot_config_new(&dialog->conf_old);
+		dialog->conf = lingot_config_new();
+		dialog->conf_old = lingot_config_new();
 
 		// config copy
-		lingot_config_copy(&dialog->conf, (config == NULL) ? &frame->conf : config);
-		lingot_config_copy(&dialog->conf_old, &frame->conf);
+		lingot_config_copy(dialog->conf, (config == NULL) ? frame->conf : config);
+		lingot_config_copy(dialog->conf_old, frame->conf);
 
 		GtkBuilder* builder = gtk_builder_new();
 
@@ -681,7 +682,7 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 	} else {
 		if (config != NULL) {
-			lingot_config_copy(&frame->config_dialog->conf, config);
+			lingot_config_copy(frame->config_dialog->conf, config);
 			lingot_gui_config_dialog_rewrite(frame->config_dialog);
 		}
 

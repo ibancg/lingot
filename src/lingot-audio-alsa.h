@@ -29,7 +29,7 @@
 
 #include "lingot-audio.h"
 
-void lingot_audio_alsa_new(LingotAudioHandler*, const char* device, int sample_rate);
+void lingot_audio_alsa_new(LingotAudioHandler*, char* device, int sample_rate);
 // In case of failure, the audio_system is set to -1.
 
 void lingot_audio_alsa_destroy(LingotAudioHandler*);

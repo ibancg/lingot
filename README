@@ -38,7 +38,6 @@ If you are building a release, just type:
 
 If you are building a development version obtained from our VCS:
 
- > mkdir -p m4
  > libtoolize
  > intltoolize
  > aclocal
