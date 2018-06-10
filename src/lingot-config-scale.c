@@ -32,9 +32,7 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-LingotScale* lingot_config_scale_new() {
-
-	LingotScale* scale = malloc(sizeof(LingotScale));
+void lingot_config_scale_new(LingotScale* scale) {
 
 	scale->name = NULL;
 	scale->notes = 0;
@@ -43,8 +41,6 @@ LingotScale* lingot_config_scale_new() {
 	scale->offset_ratios[0] = NULL;
 	scale->offset_ratios[1] = NULL;
 	scale->base_frequency = 0.0;
-
-	return scale;
 }
 
 void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes) {
@@ -62,7 +58,6 @@ void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes) 
 void lingot_config_scale_destroy(LingotScale* scale) {
 	unsigned short int i;
 
-	if (scale != NULL) {
 		for (i = 0; i < scale->notes; i++)
 			if (scale->note_name[i] != 0x0) {
 				free(scale->note_name[i]);
@@ -93,7 +88,6 @@ void lingot_config_scale_destroy(LingotScale* scale) {
 		scale->offset_ratios[0] = NULL;
 		scale->offset_ratios[1] = NULL;
 		scale->base_frequency = 0.0;
-	}
 }
 
 void lingot_config_scale_restore_default_values(LingotScale* scale) {

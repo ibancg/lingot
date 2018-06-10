@@ -37,7 +37,7 @@
 static int num_channels = 1;
 static pa_sample_spec ss;
 
-void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, char* device, int sample_rate) {
+void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
 
 	audio->pa_client = 0;
 	strcpy(audio->device, "");
