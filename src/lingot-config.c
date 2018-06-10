@@ -199,6 +199,7 @@ void lingot_config_destroy(LingotConfig* config) {
 
 void lingot_config_copy(LingotConfig* dst, LingotConfig* src) {
 	*dst = *src;
+	lingot_config_scale_new(&dst->scale); // nulll scale that will be destroyed in the copy below
 	lingot_config_scale_copy(&dst->scale, &src->scale);
 }
 
