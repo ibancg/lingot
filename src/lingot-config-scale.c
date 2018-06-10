@@ -48,7 +48,7 @@ void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes) 
 	scale->note_name = malloc(notes * sizeof(char*));
 	unsigned int i = 0;
 	for (i = 0; i < notes; i++) {
-		scale->note_name[i] = 0x0;
+		scale->note_name[i] = NULL;
 	}
 	scale->offset_cents = malloc(notes * sizeof(FLT));
 	scale->offset_ratios[0] = malloc(notes * sizeof(short int));
@@ -58,36 +58,23 @@ void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes) 
 void lingot_config_scale_destroy(LingotScale* scale) {
 	unsigned short int i;
 
-		for (i = 0; i < scale->notes; i++)
-			if (scale->note_name[i] != 0x0) {
-				free(scale->note_name[i]);
-			}
+	for (i = 0; i < scale->notes; i++) {
+		free(scale->note_name[i]);
+	}
 
-		if (scale->offset_cents != NULL) {
-			free(scale->offset_cents);
-		}
+	free(scale->offset_cents);
+	free(scale->offset_ratios[0]);
+	free(scale->offset_ratios[1]);
+	free(scale->note_name);
+	free(scale->name);
 
-		if (scale->offset_ratios[0] != NULL) {
-			free(scale->offset_ratios[0]);
-		}
-		if (scale->offset_ratios[1] != NULL) {
-			free(scale->offset_ratios[1]);
-		}
-
-		if (scale->note_name != NULL) {
-			free(scale->note_name);
-		}
-		if (scale->name != NULL) {
-			free(scale->name);
-		}
-
-		scale->name = NULL;
-		scale->notes = 0;
-		scale->note_name = NULL;
-		scale->offset_cents = NULL;
-		scale->offset_ratios[0] = NULL;
-		scale->offset_ratios[1] = NULL;
-		scale->base_frequency = 0.0;
+	scale->name = NULL;
+	scale->notes = 0;
+	scale->note_name = NULL;
+	scale->offset_cents = NULL;
+	scale->offset_ratios[0] = NULL;
+	scale->offset_ratios[1] = NULL;
+	scale->base_frequency = 0.0;
 }
 
 void lingot_config_scale_restore_default_values(LingotScale* scale) {
@@ -119,7 +106,7 @@ void lingot_config_scale_restore_default_values(LingotScale* scale) {
 	}
 }
 
-void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
+void lingot_config_scale_copy(LingotScale* dst, const LingotScale* src) {
 	unsigned short int i;
 
 	lingot_config_scale_destroy(dst);
@@ -138,7 +125,6 @@ void lingot_config_scale_copy(LingotScale* dst, LingotScale* src) {
 }
 
 int lingot_config_scale_get_octave(const LingotScale* scale, int index) {
-	int result = 0;
 	return (index < 0) ?
 			((index + 1) / scale->notes) - 1 :
 			index / scale->notes;
@@ -162,7 +148,7 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
 }
 
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
-FLT freq, FLT deviation, FLT* error_cents) {
+		FLT freq, FLT deviation, FLT* error_cents) {
 
 	short note_index = 0;
 	short int index;

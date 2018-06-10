@@ -196,21 +196,10 @@ void lingot_core_destroy(LingotCore* core) {
 		free(core->flt_read_buffer);
 		free(core->temporal_buffer);
 
-		if (core->hamming_window_fft != NULL) {
-			free(core->hamming_window_temporal);
-		}
-
-		if (core->windowed_temporal_buffer != NULL) {
-			free(core->windowed_temporal_buffer);
-		}
-
-		if (core->hamming_window_fft != NULL) {
-			free(core->hamming_window_fft);
-		}
-
-		if (core->windowed_fft_buffer != NULL) {
-			free(core->windowed_fft_buffer);
-		}
+		free(core->hamming_window_temporal);
+		free(core->windowed_temporal_buffer);
+		free(core->hamming_window_fft);
+		free(core->windowed_fft_buffer);
 
 		lingot_filter_destroy(&core->antialiasing_filter);
 
@@ -247,7 +236,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 //	}
 
 	//
-	// just readed:
+	// just read:
 	//
 	//  ----------------------------
 	// |bxxxbxxxbxxxbxxxbxxxbxxxbxxx|
@@ -314,7 +303,7 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 		lingot_filter_filter(&core->antialiasing_filter, samples_read,
 				decimation_in, decimation_in);
 
-		// compression.
+		// downsampling.
 		for (decimation_output_index = 0; decimation_input_index < samples_read;
 				decimation_output_index++, decimation_input_index +=
 						conf->oversampling) {
@@ -358,8 +347,6 @@ int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
 	return 0;
 }
 
-// tells whether the two frequencies are harmonically related, giving the
-// multipliers to the ground frequency
 int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
 FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
 

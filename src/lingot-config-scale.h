@@ -46,7 +46,7 @@ void lingot_config_scale_destroy(LingotScale* scale);
 int lingot_config_scale_load_scl(LingotScale* scale, char* filename);
 int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
 void lingot_config_scale_format_shift(char*, double, short int, short int);
-void lingot_config_scale_copy(LingotScale* dst, LingotScale* src);
+void lingot_config_scale_copy(LingotScale* dst, const LingotScale* src);
 void lingot_config_scale_restore_default_values(LingotScale* scale);
 
 // Gets the note index within the range [0, num notes)

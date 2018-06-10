@@ -314,8 +314,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-		if (filechooser_config_last_folder != NULL)
-			free(filechooser_config_last_folder);
+		free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
 				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		lingot_config_new(&config);

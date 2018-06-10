@@ -166,7 +166,7 @@ LingotConfigParameterSpec lingot_config_get_parameter_spec(
 
 void lingot_config_new(LingotConfig*);
 void lingot_config_destroy(LingotConfig*);
-void lingot_config_copy(LingotConfig* dst, LingotConfig* src);
+void lingot_config_copy(LingotConfig* dst, const LingotConfig* src);
 
 // back to default configuration.
 void lingot_config_restore_default_values(LingotConfig*);
