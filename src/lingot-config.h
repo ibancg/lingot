@@ -67,8 +67,7 @@ typedef enum LingotConfigParameterType {
 
 typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
 
-// configuration parameter specification (id, type, minimum and maximum allowed
-// values, ...)
+// configuration parameter specification (id, type, minimum and maximum allowed values, ...)
 struct _LingotConfigParameterSpec {
 
 	LingotConfigParameterId id;
@@ -105,7 +104,7 @@ typedef struct {
 	audio_system_t audio_system;
 
 	char audio_dev[4][512];
-	int sample_rate; // soundcard sample rate.
+	int sample_rate; // hardware sample rate.
 	unsigned int oversampling; // oversampling factor.
 
 	FLT root_frequency_error; // deviation of the above root frequency.
@@ -174,7 +173,7 @@ void lingot_config_restore_default_values(LingotConfig*);
 // derivate internal parameters from external ones.
 void lingot_config_update_internal_params(LingotConfig*);
 
-void lingot_config_save(LingotConfig*, char* filename);
-void lingot_config_load(LingotConfig*, char* filename);
+void lingot_config_save(LingotConfig*, const char* filename);
+void lingot_config_load(LingotConfig*, const char* filename);
 
 #endif // __LINGOT_CONFIG_H__

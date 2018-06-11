@@ -190,6 +190,7 @@ void lingot_config_new(LingotConfig* config) {
 
 	config->max_nr_iter = 10; // iterations
 	config->window_type = HAMMING;
+	config->optimize_internal_parameters = 0;
 	lingot_config_scale_new(&config->scale);
 }
 
@@ -226,10 +227,10 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 	config->root_frequency_error = 0.0; // Hz
 	config->min_frequency = 82.407; // Hz (E2)
 	config->max_frequency = 329.6276; // Hz (E4)
-	config->optimize_internal_parameters = 1;
+	config->optimize_internal_parameters = 0;
 
 	config->fft_size = 512; // samples
-	config->temporal_window = 0.25; // seconds
+	config->temporal_window = 0.3; // seconds
 	config->calculation_rate = 15.0; // Hz
 	config->visualization_rate = 24.0; // Hz
 	config->min_overall_SNR = 20.0; // dB
@@ -268,24 +269,32 @@ void lingot_config_update_internal_params(LingotConfig* config) {
 		config->oversampling = 1;
 	}
 
-//	printf("config: sample rate = %i\n", config->sample_rate);
-//	printf("config: oversampling = %i\n", config->oversampling);
+	//	printf("config: sample rate = %i\n", config->sample_rate);
+	//	printf("config: oversampling = %i\n", config->oversampling);
+
+	// TODO: tune this parameters
+	unsigned int fft_size = 512;
+	if (config->internal_max_frequency > 5000) {
+		fft_size = 1024;
+	}
+	FLT temporal_window = 1.0 * config->fft_size * config->oversampling
+			/ config->sample_rate;
+	if (temporal_window < 0.3) {
+		temporal_window = 0.3;
+	}
 	if (config->optimize_internal_parameters) {
-		// TODO: tune this parameters
-		config->fft_size = 512;
-		if (config->internal_max_frequency > 5000) {
-			config->fft_size = 1024;
-		}
-		config->temporal_window = 1.0 * config->fft_size * config->oversampling
-				/ config->sample_rate;
-		if (config->temporal_window < 0.3) {
-			config->temporal_window = 0.3;
-		}
+		config->fft_size = fft_size;
+		config->temporal_window = temporal_window;
+	} else {
+		// if the governed parameters happen to be the same as the one we would
+		// suggest, then we will indeed suggest them.
+		config->optimize_internal_parameters = (config->fft_size == fft_size) &&
+				(config->temporal_window == temporal_window);
 	}
 
 	config->temporal_buffer_size = (unsigned int) ceil(
 			config->temporal_window * config->sample_rate
-					/ config->oversampling);
+			/ config->oversampling);
 
 	config->min_SNR = 0.5 * config->min_overall_SNR;
 	config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
@@ -354,7 +363,7 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 	}
 }
 
-void lingot_config_save(LingotConfig* config, char* filename) {
+void lingot_config_save(LingotConfig* config, const char* filename) {
 	unsigned int i;
 	FILE* fp;
 	char* lc_all;
@@ -438,7 +447,7 @@ void lingot_config_save(LingotConfig* config, char* filename) {
 
 typedef enum { rs_not_yet, rs_reading, rs_done } reading_scale_step_t;
 
-void lingot_config_load(LingotConfig* config, char* filename) {
+void lingot_config_load(LingotConfig* config, const char* filename) {
 	FILE* fp;
 	int line;
 	int option_index;
@@ -455,7 +464,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 	// restore default values for non specified parameters
 	lingot_config_restore_default_values(config);
-
+	config->optimize_internal_parameters = 0;
 	lingot_config_map_parameters(config, params);
 
 	static const unsigned int max_line_size = 1024;
@@ -533,9 +542,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 					line++;
 					if (!fgets(char_buffer, max_line_size, fp)) {
 						scale_errors = 1;
-						fprintf(stderr,
-								"error at line %i: error reading the scale\n",
-								line);
+						fprintf(stderr, "error at line %i: error reading the scale\n", line);
 						break;
 					}
 
@@ -544,9 +551,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 					if (char_buffer_pointer == NULL) {
 						scale_errors = 1;
-						fprintf(stderr,
-								"error at line %i: error reading the scale\n",
-								line);
+						fprintf(stderr, "error at line %i: error reading the scale\n", line);
 						break;
 					}
 
@@ -555,9 +560,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 					if (char_buffer_pointer == NULL) {
 						scale_errors = 1;
-						fprintf(stderr,
-								"error at line %i: error reading the scale\n",
-								line);
+						fprintf(stderr, "error at line %i: error reading the scale\n", line);
 						break;
 					}
 
@@ -568,8 +571,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 						scale_errors = 1;
 					} else {
 
-						if ((scale.offset_cents[i] < 0)
-								|| (scale.offset_cents[i] >= 1200)) {
+						if ((scale.offset_cents[i] < 0) || (scale.offset_cents[i] >= 1200)) {
 							scale_errors = 1;
 							fprintf(stderr,
 									"error at line %i: the notes in the scale must be equal or higher than 1/1 (0 cents) and lower than 2/1 (1200 cents)\n",
@@ -583,8 +585,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 										"error at line %i: the first note in the scale must be 1/1 (0 cents shift)\n",
 										line);
 							}
-						} else if (scale.offset_cents[i]
-								<= scale.offset_cents[i - 1]) {
+						} else if (scale.offset_cents[i] <= scale.offset_cents[i - 1]) {
 							scale_errors = 1;
 							fprintf(stderr,
 									"error at line %i: the notes in the scale must be well ordered\n",
@@ -606,8 +607,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 
 		}
 
-		for (option_index = 0; option_index < parameters_count;
-				option_index++) {
+		for (option_index = 0; option_index < parameters_count; option_index++) {
 			if (!strcmp(char_buffer_pointer, parameters[option_index].name)) {
 				break; // found token.
 			}
@@ -634,9 +634,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			char_buffer_pointer = strtok(NULL, delim);
 
 			if (!char_buffer_pointer) {
-				fprintf(stderr,
-						"warning: parse error at line %i: value expected\n",
-						line);
+				fprintf(stderr, "warning: parse error at line %i: value expected\n", line);
 				parse_errors = 1;
 				continue;
 			}
@@ -645,7 +643,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 			double double_value;
 			audio_system_t audio_system_value;
 
-			// asign the value to the parameter.
+			// assign the value to the parameter.
 			switch (parameters[option_index].type) {
 			case LINGOT_PARAMETER_TYPE_STRING:
 				if (strlen(char_buffer_pointer)
@@ -665,8 +663,7 @@ void lingot_config_load(LingotConfig* config, char* filename) {
 				sscanf(char_buffer_pointer, "%d", &int_value);
 
 				// TODO: generalize validation?
-				if (parameters[option_index].id
-						== LINGOT_PARAMETER_ID_FFT_SIZE) {
+				if (parameters[option_index].id == LINGOT_PARAMETER_ID_FFT_SIZE) {
 					if ((int_value != 256) && (int_value != 512)
 							&& (int_value != 1024) && (int_value != 2048)
 							&& (int_value != 4096)) {
