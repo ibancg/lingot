@@ -35,16 +35,16 @@ struct GtkBuilder;
 void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GtkBuilder*);
 
 // validate the information stored in the table
-int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
-		LingotScale* scale);
+int lingot_gui_config_dialog_scale_validate(const LingotConfigDialog* dialog,
+		const LingotScale* scale);
 
 // copies the information stores in the table to the internal data structure
-void lingot_gui_config_dialog_scale_apply(LingotConfigDialog* dialog,
+void lingot_gui_config_dialog_scale_gui_to_data(const LingotConfigDialog* dialog,
 		LingotScale* scale);
 
 // fills the table with the information carried by the structure
-void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
-		LingotScale* scale);
+void lingot_gui_config_dialog_scale_data_to_gui(LingotConfigDialog* dialog,
+		const LingotScale* scale);
 
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
 		LingotConfigDialog *dialog);

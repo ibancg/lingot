@@ -27,7 +27,6 @@
 
 void lingot_config_scale_test() {
 
-	lingot_config_create_parameter_specs();
 	LingotConfig _config;
 	LingotConfig* config = &_config;
 	lingot_config_new(config);

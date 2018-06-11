@@ -67,7 +67,6 @@ struct _LingotConfigDialog {
 	GtkWidget* win; // window
 };
 
-//LingotConfigDialog* lingot_config_dialog_new(LingotMainFrame*);
 void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
 void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
 

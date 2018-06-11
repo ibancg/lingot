@@ -28,62 +28,6 @@
 #include "lingot-defs.h"
 #include "lingot-config-scale.h"
 
-// configuration parameter identifier
-typedef enum LingotConfigParameterId {
-	LINGOT_PARAMETER_ID_AUDIO_SYSTEM, //
-	LINGOT_PARAMETER_ID_AUDIO_DEV, //
-	LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA, //
-	LINGOT_PARAMETER_ID_AUDIO_DEV_JACK, //
-	LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, //
-	LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, //
-	LINGOT_PARAMETER_ID_FFT_SIZE, //
-	LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, //
-	LINGOT_PARAMETER_ID_MIN_SNR, //
-	LINGOT_PARAMETER_ID_CALCULATION_RATE, //
-	LINGOT_PARAMETER_ID_VISUALIZATION_RATE, //
-	LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, //
-	LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, //
-	// ------- obsolete ---------
-	LINGOT_PARAMETER_ID_MIN_FREQUENCY, //
-	LINGOT_PARAMETER_ID_GAIN, //
-	LINGOT_PARAMETER_ID_NOISE_THRESHOLD, //
-	LINGOT_PARAMETER_ID_SAMPLE_RATE, //
-	LINGOT_PARAMETER_ID_OVERSAMPLING, //
-	LINGOT_PARAMETER_ID_DFT_NUMBER, //
-	LINGOT_PARAMETER_ID_DFT_SIZE, //
-	LINGOT_PARAMETER_ID_PEAK_ORDER, //
-	LINGOT_PARAMETER_ID_PEAK_NUMBER, //
-	LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, //
-	LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION, //
-} LingotConfigParameterId;
-
-// configuration parameter type
-typedef enum LingotConfigParameterType {
-	LINGOT_PARAMETER_TYPE_STRING,
-	LINGOT_PARAMETER_TYPE_INTEGER,
-	LINGOT_PARAMETER_TYPE_FLOAT,
-	LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM
-} LingotConfigParameterType;
-
-typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
-
-// configuration parameter specification (id, type, minimum and maximum allowed values, ...)
-struct _LingotConfigParameterSpec {
-
-	LingotConfigParameterId id;
-	LingotConfigParameterType type;
-	const char* name;
-	const char* units;
-
-	int deprecated;
-
-	int str_max_len;
-	int int_min;
-	int int_max;
-	double float_min;
-	double float_max;
-};
-
 typedef enum audio_system_t {
 	AUDIO_SYSTEM_OSS = 0,
 	AUDIO_SYSTEM_ALSA = 1,
@@ -152,16 +96,9 @@ typedef struct {
 	//----------------------------------------------------------------------------
 
 	LingotScale scale;
+
 } LingotConfig;
 
-// converts an audio_system_t to a string
-const char* audio_system_t_to_str(audio_system_t audio_system);
-// converts a string to an audio_system_t
-audio_system_t str_to_audio_system_t(char* audio_system);
-
-void lingot_config_create_parameter_specs();
-LingotConfigParameterSpec lingot_config_get_parameter_spec(
-		LingotConfigParameterId id);
 
 void lingot_config_new(LingotConfig*);
 void lingot_config_destroy(LingotConfig*);
@@ -172,8 +109,5 @@ void lingot_config_restore_default_values(LingotConfig*);
 
 // derivate internal parameters from external ones.
 void lingot_config_update_internal_params(LingotConfig*);
-
-void lingot_config_save(LingotConfig*, const char* filename);
-void lingot_config_load(LingotConfig*, const char* filename);
 
 #endif // __LINGOT_CONFIG_H__

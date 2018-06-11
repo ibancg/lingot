@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-void lingot_config_test();
+void lingot_io_config_test();
 void lingot_config_scale_test();
 void lingot_signal_test();
 void lingot_core_test();
@@ -30,6 +30,7 @@ void lingot_core_test();
 #include "lingot-msg.c"
 #include "lingot-config-scale.c"
 #include "lingot-config.c"
+#include "lingot-io-config.c"
 #include "lingot-audio.c"
 #include "lingot-audio-alsa.c"
 #include "lingot-audio-oss.c"
@@ -62,7 +63,7 @@ int main(void) {
 	/* add the tests to the suite */
 	/* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
 	if ( //
-			(NULL == CU_add_test(pSuite, "lingot_config", lingot_config_test)) || //
+			(NULL == CU_add_test(pSuite, "lingot_config", lingot_io_config_test)) || //
 			(NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_config_scale_test)) || //
 			(NULL == CU_add_test(pSuite, "lingot_signal", lingot_signal_test)) || //
 			(NULL == CU_add_test(pSuite, "lingot_core", lingot_core_test)) || //

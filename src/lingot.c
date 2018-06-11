@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	lingot_config_create_parameter_specs();
+	lingot_io_config_create_parameter_specs();
 
 	// if config file doesn't exists, i will create it.
 	FILE* fp;
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 		LingotConfig new_conf;
 		lingot_config_new(&new_conf);
 		lingot_config_restore_default_values(&new_conf);
-		lingot_config_save(&new_conf, CONFIG_FILE_NAME);
+		lingot_io_config_save(&new_conf, CONFIG_FILE_NAME);
 		lingot_config_destroy(&new_conf);
 
 		printf("ok\n");

@@ -23,11 +23,11 @@
 #include "lingot-test.h"
 
 #include "lingot-config-scale.h"
-#include "lingot-config.h"
+#include "lingot-io-config.h"
 
-void lingot_config_test() {
+void lingot_io_config_test() {
 
-	lingot_config_create_parameter_specs();
+	lingot_io_config_create_parameter_specs();
 	LingotConfig _config;
 	LingotConfig* config = &_config;
 	lingot_config_new(config);
@@ -37,7 +37,7 @@ void lingot_config_test() {
 	// old file with obsolete options
 	// ------------------------------
 
-	lingot_config_load(config, "resources/lingot-001.conf");
+	lingot_io_config_load(config, "resources/lingot-001.conf");
 
 	CU_ASSERT_EQUAL(config->audio_system, AUDIO_SYSTEM_PULSEAUDIO);
 	CU_ASSERT(
@@ -54,7 +54,7 @@ void lingot_config_test() {
 	// recent file
 	// -----------
 
-	lingot_config_load(config, "resources/lingot-0_9_2b8.conf");
+	lingot_io_config_load(config, "resources/lingot-0_9_2b8.conf");
 
 	CU_ASSERT_EQUAL(config->audio_system, AUDIO_SYSTEM_PULSEAUDIO);
 	CU_ASSERT(!strcmp(config->audio_dev[config->audio_system], "default"));

@@ -44,6 +44,8 @@ lingot_SOURCES = \
 	lingot-gauge.h\
 	lingot-filter.c\
 	lingot-filter.h\
+	lingot-io-config.c\
+	lingot-io-config.h\
 	lingot-signal.c\
 	lingot-signal.h\
 	lingot.c\

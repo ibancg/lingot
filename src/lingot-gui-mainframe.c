@@ -318,7 +318,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 		filechooser_config_last_folder = strdup(
 				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
 		lingot_config_new(&config);
-		lingot_config_load(&config, filename);
+		lingot_io_config_load(&config, filename);
 		config_used = 1;
 		g_free(filename);
 	}
@@ -361,7 +361,7 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 			free(filechooser_config_last_folder);
 		filechooser_config_last_folder = strdup(
 				gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
-		lingot_config_save(&frame->conf, filename);
+		lingot_io_config_save(&frame->conf, filename);
 		g_free(filename);
 	}
 	gtk_widget_destroy(dialog);
@@ -417,7 +417,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	LingotConfig* const conf = &frame->conf;
 	lingot_config_new(conf);
-	lingot_config_load(conf, CONFIG_FILE_NAME);
+	lingot_io_config_load(conf, CONFIG_FILE_NAME);
 
 	lingot_gauge_new(&frame->gauge, conf->gauge_rest_value); // gauge in rest situation
 

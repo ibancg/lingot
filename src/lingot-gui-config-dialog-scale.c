@@ -392,8 +392,7 @@ void lingot_gui_config_dialog_scale_tree_add_column(
 	gtk_tree_view_append_column(treeview, column);
 }
 
-int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
-		LingotScale* scale) {
+int lingot_gui_config_dialog_scale_validate(const LingotConfigDialog* dialog, const LingotScale* scale) {
 
 	GtkTreeIter iter, iter2;
 	GtkTreeModel* model = gtk_tree_view_get_model(dialog->scale_treeview);
@@ -413,8 +412,7 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 	int row1 = 0;
 
 	do {
-		gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT,
-				&shift_char, -1);
+		gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT, &shift_char, -1);
 		lingot_config_scale_parse_shift(shift_char, &shift, NULL, NULL);
 		free(shift_char);
 
@@ -441,16 +439,14 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 
 		if (shift < last_shift) {
 			lingot_msg_add_error(
-					_(
-							"There are invalid values in the scale: the notes should be ordered by frequency / shift"));
+					_("There are invalid values in the scale: the notes should be ordered by frequency / shift"));
 			// TODO: select the conflictive line
 			return 0;
 		}
 
 		if (shift >= 1200.0) {
 			lingot_msg_add_error(
-					_(
-							"There are invalid values in the scale: all the notes should be in the same octave"));
+					_("There are invalid values in the scale: all the notes should be in the same octave"));
 			return 0;
 		}
 
@@ -466,8 +462,8 @@ int lingot_gui_config_dialog_scale_validate(LingotConfigDialog* dialog,
 	return 1;
 }
 
-void lingot_gui_config_dialog_scale_apply(LingotConfigDialog* dialog,
-		LingotScale* scale) {
+void lingot_gui_config_dialog_scale_gui_to_data(const LingotConfigDialog* dialog, LingotScale* scale) {
+
 	GtkTreeIter iter;
 	GtkTreeModel* model = gtk_tree_view_get_model(dialog->scale_treeview);
 	gdouble freq, shift;
@@ -498,8 +494,7 @@ void lingot_gui_config_dialog_scale_apply(LingotConfigDialog* dialog,
 	} while (gtk_tree_model_iter_next(model, &iter));
 }
 
-void lingot_gui_config_dialog_scale_rewrite(LingotConfigDialog* dialog,
-		LingotScale* scale) {
+void lingot_gui_config_dialog_scale_data_to_gui(LingotConfigDialog* dialog, const LingotScale* scale) {
 	gtk_entry_set_text(dialog->scale_name, scale->name);
 	GtkTreeStore* store = (GtkTreeStore *) gtk_tree_view_get_model(
 			dialog->scale_treeview);
@@ -557,7 +552,7 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 		LingotScale scale;
                 lingot_config_scale_new(&scale);
 		if (lingot_config_scale_load_scl(&scale, filename)) {
-			lingot_gui_config_dialog_scale_rewrite(config_dialog, &scale);
+			lingot_gui_config_dialog_scale_data_to_gui(config_dialog, &scale);
 		}
 
 		lingot_config_scale_destroy(&scale);
@@ -642,8 +637,7 @@ gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
 	return TRUE;
 }
 
-void lingot_gui_config_dialog_scale_show(LingotConfigDialog* dialog,
-		GtkBuilder* builder) {
+void lingot_gui_config_dialog_scale_show(LingotConfigDialog* dialog, GtkBuilder* builder) {
 
 	dialog->scale_name = GTK_ENTRY(
 			gtk_builder_get_object(builder, "scale_name"));
