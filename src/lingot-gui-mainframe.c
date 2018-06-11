@@ -542,7 +542,6 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 			lingot_gui_mainframe_callback_error_dispatcher, frame);
 
 	lingot_core_new(&frame->core, conf);
-	lingot_core_start(&frame->core);
 
 	g_object_unref(builder);
 
@@ -551,7 +550,6 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
 
-	lingot_core_stop(&frame->core);
 	lingot_core_destroy(&frame->core);
 
 	lingot_gauge_destroy(&frame->gauge);
@@ -1266,7 +1264,6 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 		LingotConfig* conf) {
-	lingot_core_stop(&frame->core);
 	lingot_core_destroy(&frame->core);
 
 	// dup.
@@ -1275,7 +1272,6 @@ void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
 	lingot_core_new(&frame->core, &frame->conf);
 	lingot_gui_mainframe_draw_gauge_background(frame);
 	lingot_gui_mainframe_draw_spectrum_background(frame);
-	lingot_core_start(&frame->core);
 
 	// some parameters may have changed
 	lingot_config_copy(conf, &frame->conf);
