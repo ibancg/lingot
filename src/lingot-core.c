@@ -30,11 +30,6 @@
 #include <sys/time.h>
 #include <time.h>
 #include <stdlib.h>
-
-#ifndef LIBFFTW
-#include "lingot-complex.h"
-#endif
-
 #include "lingot-fft.h"
 #include "lingot-signal.h"
 #include "lingot-core.h"
