@@ -43,3 +43,4 @@ ltmain.sh
 missing
 test/Debug/
 test/.settings
+lingot.pot

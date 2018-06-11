@@ -103,7 +103,9 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Apply the current changes to the running tuner, but doesn't modify the configuration file.</property>
+                <property name="tooltip_text" translatable="yes">Applies the current changes to the running tuner, but doesn't modify the configuration file. 
+
+Any applied changes can be rolled back pressing Cancel.</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -118,7 +120,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Apply the current changes and modify the congifuration file.</property>
+                <property name="tooltip_text" translatable="yes">Applies the current changes and modifies the congifuration file.</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
