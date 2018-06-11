@@ -43,10 +43,17 @@ typedef struct {
 void lingot_config_scale_new(LingotScale*);
 void lingot_config_scale_allocate(LingotScale* scale, unsigned short int notes);
 void lingot_config_scale_destroy(LingotScale* scale);
+
 int lingot_config_scale_load_scl(LingotScale* scale, char* filename);
+/* The scale argument must *not* be initialized with _new. */
+
 int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
+
 void lingot_config_scale_format_shift(char*, double, short int, short int);
+
 void lingot_config_scale_copy(LingotScale* dst, const LingotScale* src);
+/* The dst argument *must* be initialized with _new. */
+
 void lingot_config_scale_restore_default_values(LingotScale* scale);
 
 // Gets the note index within the range [0, num notes)
