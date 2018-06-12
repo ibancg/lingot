@@ -1,12 +1,10 @@
 SUBDIRS = glade
 
 AM_CFLAGS = \
+	 -Wall -Wextra \
 	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS) \
 	-DLINGOT_GLADEDIR=\""$(datadir)/lingot/glade/"\" \
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
-
-AM_CXXFLAGS =\
-	 -Wall
 
 bin_PROGRAMS = lingot
 
