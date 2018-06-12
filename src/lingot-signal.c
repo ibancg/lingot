@@ -33,7 +33,7 @@
  */
 
 static int lingot_signal_is_peak(const FLT* signal, int index,
-		short peak_half_width) {
+		unsigned short peak_half_width) {
 	register unsigned int j;
 
 	for (j = 0; j < peak_half_width; j++) {
@@ -55,8 +55,8 @@ static FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
 									/ (x + 1.0 + 0.816496580927726)));
 }
 
-static FLT lingot_signal_fft_bin_interpolate_quinn2(LingotComplex y1,
-		LingotComplex y2, LingotComplex y3) {
+static FLT lingot_signal_fft_bin_interpolate_quinn2(const LingotComplex y1,
+		const LingotComplex y2, const LingotComplex y3) {
 	FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
 	FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
 	FLT dp = -ap / (1.0 - ap);
@@ -90,8 +90,13 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 
 // search the fundamental peak given the SPD and its 2nd derivative
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
-		const LingotComplex* fft, int N, int n_peaks, int lowest_index,
-		int highest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
+		const LingotComplex* fft,
+		unsigned int N,
+		unsigned int n_peaks,
+		unsigned int lowest_index,
+		unsigned int highest_index,
+		unsigned short peak_half_width,
+		FLT delta_f_fft, FLT min_snr,
 		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
 	register unsigned int i, j, m;
 	int p_index[n_peaks];
@@ -99,6 +104,8 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
 
 #ifdef DRAW_MARKERS
 	core->markers_size = 0;
+#else
+	(void)core;             //  Unused parameter.
 #endif
 
 	// at this moment there are no peaks.
@@ -108,11 +115,11 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
 	if (lowest_index < peak_half_width) {
 		lowest_index = peak_half_width;
 	}
-	if (highest_index > N - peak_half_width) {
+	if (peak_half_width + highest_index > N) {
 		highest_index = N - peak_half_width;
 	}
 
-	short n_found_peaks = 0;
+	unsigned short n_found_peaks = 0;
 
 	// I'll get the n_peaks maximum peaks with SNR above the required.
 	for (i = lowest_index; i < highest_index; i++) {
@@ -203,13 +210,13 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
 	static const FLT ratioTol = 0.02; // TODO: tune
 	static const short max_divisor = 4;
 
-	short tone_index = 0;
+	unsigned short tone_index = 0;
 	short div = 0;
 	FLT groundFreq = 0.0;
 	FLT ratios[n_found_peaks];
 	FLT error[n_found_peaks];
 	short indices_related[n_found_peaks];
-	short n_indices_related = 0;
+	unsigned short n_indices_related = 0;
 
 	FLT bestQ = 0.0;
 	short best_indices_related[n_found_peaks];

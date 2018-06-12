@@ -67,7 +67,7 @@ void lingot_audio_jack_shutdown(void* param) {
 	pthread_mutex_unlock(&stop_mutex);
 }
 
-void lingot_audio_jack_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
+void lingot_audio_jack_new(LingotAudioHandler* audio, const char* device) {
 	const char* exception;
 //	const char **ports = NULL;
 	const char *client_name = "lingot";

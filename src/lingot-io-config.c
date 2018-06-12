@@ -224,7 +224,7 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
 					{ .id = -1, .value = NULL }, // null terminated
 			};
 
-	int i = 0;
+	unsigned int i = 0;
 	for (i = 0; i < parameters_count; i++) {
 		params[i] = NULL;
 	}
@@ -320,10 +320,10 @@ typedef enum { rs_not_yet, rs_reading, rs_done } reading_scale_step_t;
 void lingot_io_config_load(LingotConfig* config, const char* filename) {
 	FILE* fp;
 	int line;
-	int option_index;
+	unsigned int option_index;
 	char* char_buffer_pointer;
-	const static char* delim = " \t=\n";
-	const static char* delim2 = " \t\n";
+	static const char* delim = " \t=\n";
+	static const char* delim2 = " \t\n";
 	void* params[N_MAX_OPTIONS]; // parameter pointer array.
 	void* param = NULL;
 	reading_scale_step_t reading_scale = rs_not_yet;

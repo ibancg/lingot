@@ -40,7 +40,7 @@
 #include "lingot-config.h"
 
 typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
-		int read_buffer_size_samples, void *arg);
+		unsigned int read_buffer_size_samples, void *arg);
 
 #define FLT_SAMPLE_SCALE	32767.0
 
@@ -70,7 +70,7 @@ typedef struct {
 #	error "No audio system has been enabled"
 #	endif
 
-	int read_buffer_size_samples;
+	unsigned int read_buffer_size_samples;
 	FLT* flt_read_buffer;
 
 	unsigned int real_sample_rate;

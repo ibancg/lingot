@@ -34,6 +34,7 @@
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-i18n.h"
+#include "lingot-io-config.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>

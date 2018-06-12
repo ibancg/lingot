@@ -38,11 +38,11 @@
 #include "lingot-msg.h"
 
 int
-lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg);
+lingot_core_read_callback(FLT* read_buffer, unsigned int samples_read, void *arg);
 
 void lingot_core_run_computation_thread(LingotCore* core);
 
-int decimation_input_index = 0;
+unsigned int decimation_input_index = 0;
 
 void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 
@@ -101,7 +101,7 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 		}
 
 		// Since the SPD is symmetrical, we only store the 1st half.
-		int spd_size = (core->conf.fft_size / 2);
+		const unsigned int spd_size = (core->conf.fft_size / 2);
 
 		core->spd_fft = malloc(spd_size * sizeof(FLT));
 		core->noise_level = malloc(spd_size * sizeof(FLT));
@@ -254,10 +254,10 @@ void lingot_core_destroy(LingotCore* core) {
 
 // reads a new piece of signal from audio source, applies filtering and
 // decimation and appends it to the buffer
-int lingot_core_read_callback(FLT* read_buffer, int samples_read, void *arg) {
+int lingot_core_read_callback(FLT* read_buffer, unsigned int samples_read, void *arg) {
 
 	unsigned int decimation_output_index; // loop variables.
-	int decimation_output_len;
+	unsigned int decimation_output_len;
 	FLT* decimation_in;
 	FLT* decimation_out;
 	LingotCore* core = (LingotCore*) arg;
@@ -618,7 +618,7 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 						- conf->fft_size], conf->fft_size * sizeof(FLT));
 	}
 
-	int spd_size = (conf->fft_size / 2);
+	const unsigned int spd_size = (conf->fft_size / 2);
 
 	// FFT
 	lingot_fft_compute_dft_and_spd(&core->fftplan, core->spd_fft, spd_size);
@@ -781,7 +781,7 @@ void lingot_core_run_computation_thread(LingotCore* core) {
 		pthread_mutex_unlock(&core->thread_computation_mutex);
 
 		if (core->audio.audio_system != -1) {
-			int spd_size = core->conf.fft_size / 2;
+			const unsigned int spd_size = core->conf.fft_size / 2;
 			if (core->audio.interrupted) {
 				memset(core->SPL, 0, spd_size * sizeof(FLT));
 				core->freq = 0.0;

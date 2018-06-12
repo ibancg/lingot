@@ -207,7 +207,7 @@ int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
 
 int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
 		short int* numerator, short int* denominator) {
-	const static char* delim = "/";
+	static const char* delim = "/";
 	char* char_buffer_pointer1 = strtok(char_buffer, delim);
 	char* char_buffer_pointer2 = strtok(NULL, delim);
 	short int num, den;
@@ -274,7 +274,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 	int i;
 	char* char_buffer_pointer1;
 	char* nl;
-	const static char* delim = " \t\n";
+	static const char* delim = " \t\n";
 	int result = 1;
 	int line = 0;
 	const char* error_format_msg = _("incorrect format");

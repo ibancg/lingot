@@ -37,16 +37,19 @@ enum {
 
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
+	(void)widget;           //  Unused parameter.
 	gtk_widget_queue_draw(GTK_WIDGET(dialog->scale_treeview));
 }
 
 void lingot_gui_config_dialog_scale_callback_change_octave(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
+	(void)widget;           //  Unused parameter.
 	gtk_widget_queue_draw(GTK_WIDGET(dialog->scale_treeview));
 }
 
 void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 		GtkTreeView *treeview) {
+	(void)data;             //  Unused parameter.
 	GtkTreeModel *model;
 	GtkTreeStore *model_store;
 	GtkTreeIter iter1, iter2;
@@ -109,6 +112,7 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 
 void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
 		GtkTreeView *treeview) {
+	(void)data;             //  Unused parameter.
 	GtkTreeStore *store;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -153,6 +157,7 @@ void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
 void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		GtkCellRendererText *cell, gchar *path_string, gchar *new_text,
 		gpointer user_data) {
+	(void)path_string;      //  Unused parameter.
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeStore *model_store;
@@ -309,6 +314,7 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
 		GtkTreeViewColumn *col, GtkCellRenderer *renderer, GtkTreeModel *model,
 		GtkTreeIter *iter, gpointer user_data) {
+	(void)col;              //  Unused parameter.
 	gdouble freq;
 	gchar buf[20];
 	LingotConfigDialog* config_dialog = (LingotConfigDialog*) user_data;
@@ -393,7 +399,7 @@ void lingot_gui_config_dialog_scale_tree_add_column(
 }
 
 int lingot_gui_config_dialog_scale_validate(const LingotConfigDialog* dialog, const LingotScale* scale) {
-
+	(void)scale;            //  Unused parameter.
 	GtkTreeIter iter, iter2;
 	GtkTreeModel* model = gtk_tree_view_get_model(dialog->scale_treeview);
 
@@ -516,6 +522,7 @@ void lingot_gui_config_dialog_scale_data_to_gui(LingotConfigDialog* dialog, cons
 
 void lingot_gui_config_dialog_import_scl(gpointer data,
 		LingotConfigDialog* config_dialog) {
+	(void)data;             //  Unused parameter.
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(_("Open Scale File"),
 			GTK_WINDOW(config_dialog->win), GTK_FILE_CHOOSER_ACTION_OPEN,
 			"_Cancel", GTK_RESPONSE_CANCEL, "_Open",
@@ -564,6 +571,7 @@ void lingot_gui_config_dialog_import_scl(gpointer data,
 
 gint lingot_gui_config_dialog_scale_key_press_cb(GtkWidget *widget,
 		GdkEventKey *kevent, gpointer data) {
+	(void)widget;           //  Unused parameter.
 
 	LingotConfigDialog* dialog = (LingotConfigDialog*) data;
 	if (kevent->type == GDK_KEY_PRESS) {
@@ -602,6 +610,9 @@ gint lingot_gui_config_dialog_scale_tree_view_column_get_index(
 gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
 		gint x, gint y, gboolean keyboard_mode, GtkTooltip *tooltip,
 		gpointer user_data) {
+	(void)keyboard_mode;    //  Unused parameter.
+	(void)user_data;        //  Unused parameter.
+
 	GtkTreePath* path;
 	GtkTreeViewColumn* col;
 	gint cx, cy;

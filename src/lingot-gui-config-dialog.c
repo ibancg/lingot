@@ -55,11 +55,13 @@ static const unsigned short frequency_combo_first_octave = 1;
 
 void lingot_gui_config_dialog_callback_button_cancel(GtkButton *button,
 		LingotConfigDialog* dialog) {
+	(void)button;           //  Unused parameter.
 	lingot_gui_config_dialog_close(dialog);
 }
 
 void lingot_gui_config_dialog_callback_button_ok(GtkButton *button,
 		LingotConfigDialog* dialog) {
+	(void)button;           //  Unused parameter.
 	if (lingot_gui_config_dialog_apply(dialog)) {
 		// dumps the current config to the config file
 		lingot_io_config_save(&dialog->conf, CONFIG_FILE_NAME);
@@ -72,6 +74,7 @@ void lingot_gui_config_dialog_callback_button_ok(GtkButton *button,
 
 void lingot_gui_config_dialog_callback_button_apply(GtkButton *button,
 		LingotConfigDialog* dialog) {
+	(void)button;           //  Unused parameter.
 	if (lingot_gui_config_dialog_apply(dialog)) {
 		lingot_gui_config_dialog_data_to_gui(dialog, &dialog->conf);
 	}
@@ -79,6 +82,7 @@ void lingot_gui_config_dialog_callback_button_apply(GtkButton *button,
 
 void lingot_gui_config_dialog_callback_button_default(GtkButton *button,
 		LingotConfigDialog* dialog) {
+	(void)button;           //  Unused parameter.
 	lingot_config_restore_default_values(&dialog->conf);
 	lingot_gui_config_dialog_data_to_gui(dialog, &dialog->conf);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->octave), 4);
@@ -86,12 +90,14 @@ void lingot_gui_config_dialog_callback_button_default(GtkButton *button,
 
 void lingot_gui_config_dialog_callback_cancel(GtkWidget *widget,
 		LingotConfigDialog* dialog) {
+	(void)widget;           //  Unused parameter.
 	//lingot_mainframe_change_config(dialog->mainframe, &dialog->conf_old); // restore old configuration.
 	lingot_gui_config_dialog_close(dialog);
 }
 
 void lingot_gui_config_dialog_callback_close(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
+	(void)widget;           //  Unused parameter.
 	lingot_gui_mainframe_change_config(dialog->mainframe, &dialog->conf_old); // restore old configuration.
 	gtk_widget_destroy(dialog->win);
 	lingot_gui_config_dialog_destroy(dialog);
@@ -99,8 +105,7 @@ void lingot_gui_config_dialog_callback_close(GtkWidget *widget,
 
 void lingot_gui_config_dialog_callback_change_input_system(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
-
-	char buff[10];
+	(void)widget;           //  Unused parameter.
 	char* text = gtk_combo_box_text_get_active_text(dialog->input_system);
 	audio_system_t audio_system = str_to_audio_system_t(text);
 	free(text);
@@ -338,6 +343,7 @@ static void lingot_gui_config_dialog_optimize_check_toggled_update(LingotConfigD
 
 void lingot_gui_config_dialog_optimize_check_toggled(GtkWidget *widget,
 		LingotConfigDialog *dialog) {
+	(void)widget;           //  Unused parameter.
 	lingot_gui_config_dialog_optimize_check_toggled_update(dialog);
 }
 
@@ -382,7 +388,6 @@ void lingot_gui_config_dialog_data_to_gui(LingotConfigDialog* dialog, const Ling
 int lingot_gui_config_dialog_gui_to_data(const LingotConfigDialog* dialog, LingotConfig* conf) {
 
 	gchar* text1;
-	const gchar* text2;
 
 	// validation
 
