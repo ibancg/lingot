@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 00:02+0200\n"
+"POT-Creation-Date: 2018-06-12 16:15+0200\n"
 "PO-Revision-Date: 2010-11-25 03:41+0100\n"
 "Last-Translator: Olivier HUMBERT <humbert.olivier.1@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,9 +182,8 @@ msgid "Leave this option ON and Lingot will optimize some parameters for you."
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:37
-#, fuzzy
 msgid "Minimum note"
-msgstr "Fréquence minimale"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:38
 msgid "Maximum note"
@@ -197,9 +196,8 @@ msgid ""
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:40
-#, fuzzy
 msgid "Intrument frequency range"
-msgstr "Fréquence minimale"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
 msgid ""
@@ -373,9 +371,8 @@ msgid "Spectrum"
 msgstr "Spectre"
 
 #: ../src/lingot-audio.c:57
-#, fuzzy
 msgid "The application has not been built with OSS support"
-msgstr "L'application n'a pas été construite avec le support ALSA"
+msgstr "L'application n'a pas été construite avec le support OSS"
 
 #: ../src/lingot-audio.c:66
 msgid "The application has not been built with ALSA support"
@@ -383,12 +380,11 @@ msgstr "L'application n'a pas été construite avec le support ALSA"
 
 #: ../src/lingot-audio.c:75
 msgid "The application has not been built with JACK support"
-msgstr "L'application n'a pas été construite avec le support JACK"
+msgstr "L'application n'a pas été construite avec le support Jack"
 
 #: ../src/lingot-audio.c:84
-#, fuzzy
 msgid "The application has not been built with PULSEAUDIO support"
-msgstr "L'application n'a pas été construite avec le support ALSA"
+msgstr "L'application n'a pas été construite avec le support PulseAudio"
 
 #: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:68
 #, c-format
@@ -471,9 +467,8 @@ msgid "Cannot activate client"
 msgstr "Ne peut pas activer le client"
 
 #: ../src/lingot-audio-jack.c:252
-#, fuzzy
 msgid "No active capture ports"
-msgstr "Pas de ports de capture physique"
+msgstr "Pas de ports de capture"
 
 #: ../src/lingot-audio-jack.c:264 ../src/lingot-audio-jack.c:277
 msgid "Cannot connect input ports"
@@ -537,9 +532,8 @@ msgid "A#"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:85
-#, fuzzy
 msgid "B"
-msgstr "dB"
+msgstr ""
 
 #. default 12 tones equal-tempered scale hard-coded
 #: ../src/lingot-config-scale.c:91
@@ -575,19 +569,19 @@ msgstr ""
 "Le tampon temporel est plus petit que la taille FFT. Il a été augmenté à "
 "%0.3f secondes"
 
-#: ../src/lingot-gui-mainframe.c:109
+#: ../src/lingot-gui-mainframe.c:110
 msgid "Logo design"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:115
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Accordeur d'instruments de musique précis et facile à utiliser"
 
-#: ../src/lingot-gui-mainframe.c:118
+#: ../src/lingot-gui-mainframe.c:119
 msgid "translator-credits"
 msgstr "Olivier Humbert <humbert.olivier.1@free.fr>, 2010"
 
-#: ../src/lingot-gui-mainframe.c:244
+#: ../src/lingot-gui-mainframe.c:245
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -595,36 +589,32 @@ msgid ""
 "case, you can try again."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:254
+#: ../src/lingot-gui-mainframe.c:255
 msgid "The core is not running, you must check your configuration."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:270
 msgid "Error"
 msgstr "Erreur"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Warning"
 msgstr "Attention"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Info"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:295
+#: ../src/lingot-gui-mainframe.c:296
 msgid "Open Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:304 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
 msgid "Lingot configuration files"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:336
+#: ../src/lingot-gui-mainframe.c:337
 msgid "Save Configuration File"
-msgstr ""
-
-#: ../src/lingot-gui-mainframe.c:343
-msgid "untitled.conf"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401
@@ -731,49 +721,3 @@ msgid ""
 "keywords are normally reserved for the 4th octave (try to assign frequencies "
 "only to the 4th octave)."
 msgstr ""
-
-#~ msgid "Sample rate"
-#~ msgstr "Taux d'échantillonnage"
-
-#~ msgid "Noise threshold"
-#~ msgstr "Seuil de bruit"
-
-#~ msgid "Gain"
-#~ msgstr "Gain"
-
-#~ msgid "Effective sample rate"
-#~ msgstr "Taux d'échantillonage effectif"
-
-#~ msgid "Basic"
-#~ msgstr "Basique"
-
-#~ msgid "peaks"
-#~ msgstr "pics"
-
-#~ msgid "DFTs"
-#~ msgstr "DFTs"
-
-#~ msgid "Peak rejection relation"
-#~ msgstr "Relation de rejet maximale"
-
-#~ msgid "Peak half-width"
-#~ msgstr "Pic de milieu"
-
-#~ msgid "Peak number"
-#~ msgstr "Nombre de pic"
-
-#~ msgid "DFT size"
-#~ msgstr "taille DFT"
-
-#~ msgid "DFT number"
-#~ msgstr "Nombre DFT"
-
-#~ msgid "Advanced"
-#~ msgstr "Avancés"
-
-#, fuzzy
-#~ msgid "The application has not been built with PulseAudio support"
-#~ msgstr "L'application n'a pas été construite avec le support PulseAudio"
-
-#~ msgid "No physical capture ports"
-#~ msgstr "Pas de ports de capture physique"

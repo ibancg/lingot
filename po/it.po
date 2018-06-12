@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 00:02+0200\n"
+"POT-Creation-Date: 2018-06-12 16:15+0200\n"
 "PO-Revision-Date: 2011-12-09 12:27+0100\n"
 "Last-Translator: Stefano Cereda <cereda.ste@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -230,9 +230,8 @@ msgid ""
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:40
-#, fuzzy
 msgid "Intrument frequency range"
-msgstr "Frequenza minima"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
 msgid ""
@@ -602,9 +601,8 @@ msgid "A#"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:85
-#, fuzzy
 msgid "B"
-msgstr "dB"
+msgstr ""
 
 #. default 12 tones equal-tempered scale hard-coded
 #: ../src/lingot-config-scale.c:91
@@ -639,19 +637,19 @@ msgid ""
 msgstr ""
 "Il buffer temporale è più piccolo dell'FFT. È stato aumentato a %0.3f secondi"
 
-#: ../src/lingot-gui-mainframe.c:109
+#: ../src/lingot-gui-mainframe.c:110
 msgid "Logo design"
 msgstr "Disegno del logo"
 
-#: ../src/lingot-gui-mainframe.c:115
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Accordatore di strumenti affidabile e semplice da usare"
 
-#: ../src/lingot-gui-mainframe.c:118
+#: ../src/lingot-gui-mainframe.c:119
 msgid "translator-credits"
 msgstr "Stefano Cereda <cereda.ste@gmail.com>, 2008-2011"
 
-#: ../src/lingot-gui-mainframe.c:244
+#: ../src/lingot-gui-mainframe.c:245
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -663,38 +661,34 @@ msgstr ""
 "fino a qualche secondo dopo l'ultimo utilizzo. In questo caso, puoi "
 "riprovare."
 
-#: ../src/lingot-gui-mainframe.c:254
+#: ../src/lingot-gui-mainframe.c:255
 msgid "The core is not running, you must check your configuration."
 msgstr ""
 "Il programma principale non funziona, devi controllare la tua configurazione."
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:270
 msgid "Error"
 msgstr "Errore"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Warning"
 msgstr "Attenzione"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Info"
 msgstr "Info"
 
-#: ../src/lingot-gui-mainframe.c:295
+#: ../src/lingot-gui-mainframe.c:296
 msgid "Open Configuration File"
 msgstr "Apri un file di configurazione"
 
-#: ../src/lingot-gui-mainframe.c:304 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
 msgid "Lingot configuration files"
 msgstr "File di configurazione di lingot"
 
-#: ../src/lingot-gui-mainframe.c:336
+#: ../src/lingot-gui-mainframe.c:337
 msgid "Save Configuration File"
 msgstr "Salva file di configurazione"
-
-#: ../src/lingot-gui-mainframe.c:343
-msgid "untitled.conf"
-msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401
 msgid "Audio device identifier too long"

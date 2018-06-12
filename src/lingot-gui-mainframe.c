@@ -32,6 +32,7 @@
 #include "lingot-defs.h"
 
 #include "lingot-config.h"
+#include "lingot-io-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gauge.h"
@@ -350,8 +351,7 @@ void lingot_gui_mainframe_callback_save_config(gpointer data,
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
 	TRUE);
 
-	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog),
-			_("untitled.conf"));
+	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "untitled.conf");
 	GtkFileFilter* filefilter = gtk_file_filter_new();
 
 	gtk_file_filter_set_name(filefilter,

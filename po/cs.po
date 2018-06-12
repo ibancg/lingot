@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 00:02+0200\n"
+"POT-Creation-Date: 2018-06-12 16:15+0200\n"
 "PO-Revision-Date: 2013-02-01 17:29+0100\n"
 "Last-Translator: Karel Volný <kvolny@redhat.com>\n"
 "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
@@ -210,9 +210,8 @@ msgid "Leave this option ON and Lingot will optimize some parameters for you."
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:37
-#, fuzzy
 msgid "Minimum note"
-msgstr "Nejnižší kmitočet"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:38
 msgid "Maximum note"
@@ -225,9 +224,8 @@ msgid ""
 msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:40
-#, fuzzy
 msgid "Intrument frequency range"
-msgstr "Nejnižší kmitočet"
+msgstr ""
 
 #: ../src/glade/lingot-config-dialog.glade.h:41
 msgid ""
@@ -429,9 +427,8 @@ msgid "Spectrum"
 msgstr "Spektrum"
 
 #: ../src/lingot-audio.c:57
-#, fuzzy
 msgid "The application has not been built with OSS support"
-msgstr "Aplikace nebyla sestavena s podporou pro ALSA"
+msgstr "Aplikace nebyla sestavena s podporou pro OSS"
 
 #: ../src/lingot-audio.c:66
 msgid "The application has not been built with ALSA support"
@@ -442,9 +439,8 @@ msgid "The application has not been built with JACK support"
 msgstr "Aplikace nebyla sestavena s podporou pro JACK"
 
 #: ../src/lingot-audio.c:84
-#, fuzzy
 msgid "The application has not been built with PULSEAUDIO support"
-msgstr "Aplikace nebyla sestavena s podporou pro ALSA"
+msgstr "Aplikace nebyla sestavena s podporou pro PulseAudio"
 
 #: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:68
 #, c-format
@@ -594,9 +590,8 @@ msgid "A#"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:85
-#, fuzzy
 msgid "B"
-msgstr "dB"
+msgstr ""
 
 #. default 12 tones equal-tempered scale hard-coded
 #: ../src/lingot-config-scale.c:91
@@ -632,19 +627,19 @@ msgstr ""
 "Interval pro analýzu je menší než je třeba pro FFT, a proto byl zvýšen na "
 "%0.3f s."
 
-#: ../src/lingot-gui-mainframe.c:109
+#: ../src/lingot-gui-mainframe.c:110
 msgid "Logo design"
 msgstr "design loga"
 
-#: ../src/lingot-gui-mainframe.c:115
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
 
-#: ../src/lingot-gui-mainframe.c:118
+#: ../src/lingot-gui-mainframe.c:119
 msgid "translator-credits"
 msgstr "Karel Volný <kavol@seznam.cz>, 2008—2013"
 
-#: ../src/lingot-gui-mainframe.c:244
+#: ../src/lingot-gui-mainframe.c:245
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -656,37 +651,33 @@ msgstr ""
 "prostředky i několik sekund poté, co byly naposledy použity. V tom případě "
 "to zkuste znovu."
 
-#: ../src/lingot-gui-mainframe.c:254
+#: ../src/lingot-gui-mainframe.c:255
 msgid "The core is not running, you must check your configuration."
 msgstr "Jádro neběží, zkontrolujte konfiguraci."
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:270
 msgid "Error"
 msgstr "Chyba"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Warning"
 msgstr "Upozornění"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Info"
 msgstr "Informace"
 
-#: ../src/lingot-gui-mainframe.c:295
+#: ../src/lingot-gui-mainframe.c:296
 msgid "Open Configuration File"
 msgstr "Načíst soubor s konfigurací"
 
-#: ../src/lingot-gui-mainframe.c:304 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
 msgid "Lingot configuration files"
 msgstr "Konfigurační soubory Lingot"
 
-#: ../src/lingot-gui-mainframe.c:336
+#: ../src/lingot-gui-mainframe.c:337
 msgid "Save Configuration File"
 msgstr "Uložit konfigurační soubor"
-
-#: ../src/lingot-gui-mainframe.c:343
-msgid "untitled.conf"
-msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401
 msgid "Audio device identifier too long"
@@ -809,189 +800,3 @@ msgstr ""
 "referenční, a všechny ostatní kmitočty budou přepočteny podle nastavených "
 "intervalů. Lze zadat buď číselnou hodnotu anebo klíčová slova ‚mid-"
 "C‘ (261,625565 Hz) a ‚mid-A‘ (440 Hz)."
-
-#~ msgid "Sample rate"
-#~ msgstr "Vzorkovací kmitočet"
-
-#~ msgid ""
-#~ "Choose the hardware sample rate here. We give you some examples, but you "
-#~ "can choose another one. Please, be aware that depending on the audio "
-#~ "system and/or device, not all the sampling frequencies are available. "
-#~ "Anyway, you can get close to your desired effective sample rate by "
-#~ "combining this parameter with the oversampling factor (Basic tab). If you "
-#~ "are using JACK, you cannot modify this field, but you can change it "
-#~ "externally (in the JACK server configuration)."
-#~ msgstr ""
-#~ "Vyberte vzorkovací kmitočet. Nabízíme výběr z nejběžnějších hodnot, ale "
-#~ "lze nastavit cokoli. Prosím mějte na paměti, že v závislosti na "
-#~ "parametrech zvukového zařízení nemusí být všechny vzorkovací kmitočty "
-#~ "podporovány. Abyste se lépe přiblížili požadovanému efektivnímu "
-#~ "vzorkovacímu kmitočtu, můžete tento parametr kombinovat s nastavením "
-#~ "převzorkování (karta Základní). Jestliže používáte JACK, nemůžete změnit "
-#~ "vzorkovací kmitočet zde, nýbrž je třeba jej změnit v nastavení serveru "
-#~ "JACK."
-
-#~ msgid "Noise threshold"
-#~ msgstr "Práh šumu"
-
-#~ msgid "Gain"
-#~ msgstr "Zisk"
-
-#~ msgid ""
-#~ "Any signal level below this value will be considered as noise. This noise "
-#~ "level is depicted in the spectrum area as a yellow dotted line."
-#~ msgstr ""
-#~ "Signál nižší úrovně než je tato hranice bude považován za šum. Tato "
-#~ "hranice šumu je naznačena přerušovanou čarou v zobrazení spektra."
-
-#~ msgid ""
-#~ "Allows you to adapt the signal levels without the aid of an external "
-#~ "mixer."
-#~ msgstr "Umožňuje upravit úroveň signálu bez pomoci samostatného mixéru."
-
-#~ msgid "256"
-#~ msgstr "256"
-
-#~ msgid "512"
-#~ msgstr "512"
-
-#~ msgid "1024"
-#~ msgstr "1024"
-
-#~ msgid "2048"
-#~ msgstr "2048"
-
-#~ msgid "4096"
-#~ msgstr "4096"
-
-#~ msgid "Hardware sampling frequency"
-#~ msgstr "Hardwarový vzorkovací kmitočet"
-
-#~ msgid "Oversampling factor"
-#~ msgstr "Konstanta převzorkování"
-
-#~ msgid ""
-#~ "Effective sampling frequency. The lower this parameter is, the more "
-#~ "accurate the FFT will be, and hence the better is the hooking up to the "
-#~ "correct peak. Remember, however, that your temporal window will increase, "
-#~ "and the fact that you won't be able to tune frequencies above the half of "
-#~ "this frequency (Nyquist-Shannon sampling theorem)."
-#~ msgstr ""
-#~ "Efektivní vzorkovací kmitočet. Čímž nižší je tento parametr, tím "
-#~ "přesnější bude FFT a tím pádem i detekce správné špičky. Mějte ale na "
-#~ "paměti, že se tím zvětší časové okno a že nebudete schopni ladit kmitočty "
-#~ "nad polovinou této hodnoty (Shannonův teorém)."
-
-#~ msgid "Effective sample rate"
-#~ msgstr "Efektivní vzorkovací kmitočet"
-
-#~ msgid "Lingot only considers frequencies above this one."
-#~ msgstr "Při ladění se berou v úvahu pouze kmitočty vyšší než tento."
-
-#~ msgid "Basic"
-#~ msgstr "Základní"
-
-#~ msgid "peaks"
-#~ msgstr "špiček"
-
-#~ msgid "DFTs"
-#~ msgstr "DFT"
-
-#~ msgid ""
-#~ "All the peaks with an amplitude difference with the highest one greater "
-#~ "than this parameter will be rejected as a candidate to host the "
-#~ "fundamental frequency"
-#~ msgstr ""
-#~ "Všechny špičky s rozdílem amplitud od nejvyšší větším než tato hodnota "
-#~ "nebudou zvažovány jako možný základní kmitočet"
-
-#~ msgid ""
-#~ "Number of samples needed by a peak at each side, lower in amplitude than "
-#~ "the sample at the center, to be considered as a peak. You should not "
-#~ "consider more than 1 or 2 samples, unless you have a really big FFT "
-#~ "buffer."
-#~ msgstr ""
-#~ "Počet vzorků na každou stranu od špičky nižších nežli střední, aby tento "
-#~ "byl považován za špičku. Neměli byste nastavovat více než 1 nebo 2 "
-#~ "vzorky, pokud nemáte vskutku velkou vyrovnávací paměť FFT."
-
-#~ msgid ""
-#~ "Number of main peaks considered over the FFT. Remember that sometimes the "
-#~ "first harmonics can have a higher amplitude than the fundamental "
-#~ "component, depending on your instrument."
-#~ msgstr ""
-#~ "Počet hlavních špiček uvažovaných při FFT. Je nutno pamatovat, že někdy, "
-#~ "dle nástroje, může mít první harmonická větší amplitudu než má základní "
-#~ "kmitočet."
-
-#~ msgid "Number of samples of each DFT."
-#~ msgstr "Počet vzorků pro každou DFT."
-
-#~ msgid "Peak rejection relation"
-#~ msgstr "Maximální rozdíl špiček"
-
-#~ msgid ""
-#~ "After having chosen the fundamental peak on the FFT, Lingot computes a "
-#~ "series of N (being N this parameter) DFTs localized in frequency to "
-#~ "enclose the fundamental frequency."
-#~ msgstr ""
-#~ "Po zvolení základní špičky ve FFT, Lingot spočte sérii N (kde N je tento "
-#~ "parametr) DFT s kmitočty obklopujícími základní kmitočet."
-
-#~ msgid "Peak half-width"
-#~ msgstr "Trvání špičky"
-
-#~ msgid "Peak number"
-#~ msgstr "Počet špiček"
-
-#~ msgid "DFT size"
-#~ msgstr "Rozsah DFT"
-
-#~ msgid "DFT number"
-#~ msgstr "Počet DFT"
-
-#~ msgid ""
-#~ "Advanced settings on the frequency finding algorithm. You should not "
-#~ "modify these parameters unless you really need it and you have a good "
-#~ "understanding of the algorithm. Use the 'Default' button if you get lost, "
-#~ "and use those default parameters as your reference."
-#~ msgstr ""
-#~ "Pokročilá nastavení algoritmu pro určení kmitočtu. Neměli byste měnit "
-#~ "tyto parametry, pokud to opravdu nutně nepotřebujete a nemáte dobré "
-#~ "znalosti tohoto algoritmu. Pokud se ztratíte, použijte tlačítko ‚Výchozí‘ "
-#~ "a vyjděte z těchto parametrů."
-
-#~ msgid "Advanced"
-#~ msgstr "Pokročilé"
-
-#~ msgid "The application has not been built with PulseAudio support"
-#~ msgstr "Aplikace nebyla sestavena s podporou pro PulseAudio."
-
-#~ msgid ""
-#~ "Error parsing the configuration file, line %i: unrecognized audio system, "
-#~ "assuming default value.\n"
-#~ msgstr ""
-#~ "Chyba při čtení konfiguračního souboru na řádku %i: neznámý zvukový "
-#~ "ovladač, použiji výchozí hodnotu.\n"
-
-#~ msgid ""
-#~ "The configuration file contains errors, and hence some default values "
-#~ "have been chosen. The problem will be fixed once you have accepted the "
-#~ "settings in the configuration dialog."
-#~ msgstr ""
-#~ "Konfigurační soubor obsahuje chyby, a proto byly nastaveny některé "
-#~ "výchozí hodnoty. Problém bude opraven jakmile uložíte nastavení v "
-#~ "konfiguračním dialogu."
-
-#~ msgid ""
-#~ "The requested sample rate is not available, the real sample rate has been "
-#~ "set to %d Hz"
-#~ msgstr ""
-#~ "Požadovaný vzorkovací kmitočet není dostupný, skutečný vzorkovací "
-#~ "kmitočet byl nastaven na %d Hz."
-
-#~ msgid "Sample rate out of range"
-#~ msgstr "Vzorek mimo rozsah"
-
-#~ msgid "No physical capture ports"
-#~ msgstr "Žádné fyzické vstupní porty"
