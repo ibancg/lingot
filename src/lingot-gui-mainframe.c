@@ -32,7 +32,6 @@
 #include "lingot-defs.h"
 
 #include "lingot-config.h"
-#include "lingot-io-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gauge.h"

@@ -67,7 +67,7 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 	core->markers_size2 = 0;
 #endif
 
-	int requested_sample_rate = core->conf.sample_rate;
+	unsigned int requested_sample_rate = core->conf.sample_rate;
 
 	if (core->conf.sample_rate <= 0) {
 		core->conf.sample_rate = 0;
