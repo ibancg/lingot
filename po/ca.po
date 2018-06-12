@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 00:02+0200\n"
+"POT-Creation-Date: 2018-06-12 16:15+0200\n"
 "PO-Revision-Date: 2007-10-02 19:00+0200\n"
 "Last-Translator: Raül Cambeiro <rulet@menta.net>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -532,9 +532,8 @@ msgid "A#"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:85
-#, fuzzy
 msgid "B"
-msgstr "dB"
+msgstr ""
 
 #. default 12 tones equal-tempered scale hard-coded
 #: ../src/lingot-config-scale.c:91
@@ -570,19 +569,19 @@ msgstr ""
 "La memòria intermèdia temporal és menor que la mida de l'FFT. S'ha augmentat "
 "a %0.3f segons."
 
-#: ../src/lingot-gui-mainframe.c:109
+#: ../src/lingot-gui-mainframe.c:110
 msgid "Logo design"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:115
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador d'instruments musicals precís i fàcil de fer anar"
 
-#: ../src/lingot-gui-mainframe.c:118
+#: ../src/lingot-gui-mainframe.c:119
 msgid "translator-credits"
 msgstr "Raúl Cambeiro <rulet@menta.net>, 2007"
 
-#: ../src/lingot-gui-mainframe.c:244
+#: ../src/lingot-gui-mainframe.c:245
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -590,36 +589,32 @@ msgid ""
 "case, you can try again."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:254
+#: ../src/lingot-gui-mainframe.c:255
 msgid "The core is not running, you must check your configuration."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:270
 msgid "Error"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Warning"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Info"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:295
+#: ../src/lingot-gui-mainframe.c:296
 msgid "Open Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:304 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
 msgid "Lingot configuration files"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:336
+#: ../src/lingot-gui-mainframe.c:337
 msgid "Save Configuration File"
-msgstr ""
-
-#: ../src/lingot-gui-mainframe.c:343
-msgid "untitled.conf"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot 0.7.7b5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 00:02+0200\n"
+"POT-Creation-Date: 2018-06-12 16:15+0200\n"
 "PO-Revision-Date: 2009-09-14 17:29+0800\n"
 "Last-Translator: Careone <careoneagain@gmail.com>\n"
 "Language-Team: Chinese/Simplified <lp-l10n-zh-cn@lists.launchpad.net>\n"
@@ -375,9 +375,8 @@ msgid "Spectrum"
 msgstr "乐谱"
 
 #: ../src/lingot-audio.c:57
-#, fuzzy
 msgid "The application has not been built with OSS support"
-msgstr "这个程序无法支持插孔"
+msgstr ""
 
 #: ../src/lingot-audio.c:66
 msgid "The application has not been built with ALSA support"
@@ -388,9 +387,8 @@ msgid "The application has not been built with JACK support"
 msgstr "这个程序无法支持插孔"
 
 #: ../src/lingot-audio.c:84
-#, fuzzy
 msgid "The application has not been built with PULSEAUDIO support"
-msgstr "这个程序无法支持插孔"
+msgstr ""
 
 #: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:68
 #, c-format
@@ -539,9 +537,8 @@ msgid "A#"
 msgstr ""
 
 #: ../src/lingot-config-scale.c:85
-#, fuzzy
 msgid "B"
-msgstr "分贝(dB)"
+msgstr ""
 
 #. default 12 tones equal-tempered scale hard-coded
 #: ../src/lingot-config-scale.c:91
@@ -575,19 +572,19 @@ msgid ""
 "seconds"
 msgstr "临时缓冲区小于“快速傅里叶变换(FFT)”的大小。提高到 %0.3f 秒"
 
-#: ../src/lingot-gui-mainframe.c:109
+#: ../src/lingot-gui-mainframe.c:110
 msgid "Logo design"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:115
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "精确和方便的乐器调音师"
 
-#: ../src/lingot-gui-mainframe.c:118
+#: ../src/lingot-gui-mainframe.c:119
 msgid "translator-credits"
 msgstr "Careone <careoneagain@gmail.com>, 2009"
 
-#: ../src/lingot-gui-mainframe.c:244
+#: ../src/lingot-gui-mainframe.c:245
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -595,36 +592,32 @@ msgid ""
 "case, you can try again."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:254
+#: ../src/lingot-gui-mainframe.c:255
 msgid "The core is not running, you must check your configuration."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:270
 msgid "Error"
 msgstr "错误"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Warning"
 msgstr "警告"
 
-#: ../src/lingot-gui-mainframe.c:271
+#: ../src/lingot-gui-mainframe.c:272
 msgid "Info"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:295
+#: ../src/lingot-gui-mainframe.c:296
 msgid "Open Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:304 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
 msgid "Lingot configuration files"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:336
+#: ../src/lingot-gui-mainframe.c:337
 msgid "Save Configuration File"
-msgstr ""
-
-#: ../src/lingot-gui-mainframe.c:343
-msgid "untitled.conf"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.c:401
