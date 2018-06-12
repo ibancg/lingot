@@ -90,7 +90,7 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 
 // search the fundamental peak given the SPD and its 2nd derivative
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
-		LingotComplex* const fft, int N, int n_peaks, int lowest_index,
+		const LingotComplex* fft, int N, int n_peaks, int lowest_index,
 		int highest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
 		FLT min_q, FLT min_freq, LingotCore* core, short* divisor) {
 	register unsigned int i, j, m;
