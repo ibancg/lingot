@@ -210,8 +210,7 @@ void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FL
 		new_b[i] = 0.0;
 	}
 
-	if ((n & 1) == 1) // odd
-			{
+	if (n & 1) {  // odd
 		// first subfilter is first order
 		a[1] = -pole[n / 2][0];
 		b[1] = 1.0;

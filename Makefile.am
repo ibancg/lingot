@@ -37,8 +37,15 @@ gnomemenu_DATA = lingot.desktop
 
 dist_man_MANS := lingot.1
 
+dist-hook: gen-ChangeLog copy-SpecFiles
+
+# Creates the ChangeLog from the git history. Extracted from GNU Hello
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	$(top_srcdir)/build-aux/gitlog-to-changelog > $(distdir)/ChangeLog
+	
 # Copy all the spec files. Of course, only one is actually used.
-dist-hook:
+copy-SpecFiles:
 	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
 	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
 	for specfile in *.spec; do \
@@ -46,3 +53,5 @@ dist-hook:
 			cp -p $$specfile $(distdir); \
 		fi \
 	done
+
+	
