@@ -35,8 +35,13 @@
 #include "lingot-core.h"
 
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
-		LingotComplex* const fft, int N, int n_peaks, int lowest_index,
-		int highest_index, short peak_half_width, FLT delta_f_fft, FLT min_snr,
+		const LingotComplex* fft,
+		unsigned int N,
+		unsigned int n_peaks,
+		unsigned int lowest_index,
+		unsigned int highest_index,
+		unsigned short peak_half_width,
+		FLT delta_f_fft, FLT min_snr,
 		FLT min_q, FLT min_freq, LingotCore* core, short* divisor);
 
 void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,

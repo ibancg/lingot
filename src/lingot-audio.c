@@ -69,7 +69,7 @@ void lingot_audio_new(LingotAudioHandler* result, audio_system_t audio_system, c
 		break;
 	case AUDIO_SYSTEM_JACK:
 #	ifdef JACK
-		lingot_audio_jack_new(result, device, sample_rate);
+		lingot_audio_jack_new(result, device);
 #	else
 		lingot_msg_add_error(
 			_("The application has not been built with JACK support"));

@@ -285,6 +285,7 @@ static void lingot_audio_pulseaudio_mainloop_quit(int ret) {
 
 static void lingot_audio_pulseaudio_context_drain_complete(pa_context *c,
 		void *userdata) {
+	(void)userdata;         //  Unused parameter.
 	pa_context_disconnect(c);
 }
 

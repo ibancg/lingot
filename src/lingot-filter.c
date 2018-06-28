@@ -120,9 +120,9 @@ void lingot_filter_vector_product(int n, LingotComplex* vector,
 
 // Chebyshev filters
 void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FLT wc) {
-	int i; // loops
-	int k;
-	int p;
+	unsigned int i; // loops
+	unsigned int k;
+	unsigned int p;
 
 	FLT a[n + 1];
 	FLT b[n + 1];

@@ -76,7 +76,7 @@ struct _LingotConfigParameterSpec {
 
 	int deprecated;
 
-	int str_max_len;
+	unsigned int str_max_len;
 	int int_min;
 	int int_max;
 	double float_min;

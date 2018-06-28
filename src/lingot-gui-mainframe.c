@@ -32,12 +32,11 @@
 #include "lingot-defs.h"
 
 #include "lingot-config.h"
-#include "lingot-io-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gauge.h"
 #include "lingot-i18n.h"
-
+#include "lingot-io-config.h"
 #include "lingot-msg.h"
 
 #include "lingot-logo.xpm"
@@ -87,15 +86,20 @@ static cairo_surface_t *spectrum_background = 0x0;
 
 void lingot_gui_mainframe_callback_redraw_gauge(GtkWidget* w, GdkEventExpose* e,
 		LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
+	(void)e;                //  Unused parameter.
 	lingot_gui_mainframe_draw_gauge(frame);
 }
 
 void lingot_gui_mainframe_callback_redraw_spectrum(GtkWidget* w,
 		GdkEventExpose* e, LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
+	(void)e;                //  Unused parameter.
 	lingot_gui_mainframe_draw_spectrum(frame);
 }
 
 void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
 	g_source_remove(frame->visualization_timer_uid);
 	g_source_remove(frame->freq_computation_timer_uid);
 	g_source_remove(frame->gauge_computation_uid);
@@ -103,6 +107,8 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
 }
 
 void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
+	(void)frame;            //  Unused parameter.
 	static const gchar* authors[] = { "Iban Cereijo <ibancg@gmail.com>",
 			"Jairo Chapela <jairochapela@gmail.com>", NULL };
 
@@ -122,6 +128,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
 
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 		LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
 	gboolean visible = gtk_check_menu_item_get_active(
 			GTK_CHECK_MENU_ITEM(frame->view_spectrum_item));
 
@@ -142,6 +149,7 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w,
 
 void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 		LingotMainFrame* frame) {
+	(void)w;                //  Unused parameter.
 	lingot_gui_config_dialog_show(frame, NULL);
 }
 
@@ -292,6 +300,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
 void lingot_gui_mainframe_callback_open_config(gpointer data,
 		LingotMainFrame* frame) {
+	(void)data;             //  Unused parameter.
 	GtkWidget * dialog = gtk_file_chooser_dialog_new(
 			_("Open Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
@@ -333,6 +342,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 
 void lingot_gui_mainframe_callback_save_config(gpointer data,
 		LingotMainFrame* frame) {
+	(void)data;             //  Unused parameter.
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(
 			_("Save Configuration File"), GTK_WINDOW(frame->win),
 			GTK_FILE_CHOOSER_ACTION_SAVE, "_Cancel", GTK_RESPONSE_CANCEL,
@@ -375,6 +385,8 @@ void lingot_gui_mainframe_color(GdkColor* color, int red, int green, int blue) {
 
 void lingot_gui_mainframe_callback_window_resize(GtkWidget *widget,
 		GtkAllocation *allocation, void *data) {
+	(void)widget;           //  Unused parameter.
+	(void)allocation;       //  Unused parameter.
 
 	const LingotMainFrame* frame = (LingotMainFrame*) data;
 
@@ -683,7 +695,7 @@ static void lingot_gui_mainframe_draw_gauge_background(
 
 	// cent tics
 	const double maxOffsetRounded = frame->conf.scale.max_offset_rounded;
-	const static int maxMinorDivisions = 20;
+	static const int maxMinorDivisions = 20;
 	double centsPerMinorDivision = maxOffsetRounded / maxMinorDivisions;
 	const double base = pow(10.0, floor(log10(centsPerMinorDivision)));
 	double normalizedCentsPerDivision = centsPerMinorDivision / base;
@@ -849,7 +861,7 @@ FLT min, FLT max) {
 	return signal - min;
 }
 
-FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, int i, FLT min,
+FLT lingot_gui_mainframe_get_noise(const LingotMainFrame* frame, FLT min,
 FLT max) {
 	FLT noise = frame->conf.min_overall_SNR;
 	if (noise < min) {
@@ -1056,12 +1068,12 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		FLT x;
 		FLT y = -1;
 
-		const int min_index = 0;
-		const int max_index = frame->conf.fft_size / 2;
+		const unsigned int min_index = 0;
+		const unsigned int max_index = frame->conf.fft_size / 2;
 
 		FLT index_density = spectrum_inner_x / max_index;
 		// TODO: step
-		int index_step = 1;
+		const unsigned int index_step = 1;
 
 		static const double dashed1[] = { 5.0, 5.0 };
 		static int len1 = sizeof(dashed1) / sizeof(dashed1[0]);
@@ -1193,7 +1205,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 		cairo_set_source_rgba(cr, 1.0, 1.0, 0.2, 1.0);
 
 		y = -spectrum_db_density
-				* lingot_gui_mainframe_get_noise(frame, 0, spectrum_min_db,
+				* lingot_gui_mainframe_get_noise(frame, spectrum_min_db,
 						spectrum_max_db); // dB.
 		cairo_move_to(cr, 0, y);
 		// noise threshold drawing.
@@ -1201,7 +1213,7 @@ void lingot_gui_mainframe_draw_spectrum(const LingotMainFrame* frame) {
 
 			x = index_density * i;
 			y = -spectrum_db_density
-					* lingot_gui_mainframe_get_noise(frame, i, spectrum_min_db,
+					* lingot_gui_mainframe_get_noise(frame, spectrum_min_db,
 							spectrum_max_db); // dB.
 			cairo_line_to(cr, x, y);
 		}
