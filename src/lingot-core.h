@@ -88,6 +88,12 @@ typedef struct {
 void lingot_core_new(LingotCore*, LingotConfig*);
 void lingot_core_destroy(LingotCore*);
 
+// start process
+void lingot_core_start(LingotCore*);
+
+// stop process
+void lingot_core_stop(LingotCore*);
+
 // tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency
 int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,

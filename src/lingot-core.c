@@ -59,8 +59,6 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 	core->windowed_fft_buffer = NULL;
 	core->hamming_window_temporal = NULL;
 	core->hamming_window_fft = NULL;
-	core->freq = 0.0;
-	decimation_input_index = 0;
 
 #ifdef DRAW_MARKERS
 	core->markers_size = 0;
@@ -170,63 +168,20 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 
 		pthread_mutex_init(&core->temporal_buffer_mutex, NULL);
 
-		/* start running the core in another thread */
-		if (lingot_audio_start (&core->audio)) {
-			core->running = 0;
-			lingot_audio_destroy(&core->audio);
-		} else {
-			pthread_mutex_init(&core->thread_computation_mutex, NULL);
-			pthread_cond_init(&core->thread_computation_cond, NULL);
+		// ------------------------------------------------------------
 
-			pthread_attr_init(&core->thread_computation_attr);
-			pthread_create(&core->thread_computation,
-					&core->thread_computation_attr,
-					(void* (*)(void*)) lingot_core_run_computation_thread,
-					core);
-			core->running = 1;
-		}
+		core->running = 1;
 	}
+
+	core->freq = 0.0;
 }
 
 // -----------------------------------------------------------------------
 
 /* Deallocate resources */
 void lingot_core_destroy(LingotCore* core) {
-	void* thread_result;
-	int result;
-	struct timeval tout, tout_abs;
-	struct timespec tout_tspec;
 
-	gettimeofday(&tout_abs, NULL);
-	tout.tv_sec = 0;
-	tout.tv_usec = 300000;
-
-	if (core->running == 1) {
-		core->running = 0;
-
-		timeradd(&tout, &tout_abs, &tout_abs);
-		tout_tspec.tv_sec = tout_abs.tv_sec;
-		tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
-
-		// watchdog timer
-		pthread_mutex_lock(&core->thread_computation_mutex);
-		result = pthread_cond_timedwait(&core->thread_computation_cond,
-				&core->thread_computation_mutex, &tout_tspec);
-		pthread_mutex_unlock(&core->thread_computation_mutex);
-
-		if (result == ETIMEDOUT) {
-			fprintf(stderr, "warning: cancelling computation thread\n");
-			pthread_cancel(core->thread_computation);
-		} else {
-			pthread_join(core->thread_computation, &thread_result);
-		}
-		pthread_attr_destroy(&core->thread_computation_attr);
-		pthread_mutex_destroy(&core->thread_computation_mutex);
-		pthread_cond_destroy(&core->thread_computation_cond);
-	}
 	if (core->audio.audio_system != -1) {
-		lingot_audio_stop(&core->audio);
-
 		lingot_fft_plan_destroy(&core->fftplan);
 		lingot_audio_destroy(&core->audio);
 
@@ -756,6 +711,78 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
 	core->freq = lingot_core_frequency_locker(freq,
 			core->conf.internal_min_frequency);
 //	printf("-> %f\n", core->freq);
+}
+
+/* start running the core in another thread */
+void lingot_core_start(LingotCore* core) {
+
+	int audio_status = 0;
+	decimation_input_index = 0;
+
+	if (core->audio.audio_system != -1) {
+		audio_status = lingot_audio_start(&core->audio);
+
+		if (audio_status == 0) {
+			pthread_mutex_init(&core->thread_computation_mutex, NULL);
+			pthread_cond_init(&core->thread_computation_cond, NULL);
+
+			pthread_attr_init(&core->thread_computation_attr);
+			pthread_create(&core->thread_computation,
+					&core->thread_computation_attr,
+					(void* (*)(void*)) lingot_core_run_computation_thread,
+					core);
+			core->running = 1;
+		} else {
+			core->running = 0;
+			lingot_audio_destroy(&core->audio);
+		}
+
+	}
+}
+
+/* stop running the core */
+void lingot_core_stop(LingotCore* core) {
+	void* thread_result;
+
+	int result;
+	struct timeval tout, tout_abs;
+	struct timespec tout_tspec;
+
+	gettimeofday(&tout_abs, NULL);
+	tout.tv_sec = 0;
+	tout.tv_usec = 300000;
+
+	if (core->running == 1) {
+		core->running = 0;
+
+		timeradd(&tout, &tout_abs, &tout_abs);
+		tout_tspec.tv_sec = tout_abs.tv_sec;
+		tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
+
+		// watchdog timer
+		pthread_mutex_lock(&core->thread_computation_mutex);
+		result = pthread_cond_timedwait(&core->thread_computation_cond,
+				&core->thread_computation_mutex, &tout_tspec);
+		pthread_mutex_unlock(&core->thread_computation_mutex);
+
+		if (result == ETIMEDOUT) {
+			fprintf(stderr, "warning: cancelling computation thread\n");
+			pthread_cancel(core->thread_computation);
+		} else {
+			pthread_join(core->thread_computation, &thread_result);
+		}
+		pthread_attr_destroy(&core->thread_computation_attr);
+		pthread_mutex_destroy(&core->thread_computation_mutex);
+		pthread_cond_destroy(&core->thread_computation_cond);
+
+		int spd_size = core->conf.fft_size / 2;
+		memset(core->SPL, 0, spd_size * sizeof(FLT));
+		core->freq = 0.0;
+	}
+
+	if (core->audio.audio_system != -1) {
+		lingot_audio_stop(&core->audio);
+	}
 }
 
 /* run the core */
