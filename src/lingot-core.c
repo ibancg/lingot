@@ -165,11 +165,8 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 		 * it doesn't matter due to the analysis is made on the signal
 		 * power distribution (only magnitude).
 		 */
-		FLT a[8 + 1];
-		FLT b[8 + 1];
-		lingot_filter_cheby_design(8, 0.5,
-				0.9 / core->conf.oversampling, a, b);
-		lingot_filter_new (&core->antialiasing_filter, 8, 8, a, b);
+		lingot_filter_cheby_design(&core->antialiasing_filter, 8, 0.5,
+				0.9 / core->conf.oversampling);
 
 		pthread_mutex_init(&core->temporal_buffer_mutex, NULL);
 
