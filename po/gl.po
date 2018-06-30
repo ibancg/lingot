@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 16:15+0200\n"
+"POT-Creation-Date: 2018-06-30 19:14+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
@@ -248,7 +248,7 @@ msgid "Settings"
 msgstr "Opcións"
 
 #: ../src/glade/lingot-config-dialog.glade.h:43
-#: ../src/lingot-gui-config-dialog-scale.c:341
+#: ../src/lingot-gui-config-dialog-scale.c:347
 msgid "Name"
 msgstr "Nome"
 
@@ -452,7 +452,7 @@ msgstr "A aplicación non foi construída con soporte para Jack"
 msgid "The application has not been built with PULSEAUDIO support"
 msgstr "A aplicación non foi construída con soporte para PulseAudio"
 
-#: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:68
+#: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:66
 #, c-format
 msgid ""
 "Cannot open audio device '%s'.\n"
@@ -477,40 +477,44 @@ msgstr "Erro establecendo o tamaño do búfer DMA."
 msgid "Error setting sample rate."
 msgstr "Erro establecendo a tasa de mostreo."
 
-#: ../src/lingot-audio-oss.c:139 ../src/lingot-audio-alsa.c:163
+#: ../src/lingot-audio-oss.c:139 ../src/lingot-audio-alsa.c:170
 #: ../src/lingot-audio-pulseaudio.c:119
 msgid "Read from audio interface failed."
 msgstr "A lectura do dispositivo fallou."
 
-#: ../src/lingot-audio-alsa.c:77 ../src/lingot-audio-alsa.c:85
+#: ../src/lingot-audio-alsa.c:75 ../src/lingot-audio-alsa.c:83
 msgid "Cannot initialize hardware parameter structure."
 msgstr "Imposible establecer estructura de parámetros hardware."
 
-#: ../src/lingot-audio-alsa.c:93
+#: ../src/lingot-audio-alsa.c:91
 msgid "Cannot set access type."
 msgstr "Imposible establecer tipo de acceso."
 
-#: ../src/lingot-audio-alsa.c:100
+#: ../src/lingot-audio-alsa.c:98
 msgid "Cannot set sample format."
 msgstr "Imposible establecer formato de mostra."
 
-#: ../src/lingot-audio-alsa.c:109
+#: ../src/lingot-audio-alsa.c:107
 msgid "Cannot set sample rate."
 msgstr "Imposible establecer tasa de mostreo."
 
-#: ../src/lingot-audio-alsa.c:118
+#: ../src/lingot-audio-alsa.c:116
 msgid "Cannot set channel number."
 msgstr "Imposible establecer número de canles."
 
 #: ../src/lingot-audio-alsa.c:124
+msgid "Cannot set buffer size."
+msgstr "Erro establecendo o tamaño do búfer."
+
+#: ../src/lingot-audio-alsa.c:131
 msgid "Cannot set parameters."
 msgstr "Imposible establecer parámetros."
 
-#: ../src/lingot-audio-alsa.c:130
+#: ../src/lingot-audio-alsa.c:137
 msgid "Cannot prepare audio interface for use."
 msgstr "Imposible preparar a interfaz de audio."
 
-#: ../src/lingot-audio-alsa.c:238
+#: ../src/lingot-audio-alsa.c:243
 msgid "Default Device"
 msgstr "Dispositivo predeterminado"
 
@@ -628,7 +632,7 @@ msgstr "as notas deben estar ben ordenadas"
 msgid "Error opening scale file"
 msgstr "Erro abrindo ficheiro de escala"
 
-#: ../src/lingot-core.c:101
+#: ../src/lingot-core.c:96
 #, c-format
 msgid ""
 "The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -637,19 +641,19 @@ msgstr ""
 "O búfer da ventá temporal é menor que o de FFT, foi incrementado a %0.3f "
 "segundos"
 
-#: ../src/lingot-gui-mainframe.c:110
+#: ../src/lingot-gui-mainframe.c:116
 msgid "Logo design"
 msgstr "Deseño do logo"
 
-#: ../src/lingot-gui-mainframe.c:116
+#: ../src/lingot-gui-mainframe.c:122
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso e fácil de usar"
 
-#: ../src/lingot-gui-mainframe.c:119
+#: ../src/lingot-gui-mainframe.c:125
 msgid "translator-credits"
 msgstr "Iban Cereijo <ibancg@gmail.com>"
 
-#: ../src/lingot-gui-mainframe.c:245
+#: ../src/lingot-gui-mainframe.c:253
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -661,39 +665,39 @@ msgstr ""
 "segundos tras a última vez que foron utilizados. Nese caso inténtao de novo "
 "nuns intres."
 
-#: ../src/lingot-gui-mainframe.c:255
+#: ../src/lingot-gui-mainframe.c:263
 msgid "The core is not running, you must check your configuration."
 msgstr "O afinador non está funcionando, debes comprobar a configuración."
 
-#: ../src/lingot-gui-mainframe.c:270
+#: ../src/lingot-gui-mainframe.c:278
 msgid "Error"
 msgstr "Erro"
 
-#: ../src/lingot-gui-mainframe.c:272
+#: ../src/lingot-gui-mainframe.c:280
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/lingot-gui-mainframe.c:272
+#: ../src/lingot-gui-mainframe.c:280
 msgid "Info"
 msgstr "Información"
 
-#: ../src/lingot-gui-mainframe.c:296
+#: ../src/lingot-gui-mainframe.c:305
 msgid "Open Configuration File"
 msgstr "Abrir arquivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:305 ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:314 ../src/lingot-gui-mainframe.c:357
 msgid "Lingot configuration files"
 msgstr "Arquivos de configuración de Lingot"
 
-#: ../src/lingot-gui-mainframe.c:337
+#: ../src/lingot-gui-mainframe.c:347
 msgid "Save Configuration File"
 msgstr "Gardar arquivo de configuración"
 
-#: ../src/lingot-gui-config-dialog.c:401
+#: ../src/lingot-gui-config-dialog.c:406
 msgid "Audio device identifier too long"
 msgstr "Identificador de dispositivo de audio moi longo"
 
-#: ../src/lingot-gui-config-dialog.c:485
+#: ../src/lingot-gui-config-dialog.c:490
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -705,55 +709,55 @@ msgstr ""
 "proporcionar escalas con 12 tonos cando menos, ou con unha distancia máxima "
 "entre notas adxacentes non superior a 200 'cents'."
 
-#: ../src/lingot-gui-config-dialog-scale.c:95
+#: ../src/lingot-gui-config-dialog-scale.c:98
 msgid "You cannot insert before the reference note."
 msgstr "Non podes insertar unha nota enriba da nota de referencia."
 
-#: ../src/lingot-gui-config-dialog-scale.c:221
+#: ../src/lingot-gui-config-dialog-scale.c:226
 msgid "Do not use space characters for the note names."
 msgstr "Non empregues caracteres valeiros para os nomes das notas."
 
-#: ../src/lingot-gui-config-dialog-scale.c:224
+#: ../src/lingot-gui-config-dialog-scale.c:229
 msgid "The name contains illegal characters."
 msgstr "O nome contén caracteres inválidos."
 
-#: ../src/lingot-gui-config-dialog-scale.c:241
+#: ../src/lingot-gui-config-dialog-scale.c:246
 msgid "You cannot change the first shift, it must be 1/1."
 msgstr ""
 "Non podes cambiar o desprazamento en frecuencia na primeria nota, debe estar "
 "fixado a 1/1."
 
-#: ../src/lingot-gui-config-dialog-scale.c:249
+#: ../src/lingot-gui-config-dialog-scale.c:254
 msgid "The shift must be between 0 and 1200 cents, or between 1/1 and 2/1."
 msgstr ""
 "O desprazamento en frecuencia debe estar entre 0 e 1200 'cents', ou entre "
 "1/1 e 2/1."
 
-#: ../src/lingot-gui-config-dialog-scale.c:268
-#: ../src/lingot-gui-config-dialog-scale.c:324
-#: ../src/lingot-gui-config-dialog-scale.c:631
+#: ../src/lingot-gui-config-dialog-scale.c:273
+#: ../src/lingot-gui-config-dialog-scale.c:330
+#: ../src/lingot-gui-config-dialog-scale.c:642
 msgid "mid-A"
 msgstr "mid-A"
 
-#: ../src/lingot-gui-config-dialog-scale.c:270
-#: ../src/lingot-gui-config-dialog-scale.c:326
-#: ../src/lingot-gui-config-dialog-scale.c:631
+#: ../src/lingot-gui-config-dialog-scale.c:275
+#: ../src/lingot-gui-config-dialog-scale.c:332
+#: ../src/lingot-gui-config-dialog-scale.c:642
 msgid "mid-C"
 msgstr "mid-C"
 
-#: ../src/lingot-gui-config-dialog-scale.c:356
+#: ../src/lingot-gui-config-dialog-scale.c:362
 msgid "Shift"
 msgstr "Desprazamento"
 
-#: ../src/lingot-gui-config-dialog-scale.c:375
+#: ../src/lingot-gui-config-dialog-scale.c:381
 msgid "Frequency [Hz]"
 msgstr "Frecuencia [Hz]"
 
-#: ../src/lingot-gui-config-dialog-scale.c:428
+#: ../src/lingot-gui-config-dialog-scale.c:434
 msgid "There are notes with the same name"
 msgstr "Hai notas có mesmo nome"
 
-#: ../src/lingot-gui-config-dialog-scale.c:442
+#: ../src/lingot-gui-config-dialog-scale.c:448
 msgid ""
 "There are invalid values in the scale: the notes should be ordered by "
 "frequency / shift"
@@ -761,26 +765,27 @@ msgstr ""
 "Hai valores inválidos na escala: as notas deberán ficar ordenadas por "
 "frecuencia / desprazamento"
 
-#: ../src/lingot-gui-config-dialog-scale.c:449
+#: ../src/lingot-gui-config-dialog-scale.c:455
 msgid ""
 "There are invalid values in the scale: all the notes should be in the same "
 "octave"
 msgstr ""
 "Hai valores inválidos na escala: tódalas notas deben estar na mesma octava"
 
-#: ../src/lingot-gui-config-dialog-scale.c:458
+#: ../src/lingot-gui-config-dialog-scale.c:464
 msgid "There are notes without name"
 msgstr "Hai notas sen nome"
 
-#: ../src/lingot-gui-config-dialog-scale.c:519
+#. Unused parameter.
+#: ../src/lingot-gui-config-dialog-scale.c:526
 msgid "Open Scale File"
 msgstr "Abrir arquivo de escala"
 
-#: ../src/lingot-gui-config-dialog-scale.c:527
+#: ../src/lingot-gui-config-dialog-scale.c:534
 msgid "Scala files"
 msgstr "Ficheiros de Scala"
 
-#: ../src/lingot-gui-config-dialog-scale.c:619
+#: ../src/lingot-gui-config-dialog-scale.c:630
 msgid ""
 "Note identifier, free text that will be displayed in the main window when "
 "tuning close to the given note. Don't use space characters here."
@@ -789,7 +794,7 @@ msgstr ""
 "o afinador esté preto da devandita nota. Non empregues caracteres en blanco "
 "aquí."
 
-#: ../src/lingot-gui-config-dialog-scale.c:624
+#: ../src/lingot-gui-config-dialog-scale.c:635
 msgid ""
 "Shift. You can define it as a deviation in cents from the reference note "
 "(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
@@ -802,7 +807,7 @@ msgstr ""
 "'cents', ou entre 1/1 e 2/1 (é dicir, tódalas notas deben estar na mesma "
 "octava), e deben estar todos eles ben ordenados."
 
-#: ../src/lingot-gui-config-dialog-scale.c:630
+#: ../src/lingot-gui-config-dialog-scale.c:641
 #, c-format
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
@@ -813,7 +818,8 @@ msgid ""
 "only to the 4th octave)."
 msgstr ""
 "Frecuencia. Podes definir aquí a frecuencia absoluta dunha nota concreta "
-"como referencia, e o resto de frecuencias estableceránse en base a este "
+"como referencia, e o resto de frecuencias estableceranse en base a este "
 "valor e ó desprazamento en frecuencia de cada nota (definido na columna "
 "'Desprazamento'). Podes empregar tanto un valor numérico, ou as palabras "
-"clave 'mid-C' (261.625565 Hz) e 'mid-A' (440 Hz)."
+"clave 'mid-C' (261.625565 Hz) e 'mid-A' (440 Hz), normalmente reservadas á "
+"cuarta octava (intenta asignar soamente frecuencias á cuarta octava)."
