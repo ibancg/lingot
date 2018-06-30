@@ -31,7 +31,7 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
+snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 
 static const unsigned int channels = 1;
 
@@ -117,16 +117,6 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 					_("Cannot set channel number."), snd_strerror(err));
 			throw(error_message);
 		}
-
-		snd_pcm_uframes_t buffer_size = 10*1024;  // TODO: size up
-		if ((err = snd_pcm_hw_params_set_buffer_size_near(audio->capture_handle, hw_params, &buffer_size))
-				< 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set buffer size."),
-					snd_strerror(err));
-			throw(error_message);
-		}
-		printf("BUFFER SIZE: %lu\n", buffer_size);
 
 		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
