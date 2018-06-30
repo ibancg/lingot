@@ -30,9 +30,7 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-//snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
 snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
-//snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT64;
 
 static const unsigned int channels = 1;
 
@@ -65,7 +63,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 		if ((err = snd_pcm_open(&audio->capture_handle, device,
 				SND_PCM_STREAM_CAPTURE, 0)) < 0) {
 			snprintf(error_message, sizeof(error_message),
-			_("Cannot open audio device '%s'.\n%s"), device,
+					_("Cannot open audio device '%s'.\n%s"), device,
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -74,7 +72,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 
 		if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot initialize hardware parameter structure."),
+					_("Cannot initialize hardware parameter structure."),
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -82,7 +80,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 		if ((err = snd_pcm_hw_params_any(audio->capture_handle, hw_params))
 				< 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot initialize hardware parameter structure."),
+					_("Cannot initialize hardware parameter structure."),
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -90,14 +88,14 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 		if ((err = snd_pcm_hw_params_set_access(audio->capture_handle,
 				hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot set access type."), snd_strerror(err));
+					_("Cannot set access type."), snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params_set_format(audio->capture_handle,
 				hw_params, sample_format)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot set sample format."), snd_strerror(err));
+					_("Cannot set sample format."), snd_strerror(err));
 			throw(error_message);
 		}
 
@@ -106,7 +104,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
 				hw_params, &rate, 0)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot set sample rate."), snd_strerror(err));
+					_("Cannot set sample rate."), snd_strerror(err));
 			throw(error_message);
 		}
 
@@ -115,19 +113,28 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 		if ((err = snd_pcm_hw_params_set_channels(audio->capture_handle,
 				hw_params, channels)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot set channel number."), snd_strerror(err));
+					_("Cannot set channel number."), snd_strerror(err));
+			throw(error_message);
+		}
+
+		snd_pcm_uframes_t frames = 10*1024;
+		if ((err = snd_pcm_hw_params_set_buffer_size_near(audio->capture_handle, hw_params, &frames))
+				< 0) {
+			snprintf(error_message, sizeof(error_message), "%s\n%s",
+					_("Cannot set buffer size."),
+					snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot set parameters."), snd_strerror(err));
+					_("Cannot set parameters."), snd_strerror(err));
 			throw(error_message);
 		}
 
 		if ((err = snd_pcm_prepare(audio->capture_handle)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
-			_("Cannot prepare audio interface for use."),
+					_("Cannot prepare audio interface for use."),
 					snd_strerror(err));
 			throw(error_message);
 		}
@@ -160,7 +167,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	if (samples_read < 0) {
 		char buff[250];
 		snprintf(buff, sizeof(buff), "%s\n%s",
-		_("Read from audio interface failed."),
+				_("Read from audio interface failed."),
 				snd_strerror(samples_read));
 		lingot_msg_add_error_with_code(buff, -samples_read);
 	} else {
@@ -211,12 +218,10 @@ int lingot_audio_alsa_get_audio_system_properties(
 
 	int status;
 	int card_index = -1;
-//	char* card_longname = NULL;
 	char* card_shortname = NULL;
 	const char* exception;
 	char error_message[1000];
 	char device_name[512];
-//	char str[64];
 	int device_index = -1;
 	int subdevice_count, subdevice_index;
 	snd_ctl_t *card_handler;
