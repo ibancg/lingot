@@ -24,13 +24,14 @@
 #ifdef ALSA
 
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "lingot-defs.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
+snd_pcm_format_t sample_format = SND_PCM_FORMAT_S16;
 
 static const unsigned int channels = 1;
 
@@ -61,7 +62,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 	try
 	{
 		if ((err = snd_pcm_open(&audio->capture_handle, device,
-				SND_PCM_STREAM_CAPTURE, 0)) < 0) {
+				SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK)) < 0) {
 			snprintf(error_message, sizeof(error_message),
 					_("Cannot open audio device '%s'.\n%s"), device,
 					snd_strerror(err));
@@ -117,14 +118,15 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 			throw(error_message);
 		}
 
-		snd_pcm_uframes_t frames = 10*1024;
-		if ((err = snd_pcm_hw_params_set_buffer_size_near(audio->capture_handle, hw_params, &frames))
+		snd_pcm_uframes_t buffer_size = 10*1024;  // TODO: size up
+		if ((err = snd_pcm_hw_params_set_buffer_size_near(audio->capture_handle, hw_params, &buffer_size))
 				< 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
 					_("Cannot set buffer size."),
 					snd_strerror(err));
 			throw(error_message);
 		}
+		printf("BUFFER SIZE: %lu\n", buffer_size);
 
 		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
 			snprintf(error_message, sizeof(error_message), "%s\n%s",
@@ -164,41 +166,47 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 	samples_read = snd_pcm_readi(audio->capture_handle, buffer,
 			audio->read_buffer_size_samples);
 
-	if (samples_read < 0) {
-		char buff[250];
-		snprintf(buff, sizeof(buff), "%s\n%s",
-				_("Read from audio interface failed."),
-				snd_strerror(samples_read));
-		lingot_msg_add_error_with_code(buff, -samples_read);
+	if (samples_read == -EAGAIN) {
+		usleep(1000); // TODO: size up
+		samples_read = 0;
 	} else {
-		int i;
-		// float point conversion
-		switch (sample_format) {
-		case SND_PCM_FORMAT_S16: {
-			int16_t* read_buffer = (int16_t*) buffer;
-			for (i = 0; i < samples_read; i++) {
-				audio->flt_read_buffer[i] = read_buffer[i];
+		if (samples_read < 0) {
+			char buff[250];
+			snprintf(buff, sizeof(buff), "%s\n%s",
+					_("Read from audio interface failed."),
+					snd_strerror(samples_read));
+			lingot_msg_add_error_with_code(buff, -samples_read);
+		} else {
+			int i;
+			// float point conversion
+			switch (sample_format) {
+			case SND_PCM_FORMAT_S16: {
+				int16_t* read_buffer = (int16_t*) buffer;
+				for (i = 0; i < samples_read; i++) {
+					audio->flt_read_buffer[i] = read_buffer[i];
+				}
+				break;
 			}
-			break;
-		}
-		case SND_PCM_FORMAT_FLOAT: {
-			float* read_buffer = (float*) buffer;
-			for (i = 0; i < samples_read; i++) {
-				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+			case SND_PCM_FORMAT_FLOAT: {
+				float* read_buffer = (float*) buffer;
+				for (i = 0; i < samples_read; i++) {
+					audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+				}
+				break;
 			}
-			break;
-		}
-		case SND_PCM_FORMAT_FLOAT64: {
-			double* read_buffer = (double*) buffer;
-			for (i = 0; i < samples_read; i++) {
-				audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+			case SND_PCM_FORMAT_FLOAT64: {
+				double* read_buffer = (double*) buffer;
+				for (i = 0; i < samples_read; i++) {
+					audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+				}
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			default:
+				break;
+			}
 		}
 	}
+
 	return samples_read;
 }
 
@@ -270,7 +278,7 @@ int lingot_audio_alsa_get_audio_system_properties(
 				if ((status = snd_card_get_name(card_index, &card_shortname))
 						< 0) {
 					snprintf(error_message, sizeof(error_message),
-							"warning: cannot determine card shortname: %s",
+							"warning: cannot determine card short name: %s",
 							snd_strerror(status));
 					throw(error_message);
 				}
@@ -369,7 +377,7 @@ int lingot_audio_alsa_get_audio_system_properties(
 			name_node_current = name_node_current->next;
 		}
 
-	}catch {
+	} catch {
 		fprintf(stderr, "%s", exception);
 	}
 
