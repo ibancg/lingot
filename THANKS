@@ -1,6 +1,15 @@
 
-* Niv Sardi Altivanik (debian package, maintenance and man page).
-* Matthew Blissett (logo design).
-* Graciano Carrillo (maintenance).
-* Karel Volný (beta testing).
-* Nicolas Boulenguez (code contributions).
+Thanks to:
+
+   Niv Sardi (debian package, maintenance and man page).
+   
+   Nicolas Boulenguez (debian package, feedback and code contributions).
+   
+   Matthew Blissett (logo design).
+   
+   Graciano Carrillo (maintenance).
+   
+   Karel Volný (beta testing).
+   
+   All the translators (run 'grep -e ^\"Last-Translator: po/*.po').
+  

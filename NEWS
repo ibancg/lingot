@@ -1,5 +1,5 @@
 
-Lingot 1.0.0 (2018-xx-xx)
+Lingot 1.0.0 (2018-07-xx)
 -------------------------
 
  * Added PulseAudio support.
@@ -9,12 +9,12 @@ Lingot 1.0.0 (2018-xx-xx)
  * Modified the configuration: the user specifies now the frequency range of the
    instrument, instead of providing low level parameters like the sample rate.
  * Implemented task #11284: audio devices autodetection.
- * Fixed bugs #35183, #35220, #35221, #54209 (in savannah bug tracker).
+ * Fixed several bugs: #32581, #35183, #35220, #35221, #54209.
  * Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný).
  * Showing octave index along with the note.
  * Implemented task #10683: config file validation.
  * Implemented task #11100: add libfftw support.
- * Fixed bug #643435 (in debian bug tracker)
+ * Fixed bug #643435 in debian.
  * Enhanced some error messages.
  * Fixed potential error when reading from OSS and ALSA.
  * Fixed memory leaks and improved memory management (thanks to Nicolas Boulenguez).

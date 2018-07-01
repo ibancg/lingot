@@ -14,10 +14,7 @@ lingotdoc_DATA = \
 	AUTHORS\
 	ChangeLog\
 	NEWS\
-	TODO\
-	THANKS\
-	MAINTAINERS\
-	src/lingot-logo.xpm
+	THANKS
 
 EXTRA_DIST = $(lingotdoc_DATA)
 
