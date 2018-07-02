@@ -16,8 +16,6 @@ lingotdoc_DATA = \
 	NEWS\
 	THANKS
 
-EXTRA_DIST = $(lingotdoc_DATA)
-
 DISTCLEANFILES = \
 	intltool-extract.in\
 	intltool-extract\
@@ -34,7 +32,9 @@ gnomemenu_DATA = lingot.desktop
 appdatadir = $(datadir)/metainfo
 appdata_DATA = lingot.appdata.xml
 
-dist_man_MANS := lingot.1
+dist_man_MANS = lingot.1
+
+EXTRA_DIST = $(lingotdoc_DATA) $(appdata_DATA)
 
 dist-hook: gen-ChangeLog copy-SpecFiles
 
