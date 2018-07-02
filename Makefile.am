@@ -31,6 +31,8 @@ DISTCLEANFILES = \
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
 gnomemenu_DATA = lingot.desktop
+appdatadir = $(datadir)/metainfo
+appdata_DATA = lingot.appdata.xml
 
 dist_man_MANS := lingot.1
 
