@@ -317,7 +317,7 @@ void lingot_io_config_save(LingotConfig* config, const char* filename) {
 
 typedef enum { rs_not_yet, rs_reading, rs_done } reading_scale_step_t;
 
-void lingot_io_config_load(LingotConfig* config, const char* filename) {
+int lingot_io_config_load(LingotConfig* config, const char* filename) {
 	FILE* fp;
 	int line;
 	unsigned int option_index;
@@ -345,7 +345,7 @@ void lingot_io_config_load(LingotConfig* config, const char* filename) {
 				"error opening config file %s, assuming default values ",
 				filename);
 		perror(char_buffer);
-		return;
+		return 0;
 	}
 
 	line = 0;
@@ -615,4 +615,5 @@ void lingot_io_config_load(LingotConfig* config, const char* filename) {
 	}
 
 	lingot_config_update_internal_params(config);
+	return 1;
 }

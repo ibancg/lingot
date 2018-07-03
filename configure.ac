@@ -241,6 +241,7 @@ po/Makefile.in
 src/Makefile
 src/glade/Makefile
 pixmaps/Makefile
+test/Makefile
 org.nongnu.lingot.desktop
 ])
 AC_OUTPUT

@@ -20,10 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-void lingot_io_config_test();
-void lingot_config_scale_test();
-void lingot_signal_test();
-void lingot_core_test();
+void lingot_test_io_config();
+void lingot_test_config_scale();
+void lingot_test_signal();
+void lingot_test_core();
 
 // TODO: lib?
 #include "lingot-complex.c"
@@ -54,7 +54,7 @@ int main(void) {
 		return CU_get_error();
 
 	/* add a suite to the registry */
-	pSuite = CU_add_suite("Suite_1", NULL, NULL);
+	pSuite = CU_add_suite("Lingot_test_suite", NULL, NULL);
 	if (NULL == pSuite) {
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -63,10 +63,10 @@ int main(void) {
 	/* add the tests to the suite */
 	/* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
 	if ( //
-			(NULL == CU_add_test(pSuite, "lingot_config", lingot_io_config_test)) || //
-			(NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_config_scale_test)) || //
-			(NULL == CU_add_test(pSuite, "lingot_signal", lingot_signal_test)) || //
-			(NULL == CU_add_test(pSuite, "lingot_core", lingot_core_test)) || //
+			(NULL == CU_add_test(pSuite, "lingot_config", lingot_test_io_config)) || //
+			(NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_test_config_scale)) || //
+			(NULL == CU_add_test(pSuite, "lingot_signal", lingot_test_signal)) || //
+			(NULL == CU_add_test(pSuite, "lingot_core", lingot_test_core)) || //
 			0) {
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -75,7 +75,10 @@ int main(void) {
 	/* Run all tests using the CUnit Basic interface */
 	CU_basic_set_mode(CU_BRM_VERBOSE);
 	CU_basic_run_tests();
+
+	int num_failures = CU_get_number_of_failures();
 	CU_cleanup_registry();
-	return CU_get_error();
+
+	return num_failures;
 
 }

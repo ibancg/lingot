@@ -20,9 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <errno.h>
+
 #include "lingot-test.h"
 
-#include "errno.h"
 #include "lingot-audio.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-oss.h"
@@ -32,7 +33,7 @@
 
 #include "lingot-core.h"
 
-void lingot_core_test() {
+void lingot_test_core() {
 
 	FLT multiplier1 = 0.0;
 	FLT multiplier2 = 0.0;

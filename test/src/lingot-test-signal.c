@@ -31,7 +31,7 @@
 #include "lingot-filter.h"
 #include "lingot-signal.h"
 
-void lingot_signal_test() {
+void lingot_test_signal() {
 
 	int N = 16;
 	int i = 0;
@@ -46,35 +46,37 @@ void lingot_signal_test() {
 
 	lingot_signal_compute_noise_level(spd, N, n, noise);
 
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
-	printf("N = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", noise[i]);
-	}
-	printf("] \n");
+	// TODO: enable logic
 
-	puts("done.");
-
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
-//	assert(lingot_signal_quick_select(spd, 1) == 1.0);
-//	assert(lingot_signal_quick_select(spd, 2) == 1.0);
-//	assert(lingot_signal_quick_select(spd, 3) == 2.0);
-//	assert(lingot_signal_quick_select(spd, 4) == 2.0);
-//	assert(lingot_signal_quick_select(spd, 5) == 3.0);
-//	assert(lingot_signal_quick_select(spd, 6) == 3.0);
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
+	//	printf("N = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", noise[i]);
+	//	}
+	//	printf("] \n");
+	//
+	//	puts("done.");
+	//
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
+	//	assert(lingot_signal_quick_select(spd, 1) == 1.0);
+	//	assert(lingot_signal_quick_select(spd, 2) == 1.0);
+	//	assert(lingot_signal_quick_select(spd, 3) == 2.0);
+	//	assert(lingot_signal_quick_select(spd, 4) == 2.0);
+	//	assert(lingot_signal_quick_select(spd, 5) == 3.0);
+	//	assert(lingot_signal_quick_select(spd, 6) == 3.0);
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
 
 	free(spd);
 	free(noise);
@@ -90,11 +92,11 @@ void lingot_signal_test() {
 		noise[i] = -1.0;
 	}
 
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
 
 	//	double m;
 	//
@@ -104,23 +106,23 @@ void lingot_signal_test() {
 	//
 	//	printf("m = %f\n", m);
 
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
 
-//	tic();
-//	m = lingot_signal_quick_select(spd, 512);
-//	toc();
+	//	tic();
+	//	m = lingot_signal_quick_select(spd, 512);
+	//	toc();
 
-//	printf("m = %f\n", m);
+	//	printf("m = %f\n", m);
 
-	printf("S = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", spd[i]);
-	}
-	printf("] \n");
+	//	printf("S = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", spd[i]);
+	//	}
+	//	printf("] \n");
 
 	// -----------------
 
@@ -133,11 +135,11 @@ void lingot_signal_test() {
 	lingot_signal_compute_noise_level(spd, N, n, noise);
 	toc();
 
-	printf("N = [");
-	for (i = 0; i < N; i++) {
-		printf(" %f ", noise[i]);
-	}
-	printf("] \n");
+	//	printf("N = [");
+	//	for (i = 0; i < N; i++) {
+	//		printf(" %f ", noise[i]);
+	//	}
+	//	printf("] \n");
 
 	tic();
 	for (i = 0; i < 10000; i++) {

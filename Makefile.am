@@ -3,28 +3,28 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-SUBDIRS = po src pixmaps
+SUBDIRS = po src pixmaps test
 
 ACLOCAL_AMFLAGS = -I m4
 
 lingotdocdir = ${docdir}
 lingotdoc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	NEWS\
+	README \
+	COPYING \
+	AUTHORS \
+	ChangeLog \
+	NEWS \
 	THANKS
 
 DISTCLEANFILES = \
-	intltool-extract.in\
-	intltool-extract\
-	intltool-merge.in\
-	intltool-merge\
-	intltool-update.in\
-	intltool-update\
-	intl/*\
-	m4/*\
+	intltool-extract.in \
+	intltool-extract \
+	intltool-merge.in \
+	intltool-merge \
+	intltool-update.in \
+	intltool-update \
+	intl/* \
+	m4/* \
 	po/Makefile.in.in
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
@@ -34,13 +34,18 @@ appdata_DATA = org.nongnu.lingot.appdata.xml
 
 dist_man_MANS = lingot.1
 
-EXTRA_DIST = $(lingotdoc_DATA) $(appdata_DATA)
+
+EXTRA_DIST = \
+	$(lingotdoc_DATA) \
+	$(appdata_DATA) \
+	build-aux/gitlog-to-changelog
 
 dist-hook: gen-ChangeLog copy-SpecFiles
 
 # Creates the ChangeLog from the git history. Extracted from GNU Hello
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
+	chmod u+w ${distdir}/ChangeLog # to pass distcheck
 	$(top_srcdir)/build-aux/gitlog-to-changelog > $(distdir)/ChangeLog
 	
 # Copy all the spec files. Of course, only one is actually used.

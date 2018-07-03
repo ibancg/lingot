@@ -93,6 +93,6 @@ void lingot_io_config_create_parameter_specs();
 LingotConfigParameterSpec lingot_io_config_get_parameter_spec(LingotConfigParameterId id);
 
 void lingot_io_config_save(LingotConfig*, const char* filename);
-void lingot_io_config_load(LingotConfig*, const char* filename);
+int lingot_io_config_load(LingotConfig*, const char* filename);
 
 #endif // __LINGOT_IO_CONFIG_H__
