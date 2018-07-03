@@ -4,9 +4,9 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-lingot_pixmapsdir = $(prefix)/@NO_PREFIX_PACKAGE_PIXMAPS_DIR@
+lingot_iconsdir = $(prefix)/@NO_PREFIX_PACKAGE_ICON_DIR@
 
-lingot_pixmaps_DATA = \
-	lingot-icon.svg
+lingot_icons_DATA = \
+	org.nongnu.lingot.svg
 
-EXTRA_DIST = $(lingot_pixmaps_DATA)
+EXTRA_DIST = $(lingot_icons_DATA)

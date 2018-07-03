@@ -3,7 +3,7 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-SUBDIRS = po src pixmaps test
+SUBDIRS = po src icons test
 
 ACLOCAL_AMFLAGS = -I m4
 

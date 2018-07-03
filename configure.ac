@@ -186,6 +186,7 @@ packagedocdir=doc/${PACKAGE}
 
 dnl Set PACKAGE DIRs in config.h.
 packagepixmapsdir=share/pixmaps/${PACKAGE}
+packageicondir=share/icons/hicolor/scalable/apps/
 packagehelpdir=share/gnome/help/${PACKAGE}
 packagemenudir=share/applications
 
@@ -206,6 +207,12 @@ NO_PREFIX_PACKAGE_PIXMAPS_DIR="${packagepixmapsdir}"
 AC_SUBST(NO_PREFIX_PACKAGE_PIXMAPS_DIR)
 PACKAGE_PIXMAPS_DIR="${packageprefix}/${packagepixmapsdir}"
 AC_SUBST(PACKAGE_PIXMAPS_DIR)
+
+dnl Subst PACKAGE_ICON_DIR.
+NO_PREFIX_PACKAGE_ICON_DIR="${packageicondir}"
+AC_SUBST(NO_PREFIX_PACKAGE_ICON_DIR)
+PACKAGE_ICON_DIR="${packageprefix}/${packageicondir}"
+AC_SUBST(PACKAGE_ICON_DIR)
 
 dnl Subst PACKAGE_HELP_DIR.
 NO_PREFIX_PACKAGE_HELP_DIR="${packagehelpdir}"
@@ -231,7 +238,7 @@ AC_DEFINE([PACKAGE_DATA_DIR], [share], [Package data dir])
 AC_DEFINE([PACKAGE_DOC_DIR], [doc], [Package doc dir])
 AC_DEFINE([PACKAGE_HELP_DIR], [doc], [Help])
 AC_DEFINE([PACKAGE_MENU_DIR], [], [Menu])
-AC_DEFINE([PACKAGE_PIXMAPS_DIR], [pixmaps], [Pixmaps])
+AC_DEFINE([PACKAGE_ICON_DIR], [icons], [Icons])
 AC_DEFINE([PACKAGE_SRC_DIR], [src], [Source])
 
 
@@ -240,7 +247,7 @@ Makefile
 po/Makefile.in
 src/Makefile
 src/glade/Makefile
-pixmaps/Makefile
+icons/Makefile
 test/Makefile
 org.nongnu.lingot.desktop
 ])
