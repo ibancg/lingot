@@ -299,11 +299,13 @@ int lingot_audio_start(LingotAudioHandler* audio) {
 // function invoked when the audio thread must be cancelled
 void lingot_audio_cancel(LingotAudioHandler* audio) {
 	// TODO: avoid
-	fprintf(stderr, "warning: cancelling audio thread\n");
+	fprintf(stderr, "warning: canceling audio thread\n");
 	switch (audio->audio_system) {
+#	ifdef PULSEAUDIO
 	case AUDIO_SYSTEM_PULSEAUDIO:
 		lingot_audio_pulseaudio_cancel(audio);
 		break;
+#	endif
 	default:
 		break;
 	}
