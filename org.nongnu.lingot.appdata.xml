@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
-    <id type="desktop">lingot.desktop</id>
-    <licence>GPL-2.0</licence>
+<component type="desktop">
+    <id>org.nongnu.lingot</id>
+    <metadata_license>CC0-1.0</metadata_license>    
+    <project_license>GPL-2.0</project_license>
     <name>Lingot</name>
     <summary>Universal tuner</summary>
     <description>
@@ -25,34 +26,24 @@
         </ul>
     </description>
     
-    <launchable type="desktop-id">lingot.desktop</launchable>
+    <launchable type="desktop-id">org.nongnu.lingot.desktop</launchable>
     
     <screenshots>
         <screenshot type="default">
         	<caption>The main windows</caption>
         	<image>https://www.nongnu.org/lingot/images/lingot-screenshot-896x504.png</image>
         </screenshot>
-        <screenshot>
-        	<caption>Main window</caption>
-        	<image>https://www.nongnu.org/lingot/images/lingot-black-main.png</image>
-        </screenshot>
-        <screenshot>
-        	<caption>Adjustments settings</caption>
-        	<image>https://www.nongnu.org/lingot/images/lingot-black-settings-2.png</image>
-        </screenshot>
-        <screenshot>
-        	<caption>Scale settings</caption>
-        	<image>https://www.nongnu.org/lingot/images/lingot-black-settings-4.png</image>
-        </screenshot>
     </screenshots>
     
     <url type="homepage">https://www.nongnu.org/lingot/</url>
     
-    <updatecontact>ibancg@gmail.com</updatecontact>
+    <update_contact>ibancg@gmail.com</update_contact>
     
     <provides>
     	<binary>lingot</binary>
   	</provides>
     
-</application>
+    <translation type="gettext">lingot</translation>
+    
+</component>
 

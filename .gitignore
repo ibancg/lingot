@@ -7,7 +7,7 @@
 m4/
 libtool
 intltool-*.in
-lingot.desktop
+org.nongnu.lingot.desktop
 lingot-github.*
 .settings/
 src/.deps

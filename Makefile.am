@@ -28,9 +28,9 @@ DISTCLEANFILES = \
 	po/Makefile.in.in
 
 gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
-gnomemenu_DATA = lingot.desktop
+gnomemenu_DATA = org.nongnu.lingot.desktop
 appdatadir = $(datadir)/metainfo
-appdata_DATA = lingot.appdata.xml
+appdata_DATA = org.nongnu.lingot.appdata.xml
 
 dist_man_MANS = lingot.1
 
@@ -52,5 +52,3 @@ copy-SpecFiles:
 			cp -p $$specfile $(distdir); \
 		fi \
 	done
-
-	
