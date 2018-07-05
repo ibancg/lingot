@@ -57,7 +57,7 @@ void lingot_filter_cheby_design(LingotFilter*, unsigned int order, FLT Rp, FLT w
 
 void lingot_filter_destroy(LingotFilter*);
 
-// Digital Filter Implementation II, in & out overlapables. Vector filtering
+// Digital Filter Implementation II, in & out can overlap. Vector filtering
 void lingot_filter_filter(LingotFilter*, unsigned int n, const FLT* in,
 		FLT* out);
 

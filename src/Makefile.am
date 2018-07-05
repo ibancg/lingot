@@ -1,9 +1,6 @@
-SUBDIRS = glade
-
 AM_CFLAGS = \
 	 -Wall -Wextra \
 	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS) \
-	-DLINGOT_GLADEDIR=\""$(datadir)/lingot/glade/"\" \
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
 bin_PROGRAMS = lingot
@@ -34,10 +31,12 @@ lingot_SOURCES = \
 	lingot-msg.c\
 	lingot-gui-config-dialog.c\
 	lingot-gui-config-dialog.h\
+	lingot-gui-config-dialog.glade\
 	lingot-gui-config-dialog-scale.c\
 	lingot-gui-config-dialog-scale.h\
 	lingot-gui-mainframe.c\
 	lingot-gui-mainframe.h\
+	lingot-gui-mainframe.glade\
 	lingot-gauge.c\
 	lingot-gauge.h\
 	lingot-filter.c\
@@ -47,8 +46,17 @@ lingot_SOURCES = \
 	lingot-signal.c\
 	lingot-signal.h\
 	lingot.c\
-	lingot-i18n.h
+	lingot-i18n.h\
+	lingot.gresource.xml\
+	lingot-resources.c
+		
+#PKGCONFIG = $(shell which pkg-config)		
+#GLIB_COMPILE_RESOURCES = $(shell $(PKGCONFIG) --variable=glib_compile_resources gio-2.0)
+GLIB_COMPILE_RESOURCES = glib-compile-resources
 
+lingot-resources.c: lingot.gresource.xml
+	$(GLIB_COMPILE_RESOURCES) lingot.gresource.xml --target=$@ --sourcedir=. --generate-source
+        
 lingot_LDFLAGS =
 
 lingot_LDADD =  \

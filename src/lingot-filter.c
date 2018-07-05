@@ -68,7 +68,7 @@ void lingot_filter_destroy(LingotFilter* filter) {
 	free(filter->s);
 }
 
-// Digital Filter Implementation II, in & out overlapables.
+// Digital Filter Implementation II, in & out can overlap.
 void lingot_filter_filter(LingotFilter* filter, unsigned int n, const FLT* in,
 		FLT* out) {
 	FLT w, y;

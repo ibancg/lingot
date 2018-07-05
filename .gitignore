@@ -12,6 +12,7 @@ lingot-github.*
 .settings/
 src/.deps
 src/lingot
+src/lingot-resources.c
 po/Makefile
 po/Makefile.in
 po/Makefile.in.in
@@ -23,8 +24,6 @@ pixmaps/Makefile
 pixmaps/Makefile.in
 src/Makefile
 src/Makefile.in
-src/glade/Makefile
-src/glade/Makefile.in
 stamp-h1
 config.h
 config.h.in

@@ -39,7 +39,7 @@ void lingot_gauge_new(LingotGauge* gauge, FLT initial_position) {
 	//
 	// acceleration of gauge position 's(t)' linearly depends on the difference
 	// respect to the input stimulus 'e(t)' (destination position). Inserting
-	// a friction coefficient 'q', the acceleration proportionally diminish with
+	// a friction coefficient 'q', the acceleration proportionally diminishes with
 	// the velocity (typical friction in mechanics). 'k' is the adaptation
 	// constant, and depends on the gauge mass.
 	//

@@ -246,7 +246,6 @@ AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
 src/Makefile
-src/glade/Makefile
 icons/Makefile
 test/Makefile
 org.nongnu.lingot.desktop

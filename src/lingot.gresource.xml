@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/nongnu/lingot">
+    <file preprocess="xml-stripblanks">lingot-gui-mainframe.glade</file>
+    <file preprocess="xml-stripblanks">lingot-gui-config-dialog.glade</file>
+  </gresource>
+</gresources>

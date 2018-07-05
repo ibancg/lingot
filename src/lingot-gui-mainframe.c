@@ -457,17 +457,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
 	GtkBuilder* builder = gtk_builder_new();
 
-	// TODO: obtain glade files installation dir by other way
-	// TODO: add dev condition to check for the file name in $PWD
-#	define FILE_NAME "lingot-mainframe.glade"
-	FILE* fd = fopen("src/glade/" FILE_NAME, "r");
-	if (fd != NULL) {
-		fclose(fd);
-		gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL);
-	} else {
-		gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL);
-	}
-#	undef FILE_NAME
+	gtk_builder_add_from_resource(builder, "/org/nongnu/lingot/lingot-gui-mainframe.glade", NULL);
 
 	frame->win = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
 
@@ -789,7 +779,7 @@ void lingot_gui_mainframe_draw_gauge(cairo_t *cr, const LingotMainFrame* frame) 
 	static const FLT gauge_gaugeLength = 0.85;
 	static const FLT gauge_gaugeLengthBack = 0.08;
 	static const FLT gauge_gaugeCenterRadius = 0.045;
-	static const FLT gauge_gaugeStroke = 0.01;
+	static const FLT gauge_gaugeStroke = 0.012;
 	static const FLT gauge_gaugeShadowOffsetX = 0.015;
 	static const FLT gauge_gaugeShadowOffsetY = 0.01;
 
@@ -797,7 +787,7 @@ void lingot_gui_mainframe_draw_gauge(cairo_t *cr, const LingotMainFrame* frame) 
 
 	// colors
 	static const unsigned int gauge_gaugeColor = 0xaa3333;
-	static const unsigned int gauge_gaugeShadowColor = 0x44000000;
+	static const unsigned int gauge_gaugeShadowColor = 0x88000000;
 
 	const int width = gauge_size_x;
 	int height = gauge_size_y;

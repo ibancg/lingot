@@ -527,17 +527,7 @@ void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config)
 
 		GtkBuilder* builder = gtk_builder_new();
 
-		// TODO: obtain glade files installation dir by other way
-		// TODO: add dev condition to check for the file name in $PWD
-#	    define FILE_NAME "lingot-config-dialog.glade"
-		FILE* fd = fopen("src/glade/" FILE_NAME, "r");
-		if (fd != NULL) {
-			fclose(fd);
-            gtk_builder_add_from_file(builder, "src/glade/" FILE_NAME, NULL);
-		} else {
-            gtk_builder_add_from_file(builder, LINGOT_GLADEDIR FILE_NAME, NULL);
-		}
-#		undef FILE_NAME
+		gtk_builder_add_from_resource(builder, "/org/nongnu/lingot/lingot-gui-config-dialog.glade", NULL);
 
 		dialog->win = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
 
