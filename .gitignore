@@ -49,5 +49,5 @@ test/src/.dirstamp
 test/CUnitAutomated*
 test/lingot_test
 test/lingot_test.*
-test/test_suite.log
+test/test-suite.log
 lingot.pot

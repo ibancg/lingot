@@ -47,7 +47,6 @@ lingot_SOURCES = \
 	lingot-signal.c\
 	lingot-signal.h\
 	lingot.c\
-	lingot-logo.xpm\
 	lingot-i18n.h
 
 lingot_LDFLAGS =
