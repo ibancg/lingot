@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-30 19:14+0200\n"
+"POT-Creation-Date: 2018-07-05 21:55+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -17,426 +17,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/glade/lingot-config-dialog.glade.h:1
-msgid "lingot configuration"
-msgstr "configuración de Lingot"
-
-#: ../src/glade/lingot-config-dialog.glade.h:2
-msgid "Default"
-msgstr "Predet."
-
-#: ../src/glade/lingot-config-dialog.glade.h:3
-msgid "Resets the built-in settings, without applying them."
-msgstr "Restaura la configuración predeterminada, sin aplicarla."
-
-#: ../src/glade/lingot-config-dialog.glade.h:4
+#: ../src/lingot-audio-alsa.c:67 ../src/lingot-audio-oss.c:71
+#, c-format
 msgid ""
-"Applies the current changes to the running tuner, but doesn't modify the "
-"configuration file. \n"
-"\n"
-"Any applied changes can be rolled back pressing Cancel."
+"Cannot open audio device '%s'.\n"
+"%s"
 msgstr ""
-"Aplica los cambios actuales al afinador en ejecución, pero no modifica el "
-"fichero de configuración.\n"
-"\n"
-"Los cambios aplicados pueden ser revertidos pulsando Cancelar."
-
-#: ../src/glade/lingot-config-dialog.glade.h:7
-msgid "Applies the current changes and modifies the congifuration file."
-msgstr "Aplica los cambios actuales y modifica el fichero de configuración."
-
-#: ../src/glade/lingot-config-dialog.glade.h:8
-msgid ""
-"Rolls back all the previous applied changes and closes the configuration "
-"dialog."
-msgstr ""
-"Anula los cambios aplicados previamente y cierra el diálogo de configuración."
-
-#: ../src/glade/lingot-config-dialog.glade.h:9
-msgid "Audio system"
-msgstr "Sistema audio"
-
-#: ../src/glade/lingot-config-dialog.glade.h:10
-msgid "Audio device"
-msgstr "Dispositivo audio"
-
-#: ../src/glade/lingot-config-dialog.glade.h:11
-msgid "Here you can pick the sound system."
-msgstr "Aquí puedes escoger el sistema de sonido"
-
-#: ../src/glade/lingot-config-dialog.glade.h:12
-msgid ""
-"Choose the audio device if you have more than one. If you are using JACK, "
-"you can also connect Lingot to a desired source with an external JACK "
-"control application."
-msgstr ""
-"Escoge el dispositivo de entrada si dispones de más de uno. Si estás usando "
-"JACK, puedes también conectar Lingot al origen de audio deseado mediante una "
-"aplicación de control de JACK externa."
-
-#: ../src/glade/lingot-config-dialog.glade.h:13
-msgid "Select the audio source:"
-msgstr "Selecciona la fuente de audio"
-
-#: ../src/glade/lingot-config-dialog.glade.h:14
-msgid "Audio input settings. Select here the audio source."
-msgstr ""
-"Configuración de entrada de sonido. Define aquí la fuente de audio y la "
-"configuración relativa al hardware."
-
-#: ../src/glade/lingot-config-dialog.glade.h:15
-msgid "Capture"
-msgstr "Captura"
-
-#: ../src/glade/lingot-config-dialog.glade.h:16
-msgid "Calculation rate"
-msgstr "Tasa de cálculo"
-
-#: ../src/glade/lingot-config-dialog.glade.h:17
-msgid "Hz"
-msgstr "Hz"
-
-#: ../src/glade/lingot-config-dialog.glade.h:18
-msgid "Visualization rate"
-msgstr "Tasa de visualización"
-
-#: ../src/glade/lingot-config-dialog.glade.h:19
-msgid "Minimum SNR"
-msgstr "Mínima SNR"
-
-#: ../src/glade/lingot-config-dialog.glade.h:20
-msgid "dB"
-msgstr "dB"
-
-#: ../src/glade/lingot-config-dialog.glade.h:21
-msgid "Adjust the following refresh rates:"
-msgstr "Ajusta las siguientes tasas de refresco"
-
-#: ../src/glade/lingot-config-dialog.glade.h:22
-msgid "Adjust the noise level:"
-msgstr "Ajusta el nivel de ruido"
-
-#: ../src/glade/lingot-config-dialog.glade.h:23
-msgid ""
-"Minimum signal-to-noise ratio to consider the captured signal as something "
-"relevant. Try to keep this level low, and raise it if you experience "
-"problems in very noisy environments. This level is depicted in the spectrum "
-"area as a yellow dotted line."
-msgstr ""
-"Mínima relación señal a ruido para considerar la señal capturada como algo "
-"relevante. Intenta mantener un valor bajo para este parámetro, y elévalo si "
-"experimentas problemas en entornos muy ruidosos. Este nivel se muestra en la "
-"vista del espectro como una línea amarilla discontinua."
-
-#: ../src/glade/lingot-config-dialog.glade.h:24
-msgid ""
-"Number of visualizations per second of the (last) computed frequency, error "
-"and spectrum. "
-msgstr ""
-"Número de visualizaciones por segundo de la (última) frecuencia calculada, "
-"error y espectro."
-
-#: ../src/glade/lingot-config-dialog.glade.h:25
-msgid "Number of calculations of the fundamental frequency per second."
-msgstr "Número de cálculos por segundo de la frecuencia fundamental."
-
-#: ../src/glade/lingot-config-dialog.glade.h:26
-msgid "Quick adjustments on the dynamic response and the signal levels."
-msgstr "Ajustes rápicos sobre la respuesta dinámica y los niveles de señal."
-
-#: ../src/glade/lingot-config-dialog.glade.h:27
-msgid "Adjustments"
-msgstr "Ajustes"
-
-#: ../src/glade/lingot-config-dialog.glade.h:28
-msgid "Temporal window"
-msgstr "Ventana temporal"
-
-#: ../src/glade/lingot-config-dialog.glade.h:29
-msgid ""
-"This is the most recent amount of data considered for tuning. The longer it "
-"is, the more accuracy you can obtain, but also the dynamic response gets "
-"slower, regarding you are considering older parts of the signal. Also, if "
-"you raise this parameter, the computational cost increases. The size of the "
-"buffer, in samples (depending on the effective sample rate), must be greater "
-"than or equal to the FFT buffer size."
-msgstr ""
-"Ésta es la porción más reciente de señal considerada en la afinación. Cuanto "
-"más largo sea, más precisión podemos obtener, pero a la vez la respuesta "
-"dinámica es más lenta, ya que estamos considerando partes más viejas de la "
-"señal. Además, si subes este parámetro, el coste computacional aumenta. Este "
-"valor, en muestras (que depende de la tasa efectiva de muestreo), debe ser "
-"mayor o igual que el tamaño de la FFT."
-
-#: ../src/glade/lingot-config-dialog.glade.h:30
-msgid "seconds"
-msgstr "segundos"
-
-#: ../src/glade/lingot-config-dialog.glade.h:31
-msgid "samples"
-msgstr "muestras"
-
-#: ../src/glade/lingot-config-dialog.glade.h:32
-msgid "FFT size"
-msgstr "Tamaño de FFT"
-
-#: ../src/glade/lingot-config-dialog.glade.h:33
-msgid ""
-"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
-"help Lingot to hook up the correct peak, but it&apos;s also computationally "
-"more expensive. Don&apos;t use high values here unless you need to tune high "
-"frequencies."
-msgstr ""
-"El búfer de FFT permite a Lingot echar un primer vistazo al espectro de la "
-"señal. Valores más altos ayudan a tener un mejor 'enganche' con el pico "
-"correcto, pero suponen además un mayor coste computacional. No uses valores "
-"muy elevados a no ser que tengas una tasa efectiva de muestreo igualmente "
-"elevada."
-
-#: ../src/glade/lingot-config-dialog.glade.h:34
-msgid ""
-"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
-"help Lingot to hook up the correct peak, but it's also computationally more "
-"expensive. Don't use high values here unless you need to tune high "
-"frequencies."
-msgstr ""
-"El búfer de FFT permite a Lingot echar un primer vistazo al espectro de la "
-"señal. Valores más altos ayudan a tener un mejor 'enganche' con el pico "
-"correcto, pero suponen además un mayor coste computacional. No uses valores "
-"muy elevados a no ser que tengas una tasa efectiva de muestreo igualmente "
-"elevada."
-
-#: ../src/glade/lingot-config-dialog.glade.h:35
-msgid "Optimize parameters automatically"
-msgstr "Optimizar parámetros automáticamente"
-
-#: ../src/glade/lingot-config-dialog.glade.h:36
-msgid "Leave this option ON and Lingot will optimize some parameters for you."
-msgstr ""
-"Deja esta opción activada y Lingot optimizará algunos parámetros por ti."
-
-#: ../src/glade/lingot-config-dialog.glade.h:37
-msgid "Minimum note"
-msgstr "Mínimo tono"
-
-#: ../src/glade/lingot-config-dialog.glade.h:38
-msgid "Maximum note"
-msgstr "Máximo tono"
-
-#: ../src/glade/lingot-config-dialog.glade.h:39
-msgid ""
-"This is the lowest frequency you want to tune in this instrument. You can "
-"put here either a frequency or select a note from the popup list."
-msgstr ""
-"Esta es la frecuencia más baja que querrás afinar en este instrumento. Pon "
-"aquí una frecuencia o selecciona una nota del menú desplegable."
-
-#: ../src/glade/lingot-config-dialog.glade.h:40
-msgid "Intrument frequency range"
-msgstr "Rango de frecuencia del instrumento"
-
-#: ../src/glade/lingot-config-dialog.glade.h:41
-msgid ""
-"Basic settings on the frequency finding algorithm. Come here to get better "
-"accuracy, frequency range or CPU usage. "
-msgstr ""
-"Configuración básica del algoritmo de cálculo de la frecuencia fundamental. "
-"Acude aquí para obtener una mejor precisión, rango de frecuencia o uso del "
-"procesador."
-
-#: ../src/glade/lingot-config-dialog.glade.h:42
-msgid "Settings"
-msgstr "Preferencias"
-
-#: ../src/glade/lingot-config-dialog.glade.h:43
-#: ../src/lingot-gui-config-dialog-scale.c:347
-msgid "Name"
-msgstr "Nombre"
-
-#: ../src/glade/lingot-config-dialog.glade.h:44
-msgid "Scale name, only for your information."
-msgstr "Nombre de la escala, sólo para su información."
-
-#: ../src/glade/lingot-config-dialog.glade.h:45
-msgid "cents"
-msgstr "cents"
-
-#: ../src/glade/lingot-config-dialog.glade.h:46
-msgid ""
-"Applies a shift in frequency to all the notes defined in the table below."
-msgstr ""
-"Aplica un desplazamiento en frecuencia a todas las notas definidas en la "
-"tabla de abajo."
-
-#: ../src/glade/lingot-config-dialog.glade.h:47
-#: ../src/glade/lingot-mainframe.glade.h:10
-msgid "Deviation"
-msgstr "Desviación"
-
-#: ../src/glade/lingot-config-dialog.glade.h:48
-msgid "Octave"
-msgstr "Octava"
-
-#: ../src/glade/lingot-config-dialog.glade.h:49
-msgid ""
-"Octave whose frequencies are being displayed in the table below. Change this "
-"parameter if you want to display the assigned frequencies in other octaves, "
-"but try to assign the frequencies always to the 4th octave (The 4th octave "
-"usually covers the frequencies from 261.63 Hz to 523.25 Hz)."
-msgstr ""
-"Octava cuyas frecuencias se muestran en la tabla de abajo. Cambia este "
-"parámetro si quieres mostrar las frecuencias correspondientes a otras "
-"octavas, pero trata de asignar siempre frecuencias dentro de la 4ª octava "
-"(la 4ª octava comprende normalmente frecuencias desde 261.63 Hz a 523.25 Hz)."
-
-#: ../src/glade/lingot-config-dialog.glade.h:50
-msgid "Insert"
-msgstr "Insertar"
-
-#: ../src/glade/lingot-config-dialog.glade.h:51
-msgid ""
-"Adds a new note to the list, just above the selected line, or appends it to "
-"the end if no line is selected. Is not possible to add a note before the "
-"reference (the first) one. You can also use the Insert key on the table "
-"beside."
-msgstr ""
-"Añade una nota a la lista, justo encima de la fila seleccionada, o la añade "
-"al final si no hay ninguna fila seleccionada. No es posible añadir una nota "
-"antes de la nota de referencia (la primera). Se pueden usar también las "
-"teclas Insertar y Suprimir sobre la tabla de al lado."
-
-#: ../src/glade/lingot-config-dialog.glade.h:52
-msgid "Delete"
-msgstr "Eliminar"
-
-#: ../src/glade/lingot-config-dialog.glade.h:53
-msgid ""
-"Deletes the selected notes. The reference note, i.e., the first one, cannot "
-"be removed. You can also use the Delete key on the table beside."
-msgstr ""
-"Elimina las notas seleccionadas. La nota de referencia (la primera), no "
-"puede ser eliminada. Puedes utilizar también la tecla Suprimir sobre la "
-"tabla de al lado."
-
-#: ../src/glade/lingot-config-dialog.glade.h:54
-msgid "Import"
-msgstr "Importar"
-
-#: ../src/glade/lingot-config-dialog.glade.h:55
-msgid ""
-"Imports the scale from an external .scl file, with the Scala project format "
-"(http://www.huygens-fokker.org/scala/)"
-msgstr ""
-"Importa la escala desde un archivo externo .scl, con el formato utilizado en "
-"el proyecto Scala (http://www.huygens-fokker.org/scala/)"
-
-#: ../src/glade/lingot-config-dialog.glade.h:56
-msgid ""
-"Lingot is an universal tuner, it can tune any instrument according to the "
-"scale you define here."
-msgstr ""
-"Lingot es un afinador universal, puede afinar cualquier instrumento de "
-"acuerdo a la escala que definas aquí."
-
-#: ../src/glade/lingot-config-dialog.glade.h:57
-msgid "Scale"
-msgstr "Escala"
-
-#: ../src/glade/lingot-mainframe.glade.h:1
-msgid "lingot"
-msgstr "lingot"
-
-#: ../src/glade/lingot-mainframe.glade.h:2
-msgid "_File"
-msgstr "_Archivo"
-
-#: ../src/glade/lingot-mainframe.glade.h:3
-msgid "Opens an external configuration file."
-msgstr "Abre un archivo de configuración externo."
-
-#: ../src/glade/lingot-mainframe.glade.h:4
-msgid "Saves the running configuration to an external file."
-msgstr "Guarda la configuración actual en un fichero externo."
-
-#: ../src/glade/lingot-mainframe.glade.h:5
-msgid "_Edit"
-msgstr "_Editar"
-
-#: ../src/glade/lingot-mainframe.glade.h:6
-msgid "_View"
-msgstr "_Ver"
-
-#: ../src/glade/lingot-mainframe.glade.h:7
-msgid "Show spectrum"
-msgstr "Espectro"
-
-#: ../src/glade/lingot-mainframe.glade.h:8
-msgid "_Help"
-msgstr "A_yuda"
-
-#: ../src/glade/lingot-mainframe.glade.h:9
-msgid ""
-"Shows the error in cents in a visual way. The range will depend on the "
-"maximum distance between each two notes in the scale defined in the Lingot "
-"settings. Try to provide scales with low maximum distance, i.e. with an "
-"anough number of notes, to have a higher resolution in this gauge (12 notes "
-"per scale is a good option)."
-msgstr ""
-"Muestra el error en 'cents' de una manera visual. El rango dependerá de la "
-"distancia máxima entre pares de notas en la escala definida en la "
-"configuración de Lingot. Intenta suministrar escalas con baja distancia "
-"máxima, por ejemplo escalas con muchas notas, para obtener una mejor "
-"resolución en esta aguja (escalas de 12 notas son una buena elección)."
-
-#: ../src/glade/lingot-mainframe.glade.h:11
-msgid "Estimated ground frequency in hertzs."
-msgstr "Frecuencia fundamental estimada, en hercios."
-
-#: ../src/glade/lingot-mainframe.glade.h:12
-msgid "f = ---"
-msgstr "f = ---"
-
-#: ../src/glade/lingot-mainframe.glade.h:13
-msgid ""
-"Closest note to the estimated frequency, according to the scale defined in "
-"the Lingot settings."
-msgstr ""
-"Nota más cercana a la frecuencia estimada, de acuerdo a la escala definida "
-"en la configuración."
-
-#: ../src/glade/lingot-mainframe.glade.h:14
-msgid "---"
-msgstr "---"
-
-#: ../src/glade/lingot-mainframe.glade.h:15
-msgid ""
-"Error in cents between the estimated frequency and the closest note "
-"according to the scale defined in the Lingot settings."
-msgstr ""
-"Error en 'cents' entre la frecuencia estimada y la nota más cercana según la "
-"configuración del afinador."
-
-#: ../src/glade/lingot-mainframe.glade.h:16
-msgid "e = ---"
-msgstr "e = ---"
-
-#: ../src/glade/lingot-mainframe.glade.h:17
-msgid "Tone"
-msgstr "Tono"
-
-#: ../src/glade/lingot-mainframe.glade.h:18
-msgid ""
-"This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
-"ground frequency computed is shown with a red vertical line, and the noise "
-"threshold with a horizontal dotted yellow line."
-msgstr ""
-"Este área muestra la densidad espectral de potencia de la señal capturada. "
-"La frecuencia fundamental se muestra con una línea vertical roja, y el "
-"umbral de ruido mediante una línea amarilla horizontal y discontinua."
-
-#: ../src/glade/lingot-mainframe.glade.h:19
-msgid "Spectrum"
-msgstr "Espectro"
+"Imposible abrir el dispositivo de audio '%s'.\n"
+"%s"
+
+#: ../src/lingot-audio-alsa.c:76 ../src/lingot-audio-alsa.c:84
+msgid "Cannot initialize hardware parameter structure."
+msgstr "Imposible inicializar estructura de parámetros hardware."
+
+#: ../src/lingot-audio-alsa.c:92
+msgid "Cannot set access type."
+msgstr "Imposible establecer tipo de acceso."
+
+#: ../src/lingot-audio-alsa.c:99
+msgid "Cannot set sample format."
+msgstr "Imposible establecer formato de muestra."
+
+#: ../src/lingot-audio-alsa.c:108
+msgid "Cannot set sample rate."
+msgstr "Imposible establecer tasa de muestreo."
+
+#: ../src/lingot-audio-alsa.c:117
+msgid "Cannot set channel number."
+msgstr "Imposible establecer número de canales."
+
+#: ../src/lingot-audio-alsa.c:123
+msgid "Cannot set parameters."
+msgstr "Imposible establecer parámetros."
+
+#: ../src/lingot-audio-alsa.c:129
+msgid "Cannot prepare audio interface for use."
+msgstr "Error preparando el interfaz de audio."
+
+#: ../src/lingot-audio-alsa.c:166 ../src/lingot-audio-oss.c:139
+#: ../src/lingot-audio-pulseaudio.c:119
+msgid "Read from audio interface failed."
+msgstr "La lectura del dispositivo ha fallado."
+
+#: ../src/lingot-audio-alsa.c:241
+msgid "Default Device"
+msgstr "Dispositivo predeterminado."
 
 #: ../src/lingot-audio.c:57
 msgid "The application has not been built with OSS support"
@@ -453,72 +78,6 @@ msgstr "La aplicación no ha sido construída con soporte para Jack"
 #: ../src/lingot-audio.c:84
 msgid "The application has not been built with PULSEAUDIO support"
 msgstr "La aplicación no ha sido construída con soporte para PulseAudio"
-
-#: ../src/lingot-audio-oss.c:71 ../src/lingot-audio-alsa.c:66
-#, c-format
-msgid ""
-"Cannot open audio device '%s'.\n"
-"%s"
-msgstr ""
-"Imposible abrir el dispositivo de audio '%s'.\n"
-"%s"
-
-#: ../src/lingot-audio-oss.c:79
-msgid "Error setting number of channels."
-msgstr "Error estableciendo el número de canales."
-
-#: ../src/lingot-audio-oss.c:87
-msgid "Error setting bits per sample."
-msgstr "Error estableciendo los bits por muestra."
-
-#: ../src/lingot-audio-oss.c:102
-msgid "Error setting DMA buffer size."
-msgstr "Error estableciendo el tamaño del búfer DMA."
-
-#: ../src/lingot-audio-oss.c:108
-msgid "Error setting sample rate."
-msgstr "Error estableciendo tasa de muestreo."
-
-#: ../src/lingot-audio-oss.c:139 ../src/lingot-audio-alsa.c:170
-#: ../src/lingot-audio-pulseaudio.c:119
-msgid "Read from audio interface failed."
-msgstr "La lectura del dispositivo ha fallado."
-
-#: ../src/lingot-audio-alsa.c:75 ../src/lingot-audio-alsa.c:83
-msgid "Cannot initialize hardware parameter structure."
-msgstr "Imposible inicializar estructura de parámetros hardware."
-
-#: ../src/lingot-audio-alsa.c:91
-msgid "Cannot set access type."
-msgstr "Imposible establecer tipo de acceso."
-
-#: ../src/lingot-audio-alsa.c:98
-msgid "Cannot set sample format."
-msgstr "Imposible establecer formato de muestra."
-
-#: ../src/lingot-audio-alsa.c:107
-msgid "Cannot set sample rate."
-msgstr "Imposible establecer tasa de muestreo."
-
-#: ../src/lingot-audio-alsa.c:116
-msgid "Cannot set channel number."
-msgstr "Imposible establecer número de canales."
-
-#: ../src/lingot-audio-alsa.c:124
-msgid "Cannot set buffer size."
-msgstr "Error estableciendo el tamaño del búfer."
-
-#: ../src/lingot-audio-alsa.c:131
-msgid "Cannot set parameters."
-msgstr "Imposible establecer parámetros."
-
-#: ../src/lingot-audio-alsa.c:137
-msgid "Cannot prepare audio interface for use."
-msgstr "Error preparando el interfaz de audio."
-
-#: ../src/lingot-audio-alsa.c:243
-msgid "Default Device"
-msgstr "Dispositivo predeterminado."
 
 #: ../src/lingot-audio-jack.c:64
 msgid "Missing connection with JACK audio server"
@@ -552,6 +111,22 @@ msgstr "No es posible conectar los puertos de entrada"
 #, c-format
 msgid "Cannot connect to requested port '%s'"
 msgstr "No es posible conectar con el puerto solicitado '%s'"
+
+#: ../src/lingot-audio-oss.c:79
+msgid "Error setting number of channels."
+msgstr "Error estableciendo el número de canales."
+
+#: ../src/lingot-audio-oss.c:87
+msgid "Error setting bits per sample."
+msgstr "Error estableciendo los bits por muestra."
+
+#: ../src/lingot-audio-oss.c:102
+msgid "Error setting DMA buffer size."
+msgstr "Error estableciendo el tamaño del búfer DMA."
+
+#: ../src/lingot-audio-oss.c:108
+msgid "Error setting sample rate."
+msgstr "Error estableciendo tasa de muestreo."
 
 #: ../src/lingot-audio-pulseaudio.c:90
 msgid "Error creating PulseAudio client."
@@ -643,19 +218,19 @@ msgstr ""
 "El búfer de la ventana temporal es menor que el de FFT, se ha incrementado a "
 "%0.3f segundos"
 
-#: ../src/lingot-gui-mainframe.c:116
+#: ../src/lingot-gui-mainframe.c:107
 msgid "Logo design"
 msgstr "Diseño del logo"
 
-#: ../src/lingot-gui-mainframe.c:122
+#: ../src/lingot-gui-mainframe.c:132
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso y fácil de usar"
 
-#: ../src/lingot-gui-mainframe.c:125
+#: ../src/lingot-gui-mainframe.c:138
 msgid "translator-credits"
 msgstr "Iban Cereijo <ibancg@gmail.com>"
 
-#: ../src/lingot-gui-mainframe.c:253
+#: ../src/lingot-gui-mainframe.c:269
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -667,33 +242,37 @@ msgstr ""
 "dispositivo bloqueado durante unos segundos tras su última utilización. En "
 "ese caso puedes probar dentro de unos instantes."
 
-#: ../src/lingot-gui-mainframe.c:263
+#: ../src/lingot-gui-mainframe.c:279
 msgid "The core is not running, you must check your configuration."
 msgstr "El afinador no está funcionando, debes comprobar la configuración."
 
-#: ../src/lingot-gui-mainframe.c:278
+#: ../src/lingot-gui-mainframe.c:291
 msgid "Error"
 msgstr "Error"
 
-#: ../src/lingot-gui-mainframe.c:280
+#: ../src/lingot-gui-mainframe.c:292
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/lingot-gui-mainframe.c:280
+#: ../src/lingot-gui-mainframe.c:292
 msgid "Info"
 msgstr "Información"
 
-#: ../src/lingot-gui-mainframe.c:305
+#: ../src/lingot-gui-mainframe.c:317
 msgid "Open Configuration File"
 msgstr "Abrir archivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:314 ../src/lingot-gui-mainframe.c:357
+#: ../src/lingot-gui-mainframe.c:326 ../src/lingot-gui-mainframe.c:368
 msgid "Lingot configuration files"
 msgstr "Archivos de configuración de Lingot"
 
-#: ../src/lingot-gui-mainframe.c:347
+#: ../src/lingot-gui-mainframe.c:358
 msgid "Save Configuration File"
 msgstr "Guardar archivo de configuración"
+
+#: ../src/lingot-gui-mainframe.c:364
+msgid "untitled.conf"
+msgstr "sin titulo.conf"
 
 #: ../src/lingot-gui-config-dialog.c:406
 msgid "Audio device identifier too long"
@@ -710,6 +289,107 @@ msgstr ""
 "el rango de la aguja y provocan una pérdida de precisión visual. Considera "
 "proveer escalas con al menos 12 tonos, o con una distancia máxima entre "
 "notas adyacentes no superior a 200 'cents'."
+
+#: ../src/lingot-gui-mainframe.glade.h:1
+msgid "lingot"
+msgstr "lingot"
+
+#: ../src/lingot-gui-mainframe.glade.h:2
+msgid "_File"
+msgstr "_Archivo"
+
+#: ../src/lingot-gui-mainframe.glade.h:3
+msgid "Opens an external configuration file."
+msgstr "Abre un archivo de configuración externo."
+
+#: ../src/lingot-gui-mainframe.glade.h:4
+msgid "Saves the running configuration to an external file."
+msgstr "Guarda la configuración actual en un fichero externo."
+
+#: ../src/lingot-gui-mainframe.glade.h:5
+msgid "_Edit"
+msgstr "_Editar"
+
+#: ../src/lingot-gui-mainframe.glade.h:6
+msgid "_View"
+msgstr "_Ver"
+
+#: ../src/lingot-gui-mainframe.glade.h:7
+msgid "Show spectrum"
+msgstr "Espectro"
+
+#: ../src/lingot-gui-mainframe.glade.h:8
+msgid "_Help"
+msgstr "A_yuda"
+
+#: ../src/lingot-gui-mainframe.glade.h:9
+msgid ""
+"Shows the error in cents in a visual way. The range will depend on the "
+"maximum distance between each two notes in the scale defined in the Lingot "
+"settings. Try to provide scales with low maximum distance, i.e. with an "
+"anough number of notes, to have a higher resolution in this gauge (12 notes "
+"per scale is a good option)."
+msgstr ""
+"Muestra el error en 'cents' de una manera visual. El rango dependerá de la "
+"distancia máxima entre pares de notas en la escala definida en la "
+"configuración de Lingot. Intenta suministrar escalas con baja distancia "
+"máxima, por ejemplo escalas con muchas notas, para obtener una mejor "
+"resolución en esta aguja (escalas de 12 notas son una buena elección)."
+
+#: ../src/lingot-gui-mainframe.glade.h:10
+#: ../src/lingot-gui-config-dialog.glade.h:47
+msgid "Deviation"
+msgstr "Desviación"
+
+#: ../src/lingot-gui-mainframe.glade.h:11
+msgid "Estimated ground frequency in hertzs."
+msgstr "Frecuencia fundamental estimada, en hercios."
+
+#: ../src/lingot-gui-mainframe.glade.h:12
+msgid "f = ---"
+msgstr "f = ---"
+
+#: ../src/lingot-gui-mainframe.glade.h:13
+msgid ""
+"Closest note to the estimated frequency, according to the scale defined in "
+"the Lingot settings."
+msgstr ""
+"Nota más cercana a la frecuencia estimada, de acuerdo a la escala definida "
+"en la configuración."
+
+#: ../src/lingot-gui-mainframe.glade.h:14
+msgid "---"
+msgstr "---"
+
+#: ../src/lingot-gui-mainframe.glade.h:15
+msgid ""
+"Error in cents between the estimated frequency and the closest note "
+"according to the scale defined in the Lingot settings."
+msgstr ""
+"Error en 'cents' entre la frecuencia estimada y la nota más cercana según la "
+"configuración del afinador."
+
+#: ../src/lingot-gui-mainframe.glade.h:16
+msgid "e = ---"
+msgstr "e = ---"
+
+#: ../src/lingot-gui-mainframe.glade.h:17
+msgid "Tone"
+msgstr "Tono"
+
+#: ../src/lingot-gui-mainframe.glade.h:18
+msgid ""
+"This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
+"ground frequency computed is shown with a red vertical line, and the noise "
+"threshold with a horizontal dotted yellow line."
+msgstr ""
+"Este área muestra la densidad espectral de potencia de la señal capturada. "
+"La frecuencia fundamental se muestra con una línea vertical roja, y el "
+"umbral de ruido mediante una línea amarilla horizontal y discontinua."
+
+#: ../src/lingot-gui-mainframe.glade.h:19
+msgid "Spectrum"
+msgstr "Espectro"
 
 #: ../src/lingot-gui-config-dialog-scale.c:98
 msgid "You cannot insert before the reference note."
@@ -746,6 +426,11 @@ msgstr "mid-A"
 #: ../src/lingot-gui-config-dialog-scale.c:642
 msgid "mid-C"
 msgstr "mid-C"
+
+#: ../src/lingot-gui-config-dialog-scale.c:347
+#: ../src/lingot-gui-config-dialog.glade.h:43
+msgid "Name"
+msgstr "Nombre"
 
 #: ../src/lingot-gui-config-dialog-scale.c:362
 msgid "Shift"
@@ -826,3 +511,337 @@ msgstr ""
 "'Desplazamiento'). Puedes usar tanto un valor numérico, o las palabras clave "
 "'mid-C' (261.625565 Hz) y 'mid-A' (440 Hz), normalmente reservadas para la "
 "cuarta octava (intenta asignar solamente frecuencias a la cuarta octava)."
+
+#: ../src/lingot-gui-config-dialog.glade.h:1
+msgid "lingot configuration"
+msgstr "configuración de Lingot"
+
+#: ../src/lingot-gui-config-dialog.glade.h:2
+msgid "Default"
+msgstr "Predet."
+
+#: ../src/lingot-gui-config-dialog.glade.h:3
+msgid "Resets the built-in settings, without applying them."
+msgstr "Restaura la configuración predeterminada, sin aplicarla."
+
+#: ../src/lingot-gui-config-dialog.glade.h:4
+msgid ""
+"Applies the current changes to the running tuner, but doesn't modify the "
+"configuration file. \n"
+"\n"
+"Any applied changes can be rolled back pressing Cancel."
+msgstr ""
+"Aplica los cambios actuales al afinador en ejecución, pero no modifica el "
+"fichero de configuración.\n"
+"\n"
+"Los cambios aplicados pueden ser revertidos pulsando Cancelar."
+
+#: ../src/lingot-gui-config-dialog.glade.h:7
+msgid "Applies the current changes and modifies the congifuration file."
+msgstr "Aplica los cambios actuales y modifica el fichero de configuración."
+
+#: ../src/lingot-gui-config-dialog.glade.h:8
+msgid ""
+"Rolls back all the previous applied changes and closes the configuration "
+"dialog."
+msgstr ""
+"Anula los cambios aplicados previamente y cierra el diálogo de configuración."
+
+#: ../src/lingot-gui-config-dialog.glade.h:9
+msgid "Audio system"
+msgstr "Sistema audio"
+
+#: ../src/lingot-gui-config-dialog.glade.h:10
+msgid "Audio device"
+msgstr "Dispositivo audio"
+
+#: ../src/lingot-gui-config-dialog.glade.h:11
+msgid "Here you can pick the sound system."
+msgstr "Aquí puedes escoger el sistema de sonido"
+
+#: ../src/lingot-gui-config-dialog.glade.h:12
+msgid ""
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
+msgstr ""
+"Escoge el dispositivo de entrada si dispones de más de uno. Si estás usando "
+"JACK, puedes también conectar Lingot al origen de audio deseado mediante una "
+"aplicación de control de JACK externa."
+
+#: ../src/lingot-gui-config-dialog.glade.h:13
+msgid "Select the audio source:"
+msgstr "Selecciona la fuente de audio"
+
+#: ../src/lingot-gui-config-dialog.glade.h:14
+msgid "Audio input settings. Select here the audio source."
+msgstr ""
+"Configuración de entrada de sonido. Define aquí la fuente de audio y la "
+"configuración relativa al hardware."
+
+#: ../src/lingot-gui-config-dialog.glade.h:15
+msgid "Capture"
+msgstr "Captura"
+
+#: ../src/lingot-gui-config-dialog.glade.h:16
+msgid "Calculation rate"
+msgstr "Tasa de cálculo"
+
+#: ../src/lingot-gui-config-dialog.glade.h:17
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/lingot-gui-config-dialog.glade.h:18
+msgid "Visualization rate"
+msgstr "Tasa de visualización"
+
+#: ../src/lingot-gui-config-dialog.glade.h:19
+msgid "Minimum SNR"
+msgstr "Mínima SNR"
+
+#: ../src/lingot-gui-config-dialog.glade.h:20
+msgid "dB"
+msgstr "dB"
+
+#: ../src/lingot-gui-config-dialog.glade.h:21
+msgid "Adjust the following refresh rates:"
+msgstr "Ajusta las siguientes tasas de refresco"
+
+#: ../src/lingot-gui-config-dialog.glade.h:22
+msgid "Adjust the noise level:"
+msgstr "Ajusta el nivel de ruido"
+
+#: ../src/lingot-gui-config-dialog.glade.h:23
+msgid ""
+"Minimum signal-to-noise ratio to consider the captured signal as something "
+"relevant. Try to keep this level low, and raise it if you experience "
+"problems in very noisy environments. This level is depicted in the spectrum "
+"area as a yellow dotted line."
+msgstr ""
+"Mínima relación señal a ruido para considerar la señal capturada como algo "
+"relevante. Intenta mantener un valor bajo para este parámetro, y elévalo si "
+"experimentas problemas en entornos muy ruidosos. Este nivel se muestra en la "
+"vista del espectro como una línea amarilla discontinua."
+
+#: ../src/lingot-gui-config-dialog.glade.h:24
+msgid ""
+"Number of visualizations per second of the (last) computed frequency, error "
+"and spectrum. "
+msgstr ""
+"Número de visualizaciones por segundo de la (última) frecuencia calculada, "
+"error y espectro."
+
+#: ../src/lingot-gui-config-dialog.glade.h:25
+msgid "Number of calculations of the fundamental frequency per second."
+msgstr "Número de cálculos por segundo de la frecuencia fundamental."
+
+#: ../src/lingot-gui-config-dialog.glade.h:26
+msgid "Quick adjustments on the dynamic response and the signal levels."
+msgstr "Ajustes rápicos sobre la respuesta dinámica y los niveles de señal."
+
+#: ../src/lingot-gui-config-dialog.glade.h:27
+msgid "Adjustments"
+msgstr "Ajustes"
+
+#: ../src/lingot-gui-config-dialog.glade.h:28
+msgid "Temporal window"
+msgstr "Ventana temporal"
+
+#: ../src/lingot-gui-config-dialog.glade.h:29
+msgid ""
+"This is the most recent amount of data considered for tuning. The longer it "
+"is, the more accuracy you can obtain, but also the dynamic response gets "
+"slower, regarding you are considering older parts of the signal. Also, if "
+"you raise this parameter, the computational cost increases. The size of the "
+"buffer, in samples (depending on the effective sample rate), must be greater "
+"than or equal to the FFT buffer size."
+msgstr ""
+"Ésta es la porción más reciente de señal considerada en la afinación. Cuanto "
+"más largo sea, más precisión podemos obtener, pero a la vez la respuesta "
+"dinámica es más lenta, ya que estamos considerando partes más viejas de la "
+"señal. Además, si subes este parámetro, el coste computacional aumenta. Este "
+"valor, en muestras (que depende de la tasa efectiva de muestreo), debe ser "
+"mayor o igual que el tamaño de la FFT."
+
+#: ../src/lingot-gui-config-dialog.glade.h:30
+msgid "seconds"
+msgstr "segundos"
+
+#: ../src/lingot-gui-config-dialog.glade.h:31
+msgid "samples"
+msgstr "muestras"
+
+#: ../src/lingot-gui-config-dialog.glade.h:32
+msgid "FFT size"
+msgstr "Tamaño de FFT"
+
+#: ../src/lingot-gui-config-dialog.glade.h:33
+msgid ""
+"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
+"help Lingot to hook up the correct peak, but it&apos;s also computationally "
+"more expensive. Don&apos;t use high values here unless you need to tune high "
+"frequencies."
+msgstr ""
+"El búfer de FFT permite a Lingot echar un primer vistazo al espectro de la "
+"señal. Valores más altos ayudan a tener un mejor 'enganche' con el pico "
+"correcto, pero suponen además un mayor coste computacional. No uses valores "
+"muy elevados a no ser que tengas una tasa efectiva de muestreo igualmente "
+"elevada."
+
+#: ../src/lingot-gui-config-dialog.glade.h:34
+msgid ""
+"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
+"help Lingot to hook up the correct peak, but it's also computationally more "
+"expensive. Don't use high values here unless you need to tune high "
+"frequencies."
+msgstr ""
+"El búfer de FFT permite a Lingot echar un primer vistazo al espectro de la "
+"señal. Valores más altos ayudan a tener un mejor 'enganche' con el pico "
+"correcto, pero suponen además un mayor coste computacional. No uses valores "
+"muy elevados a no ser que tengas una tasa efectiva de muestreo igualmente "
+"elevada."
+
+#: ../src/lingot-gui-config-dialog.glade.h:35
+msgid "Optimize parameters automatically"
+msgstr "Optimizar parámetros automáticamente"
+
+#: ../src/lingot-gui-config-dialog.glade.h:36
+msgid "Leave this option ON and Lingot will optimize some parameters for you."
+msgstr ""
+"Deja esta opción activada y Lingot optimizará algunos parámetros por ti."
+
+#: ../src/lingot-gui-config-dialog.glade.h:37
+msgid "Minimum note"
+msgstr "Mínimo tono"
+
+#: ../src/lingot-gui-config-dialog.glade.h:38
+msgid "Maximum note"
+msgstr "Máximo tono"
+
+#: ../src/lingot-gui-config-dialog.glade.h:39
+msgid ""
+"This is the lowest frequency you want to tune in this instrument. You can "
+"put here either a frequency or select a note from the popup list."
+msgstr ""
+"Esta es la frecuencia más baja que querrás afinar en este instrumento. Pon "
+"aquí una frecuencia o selecciona una nota del menú desplegable."
+
+#: ../src/lingot-gui-config-dialog.glade.h:40
+msgid "Intrument frequency range"
+msgstr "Rango de frecuencia del instrumento"
+
+#: ../src/lingot-gui-config-dialog.glade.h:41
+msgid ""
+"Basic settings on the frequency finding algorithm. Come here to get better "
+"accuracy, frequency range or CPU usage. "
+msgstr ""
+"Configuración básica del algoritmo de cálculo de la frecuencia fundamental. "
+"Acude aquí para obtener una mejor precisión, rango de frecuencia o uso del "
+"procesador."
+
+#: ../src/lingot-gui-config-dialog.glade.h:42
+msgid "Settings"
+msgstr "Preferencias"
+
+#: ../src/lingot-gui-config-dialog.glade.h:44
+msgid "Scale name, only for your information."
+msgstr "Nombre de la escala, sólo para su información."
+
+#: ../src/lingot-gui-config-dialog.glade.h:45
+msgid "cents"
+msgstr "cents"
+
+#: ../src/lingot-gui-config-dialog.glade.h:46
+msgid ""
+"Applies a shift in frequency to all the notes defined in the table below."
+msgstr ""
+"Aplica un desplazamiento en frecuencia a todas las notas definidas en la "
+"tabla de abajo."
+
+#: ../src/lingot-gui-config-dialog.glade.h:48
+msgid "Octave"
+msgstr "Octava"
+
+#: ../src/lingot-gui-config-dialog.glade.h:49
+msgid ""
+"Octave whose frequencies are being displayed in the table below. Change this "
+"parameter if you want to display the assigned frequencies in other octaves, "
+"but try to assign the frequencies always to the 4th octave (The 4th octave "
+"usually covers the frequencies from 261.63 Hz to 523.25 Hz)."
+msgstr ""
+"Octava cuyas frecuencias se muestran en la tabla de abajo. Cambia este "
+"parámetro si quieres mostrar las frecuencias correspondientes a otras "
+"octavas, pero trata de asignar siempre frecuencias dentro de la 4ª octava "
+"(la 4ª octava comprende normalmente frecuencias desde 261.63 Hz a 523.25 Hz)."
+
+#: ../src/lingot-gui-config-dialog.glade.h:50
+msgid "Insert"
+msgstr "Insertar"
+
+#: ../src/lingot-gui-config-dialog.glade.h:51
+msgid ""
+"Adds a new note to the list, just above the selected line, or appends it to "
+"the end if no line is selected. Is not possible to add a note before the "
+"reference (the first) one. You can also use the Insert key on the table "
+"beside."
+msgstr ""
+"Añade una nota a la lista, justo encima de la fila seleccionada, o la añade "
+"al final si no hay ninguna fila seleccionada. No es posible añadir una nota "
+"antes de la nota de referencia (la primera). Se pueden usar también las "
+"teclas Insertar y Suprimir sobre la tabla de al lado."
+
+#: ../src/lingot-gui-config-dialog.glade.h:52
+msgid "Delete"
+msgstr "Eliminar"
+
+#: ../src/lingot-gui-config-dialog.glade.h:53
+msgid ""
+"Deletes the selected notes. The reference note, i.e., the first one, cannot "
+"be removed. You can also use the Delete key on the table beside."
+msgstr ""
+"Elimina las notas seleccionadas. La nota de referencia (la primera), no "
+"puede ser eliminada. Puedes utilizar también la tecla Suprimir sobre la "
+"tabla de al lado."
+
+#: ../src/lingot-gui-config-dialog.glade.h:54
+msgid "Import"
+msgstr "Importar"
+
+#: ../src/lingot-gui-config-dialog.glade.h:55
+msgid ""
+"Imports the scale from an external .scl file, with the Scala project format "
+"(http://www.huygens-fokker.org/scala/)"
+msgstr ""
+"Importa la escala desde un archivo externo .scl, con el formato utilizado en "
+"el proyecto Scala (http://www.huygens-fokker.org/scala/)"
+
+#: ../src/lingot-gui-config-dialog.glade.h:56
+msgid ""
+"Lingot is an universal tuner, it can tune any instrument according to the "
+"scale you define here."
+msgstr ""
+"Lingot es un afinador universal, puede afinar cualquier instrumento de "
+"acuerdo a la escala que definas aquí."
+
+#: ../src/lingot-gui-config-dialog.glade.h:57
+msgid "Scale"
+msgstr "Escala"
+
+#: ../src/lingot-io-config.c:589
+#, c-format
+msgid ""
+"Error parsing the configuration file, line %i: unrecognized audio system, "
+"assuming default value.\n"
+msgstr ""
+"Error leyendo el archivo de configuración, línea %i: sistema de audio no "
+"reconocido, asumiendo valor por defecto.\n"
+
+#: ../src/lingot-io-config.c:614
+msgid ""
+"The configuration file contains errors, and hence some default values have "
+"been chosen. The problem will be fixed once you have accepted the settings "
+"in the configuration dialog."
+msgstr ""
+"El archivo de configuración tiene errores, y por tanto algunos parámetros "
+"tendrán valores por defecto. El problema será solucionado una vez confirmes "
+"las preferencias en el diálogo de configuración."
