@@ -1,0 +1,8 @@
+#!/bin/sh
+mkdir -p m4
+libtoolize
+intltoolize
+aclocal
+autoheader
+autoconf
+automake --add-missing

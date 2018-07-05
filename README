@@ -36,17 +36,10 @@ If you are building a release, just type:
  > ./configure
  > make install
 
-If you are building a development version obtained from our VCS:
+If you are building a development version obtained from our VCS you will need to
+create the configure script first by calling:
 
- > mkdir -p m4
- > libtoolize
- > intltoolize
- > aclocal
- > autoheader
- > autoconf 
- > automake --add-missing
- > ./configure
- > make install
+ > ./bootstrap
 
 
 Lingot supports the following audio systems/servers:
