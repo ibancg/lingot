@@ -50,10 +50,6 @@ lingot_SOURCES = \
 	lingot.gresource.xml\
 	lingot-resources.c
 		
-#PKGCONFIG = $(shell which pkg-config)		
-#GLIB_COMPILE_RESOURCES = $(shell $(PKGCONFIG) --variable=glib_compile_resources gio-2.0)
-GLIB_COMPILE_RESOURCES = glib-compile-resources
-
 lingot-resources.c: lingot.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) lingot.gresource.xml --target=$@ --sourcedir=. --generate-source
         
