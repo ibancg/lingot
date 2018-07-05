@@ -157,7 +157,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 			audio->read_buffer_size_samples);
 
 	if (samples_read == -EAGAIN) {
-		usleep(1000); // TODO: size up
+		usleep(200); // TODO: size up
 		samples_read = 0;
 	} else {
 		if (samples_read < 0) {
