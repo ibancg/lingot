@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -12,13 +12,12 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   sodipodi:docname="lingot-icon4.svg"
-   sodipodi:docbase="/home/home/Matthew/mycustomicons/inkscapesvgs"
+   sodipodi:docname="org.nongnu.lingot.svg"
    sodipodi:modified="true">
   <metadata
      id="metadata40">
@@ -197,15 +196,26 @@ Font is admin's handfont2 &lt;http://openfontlibrary.org/?ccm=/media/files/admin
      inkscape:showpageshadow="false"
      borderlayer="false"
      showgrid="false"
-     gridspacingx="4px"
-     gridspacingy="4px"
-     gridempspacing="2"
      inkscape:window-width="1016"
      inkscape:window-height="673"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-x="2239"
+     inkscape:window-y="335"
      showguides="true"
-     inkscape:guide-bbox="true" />
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0"
+       originy="0"
+       spacingx="4"
+       spacingy="4"
+       color="#3f3fff"
+       empcolor="#3f3fff"
+       opacity="0.15"
+       empopacity="0.38"
+       empspacing="2" />
+  </sodipodi:namedview>
   <g
      inkscape:groupmode="layer"
      id="layer1"
@@ -282,3 +292,4 @@ Font is admin's handfont2 &lt;http://openfontlibrary.org/?ccm=/media/files/admin
   </g>
 </svg>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
