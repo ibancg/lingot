@@ -50,6 +50,8 @@ lingot_SOURCES = \
 	lingot.gresource.xml\
 	lingot-resources.c
 		
+CLEANFILES = lingot-resources.c
+		
 lingot-resources.c: lingot.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) lingot.gresource.xml --target=$@ --sourcedir=. --generate-source
         
