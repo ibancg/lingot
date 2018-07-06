@@ -1,5 +1,5 @@
 
-Lingot 1.0.0 (2018-07-xx)
+Lingot 1.0.0 (2018-07-06)
 -------------------------
 
  * Added PulseAudio support.
@@ -9,12 +9,12 @@ Lingot 1.0.0 (2018-07-xx)
  * Modified the configuration: the user specifies now the frequency range of the
    instrument, instead of providing low level parameters like the sample rate.
  * Implemented task #11284: audio devices autodetection.
- * Fixed several bugs: #32581, #35183, #35220, #35221, #54209.
+ * Fixed several bugs: #32581, #35183, #35220, #35221, #54209, #40525.
  * Fixed SIGSEGV when there's no scale in config file (thanks to K. Volný).
  * Showing octave index along with the note.
  * Implemented task #10683: config file validation.
  * Implemented task #11100: add libfftw support.
- * Fixed bug #643435 in debian.
+ * Fixed bugs #643435, #730175 in debian.
  * Enhanced some error messages.
  * Fixed potential error when reading from OSS and ALSA.
  * Fixed memory leaks and improved memory management (thanks to Nicolas Boulenguez).
@@ -101,8 +101,8 @@ Lingot 0.7.4 (2007-08-23)
 * Added translations: es
 
 
-Lingot 0.7.3
-------------
+Lingot 0.7.3 (2007-07-17)
+-------------------------
 
 * Fixed two SIGSEGV bugs
 * Using GtkAboutDialog to show about info
@@ -111,15 +111,15 @@ Lingot 0.7.3
 * Config dialog made more "GTK-compliant"
 
 
-Lingot 0.7.1
-------------
+Lingot 0.7.1  (2007-01-28)
+--------------------------
 
 * Files reorganized to a more "GNU-like" structure.
 * Added multilingual support
 
 
-Lingot 0.6.x
-------------
+Lingot 0.6.0 (2004-12-19)
+-------------------------
 
-* Start point.
+* Initial release.
 
