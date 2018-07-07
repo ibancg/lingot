@@ -47,13 +47,15 @@ lingot_SOURCES = \
 	lingot-signal.h\
 	lingot.c\
 	lingot-i18n.h\
-	lingot.gresource.xml\
-	lingot-resources.c
-		
+	lingot.gresource.xml
+
+nodist_lingot_SOURCES = lingot-resources.c
+BUILT_SOURCES = lingot-resources.c
+
 CLEANFILES = lingot-resources.c
 		
 lingot-resources.c: lingot.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) lingot.gresource.xml --target=$@ --sourcedir=. --generate-source
+	$(GLIB_COMPILE_RESOURCES) ${srcdir}/lingot.gresource.xml --target=$@ --sourcedir=${srcdir} --generate-source
         
 lingot_LDFLAGS =
 

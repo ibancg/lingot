@@ -59,9 +59,8 @@ void lingot_test_io_config() {
 	// recent file
 	// -----------
 
+	ok = lingot_io_config_load(config, "resources/lingot-0_9_2b8.conf");
 	if (ok) { // TODO: assert
-
-		ok = lingot_io_config_load(config, "resources/lingot-0_9_2b8.conf");
 
 		CU_ASSERT_EQUAL(config->audio_system, AUDIO_SYSTEM_PULSEAUDIO);
 		CU_ASSERT(!strcmp(config->audio_dev[config->audio_system], "default"));

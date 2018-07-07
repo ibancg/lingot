@@ -30,7 +30,7 @@ lingot_test_SOURCES = \
 	src/lingot-test-signal.c
 	
 check_datadir =
-check_data_DATA = resources/lingot-001.conf
+check_data_DATA = resources/lingot-001.conf resources/lingot-0_9_2b8.conf
 
 EXTRA_DIST = \
 	$(check_data_DATA)

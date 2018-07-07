@@ -38,7 +38,8 @@ dist_man_MANS = lingot.1
 EXTRA_DIST = \
 	$(lingotdoc_DATA) \
 	$(appdata_DATA) \
-	build-aux/gitlog-to-changelog
+	build-aux/gitlog-to-changelog \
+	bootstrap
 
 dist-hook: gen-ChangeLog copy-SpecFiles
 
