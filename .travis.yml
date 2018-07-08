@@ -1,0 +1,2 @@
+language: C
+script: ./bootstrap && ./configure && make clean all check dist distcheck
