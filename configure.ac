@@ -190,7 +190,7 @@ packagedocdir=doc/${PACKAGE}
 
 dnl Set PACKAGE DIRs in config.h.
 packagepixmapsdir=share/pixmaps/${PACKAGE}
-packageicondir=share/icons/hicolor/scalable/apps/
+packageicondir=share/icons/hicolor/scalable/apps
 packagehelpdir=share/gnome/help/${PACKAGE}
 packagemenudir=share/applications
 
