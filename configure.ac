@@ -252,7 +252,6 @@ po/Makefile.in
 src/Makefile
 icons/Makefile
 test/Makefile
-org.nongnu.lingot.desktop
 ])
 AC_OUTPUT
 
