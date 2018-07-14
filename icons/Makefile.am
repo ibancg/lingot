@@ -4,7 +4,7 @@
 ## If you don't want it to overwrite it,
 ## 	Please disable it in the Anjuta project configuration
 
-lingot_iconsdir = $(prefix)/@NO_PREFIX_PACKAGE_ICON_DIR@
+lingot_iconsdir = $(datadir)/icons/hicolor/scalable/apps
 
 lingot_icons_DATA = \
 	org.nongnu.lingot.svg

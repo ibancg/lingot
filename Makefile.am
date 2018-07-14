@@ -27,7 +27,7 @@ DISTCLEANFILES = \
 	m4/* \
 	po/Makefile.in.in
 
-gnomemenudir = $(prefix)/@NO_PREFIX_PACKAGE_MENU_DIR@
+gnomemenudir = $(datadir)/applications
 gnomemenu_DATA = org.nongnu.lingot.desktop
 appdatadir = $(datadir)/metainfo
 appdata_DATA = org.nongnu.lingot.appdata.xml

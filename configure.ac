@@ -162,90 +162,6 @@ if test "x$uselibfftw" = "xyes"; then
  fi
 fi
 
-
-dnl PKG_CHECK_MODULES([GLADE], [libglade-2.0])
-dnl AC_SUBST(GLADE_CFLAGS)
-dnl AC_SUBST(GLADE_LIBS)
-
-dnl Set PACKAGE_LOCALE_DIR in config.h.
-if test "x${prefix}" = "xNONE"; then
-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Package local directory])
-else
-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale", [Package local directory])
-fi
-
-dnl Set PACKAGE SOURCE DIR in config.h.
-packagesrcdir=`cd $srcdir && pwd`
-
-dnl Set PACKAGE PREFIX
-if test "x${prefix}" = "xNONE"; then
-  packageprefix=${ac_default_prefix}
-else
-  packageprefix=${prefix}
-fi
-
-dnl Set PACKAGE DATA & DOC DIR
-packagedatadir=share
-packagedocdir=doc/${PACKAGE}
-
-dnl Set PACKAGE DIRs in config.h.
-packagepixmapsdir=share/pixmaps/${PACKAGE}
-packageicondir=share/icons/hicolor/scalable/apps
-packagehelpdir=share/gnome/help/${PACKAGE}
-packagemenudir=share/applications
-
-dnl Subst PACKAGE_DATA_DIR.
-NO_PREFIX_PACKAGE_DATA_DIR="${packagedatadir}"
-AC_SUBST(NO_PREFIX_PACKAGE_DATA_DIR)
-PACKAGE_DATA_DIR="${packageprefix}/${packagedatadir}"
-AC_SUBST(PACKAGE_DATA_DIR)
-
-dnl Subst PACKAGE_DOC_DIR.
-NO_PREFIX_PACKAGE_DOC_DIR="${packagedocdir}"
-AC_SUBST(NO_PREFIX_PACKAGE_DOC_DIR)
-PACKAGE_DOC_DIR="${packageprefix}/${packagedocdir}"
-AC_SUBST(PACKAGE_DOC_DIR)
-
-dnl Subst PACKAGE_PIXMAPS_DIR.
-NO_PREFIX_PACKAGE_PIXMAPS_DIR="${packagepixmapsdir}"
-AC_SUBST(NO_PREFIX_PACKAGE_PIXMAPS_DIR)
-PACKAGE_PIXMAPS_DIR="${packageprefix}/${packagepixmapsdir}"
-AC_SUBST(PACKAGE_PIXMAPS_DIR)
-
-dnl Subst PACKAGE_ICON_DIR.
-NO_PREFIX_PACKAGE_ICON_DIR="${packageicondir}"
-AC_SUBST(NO_PREFIX_PACKAGE_ICON_DIR)
-PACKAGE_ICON_DIR="${packageprefix}/${packageicondir}"
-AC_SUBST(PACKAGE_ICON_DIR)
-
-dnl Subst PACKAGE_HELP_DIR.
-NO_PREFIX_PACKAGE_HELP_DIR="${packagehelpdir}"
-AC_SUBST(NO_PREFIX_PACKAGE_HELP_DIR)
-PACKAGE_HELP_DIR="${packageprefix}/${packagehelpdir}"
-AC_SUBST(PACKAGE_HELP_DIR)
-
-dnl Subst PACKAGE_MENU_DIR.
-NO_PREFIX_PACKAGE_MENU_DIR="${packagemenudir}"
-AC_SUBST(NO_PREFIX_PACKAGE_MENU_DIR)
-PACKAGE_MENU_DIR="${packageprefix}/${packagemenudir}"
-AC_SUBST(PACKAGE_MENU_DIR)
-
-dnl AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${packageprefix}/${packagedatadir}")
-dnl AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedocdir}")
-dnl AC_DEFINE_UNQUOTED(PACKAGE_PIXMAPS_DIR, "${packageprefix}/${packagepixmapsdir}")
-dnl AC_DEFINE_UNQUOTED(PACKAGE_HELP_DIR, "${packageprefix}/${packagehelpdir}")
-dnl AC_DEFINE_UNQUOTED(PACKAGE_MENU_DIR, "${packageprefix}/${packagemenudir}")
-dnl AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
-
-
-AC_DEFINE([PACKAGE_DATA_DIR], [share], [Package data dir])
-AC_DEFINE([PACKAGE_DOC_DIR], [doc], [Package doc dir])
-AC_DEFINE([PACKAGE_HELP_DIR], [doc], [Help])
-AC_DEFINE([PACKAGE_MENU_DIR], [], [Menu])
-AC_DEFINE([PACKAGE_ICON_DIR], [icons], [Icons])
-AC_DEFINE([PACKAGE_SRC_DIR], [src], [Source])
-
-
 AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
@@ -254,4 +170,3 @@ icons/Makefile
 test/Makefile
 ])
 AC_OUTPUT
-
