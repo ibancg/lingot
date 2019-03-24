@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -80,7 +80,7 @@ void lingot_msg_add(const char* msg, message_type_t type, int error_code) {
 
 			if (type != INFO) {
 				fprintf(stderr, "%s: %s\n",
-						(message_type == ERROR) ? "error" : "warning", msg);
+                        (type == ERROR) ? "error" : "warning", msg);
 					}
 				}
 			}
