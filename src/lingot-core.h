@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_CORE_H__
-#define __LINGOT_CORE_H__
+#ifndef LINGOT_CORE_H
+#define LINGOT_CORE_H
 
 #include <pthread.h>
 
@@ -99,4 +99,4 @@ void lingot_core_stop(LingotCore*);
 int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
 		FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
 
-#endif //__LINGOT_CORE_H__
+#endif //LINGOT_CORE_H

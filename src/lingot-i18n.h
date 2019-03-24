@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,22 +22,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOTI18N_H_
-#define LINGOTI18N_H_
-
-#include <libintl.h>
-#include <locale.h>
-#include <langinfo.h>
+#ifndef LINGOTI18N_H
+#define LINGOTI18N_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
+#ifdef DISABLE_NLS
+#undef ENABLE_NLS
+#endif
+
 #ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#include <langinfo.h>
 #undef _
 #    define _(String) (const char*) gettext (String)
 #else
 #    define _(String) (String)
 #endif
 
-#endif /*LINGOTI18N_H_*/
+#endif /*LINGOTI18N_H*/

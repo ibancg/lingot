@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_GUI_MAIN_FRAME_H__
-#define __LINGOT_GUI_MAIN_FRAME_H__
+#ifndef LINGOT_GUI_MAIN_FRAME_H
+#define LINGOT_GUI_MAIN_FRAME_H
 
 #include "lingot-defs.h"
 #include "lingot-core.h"
@@ -77,4 +77,4 @@ void lingot_gui_mainframe_destroy(LingotMainFrame*);
 
 void lingot_gui_mainframe_change_config(LingotMainFrame*, LingotConfig*);
 
-#endif //__LINGOT_GUI_MAIN_FRAME_H__
+#endif //LINGOT_GUI_MAIN_FRAME_H

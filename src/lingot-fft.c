@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -49,12 +49,12 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, int n) {
 			FFTW_ESTIMATE);
 #else
 	FLT alpha;
-	unsigned int i;
 
 	// twiddle factors
 	result->wn = (LingotComplex*) malloc((n >> 1) * sizeof(LingotComplex));
 
-	for (i = 0; i < (n >> 1); i++) {
+    int i;
+    for (i = 0; i < (n >> 1); i++) {
 		alpha = -2.0 * i * M_PI / n;
 		result->wn[i][0] = cos(alpha);
 		result->wn[i][1] = sin(alpha);

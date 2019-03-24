@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,10 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_GUI_CONFIG_DIALOG_SCALE_H_
-#define LINGOT_GUI_CONFIG_DIALOG_SCALE_H_
+#ifndef LINGOT_GUI_CONFIG_DIALOG_SCALE_H
+#define LINGOT_GUI_CONFIG_DIALOG_SCALE_H
 
 #include <gtk/gtk.h>
+
+#include "lingot-gui-config-dialog.h"
 
 struct LingotConfigDialog;
 struct LingotScale;
@@ -51,4 +53,4 @@ void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
 void lingot_gui_config_dialog_scale_callback_change_octave(GtkWidget *widget,
 		LingotConfigDialog *dialog);
 
-#endif /* LINGOT_GUI_CONFIG_DIALOG_SCALE_H_ */
+#endif /* LINGOT_GUI_CONFIG_DIALOG_SCALE_H */

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_GUI_CONFIG_DIALOG_H__
-#define __LINGOT_GUI_CONFIG_DIALOG_H__
+#ifndef LINGOT_GUI_CONFIG_DIALOG_H
+#define LINGOT_GUI_CONFIG_DIALOG_H
 
 #include <gtk/gtk.h>
 
@@ -70,4 +70,4 @@ struct _LingotConfigDialog {
 void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
 void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
 
-#endif // __LINGOT_GUI_CONFIG_DIALOG_H__
+#endif // LINGOT_GUI_CONFIG_DIALOG_H

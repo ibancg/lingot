@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_FILTER_H__
-#define __LINGOT_FILTER_H__
+#ifndef LINGOT_FILTER_H
+#define LINGOT_FILTER_H
 
 #include <fcntl.h>
 #include <stdlib.h>
