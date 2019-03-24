@@ -31,7 +31,7 @@
 #include "lingot-filter.h"
 #include "lingot-signal.h"
 
-void lingot_test_signal() {
+void lingot_test_signal(void) {
 
 	int N = 16;
 	int i = 0;

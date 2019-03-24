@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
  *
  * This file is part of lingot.
@@ -26,359 +26,375 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "lingot-audio.h"
 #include "lingot-defs.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
-snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
-
+static snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 static const unsigned int channels = 1;
 
 void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
 
-	const char* exception;
-	snd_pcm_hw_params_t* hw_params = NULL;
-	int err;
-	char error_message[1000];
+    const char* exception;
+    snd_pcm_hw_params_t* hw_params = NULL;
+    int err;
+    char error_message[1000];
 
-	audio->audio_system = AUDIO_SYSTEM_ALSA;
+    audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraALSA));
+    LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
 
-	if (sample_rate >= 44100) {
-		audio->read_buffer_size_samples = 1024;
-	} else if (sample_rate >= 22050) {
-		audio->read_buffer_size_samples = 512;
-	} else {
-		audio->read_buffer_size_samples = 256;
-	}
+    if (sample_rate >= 44100) {
+        audio->read_buffer_size_samples = 1024;
+    } else if (sample_rate >= 22050) {
+        audio->read_buffer_size_samples = 512;
+    } else {
+        audio->read_buffer_size_samples = 256;
+    }
 
-	// ALSA allocates some mem to load its config file when we call
-	// snd_card_next. Now that we're done getting the info, let's tell ALSA
-	// to unload the info and free up that mem
-	snd_config_update_free_global();
+    // ALSA allocates some mem to load its config file when we call
+    // snd_card_next. Now that we're done getting the info, let's tell ALSA
+    // to unload the info and free up that mem
+    snd_config_update_free_global();
 
-	audio->capture_handle = NULL;
+    audioALSA->capture_handle = NULL;
 
-	try
-	{
-		if ((err = snd_pcm_open(&audio->capture_handle, device,
-				SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK)) < 0) {
-			snprintf(error_message, sizeof(error_message),
-					_("Cannot open audio device '%s'.\n%s"), device,
-					snd_strerror(err));
-			throw(error_message);
-		}
+    try
+    {
+        if ((err = snd_pcm_open(&audioALSA->capture_handle, device,
+                                SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK)) < 0) {
+            snprintf(error_message, sizeof(error_message),
+                     _("Cannot open audio device '%s'.\n%s"), device,
+                     snd_strerror(err));
+            throw(error_message);
+        }
 
-		strcpy(audio->device, device);
+        strncpy(audio->device, device, sizeof(audio->device));
 
-		if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot initialize hardware parameter structure."),
-					snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot initialize hardware parameter structure."),
+                     snd_strerror(err));
+            throw(error_message);
+        }
 
-		if ((err = snd_pcm_hw_params_any(audio->capture_handle, hw_params))
-				< 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot initialize hardware parameter structure."),
-					snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_any(audioALSA->capture_handle, hw_params))
+                < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot initialize hardware parameter structure."),
+                     snd_strerror(err));
+            throw(error_message);
+        }
 
-		if ((err = snd_pcm_hw_params_set_access(audio->capture_handle,
-				hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set access type."), snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_set_access(audioALSA->capture_handle,
+                                                hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot set access type."), snd_strerror(err));
+            throw(error_message);
+        }
 
-		if ((err = snd_pcm_hw_params_set_format(audio->capture_handle,
-				hw_params, sample_format)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set sample format."), snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_set_format(audioALSA->capture_handle,
+                                                hw_params, sample_format)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot set sample format."), snd_strerror(err));
+            throw(error_message);
+        }
 
-		unsigned int rate = sample_rate;
+        unsigned int rate = sample_rate;
 
-		if ((err = snd_pcm_hw_params_set_rate_near(audio->capture_handle,
-				hw_params, &rate, 0)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set sample rate."), snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_set_rate_near(audioALSA->capture_handle,
+                                                   hw_params, &rate, 0)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot set sample rate."), snd_strerror(err));
+            throw(error_message);
+        }
 
-		audio->real_sample_rate = rate;
+        audio->real_sample_rate = rate;
 
-		if ((err = snd_pcm_hw_params_set_channels(audio->capture_handle,
-				hw_params, channels)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set channel number."), snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params_set_channels(audioALSA->capture_handle,
+                                                  hw_params, channels)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot set channel number."), snd_strerror(err));
+            throw(error_message);
+        }
 
-		if ((err = snd_pcm_hw_params(audio->capture_handle, hw_params)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot set parameters."), snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_hw_params(audioALSA->capture_handle, hw_params)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot set parameters."), snd_strerror(err));
+            throw(error_message);
+        }
 
-		if ((err = snd_pcm_prepare(audio->capture_handle)) < 0) {
-			snprintf(error_message, sizeof(error_message), "%s\n%s",
-					_("Cannot prepare audio interface for use."),
-					snd_strerror(err));
-			throw(error_message);
-		}
+        if ((err = snd_pcm_prepare(audioALSA->capture_handle)) < 0) {
+            snprintf(error_message, sizeof(error_message), "%s\n%s",
+                     _("Cannot prepare audio interface for use."),
+                     snd_strerror(err));
+            throw(error_message);
+        }
 
-		audio->bytes_per_sample = snd_pcm_format_size(sample_format, 1);
-	}catch {
-		if (audio->capture_handle != NULL)
-			snd_pcm_close(audio->capture_handle);
-		audio->audio_system = -1;
-		lingot_msg_add_error_with_code(exception, -err);
-	}
+        audio->bytes_per_sample = snd_pcm_format_size(sample_format, 1);
+    } catch {
+        if (audioALSA->capture_handle != NULL)
+            snd_pcm_close(audioALSA->capture_handle);
+        audio->audio_system = -1;
+        lingot_msg_add_error_with_code(exception, -err);
+    }
 
-	if (hw_params != NULL)
-		snd_pcm_hw_params_free(hw_params);
+    if (hw_params != NULL)
+        snd_pcm_hw_params_free(hw_params);
 }
 
 void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
-	if (audio->audio_system == AUDIO_SYSTEM_ALSA) {
-		snd_pcm_close(audio->capture_handle);
-	}
+    if (audio->audio_system >= 0) {
+        LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
+        snd_pcm_close(audioALSA->capture_handle);
+        free(audio->audio_handler_extra);
+    }
 }
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
-	int samples_read = -1;
-	char buffer [channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+    int samples_read = -1;
+    char buffer [channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
 
-	samples_read = snd_pcm_readi(audio->capture_handle, buffer,
-			audio->read_buffer_size_samples);
+    LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
+    samples_read = snd_pcm_readi(audioALSA->capture_handle, buffer,
+                                 audio->read_buffer_size_samples);
 
-	if (samples_read == -EAGAIN) {
-		usleep(200); // TODO: size up
-		samples_read = 0;
-	} else {
-		if (samples_read < 0) {
-			char buff[250];
-			snprintf(buff, sizeof(buff), "%s\n%s",
-					_("Read from audio interface failed."),
-					snd_strerror(samples_read));
-			lingot_msg_add_error_with_code(buff, -samples_read);
-		} else {
-			int i;
-			// float point conversion
-			switch (sample_format) {
-			case SND_PCM_FORMAT_S16: {
-				int16_t* read_buffer = (int16_t*) buffer;
-				for (i = 0; i < samples_read; i++) {
-					audio->flt_read_buffer[i] = read_buffer[i];
-				}
-				break;
-			}
-			case SND_PCM_FORMAT_FLOAT: {
-				float* read_buffer = (float*) buffer;
-				for (i = 0; i < samples_read; i++) {
-					audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
-				}
-				break;
-			}
-			case SND_PCM_FORMAT_FLOAT64: {
-				double* read_buffer = (double*) buffer;
-				for (i = 0; i < samples_read; i++) {
-					audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
-				}
-				break;
-			}
-			default:
-				break;
-			}
-		}
-	}
+    if (samples_read == -EAGAIN) {
+        usleep(200); // TODO: size up
+        samples_read = 0;
+    } else {
+        if (samples_read < 0) {
+            char buff[250];
+            snprintf(buff, sizeof(buff), "%s\n%s",
+                     _("Read from audio interface failed."),
+                     snd_strerror(samples_read));
+            lingot_msg_add_error_with_code(buff, -samples_read);
+        } else {
+            int i;
+            // float point conversion
+            switch (sample_format) {
+            case SND_PCM_FORMAT_S16: {
+                int16_t* read_buffer = (int16_t*) buffer;
+                for (i = 0; i < samples_read; i++) {
+                    audio->flt_read_buffer[i] = read_buffer[i];
+                }
+                break;
+            }
+            case SND_PCM_FORMAT_FLOAT: {
+                float* read_buffer = (float*) buffer;
+                for (i = 0; i < samples_read; i++) {
+                    audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+                }
+                break;
+            }
+            case SND_PCM_FORMAT_FLOAT64: {
+                double* read_buffer = (double*) buffer;
+                for (i = 0; i < samples_read; i++) {
+                    audio->flt_read_buffer[i] = read_buffer[i] * FLT_SAMPLE_SCALE;
+                }
+                break;
+            }
+            default:
+                break;
+            }
+        }
+    }
 
-	return samples_read;
+    return samples_read;
 }
 
 int lingot_audio_alsa_get_audio_system_properties(
-		LingotAudioSystemProperties* result) {
+        LingotAudioSystemProperties* result) {
 
-	result->forced_sample_rate = 0;
-	result->n_devices = 0;
-	result->devices = NULL;
+    result->forced_sample_rate = 0;
+    result->n_devices = 0;
+    result->devices = NULL;
 
-	result->n_sample_rates = 5;
-	result->sample_rates[0] = 8000;
-	result->sample_rates[1] = 11025;
-	result->sample_rates[2] = 22050;
-	result->sample_rates[3] = 44100;
-	result->sample_rates[4] = 48000;
+    result->n_sample_rates = 5;
+    result->sample_rates[0] = 8000;
+    result->sample_rates[1] = 11025;
+    result->sample_rates[2] = 22050;
+    result->sample_rates[3] = 44100;
+    result->sample_rates[4] = 48000;
 
-	int status;
-	int card_index = -1;
-	char* card_shortname = NULL;
-	const char* exception;
-	char error_message[1000];
-	char device_name[512];
-	int device_index = -1;
-	int subdevice_count, subdevice_index;
-	snd_ctl_t *card_handler;
-	snd_pcm_info_t *pcm_info;
+    int status;
+    int card_index = -1;
+    char* card_shortname = NULL;
+    const char* exception;
+    char error_message[1000];
+    char device_name[512];
+    int device_index = -1;
+    int subdevice_count, subdevice_index;
+    snd_ctl_t *card_handler;
+    snd_pcm_info_t *pcm_info;
 
-	// linked list struct for storing the capture device names
-	struct device_name_node_t {
-		char* name;
-		struct device_name_node_t* next;
-	};
+    // linked list struct for storing the capture device names
+    struct device_name_node_t {
+        char* name;
+        struct device_name_node_t* next;
+    };
 
-	struct device_name_node_t* device_names_first =
-			(struct device_name_node_t*) malloc(
-					sizeof(struct device_name_node_t));
-	struct device_name_node_t* device_names_last = device_names_first;
+    struct device_name_node_t* device_names_first =
+            (struct device_name_node_t*) malloc(
+                        sizeof(struct device_name_node_t));
+            struct device_name_node_t* device_names_last = device_names_first;
 
-	// the first record is the default device
-	char buff[512];
-	snprintf(buff, sizeof(buff), "%s <default>", _("Default Device"));
-	device_names_first->name = strdup(buff);
-	device_names_first->next = NULL;
+            // the first record is the default device
+            char buff[512];
+            snprintf(buff, sizeof(buff), "%s <default>", _("Default Device"));
+            device_names_first->name = strdup(buff);
+            device_names_first->next = NULL;
 
-	try
-	{
-		result->n_devices = 1;
-		try
-		{
-			for (;;) {
+            try
+            {
+                result->n_devices = 1;
+                try
+                {
+                    for (;;) {
 
-				if ((status = snd_card_next(&card_index)) < 0) {
-					snprintf(error_message, sizeof(error_message),
-							"warning: cannot determine card number: %s",
-							snd_strerror(status));
-					throw(error_message);
-				}
+                        if ((status = snd_card_next(&card_index)) < 0) {
+                            snprintf(error_message, sizeof(error_message),
+                                     "warning: cannot determine card number: %s",
+                                     snd_strerror(status));
+                            throw(error_message);
+                        }
 
-				if (card_index < 0) {
-					if (result->n_devices == 0) {
-						snprintf(error_message, sizeof(error_message),
-								"warning: no sound cards detected");
-						throw(error_message);
-					}
-					break;
-				}
+                        if (card_index < 0) {
+                            if (result->n_devices == 0) {
+                                snprintf(error_message, sizeof(error_message),
+                                         "warning: no sound cards detected");
+                                throw(error_message);
+                            }
+                            break;
+                        }
 
-				if ((status = snd_card_get_name(card_index, &card_shortname))
-						< 0) {
-					snprintf(error_message, sizeof(error_message),
-							"warning: cannot determine card short name: %s",
-							snd_strerror(status));
-					throw(error_message);
-				}
+                        if ((status = snd_card_get_name(card_index, &card_shortname))
+                                < 0) {
+                            snprintf(error_message, sizeof(error_message),
+                                     "warning: cannot determine card short name: %s",
+                                     snd_strerror(status));
+                            throw(error_message);
+                        }
 
-				sprintf(device_name, "hw:%i", card_index);
-				if ((status = snd_ctl_open(&card_handler, device_name, 0))
-						< 0) {
-					snprintf(error_message, sizeof(error_message),
-							"warning: can't open card %i: %s\n", card_index,
-							snd_strerror(status));
-					throw(error_message);
-				}
+                        sprintf(device_name, "hw:%i", card_index);
+                        if ((status = snd_ctl_open(&card_handler, device_name, 0))
+                                < 0) {
+                            snprintf(error_message, sizeof(error_message),
+                                     "warning: can't open card %i: %s\n", card_index,
+                                     snd_strerror(status));
+                            throw(error_message);
+                        }
 
-				for (device_index = -1;;) {
+                        for (device_index = -1;;) {
 
-					if ((status = snd_ctl_pcm_next_device(card_handler,
-							&device_index)) < 0) {
-						snprintf(error_message, sizeof(error_message),
-								"warning: can't get next PCM device: %s\n",
-								snd_strerror(status));
-						throw(error_message);
-					}
+                            if ((status = snd_ctl_pcm_next_device(card_handler,
+                                                                  &device_index)) < 0) {
+                                snprintf(error_message, sizeof(error_message),
+                                         "warning: can't get next PCM device: %s\n",
+                                         snd_strerror(status));
+                                throw(error_message);
+                            }
 
-					if (device_index < 0)
-						break;
+                            if (device_index < 0)
+                                break;
 
-					snd_pcm_info_malloc(&pcm_info);
-					memset(pcm_info, 0, snd_pcm_info_sizeof());
+                            snd_pcm_info_malloc(&pcm_info);
+                            memset(pcm_info, 0, snd_pcm_info_sizeof());
 
-					snd_pcm_info_set_device(pcm_info, device_index);
+                            snd_pcm_info_set_device(pcm_info, device_index);
 
-					// only search for capture devices
-					snd_pcm_info_set_stream(pcm_info, SND_PCM_STREAM_CAPTURE);
+                            // only search for capture devices
+                            snd_pcm_info_set_stream(pcm_info, SND_PCM_STREAM_CAPTURE);
 
-					subdevice_index = -1;
-					subdevice_count = 1;
+                            subdevice_index = -1;
+                            subdevice_count = 1;
 
-					while (++subdevice_index < subdevice_count) {
+                            while (++subdevice_index < subdevice_count) {
 
-						snd_pcm_info_set_subdevice(pcm_info, subdevice_index);
-						if ((status = snd_ctl_pcm_info(card_handler, pcm_info))
-								< 0) {
-							fprintf(stderr,
-									"warning: can't get info for subdevice hw:%i,%i,%i: %s\n",
-									card_index, device_index, subdevice_index,
-									snd_strerror(status));
-							continue;
-						}
+                                snd_pcm_info_set_subdevice(pcm_info, subdevice_index);
+                                if ((status = snd_ctl_pcm_info(card_handler, pcm_info))
+                                        < 0) {
+                                    fprintf(stderr,
+                                            "warning: can't get info for subdevice hw:%i,%i,%i: %s\n",
+                                            card_index, device_index, subdevice_index,
+                                            snd_strerror(status));
+                                    continue;
+                                }
 
-						if (!subdevice_index) {
-							subdevice_count = snd_pcm_info_get_subdevices_count(
-									pcm_info);
-						}
+                                if (!subdevice_index) {
+                                    subdevice_count = snd_pcm_info_get_subdevices_count(
+                                                pcm_info);
+                                }
 
-						if (subdevice_count > 1) {
-							snprintf(device_name, sizeof(device_name),
-									"%s <plughw:%i,%i,%i>", card_shortname,
-									card_index, device_index, subdevice_index);
-						} else {
-							snprintf(device_name, sizeof(device_name),
-									"%s <plughw:%i,%i>", card_shortname,
-									card_index, device_index);
-						}
+                                if (subdevice_count > 1) {
+                                    snprintf(device_name, sizeof(device_name),
+                                             "%s <plughw:%i,%i,%i>", card_shortname,
+                                             card_index, device_index, subdevice_index);
+                                } else {
+                                    snprintf(device_name, sizeof(device_name),
+                                             "%s <plughw:%i,%i>", card_shortname,
+                                             card_index, device_index);
+                                }
 
-						result->n_devices++;
-						struct device_name_node_t* new_name_node =
-								(struct device_name_node_t*) malloc(
-										sizeof(struct device_name_node_t*));
-						new_name_node->name = strdup(device_name);
-						new_name_node->next = NULL;
+                                result->n_devices++;
+                                struct device_name_node_t* new_name_node =
+                                        (struct device_name_node_t*) malloc(
+                                                    sizeof(struct device_name_node_t*));
+                                        new_name_node->name = strdup(device_name);
+                                        new_name_node->next = NULL;
 
-						if (device_names_first == NULL) {
-							device_names_first = new_name_node;
-						} else {
-							device_names_last->next = new_name_node;
-						}
-						device_names_last = new_name_node;
-					}
+                                        if (device_names_first == NULL) {
+                                            device_names_first = new_name_node;
+                                        } else {
+                                            device_names_last->next = new_name_node;
+                                        }
+                                        device_names_last = new_name_node;
+                            }
 
-					snd_pcm_info_free(pcm_info);
-				}
+                            snd_pcm_info_free(pcm_info);
+                        }
 
-				snd_ctl_close(card_handler);
-			}
-		}catch {
-			result->n_devices = 1;
-			throw(exception);
-		}
+                        snd_ctl_close(card_handler);
+                    }
+                }catch {
+                    result->n_devices = 1;
+                    throw(exception);
+                }
 
-		// copy the device names list
-		result->devices = (char**) malloc(result->n_devices * sizeof(char*));
-		struct device_name_node_t* name_node_current = device_names_first;
-		for (device_index = 0; device_index < result->n_devices;
-				device_index++) {
-			result->devices[device_index] = name_node_current->name;
-			name_node_current = name_node_current->next;
-		}
+                // copy the device names list
+                result->devices = (char**) malloc(result->n_devices * sizeof(char*));
+                struct device_name_node_t* name_node_current = device_names_first;
+                for (device_index = 0; device_index < result->n_devices;
+                     device_index++) {
+                    result->devices[device_index] = name_node_current->name;
+                    name_node_current = name_node_current->next;
+                }
 
-	} catch {
-		fprintf(stderr, "%s", exception);
-	}
+            } catch {
+                fprintf(stderr, "%s", exception);
+            }
 
-	// dispose the device names list
-	struct device_name_node_t* name_node_current;
-	for (name_node_current = device_names_first; name_node_current != NULL;) {
-		struct device_name_node_t* name_node_previous = name_node_current;
-		name_node_current = name_node_current->next;
-		free(name_node_previous);
-	}
-	return 0;
+            // dispose the device names list
+            struct device_name_node_t* name_node_current;
+            for (name_node_current = device_names_first; name_node_current != NULL;) {
+                struct device_name_node_t* name_node_previous = name_node_current;
+                name_node_current = name_node_current->next;
+                free(name_node_previous);
+            }
+            return 0;
+}
+
+int lingot_audio_alsa_register(void)
+{
+    return lingot_audio_system_register("ALSA",
+                                        lingot_audio_alsa_new,
+                                        lingot_audio_alsa_destroy,
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        lingot_audio_alsa_read,
+                                        lingot_audio_alsa_get_audio_system_properties);
 }
 
 #endif

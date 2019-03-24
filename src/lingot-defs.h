@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,15 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_DEFS_H__
-#define __LINGOT_DEFS_H__
+#ifndef LINGOT_DEFS_H
+#define LINGOT_DEFS_H
 
 #include "../config.h"
 
 // floating point precission.
 #define FLT                  double
 
-#define CONFIG_DIR_NAME           ".lingot/"
+#define CONFIG_DIR_NAME           ".config/lingot/"
 #define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
 extern char CONFIG_FILE_NAME[];
 

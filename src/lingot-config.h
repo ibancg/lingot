@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,18 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_CONFIG_H__
-#define __LINGOT_CONFIG_H__
+#ifndef LINGOT_CONFIG_H
+#define LINGOT_CONFIG_H
 
 #include "lingot-defs.h"
 #include "lingot-config-scale.h"
-
-typedef enum audio_system_t {
-	AUDIO_SYSTEM_OSS = 0,
-	AUDIO_SYSTEM_ALSA = 1,
-	AUDIO_SYSTEM_JACK = 2,
-	AUDIO_SYSTEM_PULSEAUDIO = 3
-} audio_system_t;
 
 typedef enum window_type_t {
 	NONE = 0, //
@@ -41,13 +34,15 @@ typedef enum window_type_t {
 	HAMMING = 2
 } window_type_t;
 
-// Configuration struct. Determines the tuner behaviour.
+#define N_MAX_AUDIO_DEV 10
+
+// Configuration struct. Determines the behaviour of the tuner.
 // Some parameters are internal only.
 typedef struct {
 
-	audio_system_t audio_system;
+    int audio_system_index;
 
-	char audio_dev[4][512];
+    char audio_dev[N_MAX_AUDIO_DEV][512];
 	int sample_rate; // hardware sample rate.
 	unsigned int oversampling; // oversampling factor.
 
@@ -110,4 +105,4 @@ void lingot_config_restore_default_values(LingotConfig*);
 // derivate internal parameters from external ones.
 void lingot_config_update_internal_params(LingotConfig*);
 
-#endif // __LINGOT_CONFIG_H__
+#endif // LINGOT_CONFIG_H

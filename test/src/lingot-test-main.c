@@ -20,10 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-void lingot_test_io_config();
-void lingot_test_config_scale();
-void lingot_test_signal();
-void lingot_test_core();
+void lingot_test_io_config(void);
+void lingot_test_config_scale(void);
+void lingot_test_signal(void);
+void lingot_test_core(void);
+
+#ifndef LINGOT_TEST_USE_LIB
 
 // TODO: lib?
 #include "lingot-complex.c"
@@ -31,6 +33,7 @@ void lingot_test_core();
 #include "lingot-config-scale.c"
 #include "lingot-config.c"
 #include "lingot-io-config.c"
+#include "lingot-io-config-scale.c"
 #include "lingot-audio.c"
 #include "lingot-audio-alsa.c"
 #include "lingot-audio-oss.c"
@@ -41,11 +44,33 @@ void lingot_test_core();
 #include "lingot-signal.c"
 #include "lingot-filter.c"
 
+#else
+
+#include "lingot-audio-oss.h"
+#include "lingot-audio-alsa.h"
+#include "lingot-audio-jack.h"
+#include "lingot-audio-pulseaudio.h"
+
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <CUnit/Basic.h>
 
 int main(void) {
+
+#	ifdef OSS
+    lingot_audio_oss_register();
+#   endif
+#	ifdef ALSA
+    lingot_audio_alsa_register();
+#   endif
+#	ifdef PULSEAUDIO
+    lingot_audio_pulseaudio_register();
+#   endif
+#	ifdef JACK
+    lingot_audio_jack_register();
+#   endif
 
 	CU_pSuite pSuite = NULL;
 

@@ -25,7 +25,7 @@
 #include "lingot-config-scale.h"
 #include "lingot-config.h"
 
-void lingot_test_config_scale() {
+void lingot_test_config_scale(void) {
 
 	LingotConfig _config;
 	LingotConfig* config = &_config;

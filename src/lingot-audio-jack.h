@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -24,23 +24,18 @@
 
 #ifdef JACK
 
-#ifndef __LINGOT_AUDIO_JACK_H__
-#define __LINGOT_AUDIO_JACK_H__
+#ifndef LINGOT_AUDIO_JACK_H
+#define LINGOT_AUDIO_JACK_H
 
-#include "lingot-audio.h"
+#include <jack/jack.h>
 
-void lingot_audio_jack_new(LingotAudioHandler*, const char* device);
-// In case of failure, audio_system is set to -1.
+typedef struct {
+    jack_port_t *input_port;
+    jack_client_t *client;
+    int nframes;
+} LingotAudioHandlerExtraJack;
 
-void lingot_audio_jack_destroy(LingotAudioHandler*);
-
-int lingot_audio_jack_read(LingotAudioHandler*);
-
-int lingot_audio_jack_get_audio_system_properties(LingotAudioSystemProperties*);
-// Return status : 0 for OK, else -1.
-
-int lingot_audio_jack_start(LingotAudioHandler*);
-void lingot_audio_jack_stop(LingotAudioHandler*);
+int lingot_audio_jack_register(void);
 
 #endif
 #endif

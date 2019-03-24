@@ -1,7 +1,9 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2008  Jairo Chapela.
+
  *
  * This file is part of lingot.
  *
@@ -19,17 +21,17 @@
  * along with lingot; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef LINGOT_TEST_H
-#define LINGOT_TEST_H
 
-#include <assert.h>
-#include <stdio.h>
-#include <CUnit/Basic.h>
+#ifndef LINGOT_IO_CONFIG_SCALE_H
+#define LINGOT_IO_CONFIG_SCALE_H
 
-// unit testing functions
+#include "lingot-config-scale.h"
 
-// time measurement
-void tic();
-double toc();
+int lingot_config_scale_load_scl(LingotScale* scale, char* filename);
+/* The scale argument must *not* be initialized with _new. */
 
-#endif
+int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
+
+void lingot_config_scale_format_shift(char*, double, short int, short int);
+
+#endif // LINGOT_IO_CONFIG_SCALE_H

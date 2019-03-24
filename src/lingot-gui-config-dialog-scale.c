@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -30,9 +30,13 @@
 #include "lingot-gui-config-dialog-scale.h"
 #include "lingot-msg.h"
 #include "lingot-i18n.h"
+#include "lingot-io-config-scale.h"
 
 enum {
-	COLUMN_NAME = 0, COLUMN_SHIFT = 1, COLUMN_FREQUENCY = 2, NUM_COLUMNS = 3
+    COLUMN_NAME = 0,
+    COLUMN_SHIFT = 1,
+    COLUMN_FREQUENCY = 2,
+    NUM_COLUMNS = 3
 };
 
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
@@ -87,8 +91,11 @@ void lingot_gui_config_dialog_scale_tree_add_row_tree(gpointer data,
 			// TODO
 		}
 
-		g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free(list);
+        GList *elem;
+        for (elem = list; elem; elem = elem->next) {
+            gtk_tree_path_free(elem->data);
+        }
+        g_list_free(list);
 
 		if (!valid)
 			return;
@@ -150,8 +157,11 @@ void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
 		}
 		list = list->next;
 	}
-	g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-	g_list_free(list);
+    GList *elem;
+    for (elem = list; elem; elem = elem->next) {
+        gtk_tree_path_free(elem->data);
+    }
+    g_list_free(list);
 }
 
 void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
@@ -208,8 +218,11 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 		// TODO
 	}
 
-	g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-	g_list_free(list);
+    GList *elem;
+    for (elem = list; elem; elem = elem->next) {
+        gtk_tree_path_free(elem->data);
+    }
+    g_list_free(list);
 
 	if (!valid)
 		return;

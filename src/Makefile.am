@@ -1,5 +1,5 @@
 AM_CFLAGS = \
-	 -Wall -Wextra \
+         -Wall -Wextra -pedantic \
 	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS) \
 	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
 
@@ -43,7 +43,9 @@ lingot_SOURCES = \
 	lingot-filter.h\
 	lingot-io-config.c\
 	lingot-io-config.h\
-	lingot-signal.c\
+        lingot-io-config-scale.c\
+        lingot-io-config-scale.h\
+        lingot-signal.c\
 	lingot-signal.h\
 	lingot.c\
 	lingot-i18n.h\
