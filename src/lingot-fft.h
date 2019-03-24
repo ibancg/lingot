@@ -39,16 +39,16 @@
 
 typedef struct {
 
-	int n;
-	FLT* in;
+    int n;
+    FLT* in;
 
 #ifdef LIBFFTW
-	fftw_plan fftwplan;
+    fftw_plan fftwplan;
 #else
-// phase factor table, for FFT optimization.
-	LingotComplex* wn;
+    // phase factor table, for FFT optimization.
+    LingotComplex* wn;
 #endif
-	LingotComplex* fft_out; // complex signal in freq.
+    LingotComplex* fft_out; // complex signal in freq.
 } LingotFFTPlan;
 
 void lingot_fft_plan_create(LingotFFTPlan*, FLT* in, int n);
@@ -62,6 +62,6 @@ void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2);
 
 // Evaluates first and second SPD derivatives at frequency w.
 void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d0,
-		FLT* out_d1, FLT* out_d2);
+                               FLT* out_d1, FLT* out_d2);
 
 #endif

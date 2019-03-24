@@ -72,38 +72,38 @@ int main(void) {
     lingot_audio_jack_register();
 #   endif
 
-	CU_pSuite pSuite = NULL;
+    CU_pSuite pSuite = NULL;
 
-	/* initialize the CUnit test registry */
-	if (CUE_SUCCESS != CU_initialize_registry())
-		return CU_get_error();
+    /* initialize the CUnit test registry */
+    if (CUE_SUCCESS != CU_initialize_registry())
+        return CU_get_error();
 
-	/* add a suite to the registry */
-	pSuite = CU_add_suite("Lingot_test_suite", NULL, NULL);
-	if (NULL == pSuite) {
-		CU_cleanup_registry();
-		return CU_get_error();
-	}
+    /* add a suite to the registry */
+    pSuite = CU_add_suite("Lingot_test_suite", NULL, NULL);
+    if (NULL == pSuite) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
-	/* add the tests to the suite */
-	/* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
-	if ( //
-			(NULL == CU_add_test(pSuite, "lingot_config", lingot_test_io_config)) || //
-			(NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_test_config_scale)) || //
-			(NULL == CU_add_test(pSuite, "lingot_signal", lingot_test_signal)) || //
-			(NULL == CU_add_test(pSuite, "lingot_core", lingot_test_core)) || //
-			0) {
-		CU_cleanup_registry();
-		return CU_get_error();
-	}
+    /* add the tests to the suite */
+    /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
+    if ( //
+         (NULL == CU_add_test(pSuite, "lingot_config", lingot_test_io_config)) || //
+         (NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_test_config_scale)) || //
+         (NULL == CU_add_test(pSuite, "lingot_signal", lingot_test_signal)) || //
+         (NULL == CU_add_test(pSuite, "lingot_core", lingot_test_core)) || //
+         0) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
-	/* Run all tests using the CUnit Basic interface */
-	CU_basic_set_mode(CU_BRM_VERBOSE);
-	CU_basic_run_tests();
+    /* Run all tests using the CUnit Basic interface */
+    CU_basic_set_mode(CU_BRM_VERBOSE);
+    CU_basic_run_tests();
 
-	int num_failures = CU_get_number_of_failures();
-	CU_cleanup_registry();
+    int num_failures = CU_get_number_of_failures();
+    CU_cleanup_registry();
 
-	return num_failures;
+    return num_failures;
 
 }

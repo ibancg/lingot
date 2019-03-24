@@ -39,37 +39,37 @@
 
 struct _LingotMainFrame {
 
-	// gtk widgets
-	GtkWidget* gauge_area;
-	GtkWidget* spectrum_area;
-	GtkWidget* tone_label;
-	GtkWidget* view_spectrum_item;
-	GtkWidget* spectrum_frame;
+    // gtk widgets
+    GtkWidget* gauge_area;
+    GtkWidget* spectrum_area;
+    GtkWidget* tone_label;
+    GtkWidget* view_spectrum_item;
+    GtkWidget* spectrum_frame;
 
-	GtkWidget* freq_label;
-	GtkWidget* error_label;
+    GtkWidget* freq_label;
+    GtkWidget* error_label;
 
-	GtkWidget* labelsbox;
+    GtkWidget* labelsbox;
 
-	LingotFilter freq_filter;
+    LingotFilter freq_filter;
 
-	LingotGauge gauge;
+    LingotGauge gauge;
 
-	LingotCore core;
+    LingotCore core;
 
-	GtkWidget* win;
+    GtkWidget* win;
 
-	GdkColor gauge_color;
-	GdkColor spectrum_color;
+    GdkColor gauge_color;
+    GdkColor spectrum_color;
 
-	LingotConfigDialog* config_dialog;
-	LingotConfig conf;
+    LingotConfigDialog* config_dialog;
+    LingotConfig conf;
 
-	// timer uids
-	guint visualization_timer_uid;
-	guint freq_computation_timer_uid;
-	guint gauge_computation_uid;
-	guint error_dispatcher_uid;
+    // timer uids
+    guint visualization_timer_uid;
+    guint freq_computation_timer_uid;
+    guint gauge_computation_uid;
+    guint error_dispatcher_uid;
 };
 
 void lingot_gui_mainframe_create(int argc, char *argv[]);

@@ -29,9 +29,9 @@
 #include "lingot-config-scale.h"
 
 typedef enum window_type_t {
-	NONE = 0, //
-	HANNING = 1, //
-	HAMMING = 2
+    NONE = 0, //
+    HANNING = 1, //
+    HAMMING = 2
 } window_type_t;
 
 #define N_MAX_AUDIO_DEV 10
@@ -43,54 +43,54 @@ typedef struct {
     int audio_system_index;
 
     char audio_dev[N_MAX_AUDIO_DEV][512];
-	int sample_rate; // hardware sample rate.
-	unsigned int oversampling; // oversampling factor.
+    int sample_rate; // hardware sample rate.
+    unsigned int oversampling; // oversampling factor.
 
-	FLT root_frequency_error; // deviation of the above root frequency.
+    FLT root_frequency_error; // deviation of the above root frequency.
 
-	FLT min_frequency; // minimum frequency of the instrument.
-	FLT max_frequency; // maximum frequency of the instrument.
+    FLT min_frequency; // minimum frequency of the instrument.
+    FLT max_frequency; // maximum frequency of the instrument.
 
-	int optimize_internal_parameters;
+    int optimize_internal_parameters;
 
-	FLT internal_min_frequency; // minimum valid frequency.
-	FLT internal_max_frequency; // maximum frequency we want to tune.
+    FLT internal_min_frequency; // minimum valid frequency.
+    FLT internal_max_frequency; // maximum frequency we want to tune.
 
-	unsigned int fft_size; // number of samples of the FFT.
+    unsigned int fft_size; // number of samples of the FFT.
 
-	FLT calculation_rate;
-	FLT visualization_rate;
+    FLT calculation_rate;
+    FLT visualization_rate;
 
-	FLT temporal_window; // duration in seconds of the temporal window.
+    FLT temporal_window; // duration in seconds of the temporal window.
 
-	// samples stored in the temporal window (internal parameter).
-	unsigned int temporal_buffer_size;
+    // samples stored in the temporal window (internal parameter).
+    unsigned int temporal_buffer_size;
 
-	// minimum SNR required for the overall set of peaks and for each peak
-	FLT min_overall_SNR; // dB
-	FLT min_SNR; // dB
+    // minimum SNR required for the overall set of peaks and for each peak
+    FLT min_overall_SNR; // dB
+    FLT min_SNR; // dB
 
-	window_type_t window_type;
+    window_type_t window_type;
 
-	// frequency finding algorithm configuration
-	//-------------------------------------------
+    // frequency finding algorithm configuration
+    //-------------------------------------------
 
-	unsigned int peak_number; // number of maximum peaks considered.
+    unsigned int peak_number; // number of maximum peaks considered.
 
-	// number of adjacent samples needed to consider a peak.
-	unsigned int peak_half_width;
+    // number of adjacent samples needed to consider a peak.
+    unsigned int peak_half_width;
 
-	// max iterations for Newton-Raphson algorithm.
-	unsigned int max_nr_iter;
+    // max iterations for Newton-Raphson algorithm.
+    unsigned int max_nr_iter;
 
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
-	// gauge rest value. (gauge contemplates [-0.5, 0.5])
-	FLT gauge_rest_value;
+    // gauge rest value. (gauge contemplates [-0.5, 0.5])
+    FLT gauge_rest_value;
 
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
-	LingotScale scale;
+    LingotScale scale;
 
 } LingotConfig;
 

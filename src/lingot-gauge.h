@@ -35,7 +35,7 @@
 typedef struct {
     LingotFilter filter;
     FLT position;
-  } LingotGauge;
+} LingotGauge;
 
 void lingot_gauge_new(LingotGauge*, FLT);
 void lingot_gauge_destroy(LingotGauge*);

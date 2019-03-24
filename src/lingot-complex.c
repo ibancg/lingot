@@ -25,39 +25,39 @@
 #include "lingot-complex.h"
 
 void lingot_complex_add(const LingotComplex a, const LingotComplex b,
-		LingotComplex c) {
-	c[0] = a[0] + b[0];
-	c[1] = a[1] + b[1];
+                        LingotComplex c) {
+    c[0] = a[0] + b[0];
+    c[1] = a[1] + b[1];
 }
 
 void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
-		LingotComplex c) {
-	c[0] = a[0] - b[0];
-	c[1] = a[1] - b[1];
+                        LingotComplex c) {
+    c[0] = a[0] - b[0];
+    c[1] = a[1] - b[1];
 }
 
 void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
-		LingotComplex c) {
-	c[0] = a[0] * b[0] - a[1] * b[1];
-	c[1] = a[1] * b[0] + a[0] * b[1];
+                        LingotComplex c) {
+    c[0] = a[0] * b[0] - a[1] * b[1];
+    c[1] = a[1] * b[0] + a[0] * b[1];
 }
 
 void lingot_complex_div(const LingotComplex a, const LingotComplex b,
-		LingotComplex c) {
-	FLT bm2 = b[0] * b[0] + b[1] * b[1];
-	c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
-	c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
+                        LingotComplex c) {
+    FLT bm2 = b[0] * b[0] + b[1] * b[1];
+    c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
+    c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
 }
 
 void lingot_complex_mul_by(LingotComplex a, const LingotComplex b) {
-	double rr = a[0] * b[0] - a[1] * b[1];
-	a[1] = a[1] * b[0] + a[0] * b[1];
-	a[0] = rr;
+    double rr = a[0] * b[0] - a[1] * b[1];
+    a[1] = a[1] * b[0] + a[0] * b[1];
+    a[0] = rr;
 }
 
 void lingot_complex_div_by(LingotComplex a, const LingotComplex b) {
-	FLT bm2 = b[0] * b[0] + b[1] * b[1];
-	double rr = (a[0] * b[0] + a[1] * b[1]) / bm2;
-	a[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
-	a[0] = rr;
+    FLT bm2 = b[0] * b[0] + b[1] * b[1];
+    double rr = (a[0] * b[0] + a[1] * b[1]) / bm2;
+    a[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
+    a[0] = rr;
 }

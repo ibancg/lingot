@@ -95,12 +95,12 @@ int main(int argc, char *argv[]) {
 #   if !defined(OSS) && !defined(ALSA) && !defined(JACK) && !defined(PULSEAUDIO)
 #	error "No audio system has been defined"
 #   endif
-//#	ifdef OSS
-//    lingot_audio_oss_register();
-//#   endif
-//#	ifdef ALSA
-//    lingot_audio_alsa_register();
-//#   endif
+    //#	ifdef OSS
+    //    lingot_audio_oss_register();
+    //#   endif
+    //#	ifdef ALSA
+    //    lingot_audio_alsa_register();
+    //#   endif
 #	ifdef PULSEAUDIO
     lingot_audio_pulseaudio_register();
 #   endif

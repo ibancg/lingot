@@ -462,11 +462,11 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
         if (!strcmp(option, "AUDIO_DEV")) {
             option = "AUDIO_DEV.OSS";
         } else if (!strcmp(option, "AUDIO_DEV_ALSA")) {
-                option = "AUDIO_DEV.ALSA";
+            option = "AUDIO_DEV.ALSA";
         } else if (!strcmp(option, "AUDIO_DEV_JACK")) {
-                option = "AUDIO_DEV.JACK";
+            option = "AUDIO_DEV.JACK";
         } else if (!strcmp(option, "AUDIO_DEV_PULSEAUDIO")) {
-                option = "AUDIO_DEV.PulseAudio";
+            option = "AUDIO_DEV.PulseAudio";
         }
         if (!strncmp(option, "AUDIO_DEV.", 10)) {
             audio_system_name = &option[10];

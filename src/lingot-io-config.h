@@ -30,27 +30,27 @@
 
 // configuration parameter identifier
 typedef enum LingotConfigParameterId {
-	LINGOT_PARAMETER_ID_AUDIO_SYSTEM, //
-	LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, //
-	LINGOT_PARAMETER_ID_FFT_SIZE, //
-	LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, //
-	LINGOT_PARAMETER_ID_MIN_SNR, //
-	LINGOT_PARAMETER_ID_CALCULATION_RATE, //
-	LINGOT_PARAMETER_ID_VISUALIZATION_RATE, //
-	LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, //
-	LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, //
-	// ------- obsolete ---------
-	LINGOT_PARAMETER_ID_MIN_FREQUENCY, //
-	LINGOT_PARAMETER_ID_GAIN, //
-	LINGOT_PARAMETER_ID_NOISE_THRESHOLD, //
-	LINGOT_PARAMETER_ID_SAMPLE_RATE, //
-	LINGOT_PARAMETER_ID_OVERSAMPLING, //
-	LINGOT_PARAMETER_ID_DFT_NUMBER, //
-	LINGOT_PARAMETER_ID_DFT_SIZE, //
-	LINGOT_PARAMETER_ID_PEAK_ORDER, //
-	LINGOT_PARAMETER_ID_PEAK_NUMBER, //
-	LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, //
-	LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION, //
+    LINGOT_PARAMETER_ID_AUDIO_SYSTEM, //
+    LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, //
+    LINGOT_PARAMETER_ID_FFT_SIZE, //
+    LINGOT_PARAMETER_ID_TEMPORAL_WINDOW, //
+    LINGOT_PARAMETER_ID_MIN_SNR, //
+    LINGOT_PARAMETER_ID_CALCULATION_RATE, //
+    LINGOT_PARAMETER_ID_VISUALIZATION_RATE, //
+    LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY, //
+    LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY, //
+    // ------- obsolete ---------
+    LINGOT_PARAMETER_ID_MIN_FREQUENCY, //
+    LINGOT_PARAMETER_ID_GAIN, //
+    LINGOT_PARAMETER_ID_NOISE_THRESHOLD, //
+    LINGOT_PARAMETER_ID_SAMPLE_RATE, //
+    LINGOT_PARAMETER_ID_OVERSAMPLING, //
+    LINGOT_PARAMETER_ID_DFT_NUMBER, //
+    LINGOT_PARAMETER_ID_DFT_SIZE, //
+    LINGOT_PARAMETER_ID_PEAK_ORDER, //
+    LINGOT_PARAMETER_ID_PEAK_NUMBER, //
+    LINGOT_PARAMETER_ID_PEAK_HALF_WIDTH, //
+    LINGOT_PARAMETER_ID_PEAK_REJECTION_RELATION, //
 
     LINGOT_PARAMETER_ID_AUDIO_DEV, //
     LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA, //
@@ -60,10 +60,10 @@ typedef enum LingotConfigParameterId {
 
 // configuration parameter type
 typedef enum LingotConfigParameterType {
-	LINGOT_PARAMETER_TYPE_STRING,
-	LINGOT_PARAMETER_TYPE_INTEGER,
-	LINGOT_PARAMETER_TYPE_FLOAT,
-	LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM
+    LINGOT_PARAMETER_TYPE_STRING,
+    LINGOT_PARAMETER_TYPE_INTEGER,
+    LINGOT_PARAMETER_TYPE_FLOAT,
+    LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM
 } LingotConfigParameterType;
 
 typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
@@ -71,18 +71,18 @@ typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
 // configuration parameter specification (id, type, minimum and maximum allowed values, ...)
 struct _LingotConfigParameterSpec {
 
-	LingotConfigParameterId id;
-	LingotConfigParameterType type;
-	const char* name;
-	const char* units;
+    LingotConfigParameterId id;
+    LingotConfigParameterType type;
+    const char* name;
+    const char* units;
 
-	int deprecated;
+    int deprecated;
 
-	unsigned int str_max_len;
-	int int_min;
-	int int_max;
-	double float_min;
-	double float_max;
+    unsigned int str_max_len;
+    int int_min;
+    int int_max;
+    double float_min;
+    double float_max;
 };
 
 void lingot_io_config_create_parameter_specs(void);

@@ -28,16 +28,16 @@
 #include "lingot-defs.h"
 
 typedef struct {
-	char* name; 					// name of the scale
-	unsigned short int notes; 		// number of notes
-	FLT* offset_cents; 				// offset in cents
-	short int* offset_ratios[2]; 	// offset in ratios (pairs of integers)
-	FLT base_frequency; 			// frequency of the first note (tipically C4)
-	char** note_name; 				// note names
+    char* name; 					// name of the scale
+    unsigned short int notes; 		// number of notes
+    FLT* offset_cents; 				// offset in cents
+    short int* offset_ratios[2]; 	// offset in ratios (pairs of integers)
+    FLT base_frequency; 			// frequency of the first note (tipically C4)
+    char** note_name; 				// note names
 
-	// -- internal parameters --
+    // -- internal parameters --
 
-	FLT max_offset_rounded; 		// round version of maximum offset in cents
+    FLT max_offset_rounded; 		// round version of maximum offset in cents
 } LingotScale;
 
 void lingot_config_scale_new(LingotScale*);
@@ -65,6 +65,6 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index);
 
 
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
-		FLT freq, FLT deviation, FLT* error_cents);
+                                               FLT freq, FLT deviation, FLT* error_cents);
 
 #endif /* LINGOT_CONFIG_SCALE_H */

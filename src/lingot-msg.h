@@ -29,7 +29,7 @@
 
 // message types
 typedef enum message_type_t {
-	ERROR = 0, WARNING = 1, INFO = 2
+    ERROR = 0, WARNING = 1, INFO = 2
 } message_type_t;
 
 // add messages to the queue
