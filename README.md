@@ -23,7 +23,7 @@ determined automatically as the closest note to the estimated frequency.
 * A modest computer running _GNU/Linux_.
 * A sound card with line-in or microphone input.
 * [Jack](http://www.jackaudio.org/), [ALSA](https://www.alsa-project.org/main/index.php/Main_Page), [OSS](http://www.opensound.com/oss.html) or [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) support.
-* _GTK+_ library, version _3.10_ or above.
+* [GTK+](https://www.gtk.org/) library, version _3.10_ or above.
 
 ## Installation
 
@@ -34,8 +34,8 @@ If you are building a release, just type:
 make install
 ```
 
-If you are building a development version obtained from our VCS you will need to
-create the configure script first by calling:
+If you are building a development version obtained from our VCS you will first need to
+create the configure script, by calling:
 
 ```console
 ./bootstrap
