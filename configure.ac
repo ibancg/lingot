@@ -66,6 +66,7 @@ if test "x$enable_oss" = "xyes"; then
 	AC_CHECK_HEADERS([sys/ioctl.h])
 	AC_SUBST(OSS_CFLAGS)
 	AC_SUBST(OSS_LIBS)
+        CFLAGS="$CFLAGS -DOSS"
 fi
 
 AC_ARG_ENABLE(
@@ -81,6 +82,7 @@ if test "x$enable_alsa" = "xyes"; then
 	PKG_CHECK_MODULES([ALSA], [alsa])
 	AC_SUBST(ALSA_CFLAGS)
 	AC_SUBST(ALSA_LIBS)
+        CFLAGS="$CFLAGS -DALSA"
 fi
 
 AC_ARG_ENABLE(
@@ -94,6 +96,7 @@ if test "x$enable_jack" = "xyes"; then
         PKG_CHECK_MODULES(JACK, jack >= 0.117.0)
 	AC_SUBST(JACK_CFLAGS)
 	AC_SUBST(JACK_LIBS)
+        CFLAGS="$CFLAGS -DJACK"
 fi
 
 AC_ARG_ENABLE(
@@ -109,6 +112,7 @@ if test "x$enable_pulseaudio" = "xyes"; then
  	PKG_CHECK_MODULES(PULSEAUDIO, libpulse-simple >= 0.9.10)
 	AC_SUBST(PULSEAUDIO_CFLAGS)
 	AC_SUBST(PULSEAUDIO_LIBS)
+        CFLAGS="$CFLAGS -DPULSEAUDIO"
 fi
 
 uselibfftw=yes
