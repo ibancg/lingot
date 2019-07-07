@@ -12,5 +12,12 @@ addons:
             - libjack-jackd2-dev
             - libfftw3-dev
             - libgtk-3-dev
+            - libcunit1-dev
 
-script: ./bootstrap && ./configure && make clean all check dist distcheck
+script:
+    - ./bootstrap && \
+      ./configure && \
+      make all && \
+      make check && \
+      make dist && \
+      make distcheck
