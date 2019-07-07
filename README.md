@@ -12,7 +12,7 @@ determined automatically as the closest note to the estimated frequency.
 
 ## Main features
 
-* It is **free software**, distributed under the [GPL license](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+* It is free software, distributed under the [GPL license](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 * Quick and accurate, perfect for real-time microtonal tuning.
 * Easy to use. Just plug in your instrument and run it.
 * _LINGOT_ is a universal tuner. It can tune many musical instruments, you only need to provide the scale _temperaments_. For that purpose, it supports the [.scl format](http://www.huygens-fokker.org/scala/scl_format.html) from the [Scala project](http://www.huygens-fokker.org/scala/).
@@ -57,4 +57,8 @@ Also, the depedency to [libfftw](http://fftw.org) can be enabled/disabled with
   --enable-libfftw=<yes|no>
 ```
 
+Below a summary of the packages needed to build a development version on _Debian-based_ systems:
 
+```console
+sudo apt-get install libtool intltool libasound2-dev libpulse-dev libjack-jackd2-dev libfftw3-dev libgtk-3-dev libcunit1-dev
+```
