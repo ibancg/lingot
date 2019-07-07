@@ -12,19 +12,20 @@ determined automatically as the closest note to the estimated frequency.
 
 ## Main features
 
-* It’s free software. LINGOT is distributed under the [GPL license](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
-* It’s really quick and accurate, perfect for real-time microtonal tuning.
+* It is **free software**, distributed under the [GPL license](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+* Quick and accurate, perfect for real-time microtonal tuning.
 * Easy to use. Just plug in your instrument and run it.
-* LINGOT is a universal tuner. It can tune many musical instruments, you only need to provide the temperaments. For that purpose, it supports the [.scl format](http://www.huygens-fokker.org/scala/scl_format.html) from the [Scala project](http://www.huygens-fokker.org/scala/).
-* Configurable via GUI. It’s possible to change any parameter while the program is running, without editing any file.
+* _LINGOT_ is a universal tuner. It can tune many musical instruments, you only need to provide the scale _temperaments_. For that purpose, it supports the [.scl format](http://www.huygens-fokker.org/scala/scl_format.html) from the [Scala project](http://www.huygens-fokker.org/scala/).
+* Configurable via GUI. It is possible to change any parameter while the program is running, without editing any file.
 
 ## Requirements
 
-* Sound card.
-* Linux kernel with audio support (OSS, ALSA, JACK or PulseAudio).
-* GTK+ library, version 3.10.
+* A modest computer running _GNU/Linux_.
+* A sound card with line-in or microphone input.
+* [Jack](http://www.jackaudio.org/), [ALSA](https://www.alsa-project.org/main/index.php/Main_Page), [OSS](http://www.opensound.com/oss.html) or [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) support.
+* _GTK+_ library, version _3.10_ or above.
 
-# Installation
+## Installation
 
 If you are building a release, just type:
 
@@ -40,15 +41,7 @@ create the configure script first by calling:
 ./bootstrap
 ```
 
-
-Lingot supports the following audio systems/servers:
-
-* OSS
-* ALSA
-* JACK
-* PulseAudio
-
-You can enable/disable each of them with the following options passed to the
+You can enable/disable the supported audio systems with the following options passed to the
 configure script, all of them enabled by default:
 
 ```
@@ -58,29 +51,10 @@ configure script, all of them enabled by default:
   --enable-pulseaudio=<yes|no>
 ```
 
-Also, the depedency to libfftw can be enabled/disabled with
+Also, the depedency to [libfftw](http://fftw.org) can be enabled/disabled with
 
 ```
   --enable-libfftw=<yes|no>
 ```
 
-Please, see the INSTALL file.
 
-
-# Synopsis
-
-```
-    lingot [-c config]
-```
-
-The `-c` option causes the search of a file named `{config}.conf` in the `~/.config/lingot`
-folder. For example:
-
-```
-    lingot -c bass
-```
-
-will take the configuration file `~/.config/lingot/bass.conf`. This is useful for
-maintaining different configurations for different instruments. It's also
-possible to load and save configuration files from the GUI. The default
-configuration file is `~/.config/lingot/lingot.conf`.
