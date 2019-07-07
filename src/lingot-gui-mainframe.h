@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_GUI_MAIN_FRAME_H__
-#define __LINGOT_GUI_MAIN_FRAME_H__
+#ifndef LINGOT_GUI_MAIN_FRAME_H
+#define LINGOT_GUI_MAIN_FRAME_H
 
 #include "lingot-defs.h"
 #include "lingot-core.h"
@@ -39,37 +39,37 @@
 
 struct _LingotMainFrame {
 
-	// gtk widgets
-	GtkWidget* gauge_area;
-	GtkWidget* spectrum_area;
-	GtkWidget* tone_label;
-	GtkWidget* view_spectrum_item;
-	GtkWidget* spectrum_frame;
+    // gtk widgets
+    GtkWidget* gauge_area;
+    GtkWidget* spectrum_area;
+    GtkWidget* tone_label;
+    GtkWidget* view_spectrum_item;
+    GtkWidget* spectrum_frame;
 
-	GtkWidget* freq_label;
-	GtkWidget* error_label;
+    GtkWidget* freq_label;
+    GtkWidget* error_label;
 
-	GtkWidget* labelsbox;
+    GtkWidget* labelsbox;
 
-	LingotFilter freq_filter;
+    LingotFilter freq_filter;
 
-	LingotGauge gauge;
+    LingotGauge gauge;
 
-	LingotCore core;
+    LingotCore core;
 
-	GtkWidget* win;
+    GtkWidget* win;
 
-	GdkColor gauge_color;
-	GdkColor spectrum_color;
+    GdkColor gauge_color;
+    GdkColor spectrum_color;
 
-	LingotConfigDialog* config_dialog;
-	LingotConfig conf;
+    LingotConfigDialog* config_dialog;
+    LingotConfig conf;
 
-	// timer uids
-	guint visualization_timer_uid;
-	guint freq_computation_timer_uid;
-	guint gauge_computation_uid;
-	guint error_dispatcher_uid;
+    // timer uids
+    guint visualization_timer_uid;
+    guint freq_computation_timer_uid;
+    guint gauge_computation_uid;
+    guint error_dispatcher_uid;
 };
 
 void lingot_gui_mainframe_create(int argc, char *argv[]);
@@ -77,4 +77,4 @@ void lingot_gui_mainframe_destroy(LingotMainFrame*);
 
 void lingot_gui_mainframe_change_config(LingotMainFrame*, LingotConfig*);
 
-#endif //__LINGOT_GUI_MAIN_FRAME_H__
+#endif //LINGOT_GUI_MAIN_FRAME_H

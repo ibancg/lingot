@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -24,20 +24,16 @@
 
 #ifdef ALSA
 
-#ifndef __LINGOT_AUDIO_ALSA_H__
-#define __LINGOT_AUDIO_ALSA_H__
+#ifndef LINGOT_AUDIO_ALSA_H
+#define LINGOT_AUDIO_ALSA_H
 
-#include "lingot-audio.h"
+#include <alsa/asoundlib.h>
 
-void lingot_audio_alsa_new(LingotAudioHandler*, const char* device, int sample_rate);
-// In case of failure, the audio_system is set to -1.
+typedef struct {
+    snd_pcm_t *capture_handle;
+} LingotAudioHandlerExtraALSA;
 
-void lingot_audio_alsa_destroy(LingotAudioHandler*);
-
-int lingot_audio_alsa_read(LingotAudioHandler*);
-
-int lingot_audio_alsa_get_audio_system_properties(LingotAudioSystemProperties*);
-// Return status : 0 for OK, else -1.
+int lingot_audio_alsa_register(void);
 
 #endif
 #endif

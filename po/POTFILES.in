@@ -24,6 +24,7 @@ src/lingot-gui-mainframe.glade
 src/lingot-gui-config-dialog-scale.c
 src/lingot-gui-config-dialog.glade
 src/lingot-io-config.c
+src/lingot-io-config-scale.c
 src/lingot-msg.c
 src/lingot-signal.c
 

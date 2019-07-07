@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_CORE_H__
-#define __LINGOT_CORE_H__
+#ifndef LINGOT_CORE_H
+#define LINGOT_CORE_H
 
 #include <pthread.h>
 
@@ -38,48 +38,48 @@
 
 typedef struct {
 
-	//  -- shared data --
-	FLT freq; // computed analog frequency.
-	FLT* SPL; // visual portion of FFT.
-	//  -- shared data --
+    //  -- shared data --
+    FLT freq; // computed analog frequency.
+    FLT* SPL; // visual portion of FFT.
+    //  -- shared data --
 
-	LingotAudioHandler audio; // audio handler.
+    LingotAudioHandler audio; // audio handler.
 
-	FLT* flt_read_buffer;
-	FLT* temporal_buffer; // sample memory.
+    FLT* flt_read_buffer;
+    FLT* temporal_buffer; // sample memory.
 
-	// precomputed hamming windows
-	FLT* hamming_window_temporal;
-	FLT* hamming_window_fft;
+    // precomputed hamming windows
+    FLT* hamming_window_temporal;
+    FLT* hamming_window_fft;
 
-	// windowed signals
-	FLT* windowed_temporal_buffer;
-	FLT* windowed_fft_buffer;
+    // windowed signals
+    FLT* windowed_temporal_buffer;
+    FLT* windowed_fft_buffer;
 
-	// spectral power distribution esteem.
-	FLT* spd_fft;
-	FLT* noise_level;
+    // spectral power distribution esteem.
+    FLT* spd_fft;
+    FLT* noise_level;
 
-	LingotFFTPlan fftplan;
+    LingotFFTPlan fftplan;
 
-	LingotFilter antialiasing_filter; // antialiasing filter for decimation.
+    LingotFilter antialiasing_filter; // antialiasing filter for decimation.
 
-	int running;
+    int running;
 
-	LingotConfig conf; // configuration structure
+    LingotConfig conf; // configuration structure
 
-	pthread_t thread_computation;
-	pthread_attr_t thread_computation_attr;
-	pthread_cond_t thread_computation_cond;
-	pthread_mutex_t thread_computation_mutex;
+    pthread_t thread_computation;
+    pthread_attr_t thread_computation_attr;
+    pthread_cond_t thread_computation_cond;
+    pthread_mutex_t thread_computation_mutex;
 
-	pthread_mutex_t temporal_buffer_mutex;
+    pthread_mutex_t temporal_buffer_mutex;
 
 #	ifdef DRAW_MARKERS
-	int markers[20];
-	int markers2[20];
-	short markers_size;
-	short markers_size2;
+    int markers[20];
+    int markers2[20];
+    short markers_size;
+    short markers_size2;
 #	endif
 } LingotCore;
 
@@ -97,6 +97,6 @@ void lingot_core_stop(LingotCore*);
 // tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency
 int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
-		FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
+                                    FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
 
-#endif //__LINGOT_CORE_H__
+#endif //LINGOT_CORE_H

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -34,132 +34,136 @@
 #include "lingot-config-scale.h"
 #include "lingot-msg.h"
 #include "lingot-i18n.h"
+#include "lingot-audio.h"
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 
 void lingot_config_new(LingotConfig* config) {
 
-	config->max_nr_iter = 10; // iterations
-	config->window_type = HAMMING;
-	config->optimize_internal_parameters = 0;
-	lingot_config_scale_new(&config->scale);
+    config->max_nr_iter = 10; // iterations
+    config->window_type = HAMMING;
+    config->optimize_internal_parameters = 0;
+    lingot_config_scale_new(&config->scale);
 }
 
 void lingot_config_destroy(LingotConfig* config) {
-	lingot_config_scale_destroy(&config->scale);
+    lingot_config_scale_destroy(&config->scale);
 }
 
 void lingot_config_copy(LingotConfig* dst, const LingotConfig* src) {
-	*dst = *src;
-	lingot_config_scale_new(&dst->scale); // null scale that will be destroyed in the copy below
-	lingot_config_scale_copy(&dst->scale, &src->scale);
+    *dst = *src;
+    lingot_config_scale_new(&dst->scale); // null scale that will be destroyed in the copy below
+    lingot_config_scale_copy(&dst->scale, &src->scale);
 }
 
 //----------------------------------------------------------------------------
 
 void lingot_config_restore_default_values(LingotConfig* config) {
 
-#if defined(DEFAULT_AUDIO_SYSTEM_OSS)
-	config->audio_system = AUDIO_SYSTEM_OSS;
-#elif defined(DEFAULT_AUDIO_SYSTEM_JACK)
-	config->audio_system = AUDIO_SYSTEM_JACK;
-#elif defined(DEFAULT_AUDIO_SYSTEM_PULSEAUDIO)
-	config->audio_system = AUDIO_SYSTEM_PULSEAUDIO;
-#else
-	config->audio_system = AUDIO_SYSTEM_ALSA;
-#endif
-	sprintf(config->audio_dev[AUDIO_SYSTEM_OSS], "%s", "/dev/dsp");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_ALSA], "%s", "default");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_JACK], "%s", "default");
-	sprintf(config->audio_dev[AUDIO_SYSTEM_PULSEAUDIO], "%s", "default");
+    config->audio_system_index = lingot_audio_system_find_by_name("ALSA");
+    if (config->audio_system_index < 0) {
+        config->audio_system_index = lingot_audio_system_find_by_name("PulseAudio");
+    }
+    if (config->audio_system_index < 0) {
+        config->audio_system_index = lingot_audio_system_find_by_name("JACK");
+    }
+    if (config->audio_system_index < 0) {
+        config->audio_system_index = lingot_audio_system_find_by_name("OSS");
+    }
 
-	config->sample_rate = 44100; // Hz
-	config->oversampling = 21;
-	config->root_frequency_error = 0.0; // Hz
-	config->min_frequency = 82.407; // Hz (E2)
-	config->max_frequency = 329.6276; // Hz (E4)
-	config->optimize_internal_parameters = 0;
+    int i;
+    for (i = 0; i < (int) (sizeof(config->audio_dev)/sizeof(config->audio_dev[0])); ++i) {
+        sprintf(config->audio_dev[i], "%s", "");
+    }
+    for (i = 0; i < lingot_audio_system_get_count(); ++i) {
+        sprintf(config->audio_dev[i], "%s", "default");
+    }
 
-	config->fft_size = 512; // samples
-	config->temporal_window = 0.3; // seconds
-	config->calculation_rate = 15.0; // Hz
-	config->visualization_rate = 24.0; // Hz
-	config->min_overall_SNR = 20.0; // dB
+    config->sample_rate = 44100; // Hz
+    config->oversampling = 21;
+    config->root_frequency_error = 0.0; // Hz
+    config->min_frequency = 82.407; // Hz (E2)
+    config->max_frequency = 329.6276; // Hz (E4)
+    config->optimize_internal_parameters = 0;
 
-	config->peak_number = 8; // peaks
-	config->peak_half_width = 1; // samples
+    config->fft_size = 512; // samples
+    config->temporal_window = 0.3; // seconds
+    config->calculation_rate = 15.0; // Hz
+    config->visualization_rate = 24.0; // Hz
+    config->min_overall_SNR = 20.0; // dB
 
-	//--------------------------------------------------------------------------
+    config->peak_number = 8; // peaks
+    config->peak_half_width = 1; // samples
 
-	lingot_config_scale_restore_default_values(&config->scale);
-	lingot_config_update_internal_params(config);
+    //--------------------------------------------------------------------------
+
+    lingot_config_scale_restore_default_values(&config->scale);
+    lingot_config_update_internal_params(config);
 }
 
 //----------------------------------------------------------------------------
 
 void lingot_config_update_internal_params(LingotConfig* config) {
 
-	// derived parameters.
+    // derived parameters.
 
-	config->internal_min_frequency = 0.8 * config->min_frequency;
-	config->internal_max_frequency = 3.1 * config->max_frequency;
+    config->internal_min_frequency = 0.8 * config->min_frequency;
+    config->internal_max_frequency = 3.1 * config->max_frequency;
 
-	if (config->internal_min_frequency < 0) {
-		config->internal_min_frequency = 0;
-	}
-	if (config->internal_max_frequency < 500) {
-		config->internal_max_frequency = 500;
-	}
-	if (config->internal_max_frequency > 20000) {
-		config->internal_max_frequency = 20000;
-	}
+    if (config->internal_min_frequency < 0) {
+        config->internal_min_frequency = 0;
+    }
+    if (config->internal_max_frequency < 500) {
+        config->internal_max_frequency = 500;
+    }
+    if (config->internal_max_frequency > 20000) {
+        config->internal_max_frequency = 20000;
+    }
 
-	config->oversampling = floor(
-			0.5 * config->sample_rate / config->internal_max_frequency);
-	if (config->oversampling < 1) {
-		config->oversampling = 1;
-	}
+    config->oversampling = floor(0.5 * config->sample_rate / config->internal_max_frequency);
+    if (config->oversampling < 1) {
+        config->oversampling = 1;
+    }
 
-	// TODO: tune this parameters
-	unsigned int fft_size = 512;
-	if (config->internal_max_frequency > 5000) {
-		fft_size = 1024;
-	}
-	FLT temporal_window = 1.0 * config->fft_size * config->oversampling
-			/ config->sample_rate;
-	if (temporal_window < 0.3) {
-		temporal_window = 0.3;
-	}
-	if (config->optimize_internal_parameters) {
-		config->fft_size = fft_size;
-		config->temporal_window = temporal_window;
-	} else {
-		// if the governed parameters happen to be the same as the one we would
-		// suggest, then we will indeed suggest them.
-		config->optimize_internal_parameters = (config->fft_size == fft_size) &&
-				(config->temporal_window == temporal_window);
-	}
+    // TODO: tune this parameters
+    unsigned int fft_size = 512;
+    if (config->internal_max_frequency > 5000) {
+        fft_size = 1024;
+    }
+    FLT temporal_window = 1.0 * config->fft_size * config->oversampling
+            / config->sample_rate;
+    if (temporal_window < 0.3) {
+        temporal_window = 0.3;
+    }
+    if (config->optimize_internal_parameters) {
+        config->fft_size = fft_size;
+        config->temporal_window = temporal_window;
+    } else {
+        // if the governed parameters happen to be the same as the one we would
+        // suggest, then we will indeed suggest them.
+        config->optimize_internal_parameters = (config->fft_size == fft_size) &&
+                (config->temporal_window == temporal_window);
+    }
 
-	config->temporal_buffer_size = (unsigned int) ceil(
-			config->temporal_window * config->sample_rate
-			/ config->oversampling);
+    config->temporal_buffer_size = (unsigned int) ceil(config->temporal_window * config->sample_rate
+                                                       / config->oversampling);
 
-	config->min_SNR = 0.5 * config->min_overall_SNR;
-	config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
+    config->min_SNR = 0.5 * config->min_overall_SNR;
+    config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
 
-	if (config->scale.notes == 1) {
-		config->scale.max_offset_rounded = 1200.0;
-	} else {
-		int i;
-		FLT max_offset = 0.0;
-		for (i = 1; i < config->scale.notes; i++) {
-			max_offset = MAX(max_offset, config->scale.offset_cents[i]
-					- config->scale.offset_cents[i - 1]);
-		}
-		config->scale.max_offset_rounded = max_offset;
-	}
+    if (config->scale.notes == 1) {
+        config->scale.max_offset_rounded = 1200.0;
+    } else {
+        int i;
+        FLT max_offset = 0.0;
+        for (i = 1; i < config->scale.notes; i++) {
+            max_offset = MAX(max_offset, config->scale.offset_cents[i]
+                             - config->scale.offset_cents[i - 1]);
+        }
+        config->scale.max_offset_rounded = max_offset;
+    }
 
-	config->gauge_rest_value = -0.45 * config->scale.max_offset_rounded;
+    config->gauge_rest_value = -0.45 * config->scale.max_offset_rounded;
 }
 

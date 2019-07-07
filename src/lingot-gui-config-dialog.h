@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_GUI_CONFIG_DIALOG_H__
-#define __LINGOT_GUI_CONFIG_DIALOG_H__
+#ifndef LINGOT_GUI_CONFIG_DIALOG_H
+#define LINGOT_GUI_CONFIG_DIALOG_H
 
 #include <gtk/gtk.h>
 
@@ -33,41 +33,41 @@ typedef struct _LingotConfigDialog LingotConfigDialog;
 
 struct _LingotConfigDialog {
 
-	// widgets that contains configuration information.
-	GtkComboBoxText* input_system;
-	GtkComboBoxText* input_dev;
+    // widgets that contains configuration information.
+    GtkComboBoxText* input_system;
+    GtkComboBoxText* input_dev;
     GtkScale* calculation_rate;
     GtkScale* visualization_rate;
     GtkScale* noise_threshold;
-	GtkComboBoxText* fft_size;
-	GtkSpinButton* temporal_window;
-	GtkSpinButton* root_frequency_error;
-	GtkComboBoxText* minimum_frequency;
-	GtkComboBoxText* maximum_frequency;
-	GtkComboBoxText* octave;
-	GtkCheckButton* optimize_check_button;
-	GtkLabel* fft_size_label;
-	GtkLabel* fft_size_units_label;
-	GtkLabel* temporal_window_label;
-	GtkLabel* temporal_window_units_label;
+    GtkComboBoxText* fft_size;
+    GtkSpinButton* temporal_window;
+    GtkSpinButton* root_frequency_error;
+    GtkComboBoxText* minimum_frequency;
+    GtkComboBoxText* maximum_frequency;
+    GtkComboBoxText* octave;
+    GtkCheckButton* optimize_check_button;
+    GtkLabel* fft_size_label;
+    GtkLabel* fft_size_units_label;
+    GtkLabel* temporal_window_label;
+    GtkLabel* temporal_window_units_label;
 
-	GtkNotebook* notebook;
+    GtkNotebook* notebook;
 
-	GtkButton* button_scale_add;
-	GtkButton* button_scale_del;
+    GtkButton* button_scale_add;
+    GtkButton* button_scale_del;
 
-	GtkEntry* scale_name;
-	GtkTreeView* scale_treeview;
+    GtkEntry* scale_name;
+    GtkTreeView* scale_treeview;
 
-	LingotConfig conf; // provisional configuration.
-	LingotConfig conf_old; // restoration point for cancel.
+    LingotConfig conf; // provisional configuration.
+    LingotConfig conf_old; // restoration point for cancel.
 
-	LingotMainFrame* mainframe;
+    LingotMainFrame* mainframe;
 
-	GtkWidget* win; // window
+    GtkWidget* win; // window
 };
 
 void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
 void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
 
-#endif // __LINGOT_GUI_CONFIG_DIALOG_H__
+#endif // LINGOT_GUI_CONFIG_DIALOG_H

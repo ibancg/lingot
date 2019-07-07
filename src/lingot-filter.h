@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_FILTER_H__
-#define __LINGOT_FILTER_H__
+#ifndef LINGOT_FILTER_H
+#define LINGOT_FILTER_H
 
 #include <fcntl.h>
 #include <stdlib.h>
@@ -36,16 +36,16 @@
 
 typedef struct {
 
-	FLT* a;
-	FLT* b; // coefs
-	FLT* s; // status
+    FLT* a;
+    FLT* b; // coefs
+    FLT* s; // status
 
-	unsigned int N;
+    unsigned int N;
 
 } LingotFilter;
 
 void lingot_filter_new(LingotFilter*, unsigned int Na, unsigned int Nb, const FLT* a,
-		const FLT* b);
+                       const FLT* b);
 
 void lingot_filter_reset(LingotFilter* filter);
 
@@ -59,7 +59,7 @@ void lingot_filter_destroy(LingotFilter*);
 
 // Digital Filter Implementation II, in & out can overlap. Vector filtering
 void lingot_filter_filter(LingotFilter*, unsigned int n, const FLT* in,
-		FLT* out);
+                          FLT* out);
 
 // sample filtering
 FLT lingot_filter_filter_sample(LingotFilter*, FLT in);

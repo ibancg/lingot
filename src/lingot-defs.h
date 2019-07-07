@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,15 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_DEFS_H__
-#define __LINGOT_DEFS_H__
+#ifndef LINGOT_DEFS_H
+#define LINGOT_DEFS_H
 
 #include "../config.h"
 
 // floating point precission.
 #define FLT                  double
 
-#define CONFIG_DIR_NAME           ".lingot/"
+#define CONFIG_DIR_NAME           ".config/lingot/"
 #define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
 extern char CONFIG_FILE_NAME[];
 
@@ -55,6 +55,10 @@ typedef struct _LingotMainFrame LingotMainFrame;
 #define try exception = 0; do
 #define throw(a) {exception = a;break;}
 #define catch while (0); if (exception != 0)
+
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
+#endif
 
 // this option allows us to throw exception from loops, it contains a goto
 // statement, but totally controlled. It fails when trying to indent code.

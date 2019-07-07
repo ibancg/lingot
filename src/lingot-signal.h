@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_SIGNAL_H__
-#define __LINGOT_SIGNAL_H__
+#ifndef LINGOT_SIGNAL_H
+#define LINGOT_SIGNAL_H
 
 /*
  peak identification functions.
@@ -34,20 +34,29 @@
 #include "lingot-complex.h"
 #include "lingot-core.h"
 
-FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr, FLT freq,
-		const LingotComplex* fft,
-		unsigned int N,
-		unsigned int n_peaks,
-		unsigned int lowest_index,
-		unsigned int highest_index,
-		unsigned short peak_half_width,
-		FLT delta_f_fft, FLT min_snr,
-		FLT min_q, FLT min_freq, LingotCore* core, short* divisor);
+FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
+                                                 FLT freq,
+                                                 const LingotComplex* fft,
+                                                 unsigned int N,
+                                                 unsigned int n_peaks,
+                                                 unsigned int lowest_index,
+                                                 unsigned int highest_index,
+                                                 unsigned short peak_half_width,
+                                                 FLT delta_f_fft,
+                                                 FLT min_snr,
+                                                 FLT min_q,
+                                                 FLT min_freq,
+                                                 LingotCore* core,
+                                                 short* divisor);
 
-void lingot_signal_compute_noise_level(const FLT* spd, int N, int cbuffer_size,
-		FLT* noise_level);
+void lingot_signal_compute_noise_level(const FLT* spd,
+                                       int N,
+                                       int cbuffer_size,
+                                       FLT* noise_level);
 
 // generates a Hamming window of N samples
-void lingot_signal_window(int N, FLT* out, window_type_t window_type);
+void lingot_signal_window(int N,
+                          FLT* out,
+                          window_type_t window_type);
 
-#endif /*__LINGOT_SIGNAL_H__*/
+#endif /*LINGOT_SIGNAL_H*/

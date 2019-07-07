@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,14 +22,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_MESSAGES_H__
-#define __LINGOT_MESSAGES_H__
+#ifndef LINGOT_MESSAGES_H
+#define LINGOT_MESSAGES_H
 
 // asynchronous message handling
 
 // message types
 typedef enum message_type_t {
-	ERROR = 0, WARNING = 1, INFO = 2
+    ERROR = 0, WARNING = 1, INFO = 2
 } message_type_t;
 
 // add messages to the queue

@@ -1,4 +1,6 @@
 *.o
+*.lo
+*.la
 *.gz
 *.gmo
 *~
@@ -11,6 +13,7 @@ org.nongnu.lingot.desktop
 lingot-github.*
 .settings/
 src/.deps
+src/.libs
 src/lingot
 src/lingot-resources.c
 po/Makefile

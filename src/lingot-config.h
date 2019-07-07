@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2018  Iban Cereijo.
+ * Copyright (C) 2004-2019  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,80 +22,75 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __LINGOT_CONFIG_H__
-#define __LINGOT_CONFIG_H__
+#ifndef LINGOT_CONFIG_H
+#define LINGOT_CONFIG_H
 
 #include "lingot-defs.h"
 #include "lingot-config-scale.h"
 
-typedef enum audio_system_t {
-	AUDIO_SYSTEM_OSS = 0,
-	AUDIO_SYSTEM_ALSA = 1,
-	AUDIO_SYSTEM_JACK = 2,
-	AUDIO_SYSTEM_PULSEAUDIO = 3
-} audio_system_t;
-
 typedef enum window_type_t {
-	NONE = 0, //
-	HANNING = 1, //
-	HAMMING = 2
+    NONE = 0, //
+    HANNING = 1, //
+    HAMMING = 2
 } window_type_t;
 
-// Configuration struct. Determines the tuner behaviour.
+#define N_MAX_AUDIO_DEV 10
+
+// Configuration struct. Determines the behaviour of the tuner.
 // Some parameters are internal only.
 typedef struct {
 
-	audio_system_t audio_system;
+    int audio_system_index;
 
-	char audio_dev[4][512];
-	int sample_rate; // hardware sample rate.
-	unsigned int oversampling; // oversampling factor.
+    char audio_dev[N_MAX_AUDIO_DEV][512];
+    int sample_rate; // hardware sample rate.
+    unsigned int oversampling; // oversampling factor.
 
-	FLT root_frequency_error; // deviation of the above root frequency.
+    FLT root_frequency_error; // deviation of the above root frequency.
 
-	FLT min_frequency; // minimum frequency of the instrument.
-	FLT max_frequency; // maximum frequency of the instrument.
+    FLT min_frequency; // minimum frequency of the instrument.
+    FLT max_frequency; // maximum frequency of the instrument.
 
-	int optimize_internal_parameters;
+    int optimize_internal_parameters;
 
-	FLT internal_min_frequency; // minimum valid frequency.
-	FLT internal_max_frequency; // maximum frequency we want to tune.
+    FLT internal_min_frequency; // minimum valid frequency.
+    FLT internal_max_frequency; // maximum frequency we want to tune.
 
-	unsigned int fft_size; // number of samples of the FFT.
+    unsigned int fft_size; // number of samples of the FFT.
 
-	FLT calculation_rate;
-	FLT visualization_rate;
+    FLT calculation_rate;
+    FLT visualization_rate;
 
-	FLT temporal_window; // duration in seconds of the temporal window.
+    FLT temporal_window; // duration in seconds of the temporal window.
 
-	// samples stored in the temporal window (internal parameter).
-	unsigned int temporal_buffer_size;
+    // samples stored in the temporal window (internal parameter).
+    unsigned int temporal_buffer_size;
 
-	// minimum SNR required for the overall set of peaks and for each peak
-	FLT min_overall_SNR; // dB
-	FLT min_SNR; // dB
+    // minimum SNR required for the overall set of peaks and for each peak
+    FLT min_overall_SNR; // dB
+    FLT min_SNR; // dB
 
-	window_type_t window_type;
+    window_type_t window_type;
 
-	// frequency finding algorithm configuration
-	//-------------------------------------------
+    // frequency finding algorithm configuration
+    //-------------------------------------------
 
-	unsigned int peak_number; // number of maximum peaks considered.
+    unsigned int peak_number; // number of maximum peaks considered.
 
-	// number of adjacent samples needed to consider a peak.
-	unsigned int peak_half_width;
+    // number of adjacent samples needed to consider a peak.
+    unsigned int peak_half_width;
 
-	// max iterations for Newton-Raphson algorithm.
-	unsigned int max_nr_iter;
+    // max iterations for Newton-Raphson algorithm.
+    unsigned int max_nr_iter;
 
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
-	// gauge rest value. (gauge contemplates [-0.5, 0.5])
-	FLT gauge_rest_value;
+    // gauge rest value. (gauge contemplates [-0.5, 0.5])
+    FLT gauge_rest_value;
 
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
-	LingotScale scale;
+    LingotScale scale;
 
 } LingotConfig;
 
@@ -110,4 +105,4 @@ void lingot_config_restore_default_values(LingotConfig*);
 // derivate internal parameters from external ones.
 void lingot_config_update_internal_params(LingotConfig*);
 
-#endif // __LINGOT_CONFIG_H__
+#endif // LINGOT_CONFIG_H
