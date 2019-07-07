@@ -56,6 +56,10 @@ typedef struct _LingotMainFrame LingotMainFrame;
 #define throw(a) {exception = a;break;}
 #define catch while (0); if (exception != 0)
 
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
+#endif
+
 // this option allows us to throw exception from loops, it contains a goto
 // statement, but totally controlled. It fails when trying to indent code.
 //#define try exception = 0;do

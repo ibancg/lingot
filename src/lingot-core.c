@@ -27,7 +27,6 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/time.h>
-#include <time.h>
 #include <stdlib.h>
 #include "lingot-fft.h"
 #include "lingot-signal.h"
@@ -599,16 +598,17 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
     short divisor = 1;
     FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
                                                           0.5 * core->freq,
-                                                          core->fftplan.fft_out,
+                                                          (const LingotComplex*) core->fftplan.fft_out,
                                                           spd_size,
                                                           conf->peak_number,
                                                           lowest_index,
                                                           highest_index,
-                                                          conf->peak_half_width,
+                                                          (unsigned short) conf->peak_half_width,
                                                           index2f,
                                                           conf->min_SNR,
                                                           conf->min_overall_SNR,
-                                                          conf->internal_min_frequency, core,
+                                                          conf->internal_min_frequency,
+                                                          core,
                                                           &divisor);
 
     FLT w;
@@ -748,17 +748,20 @@ void lingot_core_stop(LingotCore* core) {
     void* thread_result;
 
     int result;
-    struct timeval tout, tout_abs;
+    struct timeval tout_abs;
     struct timespec tout_tspec;
 
     gettimeofday(&tout_abs, NULL);
-    tout.tv_sec = 0;
-    tout.tv_usec = 300000;
 
     if (core->running == 1) {
         core->running = 0;
 
-        timeradd(&tout, &tout_abs, &tout_abs);
+        tout_abs.tv_usec += 300000;
+        if (tout_abs.tv_usec >= 1000000) {
+            tout_abs.tv_usec -= 1000000;
+            tout_abs.tv_sec++;
+        }
+
         tout_tspec.tv_sec = tout_abs.tv_sec;
         tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
 
@@ -790,17 +793,19 @@ void lingot_core_stop(LingotCore* core) {
 
 /* run the core */
 void* lingot_core_run_computation_thread(void* _core) {
-    struct timeval tout, tout_abs;
+    struct timeval tout_abs;
     struct timespec tout_tspec;
 
     LingotCore* core = _core;
     gettimeofday(&tout_abs, NULL);
-    tout.tv_sec = 0;
-    tout.tv_usec = 1e6 / core->conf.calculation_rate;
 
     while (core->running) {
         lingot_core_compute_fundamental_fequency(core);
-        timeradd(&tout, &tout_abs, &tout_abs);
+        tout_abs.tv_usec += 1e6 / core->conf.calculation_rate;
+        if (tout_abs.tv_usec >= 1000000) {
+            tout_abs.tv_usec -= 1000000;
+            tout_abs.tv_sec++;
+        }
         tout_tspec.tv_sec = tout_abs.tv_sec;
         tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
         pthread_mutex_lock(&core->thread_computation_mutex);

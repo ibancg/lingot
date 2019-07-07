@@ -481,7 +481,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
                         "warning: line %i, audio system '%s' not found\n",
                         line, audio_system_name);
             } else {
-                strncpy(config->audio_dev[audio_system_index], char_buffer_pointer, 512);
+                strncpy(config->audio_dev[audio_system_index], char_buffer_pointer, sizeof(config->audio_dev[0]) - 1);
             }
             continue;
         }
@@ -527,7 +527,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
             case LINGOT_PARAMETER_TYPE_STRING:
                 if (strlen(char_buffer_pointer)
                         < parameters[option_index].str_max_len) {
-                    strncpy(((char*) param), char_buffer_pointer, 512);
+                    strncpy(((char*) param), char_buffer_pointer, parameters[option_index].str_max_len - 1);
                 } else {
                     fprintf(stderr,
                             "error: parse error at line %i, '%s = %s': identifier too long (maximum length %d characters), assuming default value '%s'\n",

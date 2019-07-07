@@ -70,7 +70,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
             throw(error_message);
         }
 
-        strncpy(audio->device, device, sizeof(audio->device));
+        strncpy(audio->device, device, sizeof(audio->device) - 1);
 
         if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",

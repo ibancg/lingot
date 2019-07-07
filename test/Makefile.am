@@ -1,7 +1,4 @@
 ## Process this file with automake to produce Makefile.in
-## Created by Anjuta - will be overwritten
-## If you don't want it to overwrite it,
-## 	Please disable it in the Anjuta project configuration
 
 TESTS = lingot_test
 check_PROGRAMS = lingot_test
@@ -16,7 +13,7 @@ lingot_test_LDFLAGS =
 lingot_test_LDADD =  \
 	-L/usr/local/include -lcunit \
 	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(PULSEAUDIO_LIBS) $(GLADE_LIBS) $(LIBFFTW_LIBS) \
-	 -lpthread
+         -lpthread
 	
 AUTOMAKE_OPTIONS = subdir-objects
 

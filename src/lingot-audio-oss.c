@@ -56,7 +56,7 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sam
     audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraOSS));
     LingotAudioHandlerExtraOSS* audioOSS = (LingotAudioHandlerExtraOSS*) audio->audio_handler_extra;
 
-    strncpy(audio->device, device, sizeof(audio->device));
+    strncpy(audio->device, device, sizeof(audio->device) - 1);
     if (!strcmp(audio->device, "default")) {
         strcpy(audio->device, "/dev/dsp");
     }

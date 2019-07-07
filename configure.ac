@@ -1,13 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-dnl Created by Anjuta - will be overwritten
-dnl If you don't want it to overwrite it,
-dnl 	Please disable it in the Anjuta project configuration
 
 AC_INIT([Lingot], [1.0.2b])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS([config.h])
 AM_MAINTAINER_MODE
+LT_INIT
 
 AC_ISC_POSIX
 AC_PROG_CC
@@ -54,83 +52,63 @@ PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
-useoss=yes
-
 AC_ARG_ENABLE(
   oss,
   AC_HELP_STRING([--enable-oss], [use OSS @<:@default=yes@:>@]),
-  [
-    if test "x$enableval" = "xno"; then
-      useoss=no
-    fi
-  ])
+  [], [enable_oss=yes])
 
-if test "x$useoss" = "xyes"; then
+AM_CONDITIONAL([OSS], [test "x$enable_oss" = "xyes"])
+AM_COND_IF([OSS],
+    [AC_DEFINE(OSS, 1, [Define to 0 for Something else])],[])
+
+if test "x$enable_oss" = "xyes"; then
 	AC_CHECK_HEADERS([fcntl.h])
 	AC_CHECK_HEADERS([sys/ioctl.h])
 	AC_SUBST(OSS_CFLAGS)
 	AC_SUBST(OSS_LIBS)
-	CFLAGS="$CFLAGS -DOSS"
 fi
-
-
-usealsa=yes
 
 AC_ARG_ENABLE(
   alsa,
   AC_HELP_STRING([--enable-alsa], [use ALSA @<:@default=yes@:>@]),
-  [
-    if test "x$enableval" = "xno"; then
-      usealsa=no
-    fi
-  ])
+  [], [enable_alsa=yes])
 
-if test "x$usealsa" = "xyes"; then
+AM_CONDITIONAL([ALSA], [test "x$enable_alsa" = "xyes"])
+AM_COND_IF([ALSA],
+    [AC_DEFINE(ALSA, 1, [Define to 0 for Something else])],[])
+
+if test "x$enable_alsa" = "xyes"; then
 	PKG_CHECK_MODULES([ALSA], [alsa])
 	AC_SUBST(ALSA_CFLAGS)
 	AC_SUBST(ALSA_LIBS)
-	CFLAGS="$CFLAGS -DALSA"
 fi
-
-usejack=yes
 
 AC_ARG_ENABLE(
   jack,
   AC_HELP_STRING([--enable-jack], [use JACK @<:@default=yes@:>@]),
-  [
-    if test "x$enableval" = "xno"; then
-      usejack=no
-    fi
-  ])
+  [], [enable_jack=yes])
 
-AM_CONDITIONAL(HAVE_JACK, test "x$usejack" = "xyes")
+AM_CONDITIONAL(JACK, test "x$enable_jack" = "xyes")
 
-if test "x$usejack" = "xyes"; then
-	PKG_CHECK_MODULES(JACK, jack >= 0.117.0)
+if test "x$enable_jack" = "xyes"; then
+        PKG_CHECK_MODULES(JACK, jack >= 0.117.0)
 	AC_SUBST(JACK_CFLAGS)
 	AC_SUBST(JACK_LIBS)
-	CFLAGS="$CFLAGS -DJACK"
 fi
-
-usepulseaudio=yes
 
 AC_ARG_ENABLE(
   pulseaudio,
   AC_HELP_STRING([--enable-pulseaudio], [use PulseAudio @<:@default=yes@:>@]),
-  [
-    if test "x$enableval" = "xno"; then
-      usepulseaudio=no
-    fi
-  ])
+  [], [enable_pulseaudio=yes])
 
-AM_CONDITIONAL(HAVE_PULSEAUDIO, test "x$usepulseaudio" = "xyes")
+AM_CONDITIONAL(PULSEAUDIO, test "x$enable_pulseaudio" = "xyes")
+AM_COND_IF([PULSEAUDIO],
+    [AC_DEFINE(PULSEAUDIO, 1, [Define to 0 for Something else])],[])
 
-if test "x$usepulseaudio" = "xyes"; then
+if test "x$enable_pulseaudio" = "xyes"; then
  	PKG_CHECK_MODULES(PULSEAUDIO, libpulse-simple >= 0.9.10)
-	dnl	PKG_CHECK_MODULES(PULSEAUDIO, pulseaudio >= 0.9.10)
 	AC_SUBST(PULSEAUDIO_CFLAGS)
 	AC_SUBST(PULSEAUDIO_LIBS)
-	CFLAGS="$CFLAGS -DPULSEAUDIO"
 fi
 
 uselibfftw=yes
@@ -149,7 +127,7 @@ dnl AM_CONDITIONAL(HAVE_LIBFFTW, test "x$uselibfftw" = "xyes")
 
 if test "x$uselibfftw" = "xyes"; then
  PKG_CHECK_MODULES([LIBFFTW],
-	 				[fftw3 >= 3.2.2
+                    [fftw3 >= 3.2.2
                     fftw3f >= 3.2.2],
                     [fftw_found=yes],
                     [fftw_found=no])

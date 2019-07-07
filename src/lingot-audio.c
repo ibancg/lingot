@@ -60,6 +60,8 @@ int lingot_audio_system_register(const char* audio_system_name,
                                  lingot_audio_read_t func_read,
                                  lingot_audio_get_audio_system_properties_t func_system_properties) {
 
+    printf("Found audio plugin '%s'\n", audio_system_name);
+
     if ((size_t) (audio_system_counter + 1) >= sizeof(audio_systems)/sizeof (LingotAudioSystemConnector)) {
         return -1;
     }
@@ -229,7 +231,7 @@ void* lingot_audio_run_reading_thread(void* _audio) {
             audio->interrupted = 1;
         } else {
             audio->process_callback(audio->flt_read_buffer,
-                                    samples_read,
+                                    (unsigned int) samples_read,
                                     audio->process_callback_arg);
         }
     }
@@ -286,12 +288,10 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
     void* thread_result;
 
     int result;
-    struct timeval tout, tout_abs;
+    struct timeval tout_abs;
     struct timespec tout_tspec;
 
     gettimeofday(&tout_abs, NULL );
-    tout.tv_sec = 0;
-    tout.tv_usec = 500000;
 
     if (audio->running == 1) {
         audio->running = 0;
@@ -300,7 +300,11 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
             if (system->func_stop) {
                 system->func_stop(audio);
             } else {
-                timeradd(&tout, &tout_abs, &tout_abs);
+                tout_abs.tv_usec += 500000;
+                if (tout_abs.tv_usec >= 1000000) {
+                    tout_abs.tv_usec -= 1000000;
+                    tout_abs.tv_sec++;
+                }
                 tout_tspec.tv_sec = tout_abs.tv_sec;
                 tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
 

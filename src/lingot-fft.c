@@ -37,7 +37,7 @@
  DTFT functions.
  */
 
-void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, int n) {
+void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, unsigned int n) {
 
     result->n = n;
     result->in = in;
@@ -53,7 +53,7 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, int n) {
     // twiddle factors
     result->wn = (LingotComplex*) malloc((n >> 1) * sizeof(LingotComplex));
 
-    int i;
+    unsigned int i;
     for (i = 0; i < (n >> 1); i++) {
         alpha = -2.0 * i * M_PI / n;
         result->wn[i][0] = cos(alpha);
@@ -119,9 +119,9 @@ void lingot_fft_fft(LingotFFTPlan* plan) {
 
 #endif
 
-void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
+void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, unsigned int n_out) {
 
-    int i;
+    unsigned int i;
     double _1_N2 = 1.0 / (plan->n * plan->n);
 
 # ifdef LIBFFTW
@@ -142,11 +142,12 @@ void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, int n_out) {
 /* Spectral Power Distribution esteem, selectively in frequency, by DFT.
  transforms signal in of N1 samples from frequency wi, with sample
  separation of dw rads, storing the result on buffer out with N2 samples. */
-void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
+void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2) {
     FLT Xr, Xi;
     FLT wn;
     const FLT N1_2 = N1 * N1;
-    int i, n;
+    unsigned int i;
+    unsigned int n;
 
     for (i = 0; i < N2; i++) {
 
@@ -164,13 +165,13 @@ void lingot_fft_spd_eval(FLT* in, int N1, FLT wi, FLT dw, FLT* out, int N2) {
     }
 }
 
-void lingot_fft_spd_diffs_eval(const FLT* in, int N, FLT w, FLT* out_d0,
+void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0,
                                FLT* out_d1, FLT* out_d2) {
     FLT x_cos_wn;
     FLT x_sin_wn;
     const FLT N2 = N * N;
 
-    int n;
+    unsigned int n;
 
     FLT SUM_x_sin_wn = 0.0;
     FLT SUM_x_cos_wn = 0.0;
