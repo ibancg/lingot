@@ -1,2 +1,14 @@
 language: C
+
+addons:
+    apt:
+        config:
+            retries: true
+        packages: &common_packages
+            - libtool
+            - libasound2-dev
+            - libpulse-dev
+            - libjack-jackd2-dev
+            - libfftw3-dev
+
 script: ./bootstrap && ./configure && make clean all check dist distcheck
