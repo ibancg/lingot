@@ -6,6 +6,7 @@ addons:
             retries: true
         packages: &common_packages
             - libtool
+            - intltool
             - libasound2-dev
             - libpulse-dev
             - libjack-jackd2-dev
