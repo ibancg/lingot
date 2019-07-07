@@ -15,9 +15,4 @@ addons:
             - libcunit1-dev
 
 script:
-    - ./bootstrap && \
-      ./configure && \
-      make all && \
-      make check && \
-      make dist && \
-      make distcheck
+    ./bootstrap && ./configure && make clean all check dist distcheck
