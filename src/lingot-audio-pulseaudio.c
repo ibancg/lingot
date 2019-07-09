@@ -34,6 +34,11 @@
 #include "lingot-msg.h"
 
 #include <pulse/pulseaudio.h>
+#include <pulse/simple.h>
+
+typedef struct {
+    pa_simple *pa_client;
+} LingotAudioHandlerExtraPA;
 
 static int num_channels = 1;
 static pa_sample_spec ss;
@@ -381,6 +386,13 @@ int lingot_audio_pulseaudio_register(void)
                                         lingot_audio_pulseaudio_cancel,
                                         lingot_audio_pulseaudio_read,
                                         lingot_audio_pulseaudio_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_pulseaudio_register(void)
+{
+    return 0;
 }
 
 #endif

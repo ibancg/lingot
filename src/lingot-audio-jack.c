@@ -36,6 +36,13 @@
 #include <stdlib.h>
 #include <memory.h>
 
+typedef struct {
+    jack_port_t *input_port;
+    jack_client_t *client;
+    int nframes;
+} LingotAudioHandlerExtraJack;
+
+
 // persistent JACK client to obtain hardware parameters
 static jack_client_t* client = NULL;
 static pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -350,6 +357,13 @@ int lingot_audio_jack_register(void)
                                         NULL,
                                         NULL,
                                         lingot_audio_jack_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_jack_register(void)
+{
+    return 0;
 }
 
 #endif

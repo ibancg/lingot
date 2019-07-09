@@ -22,18 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef PULSEAUDIO
-
 #ifndef LINGOT_AUDIO_PULSEAUDIO_H
 #define LINGOT_AUDIO_PULSEAUDIO_H
 
-#include <pulse/simple.h>
-
-typedef struct {
-    pa_simple *pa_client;
-} LingotAudioHandlerExtraPA;
-
 int lingot_audio_pulseaudio_register(void);
 
-#endif
 #endif

@@ -41,6 +41,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct {
+    int dsp; // file handler.
+} LingotAudioHandlerExtraOSS;
+
 void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
 
     int channels = 1;
@@ -189,6 +193,13 @@ int lingot_audio_oss_register(void)
                                         NULL,
                                         lingot_audio_oss_read,
                                         lingot_audio_oss_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_oss_register(void)
+{
+    return 0;
 }
 
 #endif

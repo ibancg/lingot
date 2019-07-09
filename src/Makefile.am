@@ -32,6 +32,14 @@ liblingot_la_SOURCES = \
     lingot-fft.h\
     lingot-audio.c\
     lingot-audio.h\
+    lingot-audio-oss.c\
+    lingot-audio-oss.h\
+    lingot-audio-alsa.c\
+    lingot-audio-alsa.h\
+    lingot-audio-jack.c\
+    lingot-audio-jack.h\
+    lingot-audio-pulseaudio.c\
+    lingot-audio-pulseaudio.h\
     lingot-complex.h\
     lingot-complex.c\
     lingot-config.c\
@@ -55,41 +63,8 @@ liblingot_la_SOURCES = \
     lingot-signal.h\
     lingot.c\
     lingot-i18n.h
-liblingot_la_LDFLAGS = -version-info 0:0:0 $(LIBFFTW_LIBS)
-
-if OSS
-    lib_LTLIBRARIES += liblingot-oss.la
-    liblingot_oss_la_SOURCES = lingot-audio-oss.c\
-                                lingot-audio-oss.h
-
-    liblingot_oss_la_LDFLAGS = -version-info 0:0:0
-endif
-
-if ALSA
-    lib_LTLIBRARIES += liblingot-alsa.la
-    liblingot_alsa_la_SOURCES = lingot-audio-alsa.c\
-                                lingot-audio-alsa.h
-
-    liblingot_alsa_la_LDFLAGS = -version-info 0:0:0 $(ALSA_LIBS)
-endif
-
-if JACK
-    lib_LTLIBRARIES += liblingot-jack.la
-    liblingot_jack_la_SOURCES = lingot-audio-jack.c\
-                                lingot-audio-jack.h
-
-    liblingot_jack_la_LDFLAGS = -version-info 0:0:0 $(JACK_LIBS)
-endif
-
-if PULSEAUDIO
-    lib_LTLIBRARIES += liblingot-pulseaudio.la
-    liblingot_pulseaudio_la_SOURCES = lingot-audio-pulseaudio.c\
-                                      lingot-audio-pulseaudio.h
-
-    liblingot_pulseaudio_la_LDFLAGS = -version-info 0:0:0 $(PULSEAUDIO_LIBS)
-endif
+liblingot_la_LDFLAGS = -version-info 0:0:0 $(LIBFFTW_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(PULSEAUDIO_LIBS)
 
 lingot_LDADD =  \
-        $(PACKAGE_LIBS) $(GTK_LIBS) $(GLADE_LIBS) \
-         -lpthread -ldl liblingot.la
+        $(PACKAGE_LIBS) $(GTK_LIBS) $(GLADE_LIBS) -lpthread ${lib_LTLIBRARIES}
 

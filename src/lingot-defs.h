@@ -46,10 +46,6 @@ extern char CONFIG_FILE_NAME[];
 /* object forward declaration */
 typedef struct _LingotMainFrame LingotMainFrame;
 
-// optionally we can use the following libraries
-//#define LIB_FFTW
-//#define LIBSNDOBJ
-
 // simple try-catch simulation, do not use throw inside loops nor nest try-catch
 // blocks
 #define try exception = 0; do

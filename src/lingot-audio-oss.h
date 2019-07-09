@@ -22,16 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef OSS
-
 #ifndef LINGOT_AUDIO_OSS_H
 #define LINGOT_AUDIO_OSS_H
 
-typedef struct {
-    int dsp; // file handler.
-} LingotAudioHandlerExtraOSS;
-
 int lingot_audio_oss_register(void);
 
-#endif
 #endif
