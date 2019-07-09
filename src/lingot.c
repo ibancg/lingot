@@ -30,6 +30,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <dlfcn.h>
 
 #include "lingot-audio.h"
 #include "lingot-audio-oss.h"
@@ -91,6 +92,38 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // TODO: hard-coded at the moment
+#define AUDIO_PLUGINS 1
+
+#ifdef AUDIO_PLUGINS
+    const char* plugin_name[] = { "oss", "alsa", "jack", "pulseaudio", NULL }; // TODO: better discovery
+    void *plugin_lib[] = { NULL, NULL, NULL, NULL };
+    int i = 0;
+    while (plugin_name[i]) {
+        char plugin_lib_name[100];
+        char plugin_register_func_name[100];
+        snprintf(plugin_lib_name, sizeof(plugin_lib_name),
+                 "liblingot-%s.so", plugin_name[i]);
+        snprintf(plugin_register_func_name, sizeof(plugin_register_func_name),
+                 "lingot_audio_%s_register", plugin_name[i]);
+        void *libso = dlopen(plugin_lib_name, RTLD_NOW | RTLD_GLOBAL);
+        printf("opening lib '%s' %p\n", plugin_lib_name, libso);
+        if (!libso) {
+            fprintf(stderr, "dlopen failed: %s\n", dlerror());
+            // exit(EXIT_FAILURE);
+        };
+        plugin_lib[i] = libso;
+        void (*plugin_register_func)(void);
+        void* plugin_register_func_p = dlsym(libso, plugin_register_func_name);
+        *(void **) (&plugin_register_func) = plugin_register_func_p;
+        printf("func '%s' %p\n", plugin_register_func_name, plugin_register_func_p);
+        if (plugin_register_func) {
+            plugin_register_func();
+        }
+        i++;
+    }
+#else
+
     // register audio systems before dealing with the config file
 #   if !defined(OSS) && !defined(ALSA) && !defined(JACK) && !defined(PULSEAUDIO)
 #	error "No audio system has been defined"
@@ -107,6 +140,8 @@ int main(int argc, char *argv[]) {
 #	ifdef JACK
     lingot_audio_jack_register();
 #   endif
+
+#endif
 
     lingot_io_config_create_parameter_specs();
 
@@ -137,6 +172,15 @@ int main(int argc, char *argv[]) {
     }
 
     lingot_gui_mainframe_create(argc, argv);
+
+    i = 0;
+    while (plugin_name[i]) {
+        if (plugin_lib[i]) {
+            printf("closing lib %p\n", plugin_lib[i]);
+            dlclose(plugin_lib);
+        }
+        i++;
+    }
 
     return 0;
 }
