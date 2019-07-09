@@ -61,5 +61,19 @@ Also, the depedency to [libfftw](http://fftw.org) can be enabled/disabled with
 Below a summary of the packages needed to build a development version on _Debian-based_ systems:
 
 ```console
-sudo apt-get install libtool intltool libasound2-dev libpulse-dev libjack-jackd2-dev libfftw3-dev libgtk-3-dev libcunit1-dev
+sudo apt-get install \
+    libtool \
+    intltool \
+    libasound2-dev \
+    libpulse-dev \
+    libjack-jackd2-dev \
+    libfftw3-dev \
+    libgtk-3-dev \
+    libcunit1-dev
 ```
+
+## Resources
+
+* [Official LINGOT wesite](http://lingot.nongnu.org/)
+* [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
+* [Downloads page in Savannah](https://savannah.nongnu.org/projects/lingot/)
