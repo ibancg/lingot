@@ -2,13 +2,14 @@
 
 # LINGOT - A musical instrument tuner.
 
+<img align="right" src="http://lingot.nongnu.org/images/lingot-black-main.png">
+
 LINGOT is a musical instrument tuner. It’s accurate, easy to use, and highly configurable. Originally conceived to tune electric
 guitars, it can be used to tune other instruments.
 
 It looks like an analogue tuner, with a gauge indicating the relative shift to a certain note,
 determined automatically as the closest note to the estimated frequency.
 
-[![Main window](http://lingot.nongnu.org/images/lingot-black-main.png)](http://lingot.nongnu.org/images/lingot-black-main.png)
 
 ## Main features
 
@@ -35,14 +36,14 @@ make install
 ```
 
 If you are building a development version obtained from our VCS you will first need to
-create the configure script, by calling:
+create the _configure_ script, by calling:
 
 ```console
 ./bootstrap
 ```
 
 You can enable/disable the supported audio systems with the following options passed to the
-configure script, all of them enabled by default:
+_configure_ script, all of them enabled by default:
 
 ```
   --enable-oss=<yes|no>
@@ -60,5 +61,19 @@ Also, the depedency to [libfftw](http://fftw.org) can be enabled/disabled with
 Below a summary of the packages needed to build a development version on _Debian-based_ systems:
 
 ```console
-sudo apt-get install libtool intltool libasound2-dev libpulse-dev libjack-jackd2-dev libfftw3-dev libgtk-3-dev libcunit1-dev
+sudo apt-get install \
+    libtool \
+    intltool \
+    libasound2-dev \
+    libpulse-dev \
+    libjack-jackd2-dev \
+    libfftw3-dev \
+    libgtk-3-dev \
+    libcunit1-dev
 ```
+
+## Resources
+
+* [Official LINGOT wesite](http://lingot.nongnu.org/)
+* [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
+* [Downloads page in Savannah](https://savannah.nongnu.org/projects/lingot/)
