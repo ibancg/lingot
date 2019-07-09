@@ -2,13 +2,14 @@
 
 # LINGOT - A musical instrument tuner.
 
+<img align="right" src="http://lingot.nongnu.org/images/lingot-black-main.png">
+
 LINGOT is a musical instrument tuner. It’s accurate, easy to use, and highly configurable. Originally conceived to tune electric
 guitars, it can be used to tune other instruments.
 
 It looks like an analogue tuner, with a gauge indicating the relative shift to a certain note,
 determined automatically as the closest note to the estimated frequency.
 
-[![Main window](http://lingot.nongnu.org/images/lingot-black-main.png)](http://lingot.nongnu.org/images/lingot-black-main.png)
 
 ## Main features
 
