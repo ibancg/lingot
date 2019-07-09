@@ -36,14 +36,14 @@ make install
 ```
 
 If you are building a development version obtained from our VCS you will first need to
-create the configure script, by calling:
+create the _configure_ script, by calling:
 
 ```console
 ./bootstrap
 ```
 
 You can enable/disable the supported audio systems with the following options passed to the
-configure script, all of them enabled by default:
+_configure_ script, all of them enabled by default:
 
 ```
   --enable-oss=<yes|no>

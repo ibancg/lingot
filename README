@@ -5,8 +5,8 @@ Written by:
   Iban Cereijo <ibancg@gmail.com>
   Jairo Chapela <jairochapela@gmail.com>
 
-Copyright (C) 2004-2018 Iban Cereijo
-Copyright (C) 2004-2018 Jairo Chapela
+Copyright (C) 2004-2019 Iban Cereijo
+Copyright (C) 2004-2019 Jairo Chapela
 
 
 Description
@@ -69,161 +69,13 @@ Synopsis
 
     lingot [-c config]
 
-The -c option causes the search of a file named {config}.conf in the ~/.lingot
-folder. For example:
+The -c option causes the search of a file named {config}.conf in the
+~/.config/lingot/ folder. For example:
 
     lingot -c bass
 
-will take the configuration file ~/.lingot/bass.conf. This is useful for
+will take the configuration file ~/.config/lingot/bass.conf. This is useful for
 maintaining different configurations for different instruments. It's also
 possible to load and save configuration files from the GUI. The default
-configuration file is ~/.lingot/lingot.conf.
+configuration file is ~/.config/lingot/lingot.conf.
 
-
-Configuration file
-==================
-
-When lingot is launched for the first time, the default configuration file
-~/.lingot/lingot.conf will be created.
-
-The default values are optimized for tuning electric guitars, other musical
-instruments might require these values to be slightly changed (a good practice
-would be to have a configuration file for each instrument). The options can be
-changed via GUI.
-
-There is a wide range of options, with the purpose of keeping the maximum
-configurability. Some background in signal processing is needed for a good
-understanding of all of their effects.
-
-We detail the main options that constitute this file, and we recommend to make
-changes depending on the desired tuning precision and demanded CPU time. If you
-don't understand the effects of some options, then just try different values or,
-even better, don't change them.
-
-
- AUDIO_SYSTEM
-
-    Audio system switch. Possible values:
-    
-    OSS
-    ALSA        [default value]
-    JACK
-    PulseAudio
-
-    
- AUDIO_DEV (OSS sound device)
-
-    Selected sound device for the OSS audio system. The default value is
-    '/dev/dsp'.
-
-
- AUDIO_DEV_ALSA (ALSA sound device)
-
-    Selected sound device for ALSA, the default value is 'default'.
-
-
- AUDIO_DEV_JACK (JACK port)
-
-    Selected sound port for JACK, the default value is 'default'.
-
-
- AUDIO_DEV_PULSEAUDIO (PulseAudio sound device)
-
-    Selected sound device for PulseAudio, the default value is 'default'.
-
-
- ROOT_FREQUENCY_ERROR ("A" reference note shift)
-
-    This option is used when we want to tune with a certain amount of shift
-    in frequency.
-
-    This can be useful when tuning an instrument against a recording with a
-    shifted tuning. For example, if we hear an "A" note in a recording that
-    it's a quarter of a tone over the real frequency (440 Hz), we can put 50
-    cents of shift here.
-
-    It must be a real number, expressed in cents. The default value is 0.
-
-
- FFT_SIZE (Size of the FTT)
-
-    A high value gets more accuracy, especially more precision locking the
-    desired frequency, but it demands more CPU time.
-
-    We must consider the time interval involved on the calculus before
-    unnecessarily raising this value: having a buffer of 4096 samples for the
-    FFT, and a sampling rate of 8 KHz, each transform needs the last 512 ms
-    temporary values, so there is no point in putting a shorter temporal window.
-
-    It must be an integer power of 2. The default value is 512 samples.
-
-
- TEMPORAL_WINDOW
-
-    The length in time of the signal used to compute the final frequency. With
-    higher values, we'll obtain a more accurate result, but also a slower
-    response polluted by earlier notes.
-
-    As a practical rule, we say that if we have a temporal window of 1 second,
-    we must wait 1 second between two consecutive notes to obtain a correct 
-    tuning. Therefore, this parameter affects directly to the responsiveness
-    of the tuner.
-
-    The temporal window size in samples (obtained as the multiplication of its
-    duration in seconds and the effective sampling rate) must be greater than
-    the FFT buffer size.
-
-    It must be a real number in seconds. The default value is 0.32 seconds.
-
-
- MIN_SNR
-
-    To avoid tuning noise, this is the lower signal-to-noise ratio we require
-    to start the tuning process.
-
-    It's a real number whose units are dB. The default value is 20 dB.
-
-
- CALCULATION_RATE
-
-    With higher calculations per second, the tuner gives us a better dynamic
-    sensation, but it'll need more CPU time.
-    
-    It's a real number, in hertz, and the default value is 20 Hz.
-
-
- VISUALIZATION_RATE
-
-    It has impact in the dynamism sensation achieved, but less in the
-    computation time.
-
-    There is no point having a calculation rate greater than the visualization
-    rate.
-
-    It's a real number, in hertz. The default value is 30 Hz.
-
-
- MINIMUM_FREQUENCY and MAXIMUM_FREQUENCY
-
-    The minimum and maximum notes the instrument can tipically generate. These
-    are not hard boundaries, but a guideline to help Lingot set its internal
-    parameters.
-    
-    They are eal numbers, in hertz. The default values are 82.41 Hz (E2) and
-    329.63 Hz (E4)
-
-
- SCALE
- 
- 	Definition of the scale used for the tuning. By default a 12 semitones
- 	equal-tempered scale is used. It contains several parameters:
- 	
- 	NAME: Scale name, only for your information.
- 	BASE_FREQUENCY: The absolute frequency - in hertz - of the first note.
- 	NOTE_COUNT: number of notes in the scale.
- 	NOTES: list of notes, being them pairs of name and frequency shift. The
- 		frequency shift can be expressed as a real number in cents or a
- 		division of integer values, encoding a frequency ratio, like '3/2'
- 		or '5/4'. Be careful with leaving wide gaps in frequency between each
- 		pair of adjacent notes, as the gauge range will adapt to the maximum
- 		of those distances. Try to use scales with at least 12 tones. 
