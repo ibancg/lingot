@@ -74,6 +74,6 @@ sudo apt-get install \
 
 ## Resources
 
-* [Official LINGOT wesite](http://lingot.nongnu.org/)
+* [Official LINGOT website](http://lingot.nongnu.org/)
 * [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
 * [Downloads page in Savannah](https://savannah.nongnu.org/projects/lingot/)
