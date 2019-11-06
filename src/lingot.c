@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
         printf("creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {
-            fprintf(stderr, "Cannot create config folder '%s': %s", config_dir, strerror(errno));
+            fprintf(stderr, "Cannot create config folder '%s': %s\n", config_dir, strerror(errno));
         }
         printf("creating file %s ...\n", CONFIG_FILE_NAME);
 

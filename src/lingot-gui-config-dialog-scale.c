@@ -157,6 +157,7 @@ void lingot_gui_config_dialog_scale_tree_remove_selected_items(gpointer data,
         }
         list = list->next;
     }
+
     GList *elem;
     for (elem = list; elem; elem = elem->next) {
         gtk_tree_path_free(elem->data);
@@ -224,8 +225,9 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
     }
     g_list_free(list);
 
-    if (!valid)
+    if (!valid) {
         return;
+    }
 
     renderer = &cell->parent;
     guint column_number = GPOINTER_TO_UINT(

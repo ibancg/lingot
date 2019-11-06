@@ -29,7 +29,7 @@
 // unit testing functions
 
 // time measurement
-void tic();
-double toc();
+void tic(void);
+double toc(void);
 
 #endif

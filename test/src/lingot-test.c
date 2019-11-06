@@ -27,11 +27,11 @@
 static struct timeval tv1;
 static struct timeval tv2;
 
-void tic() {
+void tic(void) {
     gettimeofday(&tv1, NULL);
 }
 
-double toc() {
+double toc(void) {
 
     double result = 0.0;
 

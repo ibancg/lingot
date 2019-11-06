@@ -34,7 +34,7 @@
  */
 
 static int lingot_signal_is_peak(const FLT* signal, int index, unsigned short peak_half_width) {
-    register unsigned int j;
+    unsigned int j;
 
     for (j = 0; j < peak_half_width; j++) {
         if ((signal[index + j] < signal[index + j + 1])

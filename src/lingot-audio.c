@@ -60,7 +60,7 @@ int lingot_audio_system_register(const char* audio_system_name,
                                  lingot_audio_read_t func_read,
                                  lingot_audio_get_audio_system_properties_t func_system_properties) {
 
-    printf("Found audio plugin '%s'\n", audio_system_name);
+    // printf("Found audio plugin '%s'\n", audio_system_name);
 
     if ((size_t) (audio_system_counter + 1) >= sizeof(audio_systems)/sizeof (LingotAudioSystemConnector)) {
         return -1;

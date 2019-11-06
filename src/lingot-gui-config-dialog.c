@@ -147,8 +147,9 @@ void lingot_gui_config_dialog_set_audio_system(GtkComboBoxText* combo,
     while (valid) {
         gchar *str_data;
         gtk_tree_model_get(model, &iter, 0, &str_data, -1);
-        if (!strcmp(str_data, token))
+        if (!strcmp(str_data, token)) {
             gtk_combo_box_set_active_iter(GTK_COMBO_BOX(combo), &iter);
+        }
         g_free(str_data);
         valid = gtk_tree_model_iter_next(model, &iter);
     }

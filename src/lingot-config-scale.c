@@ -184,7 +184,7 @@ int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
         }
 
         break;
-    };
+    }
 
     if (fabs(offset - pitch_inf) < fabs(offset - pitch_sup)) {
         note_index = index;
