@@ -76,4 +76,4 @@ sudo apt-get install \
 
 * [Official LINGOT website](http://lingot.nongnu.org/)
 * [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
-* [Downloads page in Savannah](https://savannah.nongnu.org/projects/lingot/)
+* [Downloads page in Savannah](http://download.savannah.gnu.org/releases/lingot/)

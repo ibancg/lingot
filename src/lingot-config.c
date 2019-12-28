@@ -36,9 +36,6 @@
 #include "lingot-i18n.h"
 #include "lingot-audio.h"
 
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
-
 void lingot_config_new(LingotConfig* config) {
 
     config->max_nr_iter = 10; // iterations
@@ -152,18 +149,15 @@ void lingot_config_update_internal_params(LingotConfig* config) {
     config->min_SNR = 0.5 * config->min_overall_SNR;
     config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
 
-    if (config->scale.notes == 1) {
-        config->scale.max_offset_rounded = 1200.0;
-    } else {
-        int i;
-        FLT max_offset = 0.0;
-        for (i = 1; i < config->scale.notes; i++) {
-            max_offset = MAX(max_offset, config->scale.offset_cents[i]
-                             - config->scale.offset_cents[i - 1]);
+    int i;
+    config->gauge_range = 1200.0;
+    for (i = 1; i < config->scale.notes; i++) {
+        FLT offset = config->scale.offset_cents[i] - config->scale.offset_cents[i - 1];
+        if (offset < config->gauge_range) {
+            config->gauge_range = offset;
         }
-        config->scale.max_offset_rounded = max_offset;
     }
 
-    config->gauge_rest_value = -0.45 * config->scale.max_offset_rounded;
+    config->gauge_rest_value = -0.45 * config->gauge_range;
 }
 
