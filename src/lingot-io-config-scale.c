@@ -101,7 +101,7 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
     int i;
     char* char_buffer_pointer1;
     char* nl;
-    static const char* delim = " \t\n";
+    static const char* delim = " =\t\n";
     int result = 1;
     int line = 0;
     const char* error_format_msg = _("incorrect format");
@@ -126,21 +126,21 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
     {
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
 
         if (strchr(char_buffer, '!') != char_buffer) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
 
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
 
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
 
         nl = strrchr(char_buffer, '\r');
@@ -153,13 +153,13 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
         sscanf(char_buffer, "%hu", &scale->notes);
 
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-            throw(error_format_msg);
+            throw(error_format_msg)
         }
         lingot_config_scale_allocate(scale, scale->notes);
 
@@ -172,28 +172,40 @@ int lingot_config_scale_load_scl(LingotScale* scale, char* filename) {
 
             line++;
             if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
-                throw(error_note_number_msg);
+                throw(error_note_number_msg)
             }
 
             char_buffer_pointer1 = strtok(char_buffer, delim);
 
             if (char_buffer_pointer1 == NULL) {
-                throw(error_note_number_msg);
+                throw(error_note_number_msg)
             }
 
+            size_t len = strlen(char_buffer_pointer1);
             int r = lingot_config_scale_parse_shift(char_buffer_pointer1,
                                                     &scale->offset_cents[i], &scale->offset_ratios[0][i],
                     &scale->offset_ratios[1][i]);
             if (!r) {
-                throw(error_format_msg);
+                throw(error_format_msg)
             } else {
                 if (scale->offset_cents[i] <= scale->offset_cents[i - 1]) {
-                    throw(_("the notes must be well ordered"));
+                    throw(_("the notes must be well ordered"))
                 }
             }
 
-            sprintf(char_buffer, "%d", i + 1);
-            scale->note_name[i] = strdup(char_buffer);
+            // we look for a possible name after the offset
+            char_buffer_pointer1 = strtok(char_buffer_pointer1 + len + 1, delim);
+            while (char_buffer_pointer1 &&
+                   (*char_buffer_pointer1 == ' ' ||
+                    *char_buffer_pointer1 == '\t')) {
+                ++char_buffer_pointer1;
+            }
+            if (char_buffer_pointer1) {
+                scale->note_name[i] = strdup(char_buffer_pointer1);
+            } else {
+                sprintf(char_buffer, "%d", i + 1);
+                scale->note_name[i] = strdup(char_buffer);
+            }
         }
     } catch {
         result = 0;
