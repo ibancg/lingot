@@ -85,7 +85,10 @@ typedef struct {
 
     //----------------------------------------------------------------------------
 
-    // gauge rest value. (gauge contemplates [-0.5, 0.5])
+    // global range for the gauge in cents
+    FLT gauge_range;
+
+    // gauge rest value in cents
     FLT gauge_rest_value;
 
     //----------------------------------------------------------------------------

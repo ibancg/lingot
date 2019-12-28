@@ -685,9 +685,9 @@ static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr,
     cairo_stroke(cr);
 
     // cent tics
-    const double maxOffsetRounded = frame->conf.scale.max_offset_rounded;
+    const double gaugeRange = frame->conf.gauge_range;
     static const int maxMinorDivisions = 20;
-    double centsPerMinorDivision = maxOffsetRounded / maxMinorDivisions;
+    double centsPerMinorDivision = gaugeRange / maxMinorDivisions;
     const double base = pow(10.0, floor(log10(centsPerMinorDivision)));
     double normalizedCentsPerDivision = centsPerMinorDivision / base;
     if (normalizedCentsPerDivision >= 6.0) {
@@ -704,9 +704,9 @@ static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr,
 
     // minor tics
     cairo_set_line_width(cr, centsBarMinorTicStroke);
-    int maxIndex = (int) floor(0.5 * maxOffsetRounded / centsPerMinorDivision);
+    int maxIndex = (int) floor(0.5 * gaugeRange / centsPerMinorDivision);
     double angleStep = 2.0 * overtureAngle * centsPerMinorDivision
-            / maxOffsetRounded;
+            / gaugeRange;
     int index;
     for (index = -maxIndex; index <= maxIndex; index++) {
         const double angle = index * angleStep;
@@ -715,8 +715,8 @@ static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr,
     }
 
     // major tics
-    maxIndex = (int) floor(0.5 * maxOffsetRounded / centsPerMajorDivision);
-    angleStep = 2.0 * overtureAngle * centsPerMajorDivision / maxOffsetRounded;
+    maxIndex = (int) floor(0.5 * gaugeRange / centsPerMajorDivision);
+    angleStep = 2.0 * overtureAngle * centsPerMajorDivision / gaugeRange;
     cairo_set_line_width(cr, centsBarMajorTicStroke);
     for (index = -maxIndex; index <= maxIndex; index++) {
         double angle = index * angleStep;
@@ -810,8 +810,7 @@ void lingot_gui_mainframe_draw_gauge(cairo_t *cr, const LingotMainFrame* frame) 
 
     lingot_gui_mainframe_draw_gauge_background(cr, frame);
 
-    const double normalized_error = frame->gauge.position
-            / frame->conf.scale.max_offset_rounded;
+    const double normalized_error = frame->gauge.position / frame->conf.gauge_range;
     const double angle = 2.0 * normalized_error * overtureAngle;
     cairo_set_line_width(cr, gaugeStroke);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);

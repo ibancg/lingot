@@ -34,10 +34,6 @@ typedef struct {
     short int* offset_ratios[2]; 	// offset in ratios (pairs of integers)
     FLT base_frequency; 			// frequency of the first note (tipically C4)
     char** note_name; 				// note names
-
-    // -- internal parameters --
-
-    FLT max_offset_rounded; 		// round version of maximum offset in cents
 } LingotScale;
 
 void lingot_config_scale_new(LingotScale*);
