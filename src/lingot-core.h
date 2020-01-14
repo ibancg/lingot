@@ -37,48 +37,7 @@
 #include "lingot-fft.h"
 
 typedef struct {
-
-    //  -- results --
-    FLT freq; // computed analog frequency.
-    FLT* SPL; // visual portion of FFT.
-    //  -- shared data --
-
-    FLT* SPL_thread_safe; // copy for thread-safe access.
-
-    LingotAudioHandler audio; // audio handler.
-
-    FLT* flt_read_buffer;
-    FLT* temporal_buffer; // sample memory.
-
-    // precomputed hamming windows
-    FLT* hamming_window_temporal;
-    FLT* hamming_window_fft;
-
-    // windowed signals
-    FLT* windowed_temporal_buffer;
-    FLT* windowed_fft_buffer;
-
-    // spectral power distribution estimation.
-    FLT* noise_level;
-
-    LingotFFTPlan fftplan;
-
-    LingotFilter antialiasing_filter; // antialiasing filter for decimation.
-
-    int running;
-
-    LingotConfig conf; // configuration structure
-
-    pthread_t thread_computation;
-    pthread_attr_t thread_computation_attr;
-    pthread_cond_t thread_computation_cond;
-    pthread_mutex_t thread_computation_mutex;
-
-    // Synchronized access to the results (typically accessed by computation and UI threads)
-    pthread_mutex_t results_mutex;
-
-    // Synchronized access to the audio buffer (accessed by computation and audio threads)
-    pthread_mutex_t temporal_buffer_mutex;
+    void *private;
 } LingotCore;
 
 //----------------------------------------------------------------
@@ -87,7 +46,7 @@ void lingot_core_new(LingotCore*, LingotConfig*);
 void lingot_core_destroy(LingotCore*);
 
 // runs the core mainloop
-void* lingot_core_mainloop(void* core);
+void lingot_core_mainloop(LingotCore* core);
 
 // starts the core in another thread
 void lingot_core_thread_start(LingotCore*);

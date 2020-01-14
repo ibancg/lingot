@@ -216,7 +216,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
     FLT freq = lingot_core_thread_get_result_frequency(&frame->core);
 
     // ignore continuous component
-    if (!frame->core.running || isnan(freq)
+    if (!lingot_core_thread_is_running(&frame->core) || isnan(freq)
             || (freq <= frame->conf.internal_min_frequency)) {
         frequency = 0.0;
         lingot_gauge_compute(&frame->gauge, frame->conf.gauge_rest_value);
@@ -270,7 +270,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
                                      "Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
             }
 
-            if ((message_type == ERROR) && !frame->core.running) {
+            if ((message_type == ERROR) && !lingot_core_thread_is_running(&frame->core)) {
                 buttonsType = GTK_BUTTONS_OK;
                 message_pointer +=
                         snprintf(message_pointer,
@@ -994,7 +994,7 @@ void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, LingotMainFrame* frame) {
     lingot_gui_mainframe_draw_spectrum_background(cr, frame);
 
     // spectrum drawing.
-    if (frame->core.running) {
+    if (lingot_core_thread_is_running(&frame->core)) {
 
         cairo_set_line_width(cr, 1.0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);

@@ -35,16 +35,65 @@
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
 
+// ----------------------------------------------------------------------------
+
+typedef struct {
+
+    //  -- results --
+    FLT freq; // computed analog frequency.
+    FLT* SPL; // visual portion of FFT.
+    //  -- shared data --
+
+    FLT* SPL_thread_safe; // copy for thread-safe access.
+
+    LingotAudioHandler audio; // audio handler.
+
+    FLT* flt_read_buffer;
+    FLT* temporal_buffer; // sample memory.
+
+    // precomputed hamming windows
+    FLT* hamming_window_temporal;
+    FLT* hamming_window_fft;
+
+    // windowed signals
+    FLT* windowed_temporal_buffer;
+    FLT* windowed_fft_buffer;
+
+    // spectral power distribution estimation.
+    FLT* noise_level;
+
+    LingotFFTPlan fftplan;
+
+    LingotFilter antialiasing_filter; // antialiasing filter for decimation.
+
+    int running;
+
+    LingotConfig conf; // configuration structure
+
+    pthread_t thread_computation;
+    pthread_attr_t thread_computation_attr;
+    pthread_cond_t thread_computation_cond;
+    pthread_mutex_t thread_computation_mutex;
+
+    // Synchronized access to the results (typically accessed by computation and UI threads)
+    pthread_mutex_t results_mutex;
+
+    // Synchronized access to the audio buffer (accessed by computation and audio threads)
+    pthread_mutex_t temporal_buffer_mutex;
+} LingotCorePrivate;
+
+// ----------------------------------------------------------------------------
 
 void lingot_core_read_callback(FLT* read_buffer, unsigned int samples_read, void *arg);
 
-void* lingot_core_mainloop(void* core);
-
 static unsigned int decimation_input_index = 0;
 
-void lingot_core_new(LingotCore* core, LingotConfig* conf) {
+void lingot_core_new(LingotCore* core_, LingotConfig* conf) {
 
     char buff[1000];
+
+    core_->private = malloc(sizeof(LingotCorePrivate));
+    LingotCorePrivate* core = (LingotCorePrivate*) core_->private;
 
     lingot_config_copy(&core->conf, conf);
     core->running = 0;
@@ -165,8 +214,9 @@ void lingot_core_new(LingotCore* core, LingotConfig* conf) {
 // -----------------------------------------------------------------------
 
 /* Deallocate resources */
-void lingot_core_destroy(LingotCore* core) {
+void lingot_core_destroy(LingotCore* core_) {
 
+    LingotCorePrivate* core = (LingotCorePrivate*) core_->private;
     if (core->audio.audio_system != -1) {
         lingot_fft_plan_destroy(&core->fftplan);
         lingot_audio_destroy(&core->audio);
@@ -187,6 +237,7 @@ void lingot_core_destroy(LingotCore* core) {
         pthread_mutex_destroy(&core->temporal_buffer_mutex);
         pthread_mutex_destroy(&core->results_mutex);
     }
+    free(core);
 }
 
 // -----------------------------------------------------------------------
@@ -199,7 +250,7 @@ void lingot_core_read_callback(FLT* read_buffer, unsigned int samples_read, void
     unsigned int decimation_output_len;
     FLT* decimation_in;
     FLT* decimation_out;
-    LingotCore* core = (LingotCore*) arg;
+    LingotCorePrivate* core = (LingotCorePrivate*) arg;
     const LingotConfig* const conf = &core->conf;
 
     memcpy(core->flt_read_buffer, read_buffer, samples_read * sizeof(FLT));
@@ -315,9 +366,10 @@ void lingot_core_read_callback(FLT* read_buffer, unsigned int samples_read, void
 #endif
 }
 
-void lingot_core_compute_fundamental_fequency(LingotCore* core) {
+void lingot_core_compute_fundamental_fequency(LingotCorePrivate* core) {
 
     unsigned int i, k; // loop variables.
+
     const LingotConfig* const conf = &core->conf;
     const FLT index2f = ((FLT) conf->sample_rate)
             / (conf->oversampling * conf->fft_size); // FFT resolution in Hz.
@@ -496,11 +548,54 @@ void lingot_core_compute_fundamental_fequency(LingotCore* core) {
     pthread_mutex_unlock(&core->results_mutex);
 }
 
+static void* lingot_core_mainloop_(void* core_) {
+    lingot_core_mainloop((LingotCore*) core_);
+    return NULL;
+}
+
+void lingot_core_mainloop(LingotCore* core_) {
+    struct timeval tout_abs;
+    struct timespec tout_tspec;
+
+    LingotCorePrivate* core = (LingotCorePrivate*) ((LingotCore*) core_)->private;
+    gettimeofday(&tout_abs, NULL);
+
+    while (core->running) {
+        lingot_core_compute_fundamental_fequency(core);
+        tout_abs.tv_usec += (long) (1e6 / core->conf.calculation_rate);
+        if (tout_abs.tv_usec >= 1000000) {
+            tout_abs.tv_usec -= 1000000;
+            tout_abs.tv_sec++;
+        }
+        tout_tspec.tv_sec = tout_abs.tv_sec;
+        tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
+        pthread_mutex_lock(&core->thread_computation_mutex);
+        pthread_cond_timedwait(&core->thread_computation_cond,
+                               &core->thread_computation_mutex, &tout_tspec);
+        pthread_mutex_unlock(&core->thread_computation_mutex);
+
+        if (core->audio.audio_system != -1) {
+            const unsigned int spd_size = core->conf.fft_size / 2;
+            if (core->audio.interrupted) {
+                memset(core->SPL, 0, spd_size * sizeof(FLT));
+                core->freq = 0.0;
+                core->running = 0;
+            }
+        }
+    }
+
+    pthread_mutex_lock(&core->thread_computation_mutex);
+    pthread_cond_broadcast(&core->thread_computation_cond);
+    pthread_mutex_unlock(&core->thread_computation_mutex);
+}
+
 /* start running the core in another thread */
-void lingot_core_thread_start(LingotCore* core) {
+void lingot_core_thread_start(LingotCore* core_) {
 
     int audio_status = 0;
     decimation_input_index = 0;
+
+    LingotCorePrivate* core = (LingotCorePrivate*) core_->private;
 
     if (core->audio.audio_system != -1) {
         audio_status = lingot_audio_start(&core->audio);
@@ -512,8 +607,8 @@ void lingot_core_thread_start(LingotCore* core) {
             pthread_attr_init(&core->thread_computation_attr);
             pthread_create(&core->thread_computation,
                            &core->thread_computation_attr,
-                           lingot_core_mainloop,
-                           core);
+                           lingot_core_mainloop_,
+                           core_);
             core->running = 1;
         } else {
             core->running = 0;
@@ -524,7 +619,7 @@ void lingot_core_thread_start(LingotCore* core) {
 }
 
 /* stop running the core */
-void lingot_core_thread_stop(LingotCore* core) {
+void lingot_core_thread_stop(LingotCore* core_) {
     void* thread_result;
 
     int result;
@@ -532,6 +627,8 @@ void lingot_core_thread_stop(LingotCore* core) {
     struct timespec tout_tspec;
 
     gettimeofday(&tout_abs, NULL);
+
+    LingotCorePrivate* core = (LingotCorePrivate*) core_->private;
 
     if (core->running == 1) {
         core->running = 0;
@@ -571,52 +668,15 @@ void lingot_core_thread_stop(LingotCore* core) {
     }
 }
 
-/* run the core */
-void* lingot_core_mainloop(void* _core) {
-    struct timeval tout_abs;
-    struct timespec tout_tspec;
-
-    LingotCore* core = _core;
-    gettimeofday(&tout_abs, NULL);
-
-    while (core->running) {
-        lingot_core_compute_fundamental_fequency(core);
-        tout_abs.tv_usec += (long) (1e6 / core->conf.calculation_rate);
-        if (tout_abs.tv_usec >= 1000000) {
-            tout_abs.tv_usec -= 1000000;
-            tout_abs.tv_sec++;
-        }
-        tout_tspec.tv_sec = tout_abs.tv_sec;
-        tout_tspec.tv_nsec = 1000 * tout_abs.tv_usec;
-        pthread_mutex_lock(&core->thread_computation_mutex);
-        pthread_cond_timedwait(&core->thread_computation_cond,
-                               &core->thread_computation_mutex, &tout_tspec);
-        pthread_mutex_unlock(&core->thread_computation_mutex);
-
-        if (core->audio.audio_system != -1) {
-            const unsigned int spd_size = core->conf.fft_size / 2;
-            if (core->audio.interrupted) {
-                memset(core->SPL, 0, spd_size * sizeof(FLT));
-                core->freq = 0.0;
-                core->running = 0;
-            }
-        }
-    }
-
-    pthread_mutex_lock(&core->thread_computation_mutex);
-    pthread_cond_broadcast(&core->thread_computation_cond);
-    pthread_mutex_unlock(&core->thread_computation_mutex);
-
-    return NULL;
-}
-
-int lingot_core_thread_is_running(LingotCore* core)
+int lingot_core_thread_is_running(LingotCore* core_)
 {
+    LingotCorePrivate* core = (LingotCorePrivate*) ((LingotCore*) core_)->private;
     return core->running;
 }
 
-FLT lingot_core_thread_get_result_frequency(LingotCore* core) {
+FLT lingot_core_thread_get_result_frequency(LingotCore* core_) {
 
+    LingotCorePrivate* core = (LingotCorePrivate*) ((LingotCore*) core_)->private;
     pthread_mutex_lock(&core->results_mutex);
     FLT freq = core->freq;
     pthread_mutex_unlock(&core->results_mutex);
@@ -624,8 +684,9 @@ FLT lingot_core_thread_get_result_frequency(LingotCore* core) {
     return freq;
 }
 
-FLT* lingot_core_thread_get_result_spd(LingotCore* core) {
+FLT* lingot_core_thread_get_result_spd(LingotCore* core_) {
 
+    LingotCorePrivate* core = (LingotCorePrivate*) ((LingotCore*) core_)->private;
     pthread_mutex_lock(&core->results_mutex);
     memcpy(core->SPL_thread_safe, core->SPL, (core->conf.fft_size/2) * sizeof(FLT));
     pthread_mutex_unlock(&core->results_mutex);
