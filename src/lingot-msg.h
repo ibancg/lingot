@@ -25,11 +25,13 @@
 #ifndef LINGOT_MESSAGES_H
 #define LINGOT_MESSAGES_H
 
-// asynchronous message handling
+// asynchronous message handling (thread-safe)
 
 // message types
 typedef enum message_type_t {
-    ERROR = 0, WARNING = 1, INFO = 2
+    ERROR = 0,
+    WARNING = 1,
+    INFO = 2
 } message_type_t;
 
 // add messages to the queue

@@ -24,26 +24,22 @@
 
 #include "lingot-complex.h"
 
-void lingot_complex_add(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_add(const LingotComplex a, const LingotComplex b, LingotComplex c) {
     c[0] = a[0] + b[0];
     c[1] = a[1] + b[1];
 }
 
-void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_sub(const LingotComplex a, const LingotComplex b, LingotComplex c) {
     c[0] = a[0] - b[0];
     c[1] = a[1] - b[1];
 }
 
-void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_mul(const LingotComplex a, const LingotComplex b, LingotComplex c) {
     c[0] = a[0] * b[0] - a[1] * b[1];
     c[1] = a[1] * b[0] + a[0] * b[1];
 }
 
-void lingot_complex_div(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_div(const LingotComplex a, const LingotComplex b, LingotComplex c) {
     FLT bm2 = b[0] * b[0] + b[1] * b[1];
     c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
     c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;

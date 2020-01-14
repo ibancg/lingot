@@ -157,7 +157,7 @@ void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
 
 int lingot_audio_alsa_read(LingotAudioHandler* audio) {
     int samples_read = -1;
-    char buffer[channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+    char buffer[channels * audio->read_buffer_size_samples * ((size_t) audio->bytes_per_sample)];
 
     LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
     samples_read = (int) snd_pcm_readi(audioALSA->capture_handle, buffer,
@@ -229,7 +229,7 @@ int lingot_audio_alsa_get_audio_system_properties(
     char device_name[512];
     int device_index = -1;
     unsigned int subdevice_count;
-    int subdevice_index;
+    unsigned int subdevice_index;
     snd_ctl_t *card_handler;
     snd_pcm_info_t *pcm_info;
     struct device_name_node_t* name_node_current;
@@ -311,12 +311,12 @@ int lingot_audio_alsa_get_audio_system_properties(
                     // only search for capture devices
                     snd_pcm_info_set_stream(pcm_info, SND_PCM_STREAM_CAPTURE);
 
-                    subdevice_index = -1;
+                    subdevice_index = (unsigned int) -1;
                     subdevice_count = 1;
 
                     while (++subdevice_index < subdevice_count) {
 
-                        snd_pcm_info_set_subdevice(pcm_info, (unsigned int) subdevice_index);
+                        snd_pcm_info_set_subdevice(pcm_info, subdevice_index);
                         if ((status = snd_ctl_pcm_info(card_handler, pcm_info))
                                 < 0) {
                             fprintf(stderr,
@@ -327,8 +327,7 @@ int lingot_audio_alsa_get_audio_system_properties(
                         }
 
                         if (!subdevice_index) {
-                            subdevice_count = snd_pcm_info_get_subdevices_count(
-                                        pcm_info);
+                            subdevice_count = snd_pcm_info_get_subdevices_count(pcm_info);
                         }
 
                         if (subdevice_count > 1) {
@@ -365,7 +364,7 @@ int lingot_audio_alsa_get_audio_system_properties(
         }
 
         // copy the device names list
-        result->devices = (char**) malloc(result->n_devices * sizeof(char*));
+        result->devices = (const char**) malloc((unsigned int) result->n_devices * sizeof(char*));
         name_node_current = device_names_first;
         for (device_index = 0; device_index < result->n_devices; device_index++) {
             result->devices[device_index] = name_node_current->name;

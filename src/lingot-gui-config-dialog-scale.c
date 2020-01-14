@@ -498,9 +498,10 @@ void lingot_gui_config_dialog_scale_gui_to_data(const LingotConfigDialog* dialog
     gtk_tree_model_get_iter_first(model, &iter);
     gtk_tree_model_get(model, &iter, COLUMN_FREQUENCY, &freq, -1);
 
+    lingot_config_scale_destroy(scale);
     scale->name = strdup(gtk_entry_get_text(dialog->scale_name));
     scale->base_frequency = freq;
-    lingot_config_scale_allocate(scale, rows);
+    lingot_config_scale_allocate(scale, (short unsigned) rows);
 
     do {
         gtk_tree_model_get(model, &iter, COLUMN_NAME, &name, COLUMN_SHIFT, &shift_char, -1);

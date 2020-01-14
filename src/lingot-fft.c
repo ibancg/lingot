@@ -45,8 +45,7 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, unsigned int n) {
 #ifdef LIBFFTW
     result->fft_out = fftw_malloc(n * sizeof(fftw_complex));
     memset(result->fft_out, 0, n * sizeof(fftw_complex));
-    result->fftwplan = fftw_plan_dft_r2c_1d(n, in, result->fft_out,
-                                            FFTW_ESTIMATE);
+    result->fftwplan = fftw_plan_dft_r2c_1d((int) n, in, result->fft_out, FFTW_ESTIMATE);
 #else
     FLT alpha;
 
@@ -82,7 +81,7 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned lo
                      unsigned long int offset, unsigned long int d1, unsigned long int step) {
     LingotComplex X1, X2;
     unsigned long int Np2 = (N >> 1); // N/2
-    register unsigned long int a, b, c, q;
+    unsigned long int a, b, c, q;
 
     if (N == 2) { // butterfly for N = 2;
 
@@ -139,7 +138,7 @@ void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, unsigned int 
     }
 }
 
-/* Spectral Power Distribution esteem, selectively in frequency, by DFT.
+/* Spectral Power Distribution estimation, selectively in frequency, by DFT.
  transforms signal in of N1 samples from frequency wi, with sample
  separation of dw rads, storing the result on buffer out with N2 samples. */
 void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2) {

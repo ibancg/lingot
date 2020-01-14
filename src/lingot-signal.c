@@ -28,13 +28,10 @@
 
 #include "lingot-signal.h"
 #include "lingot-complex.h"
-
-/*
- peak identification functions.
- */
+#include "lingot-filter.h"
 
 static int lingot_signal_is_peak(const FLT* signal, int index, unsigned short peak_half_width) {
-    unsigned int j;
+    int j;
 
     for (j = 0; j < peak_half_width; j++) {
         if ((signal[index + j] < signal[index + j + 1])
@@ -73,6 +70,176 @@ static int lingot_signal_compare_int(const void *a, const void *b) {
     return (*((const int*) a) < *((const int*) b)) ? -1 : 1;
 }
 
+int lingot_signal_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
+                                        FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
+
+    int result = 0;
+    static const FLT tol = 5e-2; // TODO: tune
+    static const int maxDivisor = 4;
+
+    if ((freq1 != 0.0) && (freq2 != 0.0)) {
+
+        FLT smallFreq = freq1;
+        FLT bigFreq = freq2;
+
+        if (bigFreq < smallFreq) {
+            smallFreq = freq2;
+            bigFreq = freq1;
+        }
+
+        int divisor;
+        FLT frac;
+        FLT error = -1.0;
+        for (divisor = 1; divisor <= maxDivisor; divisor++) {
+            if (minFrequency * divisor > smallFreq) {
+                break;
+            }
+
+            frac = bigFreq * divisor / smallFreq;
+            error = fabs(frac - round(frac));
+            if (error < tol) {
+                if (smallFreq == freq1) {
+                    *mulFreq1ToFreq = 1.0 / divisor;
+                    *mulFreq2ToFreq = 1.0 / round(frac);
+                } else {
+                    *mulFreq1ToFreq = 1.0 / round(frac);
+                    *mulFreq2ToFreq = 1.0 / divisor;
+                }
+                result = 1;
+                break;
+            }
+        }
+    } else {
+        *mulFreq1ToFreq = 0.0;
+        *mulFreq2ToFreq = 0.0;
+    }
+
+    //	printf("relation %f, %f = %i\n", freq1, freq2, result);
+
+    return result;
+}
+
+FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency) {
+
+    static int locked = 0;
+    static FLT current_frequency = -1.0;
+    static int hits_counter = 0;
+    static int rehits_counter = 0;
+    static int rehits_up_counter = 0;
+    static const int nhits_to_lock = 4;
+    static const int nhits_to_unlock = 5;
+    static const int nhits_to_relock = 6;
+    static const int nhits_to_relock_up = 8;
+    FLT multiplier = 0.0;
+    FLT multiplier2 = 0.0;
+    static FLT old_multiplier = 0.0;
+    static FLT old_multiplier2 = 0.0;
+    int fail = 0;
+    FLT result = 0.0;
+
+    int consistent_with_current_frequency = 0;
+    consistent_with_current_frequency = lingot_signal_frequencies_related(freq, current_frequency, minFrequency,
+                                                                          &multiplier, &multiplier2);
+
+    if (!locked) {
+
+        if ((freq > 0.0) && (current_frequency == 0.0)) {
+            consistent_with_current_frequency = 1;
+            multiplier = 1.0;
+            multiplier2 = 1.0;
+        }
+
+        //		printf("filtering frequency %f, current %f\n", freq, current_frequency);
+
+        if (consistent_with_current_frequency && (multiplier == 1.0)
+                && (multiplier2 == 1.0)) {
+            current_frequency = freq * multiplier;
+
+            if (++hits_counter >= nhits_to_lock) {
+                locked = 1;
+                hits_counter = 0;
+            }
+        } else {
+            hits_counter = 0;
+            current_frequency = 0.0;
+        }
+
+        //		result = freq;
+    } else {
+        //		printf("c = %i, f = %f, cf = %f, multiplier = %f, multiplier2 = %f\n",
+        //				consistent_with_current_frequency, freq, current_frequency,
+        //				multiplier, multiplier2);
+
+        if (consistent_with_current_frequency) {
+            if (fabs(multiplier2 - 1.0) < 1e-5) {
+                result = freq * multiplier;
+                current_frequency = result;
+                rehits_counter = 0;
+
+                if (fabs(multiplier - 1.0) > 1e-5) {
+                    if (fabs(multiplier - old_multiplier) < 1e-5) {
+                        if (++rehits_up_counter >= nhits_to_relock_up) {
+                            result = freq;
+                            current_frequency = result;
+                            rehits_up_counter = 0;
+                            fail = 0;
+                        }
+                    } else {
+                        rehits_up_counter = 0;
+                    }
+                } else {
+                    rehits_up_counter = 0;
+                }
+            } else {
+                rehits_up_counter = 0;
+                if (fabs(multiplier2 - 0.5) < 1e-5) {
+                    hits_counter--;
+                }
+                fail = 1;
+                if (freq * multiplier < minFrequency) {
+                } else {
+                    //					result = freq * multiplier;
+                    //					printf("hop detected!\n");
+                    //					current_frequency = result;
+
+                    if (fabs(multiplier2 - old_multiplier2) < 1e-5) {
+                        if (++rehits_counter >= nhits_to_relock) {
+                            result = freq * multiplier;
+                            current_frequency = result;
+                            rehits_counter = 0;
+                            fail = 0;
+                        }
+                    }
+                }
+            }
+
+        } else {
+            fail = 1;
+        }
+
+        if (fail) {
+            result = current_frequency;
+            hits_counter++;
+            if (hits_counter >= nhits_to_unlock) {
+                current_frequency = 0.0;
+                locked = 0;
+                hits_counter = 0;
+                result = 0.0;
+            }
+        } else {
+            hits_counter = 0;
+        }
+    }
+
+    old_multiplier = multiplier;
+    old_multiplier2 = multiplier2;
+
+    //	if (result != 0.0)
+    //		printf("result = %f\n", result);
+    return result;
+}
+
+
 // Returns a factor to multiply with in order to give more importance to higher
 // frequency harmonics. This is to give more importance to the higher divisors
 // for the same selected sets.
@@ -102,17 +269,10 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                                                  FLT min_snr,
                                                  FLT min_q,
                                                  FLT min_freq,
-                                                 LingotCore* core,
                                                  short* divisor) {
-    register unsigned int i, j, m;
+    unsigned int i, j, m;
     int p_index[n_peaks];
     FLT magnitude[n_peaks];
-
-#ifdef DRAW_MARKERS
-    core->markers_size = 0;
-#else
-    (void)core;             //  Unused parameter.
-#endif
 
     // at this moment there are no peaks.
     for (i = 0; i < n_peaks; i++)
@@ -125,7 +285,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
         highest_index = N - peak_half_width;
     }
 
-    unsigned short n_found_peaks = 0;
+    unsigned n_found_peaks = 0;
 
     // I'll get the n_peaks maximum peaks with SNR above the required.
     for (i = lowest_index; i < highest_index; i++) {
@@ -144,7 +304,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
         FLT snri = snr[i] * factor;
 
         if ((snri > min_snr)
-                && lingot_signal_is_peak(snr, i, peak_half_width)) {
+                && lingot_signal_is_peak(snr, (int) i, peak_half_width)) {
 
             // search a place in the maximums buffer, if it doesn't exists, the
             // lower maximum is candidate to be replaced.
@@ -163,10 +323,10 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
             }
 
             if (p_index[m] == -1) {
-                p_index[m] = i; // there is a place
+                p_index[m] = (int) i; // there is a place
                 magnitude[m] = snri;
             } else if (snr[i] > snr[p_index[m]]) {
-                p_index[m] = i; // if greater
+                p_index[m] = (int) i; // if greater
                 magnitude[m] = snri;
             }
 
@@ -189,10 +349,10 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
         }
 
     // all peaks much lower than maximum are deleted.
-    int delete_counter = 0;
+    unsigned delete_counter = 0;
     for (i = 0; i < n_found_peaks; i++) {
         if ((p_index[i] == -1) || (magnitude[i] < maximum - 20.0)) { // TODO: conf
-            p_index[i] = N; // there are available places in the buffer.
+            p_index[i] = (int) N; // there are available places in the buffer.
             delete_counter++;
         }
     }
@@ -206,14 +366,10 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
         delta = lingot_signal_fft_bin_interpolate_quinn2(fft[p_index[i] - 1],
                 fft[p_index[i]], fft[p_index[i] + 1]);
         freq_interpolated[i] = delta_f_fft * (p_index[i] + delta);
-
-#ifdef DRAW_MARKERS
-        core->markers[core->markers_size++] = p_index[i];
-#endif
     }
 
     // maximum ratio error
-    static const FLT ratioTol = 0.02; // TODO: tune
+    static const FLT ratio_tol = 0.02; // TODO: tune
     static const short max_divisor = 4;
 
     unsigned short tone_index = 0;
@@ -224,10 +380,10 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     short indices_related[n_found_peaks];
     unsigned short n_indices_related = 0;
 
-    FLT bestQ = 0.0;
+    FLT best_q = 0.0;
     short best_indices_related[n_found_peaks];
-    FLT bestF = 0;
-    short bestDivisor = 1;
+    FLT best_f = 0;
+    short best_divisor = 1;
 
     // possible ground frequencies
     for (tone_index = 0; tone_index < n_found_peaks; tone_index++) {
@@ -239,8 +395,8 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                     ratios[i] = freq_interpolated[i] / groundFreq;
                     error[i] = (ratios[i] - round(ratios[i]));
                     // harmonically related frequencies
-                    if (fabs(error[i]) < ratioTol) {
-                        indices_related[n_indices_related++] = i;
+                    if (fabs(error[i]) < ratio_tol) {
+                        indices_related[n_indices_related++] = (short) i;
                     }
                 }
 
@@ -255,11 +411,9 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                     // add up contributions to the quality factor
                     q += snr[p_index[indices_related[i]]]
                             * lingot_signal_frequency_penalty(groundFreq);
-                    if (snr[p_index[indices_related[i]]]
-                            > highest_harmonic_magnitude) {
-                        highest_harmonic_index = i;
-                        highest_harmonic_magnitude =
-                                snr[p_index[indices_related[i]]];
+                    if (snr[p_index[indices_related[i]]] > highest_harmonic_magnitude) {
+                        highest_harmonic_index = (int) i;
+                        highest_harmonic_magnitude = snr[p_index[indices_related[i]]];
                     }
 
                     //					snrsum += snr[p_index[indices_related[i]]];
@@ -283,22 +437,12 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                 //				}
                 //				printf("\n");
 
-                if (q > bestQ) {
-                    bestQ = q;
+                if (q > best_q) {
+                    best_q = q;
                     memcpy(best_indices_related, indices_related,
                            n_indices_related * sizeof(short));
-                    bestDivisor = round(f / groundFreq);
-                    bestF = f;
-
-#ifdef DRAW_MARKERS
-                    core->markers_size2 = 0;
-                    for (i = 0; i < n_indices_related; i++) {
-                        core->markers2[core->markers_size2++] =
-                                p_index[indices_related[i]];
-                    }
-#endif
-
-                    //					printf("%d\n", n_indices_related);
+                    best_divisor = (short) round(f / groundFreq);
+                    best_f = f;
                 }
 
             } else {
@@ -315,20 +459,13 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     //	}
     //	printf("\n");
 
-    if ((bestF != 0.0) && (bestQ < min_q)) {
-        bestF = 0.0;
+    if ((best_f != 0.0) && (best_q < min_q)) {
+        best_f = 0.0;
         //		printf("q < mq!!\n");
     }
 
-#ifdef DRAW_MARKERS
-    if (bestF == 0.0) {
-        core->markers_size2 = 0;
-    }
-#endif
-
-    *divisor = bestDivisor;
-    return bestF;
-
+    *divisor = best_divisor;
+    return best_f;
 }
 
 void lingot_signal_compute_noise_level(const FLT* spd,
@@ -350,8 +487,8 @@ void lingot_signal_compute_noise_level(const FLT* spd,
 
     lingot_filter_reset(&filter);
 
-    lingot_filter_filter(&filter, cbuffer_size, spd, noise_level);
-    lingot_filter_filter(&filter, N, spd, noise_level);
+    lingot_filter_filter(&filter, (unsigned int) cbuffer_size, spd, noise_level);
+    lingot_filter_filter(&filter, (unsigned int) N, spd, noise_level);
 
 }
 
@@ -359,7 +496,7 @@ void lingot_signal_compute_noise_level(const FLT* spd,
 
 // generates a N-sample window
 void lingot_signal_window(int N, FLT* out, window_type_t window_type) {
-    register int i;
+    int i;
     switch (window_type) {
     case HANNING:
         for (i = 0; i < N; i++)

@@ -376,7 +376,7 @@ void lingot_gui_config_dialog_data_to_gui(LingotConfigDialog* dialog, const Ling
     gtk_spin_button_set_value(dialog->root_frequency_error, conf->root_frequency_error);
     gtk_spin_button_set_value(dialog->temporal_window, conf->temporal_window);
 
-    lingot_gui_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size), conf->fft_size);
+    lingot_gui_config_dialog_combo_select_value(GTK_WIDGET(dialog->fft_size), (int) conf->fft_size);
     lingot_gui_config_dialog_set_frequency(dialog, dialog->minimum_frequency, conf->min_frequency);
     lingot_gui_config_dialog_set_frequency(dialog, dialog->maximum_frequency, conf->max_frequency);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog->optimize_check_button),
@@ -471,8 +471,6 @@ int lingot_gui_config_dialog_gui_to_data(const LingotConfigDialog* dialog, Lingo
     conf->fft_size = (unsigned int) atoi(text1);
     g_free(text1);
     conf->sample_rate = sample_rate;
-
-    lingot_config_scale_destroy(&conf->scale);
 
     lingot_gui_config_dialog_scale_gui_to_data(dialog, &conf->scale);
 
