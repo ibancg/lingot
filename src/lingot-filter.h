@@ -44,13 +44,14 @@ typedef struct {
 
 } LingotFilter;
 
-void lingot_filter_new(LingotFilter*, unsigned int Na, unsigned int Nb, const FLT* a,
-                       const FLT* b);
+void lingot_filter_new(LingotFilter*,
+                       unsigned int Na, unsigned int Nb,
+                       const FLT* a, const FLT* b);
 
 void lingot_filter_reset(LingotFilter* filter);
 
 /**
- * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple
+ * Design a Chebyshev Type I low pass filter with Rp dB of pass band ripple
  * with cutoff pi*wc radians.
  */
 void lingot_filter_cheby_design(LingotFilter*, unsigned int order, FLT Rp, FLT wc);

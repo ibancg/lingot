@@ -37,7 +37,7 @@ double toc(void) {
 
     gettimeofday(&tv2, NULL);
 
-    result = (tv2.tv_sec - tv1.tv_sec) + 1e-6 * (tv2.tv_usec - tv1.tv_usec);
+    result = ((double) (tv2.tv_sec - tv1.tv_sec)) + 1e-6 * ((double) (tv2.tv_usec - tv1.tv_usec));
 
     printf("Elapsed time: %g s.\n", result);
     return result;

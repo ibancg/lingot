@@ -118,7 +118,7 @@ void lingot_config_update_internal_params(LingotConfig* config) {
         config->internal_max_frequency = 20000;
     }
 
-    config->oversampling = floor(0.5 * config->sample_rate / config->internal_max_frequency);
+    config->oversampling = (unsigned int) floor(0.5 * config->sample_rate / config->internal_max_frequency);
     if (config->oversampling < 1) {
         config->oversampling = 1;
     }

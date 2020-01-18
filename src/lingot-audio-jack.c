@@ -130,7 +130,7 @@ void lingot_audio_jack_destroy(LingotAudioHandler* audio) {
 }
 
 int lingot_audio_jack_read(LingotAudioHandler* audio) {
-    register int i;
+    jack_nframes_t i;
     LingotAudioHandlerExtraJack* audioJack = (LingotAudioHandlerExtraJack*) audio->audio_handler_extra;
     float* in = jack_port_get_buffer(audioJack->input_port, audioJack->nframes);
     for (i = 0; i < audioJack->nframes; i++) {
@@ -190,7 +190,7 @@ int lingot_audio_jack_get_audio_system_properties(
                 fprintf(stderr, "unique name `%s' assigned\n", client_name);
             }
         } else {
-            sample_rate = jack_get_sample_rate(client);
+            sample_rate = (int) jack_get_sample_rate(client);
             ports = jack_get_ports(client, NULL, NULL, flags);
         }
 
@@ -210,8 +210,7 @@ int lingot_audio_jack_get_audio_system_properties(
         properties->n_devices = i + 1;
     }
 
-    properties->devices = (char**) malloc(
-                properties->n_devices * sizeof(char*));
+    properties->devices = (const char**) malloc((size_t) properties->n_devices * sizeof(char*));
     char buff[512];
     snprintf(buff, sizeof(buff), "%s <default>", _("Default Port"));
     properties->devices[0] = strdup(buff);

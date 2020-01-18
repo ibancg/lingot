@@ -27,7 +27,7 @@
 
 #include "../config.h"
 
-// floating point precission.
+// floating point precision.
 #define FLT                  double
 
 #define CONFIG_DIR_NAME           ".config/lingot/"
@@ -45,10 +45,6 @@ extern char CONFIG_FILE_NAME[];
 
 /* object forward declaration */
 typedef struct _LingotMainFrame LingotMainFrame;
-
-// optionally we can use the following libraries
-//#define LIB_FFTW
-//#define LIBSNDOBJ
 
 // simple try-catch simulation, do not use throw inside loops nor nest try-catch
 // blocks

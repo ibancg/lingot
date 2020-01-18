@@ -116,7 +116,7 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sam
             throw(error_message);
         }
 
-        audio->real_sample_rate = sample_rate;
+        audio->real_sample_rate = (unsigned int) sample_rate;
         audio->bytes_per_sample = 2;
     }catch {
         lingot_msg_add_error_with_code(exception, errno);
@@ -138,10 +138,10 @@ void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
 
 int lingot_audio_oss_read(LingotAudioHandler* audio) {
     int samples_read = -1;
-    char buffer [audio->read_buffer_size_samples * audio->bytes_per_sample];
+    char buffer [audio->read_buffer_size_samples * (unsigned int) audio->bytes_per_sample];
 
     LingotAudioHandlerExtraOSS* audioOSS = (LingotAudioHandlerExtraOSS*) audio->audio_handler_extra;
-    int bytes_read = read(audioOSS->dsp, buffer, sizeof (buffer));
+    long int bytes_read = read(audioOSS->dsp, buffer, sizeof (buffer));
 
     if (bytes_read < 0) {
         char buff[512];
@@ -150,7 +150,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
         lingot_msg_add_error(buff);
     } else {
 
-        samples_read = bytes_read / audio->bytes_per_sample;
+        samples_read = (int) (bytes_read / audio->bytes_per_sample);
         // float point conversion
         int i;
         const int16_t* read_buffer = (int16_t*) buffer;
@@ -166,7 +166,7 @@ int lingot_audio_oss_get_audio_system_properties(
 
     result->forced_sample_rate = 0;
     result->n_devices = 1;
-    result->devices = (char**) malloc(result->n_devices * sizeof(char*));
+    result->devices = (const char**) malloc((unsigned int) result->n_devices * sizeof(char*));
     result->devices[0] = strdup("/dev/dsp");
 
     result->n_sample_rates = 5;

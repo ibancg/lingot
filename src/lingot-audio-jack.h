@@ -32,7 +32,7 @@
 typedef struct {
     jack_port_t *input_port;
     jack_client_t *client;
-    int nframes;
+    jack_nframes_t nframes;
 } LingotAudioHandlerExtraJack;
 
 int lingot_audio_jack_register(void);

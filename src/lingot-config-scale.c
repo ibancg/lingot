@@ -67,13 +67,7 @@ void lingot_config_scale_destroy(LingotScale* scale) {
     free(scale->note_name);
     free(scale->name);
 
-    scale->name = NULL;
-    scale->notes = 0;
-    scale->note_name = NULL;
-    scale->offset_cents = NULL;
-    scale->offset_ratios[0] = NULL;
-    scale->offset_ratios[1] = NULL;
-    scale->base_frequency = 0.0;
+    lingot_config_scale_new(scale);
 }
 
 void lingot_config_scale_restore_default_values(LingotScale* scale) {
@@ -149,18 +143,17 @@ FLT lingot_config_scale_get_frequency(const LingotScale* scale, int index) {
 int lingot_config_scale_get_closest_note_index(const LingotScale* scale,
                                                FLT freq, FLT deviation, FLT* error_cents) {
 
-    short note_index = 0;
-    short int index;
+    int note_index = 0;
+    int index;
 
     FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
-    int octave = 0;
-    octave = floor(offset / 1200);
+    int octave = (int) floor(offset / 1200);
     offset = fmod(offset, 1200.0);
     if (offset < 0.0) {
         offset += 1200.0;
     }
 
-    index = floor(scale->notes * offset / 1200.0);
+    index = (int) floor(scale->notes * offset / 1200.0);
 
     // TODO: bisection?, avoid loop?
     FLT pitch_inf;

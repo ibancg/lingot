@@ -37,50 +37,7 @@
 #include "lingot-fft.h"
 
 typedef struct {
-
-    //  -- shared data --
-    FLT freq; // computed analog frequency.
-    FLT* SPL; // visual portion of FFT.
-    //  -- shared data --
-
-    LingotAudioHandler audio; // audio handler.
-
-    FLT* flt_read_buffer;
-    FLT* temporal_buffer; // sample memory.
-
-    // precomputed hamming windows
-    FLT* hamming_window_temporal;
-    FLT* hamming_window_fft;
-
-    // windowed signals
-    FLT* windowed_temporal_buffer;
-    FLT* windowed_fft_buffer;
-
-    // spectral power distribution esteem.
-    FLT* spd_fft;
-    FLT* noise_level;
-
-    LingotFFTPlan fftplan;
-
-    LingotFilter antialiasing_filter; // antialiasing filter for decimation.
-
-    int running;
-
-    LingotConfig conf; // configuration structure
-
-    pthread_t thread_computation;
-    pthread_attr_t thread_computation_attr;
-    pthread_cond_t thread_computation_cond;
-    pthread_mutex_t thread_computation_mutex;
-
-    pthread_mutex_t temporal_buffer_mutex;
-
-#	ifdef DRAW_MARKERS
-    int markers[20];
-    int markers2[20];
-    short markers_size;
-    short markers_size2;
-#	endif
+    void *private;
 } LingotCore;
 
 //----------------------------------------------------------------
@@ -88,15 +45,23 @@ typedef struct {
 void lingot_core_new(LingotCore*, LingotConfig*);
 void lingot_core_destroy(LingotCore*);
 
-// start process
-void lingot_core_start(LingotCore*);
+// runs the core mainloop
+void lingot_core_mainloop(LingotCore* core);
 
-// stop process
-void lingot_core_stop(LingotCore*);
+// starts the core in another thread
+void lingot_core_thread_start(LingotCore*);
 
-// tells whether the two frequencies are harmonically related, giving the
-// multipliers to the ground frequency
-int lingot_core_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
-                                    FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
+// stops the core started in another thread
+void lingot_core_thread_stop(LingotCore*);
+
+// Thread-safe request if the core is running
+int lingot_core_thread_is_running(LingotCore*);
+
+// Thread-safe request to the latest computed frequency
+FLT lingot_core_thread_get_result_frequency(LingotCore*);
+
+// Thread-safe access to the latest computed spectrum. The SPD is copied into
+// an internal secondary buffer that can be accessed afterwards from the calling thread
+FLT* lingot_core_thread_get_result_spd(LingotCore*);
 
 #endif //LINGOT_CORE_H

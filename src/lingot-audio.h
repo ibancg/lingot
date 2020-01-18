@@ -75,7 +75,7 @@ typedef struct {
     int sample_rates [5]; // sample rates
 
     int n_devices; // number of available devices
-    char** devices; // devices
+    const char** devices; // devices
 } LingotAudioSystemProperties;
 
 
@@ -117,6 +117,8 @@ void lingot_audio_new(LingotAudioHandler*,
 
 // destroys an audio handler
 void lingot_audio_destroy(LingotAudioHandler*);
+
+void* lingot_audio_mainloop(void*);
 
 int lingot_audio_start(LingotAudioHandler*);
 void lingot_audio_stop(LingotAudioHandler*);

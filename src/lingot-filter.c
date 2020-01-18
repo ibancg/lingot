@@ -31,8 +31,9 @@
 #define max(a,b) (((a)<(b))?(b):(a))
 
 // given each polynomial order and coefs, with optional initial status.
-void lingot_filter_new(LingotFilter* filter, unsigned int Na, unsigned int Nb, const FLT* a,
-                       const FLT* b) {
+void lingot_filter_new(LingotFilter* filter,
+                       unsigned int Na, unsigned int Nb,
+                       const FLT* a, const FLT* b) {
     unsigned int i;
     filter->N = max(Na, Nb);
 
@@ -69,18 +70,18 @@ void lingot_filter_destroy(LingotFilter* filter) {
 }
 
 // Digital Filter Implementation II, in & out can overlap.
-void lingot_filter_filter(LingotFilter* filter, unsigned int n, const FLT* in,
-                          FLT* out) {
+void lingot_filter_filter(LingotFilter* filter, unsigned int n,
+                          const FLT* in, FLT* out) {
     FLT w, y;
-    register unsigned int i;
-    register int j;
+    unsigned int i;
+    int j;
 
     for (i = 0; i < n; i++) {
 
         w = in[i];
         y = 0.0;
 
-        for (j = filter->N - 1; j >= 0; j--) {
+        for (j = (int) (filter->N - 1); j >= 0; j--) {
             w -= filter->a[j + 1] * filter->s[j];
             y += filter->b[j + 1] * filter->s[j];
             filter->s[j + 1] = filter->s[j];
@@ -102,9 +103,8 @@ FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in) {
 }
 
 // vector prod
-void lingot_filter_vector_product(int n, LingotComplex* vector,
-                                  LingotComplex result) {
-    register int i;
+void lingot_filter_vector_product(unsigned int n, LingotComplex* vector, LingotComplex result) {
+    unsigned int i;
     LingotComplex aux1;
 
     result[0] = 1.0;

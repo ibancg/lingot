@@ -35,7 +35,7 @@
 
 #include <pulse/pulseaudio.h>
 
-static int num_channels = 1;
+static unsigned int num_channels = 1;
 static pa_sample_spec ss;
 
 void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
@@ -43,7 +43,7 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, 
     strcpy(audio->device, "");
 
     //	sample_rate = 44100;
-    audio->real_sample_rate = sample_rate;
+    audio->real_sample_rate = (unsigned int) sample_rate;
 
     audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraPA));
     LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
@@ -61,16 +61,17 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, 
 
     //	ss.format = PA_SAMPLE_S16NE;
     ss.format = PA_SAMPLE_FLOAT32; // TODO: config?
-    ss.channels = num_channels;
-    ss.rate = sample_rate;
+    ss.channels = (unsigned char) num_channels;
+    ss.rate = (unsigned int) sample_rate;
 
     //	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate, ss.format);
 
-    audio->bytes_per_sample = pa_sample_size(&ss);
+    audio->bytes_per_sample = (short) pa_sample_size(&ss);
 
     pa_buffer_attr buff;
-    buff.maxlength = -1;
-    buff.fragsize = num_channels * audio->read_buffer_size_samples * audio->bytes_per_sample;
+    buff.maxlength = (unsigned int) -1;
+    buff.fragsize = num_channels *
+            audio->read_buffer_size_samples * ((unsigned int) audio->bytes_per_sample);
 
     const char* device_name = device;
     if (!strcmp(device_name, "default") || !strcmp(device_name, "")) {
@@ -112,7 +113,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
     int samples_read = -1;
     int error;
-    char buffer[num_channels * audio->read_buffer_size_samples * audio->bytes_per_sample];
+    char buffer[num_channels * audio->read_buffer_size_samples * ((unsigned int) audio->bytes_per_sample)];
 
     LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
     int result = pa_simple_read(audioPA->pa_client, buffer,
@@ -127,7 +128,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
         lingot_msg_add_error_with_code(buff, error);
     } else {
 
-        samples_read = audio->read_buffer_size_samples;
+        samples_read = (int) audio->read_buffer_size_samples;
         int i;
         switch (ss.format) {
         case PA_SAMPLE_S16LE: {
@@ -191,99 +192,98 @@ int lingot_audio_pulseaudio_get_audio_system_properties(
     properties->sample_rates[3] = 44100;
     properties->sample_rates[4] = 48000; // TODO
 
-    struct device_name_node_t* device_names_first =
-            (struct device_name_node_t*) malloc(
-                        sizeof(struct device_name_node_t));
-            struct device_name_node_t* device_names_last = device_names_first;
-            // the first record is the default source
-            char buff[512];
-            snprintf(buff, sizeof(buff), "%s <default>", _("Default Source"));
-            device_names_first->name = strdup(buff);
-            device_names_first->next = NULL;
+    struct device_name_node_t* device_names_first = (struct device_name_node_t*) malloc(sizeof(struct device_name_node_t));
 
-            context = NULL;
-            mainloop_api = NULL;
-            proplist = NULL;
-            pa_mainloop *m = NULL;
-            int ret = 1;
-            char *server = NULL;
-            int fail = 0;
+    struct device_name_node_t* device_names_last = device_names_first;
+    // the first record is the default source
+    char buff[512];
+    snprintf(buff, sizeof(buff), "%s <default>", _("Default Source"));
+    device_names_first->name = strdup(buff);
+    device_names_first->next = NULL;
 
-            proplist = pa_proplist_new();
+    context = NULL;
+    mainloop_api = NULL;
+    proplist = NULL;
+    pa_mainloop *m = NULL;
+    int ret = 1;
+    char *server = NULL;
+    int fail = 0;
 
-            if (!(m = pa_mainloop_new())) {
-                fprintf(stderr, "PulseAudio: pa_mainloop_new() failed.\n");
-            } else {
+    proplist = pa_proplist_new();
 
-                mainloop_api = pa_mainloop_get_api(m);
+    if (!(m = pa_mainloop_new())) {
+        fprintf(stderr, "PulseAudio: pa_mainloop_new() failed.\n");
+    } else {
 
-                //		//!pa_assert_se(pa_signal_init(mainloop_api) == 0);
-                //		pa_signal_new(SIGINT, exit_signal_callback, NULL);
-                //		pa_signal_new(SIGTERM, exit_signal_callback, NULL);
-                //		pa_disable_sigpipe();
+        mainloop_api = pa_mainloop_get_api(m);
 
-                if (!(context = pa_context_new_with_proplist(mainloop_api, NULL,
-                                                             proplist))) {
-                    fprintf(stderr, "PulseAudio: pa_context_new() failed.\n");
-                } else {
+        //		//!pa_assert_se(pa_signal_init(mainloop_api) == 0);
+        //		pa_signal_new(SIGINT, exit_signal_callback, NULL);
+        //		pa_signal_new(SIGTERM, exit_signal_callback, NULL);
+        //		pa_disable_sigpipe();
 
-                    pa_context_set_state_callback(context,
-                                                  lingot_audio_pulseaudio_context_state_callback,
-                                                  &device_names_last);
-                    if (pa_context_connect(context, server, 0, NULL) < 0) {
-                        fprintf(stderr, "PulseAudio: pa_context_connect() failed: %s",
-                                pa_strerror(pa_context_errno(context)));
-                    } else if (pa_mainloop_run(m, &ret) < 0) {
-                        fprintf(stderr, "PulseAudio: pa_mainloop_run() failed.");
-                    }
-                }
+        if (!(context = pa_context_new_with_proplist(mainloop_api, NULL,
+                                                     proplist))) {
+            fprintf(stderr, "PulseAudio: pa_context_new() failed.\n");
+        } else {
+
+            pa_context_set_state_callback(context,
+                                          lingot_audio_pulseaudio_context_state_callback,
+                                          &device_names_last);
+            if (pa_context_connect(context, server, 0, NULL) < 0) {
+                fprintf(stderr, "PulseAudio: pa_context_connect() failed: %s",
+                        pa_strerror(pa_context_errno(context)));
+            } else if (pa_mainloop_run(m, &ret) < 0) {
+                fprintf(stderr, "PulseAudio: pa_mainloop_run() failed.");
             }
+        }
+    }
 
-            if (context)
-                pa_context_unref(context);
+    if (context) {
+        pa_context_unref(context);
+    }
 
-            if (m) {
-                //		pa_signal_done();
-                pa_mainloop_free(m);
-            }
+    if (m) {
+        //		pa_signal_done();
+        pa_mainloop_free(m);
+    }
 
-            pa_xfree(server);
+    pa_xfree(server);
 
-            if (proplist)
-                pa_proplist_free(proplist);
+    if (proplist) {
+        pa_proplist_free(proplist);
+    }
 
-            int device_index;
+    int device_index;
 
-            if (!fail) {
-                struct device_name_node_t* name_node_current;
-                for (name_node_current = device_names_first; name_node_current != NULL;
-                     name_node_current = name_node_current->next) {
-                    properties->n_devices++;
-                }
+    if (!fail) {
+        struct device_name_node_t* name_node_current;
+        for (name_node_current = device_names_first; name_node_current != NULL;
+             name_node_current = name_node_current->next) {
+            properties->n_devices++;
+        }
 
-                // copy the device names list
-                properties->devices = (char**) malloc(
-                            properties->n_devices * sizeof(char*));
-                name_node_current = device_names_first;
-                for (device_index = 0; device_index < properties->n_devices;
-                     device_index++) {
-                    properties->devices[device_index] = name_node_current->name;
-                    name_node_current = name_node_current->next;
-                }
-            } else {
-                fprintf(stderr,
-                        "PulseAudio: cannot obtain device information from server\n");
-            }
+        // copy the device names list
+        properties->devices = (const char**) malloc((size_t) properties->n_devices * sizeof(char*));
+        name_node_current = device_names_first;
+        for (device_index = 0; device_index < properties->n_devices; device_index++) {
+            properties->devices[device_index] = name_node_current->name;
+            name_node_current = name_node_current->next;
+        }
+    } else {
+        fprintf(stderr,
+                "PulseAudio: cannot obtain device information from server\n");
+    }
 
-            // dispose the device names list
-            struct device_name_node_t* name_node_current;
-            for (name_node_current = device_names_first; name_node_current != NULL;) {
-                struct device_name_node_t* name_node_previous = name_node_current;
-                name_node_current = name_node_current->next;
-                free(name_node_previous);
-            }
+    // dispose the device names list
+    struct device_name_node_t* name_node_current;
+    for (name_node_current = device_names_first; name_node_current != NULL;) {
+        struct device_name_node_t* name_node_previous = name_node_current;
+        name_node_current = name_node_current->next;
+        free(name_node_previous);
+    }
 
-            return 0;
+    return 0;
 }
 
 static void lingot_audio_pulseaudio_mainloop_quit(int ret) {

@@ -314,7 +314,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
     lingot_config_map_parameters(config, params);
 
     char char_buffer[1024];
-    static const unsigned int max_line_size = sizeof(char_buffer);
+    static const size_t max_line_size = sizeof(char_buffer);
 
     if ((fp = fopen(filename, "r")) == NULL) {
         snprintf(char_buffer, max_line_size,
@@ -330,7 +330,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
 
         line++;
 
-        if (!fgets(char_buffer, max_line_size, fp)) {
+        if (!fgets(char_buffer, (int) max_line_size, fp)) {
             break;
         }
 
@@ -389,7 +389,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
                 int i = 0;
                 for (i = 0; i < scale.notes; i++) {
                     line++;
-                    if (!fgets(char_buffer, max_line_size, fp)) {
+                    if (!fgets(char_buffer, (int) max_line_size, fp)) {
                         scale_errors = 1;
                         fprintf(stderr, "error at line %i: error reading the scale\n", line);
                         break;
@@ -443,7 +443,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
                     }
                 }
                 line++;
-                if (!fgets(char_buffer, max_line_size, fp)) {
+                if (!fgets(char_buffer, (int) max_line_size, fp)) {
                     break;
                 }
 

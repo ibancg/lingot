@@ -210,26 +210,27 @@ void lingot_audio_system_properties_destroy(
     if (properties->devices) {
         for (i = 0; i < properties->n_devices; i++) {
             if (properties->devices[i]) {
-                free(properties->devices[i]);
+                free((void*) properties->devices[i]);
             }
         }
         free(properties->devices);
     }
 }
 
-void* lingot_audio_run_reading_thread(void* _audio) {
+void* lingot_audio_mainloop(void* _audio) {
 
     int samples_read = 0;
     LingotAudioHandler* audio = _audio;
 
     while (audio->running) {
-        // process new data block.
+        // blocking read
         samples_read = lingot_audio_read(audio);
 
         if (samples_read < 0) {
             audio->running = 0;
             audio->interrupted = 1;
         } else {
+            // process new data block.
             audio->process_callback(audio->flt_read_buffer,
                                     (unsigned int) samples_read,
                                     audio->process_callback_arg);
@@ -261,7 +262,7 @@ int lingot_audio_start(LingotAudioHandler* audio) {
             pthread_attr_init(&audio->thread_input_read_attr);
             pthread_create(&audio->thread_input_read,
                            &audio->thread_input_read_attr,
-                           lingot_audio_run_reading_thread, audio);
+                           lingot_audio_mainloop, audio);
             result = 0;
         }
     }
