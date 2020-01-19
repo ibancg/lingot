@@ -22,8 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef JACK
-
 #ifndef LINGOT_AUDIO_JACK_H
 #define LINGOT_AUDIO_JACK_H
 
@@ -37,5 +35,4 @@ int lingot_audio_jack_register(void);
 }
 #endif
 
-#endif
 #endif
