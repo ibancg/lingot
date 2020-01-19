@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -25,6 +25,10 @@
 #ifndef LINGOT_GAUGE_H
 #define LINGOT_GAUGE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "lingot-defs.h"
 #include "lingot-filter.h"
 
@@ -33,12 +37,16 @@
  */
 
 typedef struct {
-    LingotFilter filter;
+    lingot_filter_t filter;
     FLT position;
-} LingotGauge;
+} lingot_gauge_t;
 
-void lingot_gauge_new(LingotGauge*, FLT);
-void lingot_gauge_destroy(LingotGauge*);
-void lingot_gauge_compute(LingotGauge*, FLT);
+void lingot_gauge_new(lingot_gauge_t*, FLT gauge_rate, FLT initial_position);
+void lingot_gauge_destroy(lingot_gauge_t*);
+void lingot_gauge_compute(lingot_gauge_t*, FLT position);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*LINGOT_GAUGE_H*/

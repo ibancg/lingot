@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -52,9 +52,9 @@ static FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
                 / (x + 1.0 + 0.816496580927726)));
 }
 
-static FLT lingot_signal_fft_bin_interpolate_quinn2(const LingotComplex y1,
-                                                    const LingotComplex y2,
-                                                    const LingotComplex y3) {
+static FLT lingot_signal_fft_bin_interpolate_quinn2(const lingot_complex_t y1,
+                                                    const lingot_complex_t y2,
+                                                    const lingot_complex_t y3) {
     FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
     FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
     FLT dp = -ap / (1.0 - ap);
@@ -259,7 +259,7 @@ static FLT lingot_signal_frequency_penalty(FLT freq) {
 // search the fundamental peak given the SPD and its 2nd derivative
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                                                  FLT freq,
-                                                 const LingotComplex* fft,
+                                                 const lingot_complex_t* fft,
                                                  unsigned int N,
                                                  unsigned int n_peaks,
                                                  unsigned int lowest_index,
@@ -478,7 +478,7 @@ void lingot_signal_compute_noise_level(const FLT* spd,
     const FLT filter_a[] = { 1.0, c - 1.0 };
     const FLT filter_b[] = { c };
     static char initialized = 0;
-    static LingotFilter filter;
+    static lingot_filter_t filter;
 
     if (! initialized) {
         initialized = 1;

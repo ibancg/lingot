@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -25,11 +25,15 @@
 #ifndef LINGOT_IO_CONFIG_H
 #define LINGOT_IO_CONFIG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "lingot-config.h"
 #include "lingot-io-config-scale.h"
 
 // configuration parameter identifier
-typedef enum LingotConfigParameterId {
+typedef enum {
     LINGOT_PARAMETER_ID_AUDIO_SYSTEM, //
     LINGOT_PARAMETER_ID_ROOT_FREQUENCY_ERROR, //
     LINGOT_PARAMETER_ID_FFT_SIZE, //
@@ -56,23 +60,21 @@ typedef enum LingotConfigParameterId {
     LINGOT_PARAMETER_ID_AUDIO_DEV_ALSA, //
     LINGOT_PARAMETER_ID_AUDIO_DEV_JACK, //
     LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO, //
-} LingotConfigParameterId;
+} lingot_config_parameter_id_t;
 
 // configuration parameter type
-typedef enum LingotConfigParameterType {
+typedef enum {
     LINGOT_PARAMETER_TYPE_STRING,
     LINGOT_PARAMETER_TYPE_INTEGER,
     LINGOT_PARAMETER_TYPE_FLOAT,
     LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM
-} LingotConfigParameterType;
-
-typedef struct _LingotConfigParameterSpec LingotConfigParameterSpec;
+} lingot_config_parameter_type_t;
 
 // configuration parameter specification (id, type, minimum and maximum allowed values, ...)
-struct _LingotConfigParameterSpec {
+typedef struct {
 
-    LingotConfigParameterId id;
-    LingotConfigParameterType type;
+    lingot_config_parameter_id_t id;
+    lingot_config_parameter_type_t type;
     const char* name;
     const char* units;
 
@@ -83,12 +85,17 @@ struct _LingotConfigParameterSpec {
     int int_max;
     double float_min;
     double float_max;
-};
+
+} lingot_config_parameter_spec_t;
 
 void lingot_io_config_create_parameter_specs(void);
-LingotConfigParameterSpec lingot_io_config_get_parameter_spec(LingotConfigParameterId id);
+lingot_config_parameter_spec_t lingot_io_config_get_parameter_spec(lingot_config_parameter_id_t id);
 
-void lingot_io_config_save(LingotConfig*, const char* filename);
-int lingot_io_config_load(LingotConfig*, const char* filename);
+void lingot_io_config_save(lingot_config_t*, const char* filename);
+int lingot_io_config_load(lingot_config_t*, const char* filename);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LINGOT_IO_CONFIG_H

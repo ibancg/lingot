@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -27,11 +27,19 @@
 #ifndef LINGOT_AUDIO_OSS_H
 #define LINGOT_AUDIO_OSS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     int dsp; // file handler.
-} LingotAudioHandlerExtraOSS;
+} lingot_audio_handler_oss_t;
 
 int lingot_audio_oss_register(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 #endif

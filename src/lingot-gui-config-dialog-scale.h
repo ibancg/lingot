@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,28 +29,28 @@
 
 #include "lingot-gui-config-dialog.h"
 
-struct LingotConfigDialog;
-struct LingotScale;
+struct lingot_config_dialog_t;
+struct lingot_scale_t;
 struct GtkBuilder;
 
 // initialize and show the components
-void lingot_gui_config_dialog_scale_show(LingotConfigDialog*, GtkBuilder*);
+void lingot_gui_config_dialog_scale_show(lingot_config_dialog_t*, GtkBuilder*);
 
 // validate the information stored in the table
-int lingot_gui_config_dialog_scale_validate(const LingotConfigDialog* dialog,
-                                            const LingotScale* scale);
+int lingot_gui_config_dialog_scale_validate(const lingot_config_dialog_t* dialog,
+                                            const lingot_scale_t* scale);
 
 // copies the information stores in the table to the internal data structure
-void lingot_gui_config_dialog_scale_gui_to_data(const LingotConfigDialog* dialog,
-                                                LingotScale* scale);
+void lingot_gui_config_dialog_scale_gui_to_data(const lingot_config_dialog_t* dialog,
+                                                lingot_scale_t* scale);
 
 // fills the table with the information carried by the structure
-void lingot_gui_config_dialog_scale_data_to_gui(LingotConfigDialog* dialog,
-                                                const LingotScale* scale);
+void lingot_gui_config_dialog_scale_data_to_gui(lingot_config_dialog_t* dialog,
+                                                const lingot_scale_t* scale);
 
 void lingot_gui_config_dialog_scale_callback_change_deviation(GtkWidget *widget,
-                                                              LingotConfigDialog *dialog);
+                                                              lingot_config_dialog_t *dialog);
 void lingot_gui_config_dialog_scale_callback_change_octave(GtkWidget *widget,
-                                                           LingotConfigDialog *dialog);
+                                                           lingot_config_dialog_t *dialog);
 
 #endif /* LINGOT_GUI_CONFIG_DIALOG_SCALE_H */

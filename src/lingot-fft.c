@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -37,7 +37,7 @@
  DTFT functions.
  */
 
-void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, unsigned int n) {
+void lingot_fft_plan_create(lingot_fft_plan_t* result, FLT* in, unsigned int n) {
 
     result->n = n;
     result->in = in;
@@ -50,7 +50,7 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, unsigned int n) {
     FLT alpha;
 
     // twiddle factors
-    result->wn = (LingotComplex*) malloc((n >> 1) * sizeof(LingotComplex));
+    result->wn = (lingot_complex_t*) malloc((n >> 1) * sizeof(lingot_complex_t));
 
     unsigned int i;
     for (i = 0; i < (n >> 1); i++) {
@@ -58,13 +58,13 @@ void lingot_fft_plan_create(LingotFFTPlan* result, FLT* in, unsigned int n) {
         result->wn[i][0] = cos(alpha);
         result->wn[i][1] = sin(alpha);
     }
-    result->fft_out = malloc(n * sizeof(LingotComplex)); // complex signal in freq domain.
-    memset(result->fft_out, 0, n * sizeof(LingotComplex));
+    result->fft_out = malloc(n * sizeof(lingot_complex_t)); // complex signal in freq domain.
+    memset(result->fft_out, 0, n * sizeof(lingot_complex_t));
 #endif
 
 }
 
-void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
+void lingot_fft_plan_destroy(lingot_fft_plan_t* plan) {
 
 #ifdef LIBFFTW
     fftw_destroy_plan(plan->fftwplan);
@@ -72,14 +72,16 @@ void lingot_fft_plan_destroy(LingotFFTPlan* plan) {
 #else
     free(plan->fft_out);
     free(plan->wn);
+    plan->fft_out = NULL;
+    plan->wn = NULL;
 #endif
 }
 
 #ifndef LIBFFTW
 
-void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned long int N,
+void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsigned long int N,
                      unsigned long int offset, unsigned long int d1, unsigned long int step) {
-    LingotComplex X1, X2;
+    lingot_complex_t X1, X2;
     unsigned long int Np2 = (N >> 1); // N/2
     unsigned long int a, b, c, q;
 
@@ -112,13 +114,13 @@ void _lingot_fft_fft(FLT* in, LingotComplex* out, LingotComplex* wn, unsigned lo
     }
 }
 
-void lingot_fft_fft(LingotFFTPlan* plan) {
+void lingot_fft_fft(lingot_fft_plan_t* plan) {
     _lingot_fft_fft(plan->in, plan->fft_out, plan->wn, plan->n, 0, 0, 1);
 }
 
 #endif
 
-void lingot_fft_compute_dft_and_spd(LingotFFTPlan* plan, FLT* out, unsigned int n_out) {
+void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, FLT* out, unsigned int n_out) {
 
     unsigned int i;
     double _1_N2 = 1.0 / (plan->n * plan->n);

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -35,19 +35,15 @@
 
 #include <pulse/pulseaudio.h>
 
-static unsigned int num_channels = 1;
-static pa_sample_spec ss;
-
-void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
+void lingot_audio_pulseaudio_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
 
     strcpy(audio->device, "");
 
-    //	sample_rate = 44100;
     audio->real_sample_rate = (unsigned int) sample_rate;
 
-    audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraPA));
-    LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
-    audioPA->pa_client = 0;
+    audio->audio_handler_extra = malloc(sizeof(lingot_audio_handler_pulseaudio_t));
+    lingot_audio_handler_pulseaudio_t* audio_pa = (lingot_audio_handler_pulseaudio_t*) audio->audio_handler_extra;
+    audio_pa->client = 0;
 
     if (sample_rate >= 44100) {
         audio->read_buffer_size_samples = 2048;
@@ -60,17 +56,17 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, 
     int error;
 
     //	ss.format = PA_SAMPLE_S16NE;
-    ss.format = PA_SAMPLE_FLOAT32; // TODO: config?
-    ss.channels = (unsigned char) num_channels;
-    ss.rate = (unsigned int) sample_rate;
+    audio_pa->sample_spec.format = PA_SAMPLE_FLOAT32; // TODO: config?
+    audio_pa->sample_spec.channels = 1;
+    audio_pa->sample_spec.rate = (unsigned int) sample_rate;
 
     //	printf("sr %i, real sr %i, format = %i\n", ss.rate, audio->real_sample_rate, ss.format);
 
-    audio->bytes_per_sample = (short) pa_sample_size(&ss);
+    audio->bytes_per_sample = (short) pa_sample_size(&audio_pa->sample_spec);
 
     pa_buffer_attr buff;
     buff.maxlength = (unsigned int) -1;
-    buff.fragsize = num_channels *
+    buff.fragsize = audio_pa->sample_spec.channels *
             audio->read_buffer_size_samples * ((unsigned int) audio->bytes_per_sample);
 
     const char* device_name = device;
@@ -78,17 +74,17 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, 
         device_name = NULL;
     }
 
-    audioPA->pa_client = pa_simple_new(NULL, // Use the default server.
-                                       "Lingot", // Our application's name.
-                                       PA_STREAM_RECORD, //
-                                       device_name, //
-                                       "Lingot record thread", // Description of our stream.
-                                       &ss, // sample format.
-                                       NULL, // Use default channel map
-                                       &buff, //
-                                       &error);
+    audio_pa->client = pa_simple_new(NULL, // Use the default server.
+                                        "Lingot", // Our application's name.
+                                        PA_STREAM_RECORD, //
+                                        device_name, //
+                                        "Lingot record thread", // Description of our stream.
+                                        &audio_pa->sample_spec, // sample format.
+                                        NULL, // Use default channel map
+                                        &buff, //
+                                        &error);
 
-    if (!audioPA->pa_client) {
+    if (!audio_pa->client) {
         char buff[512];
         snprintf(buff, sizeof(buff), "%s\n%s",
                  _("Error creating PulseAudio client."),
@@ -98,25 +94,26 @@ void lingot_audio_pulseaudio_new(LingotAudioHandler* audio, const char* device, 
     }
 }
 
-void lingot_audio_pulseaudio_destroy(LingotAudioHandler* audio) {
+void lingot_audio_pulseaudio_destroy(lingot_audio_handler_t* audio) {
     if (audio->audio_system >= 0) {
-        LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
-        if (audioPA->pa_client != 0x0) {
-            pa_simple_free(audioPA->pa_client);
-            audioPA->pa_client = 0x0;
+        lingot_audio_handler_pulseaudio_t* audio_pa = (lingot_audio_handler_pulseaudio_t*) audio->audio_handler_extra;
+        if (audio_pa->client) {
+            pa_simple_free(audio_pa->client);
+            audio_pa->client = NULL;
             free(audio->audio_handler_extra);
+            audio->audio_handler_extra = NULL;
         }
     }
 }
 
-int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
+int lingot_audio_pulseaudio_read(lingot_audio_handler_t* audio) {
 
     int samples_read = -1;
     int error;
-    char buffer[num_channels * audio->read_buffer_size_samples * ((unsigned int) audio->bytes_per_sample)];
+    lingot_audio_handler_pulseaudio_t* audio_pa = (lingot_audio_handler_pulseaudio_t*) audio->audio_handler_extra;
+    char buffer[audio_pa->sample_spec.channels * audio->read_buffer_size_samples * ((unsigned int) audio->bytes_per_sample)];
 
-    LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
-    int result = pa_simple_read(audioPA->pa_client, buffer,
+    int result = pa_simple_read(audio_pa->client, buffer,
                                 sizeof(buffer), &error);
 
     //	printf("result = %i\n", result);
@@ -130,7 +127,7 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
 
         samples_read = (int) audio->read_buffer_size_samples;
         int i;
-        switch (ss.format) {
+        switch (audio_pa->sample_spec.format) {
         case PA_SAMPLE_S16LE: {
             int16_t* read_buffer = (int16_t*) buffer;
             for (i = 0; i < samples_read; i++) {
@@ -153,11 +150,11 @@ int lingot_audio_pulseaudio_read(LingotAudioHandler* audio) {
     return samples_read;
 }
 
-void lingot_audio_pulseaudio_cancel(LingotAudioHandler* audio) {
+void lingot_audio_pulseaudio_cancel(lingot_audio_handler_t* audio) {
     // warning: memory leak?
     // TODO: avoid it by using the async API
-    LingotAudioHandlerExtraPA* audioPA = (LingotAudioHandlerExtraPA*) audio->audio_handler_extra;
-    audioPA->pa_client = 0x0;
+    lingot_audio_handler_pulseaudio_t* audio_pa = (lingot_audio_handler_pulseaudio_t*) audio->audio_handler_extra;
+    audio_pa->client = 0x0;
 }
 
 // linked list struct for storing the capture device names
@@ -179,8 +176,7 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
 static void lingot_audio_pulseaudio_context_state_callback(pa_context *c,
                                                            void *userdata);
 
-int lingot_audio_pulseaudio_get_audio_system_properties(
-        LingotAudioSystemProperties* properties) {
+int lingot_audio_pulseaudio_get_audio_system_properties(lingot_audio_system_properties_t* properties) {
 
     properties->forced_sample_rate = 0;
     properties->n_devices = 0;

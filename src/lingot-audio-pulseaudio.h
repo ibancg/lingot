@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,11 +29,20 @@
 
 #include <pulse/simple.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
-    pa_simple *pa_client;
-} LingotAudioHandlerExtraPA;
+    pa_simple *client;
+    pa_sample_spec sample_spec;
+} lingot_audio_handler_pulseaudio_t;
 
 int lingot_audio_pulseaudio_register(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 #endif

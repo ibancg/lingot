@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -41,7 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
+void lingot_audio_oss_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
 
     int channels = 1;
 #	ifdef AFMT_S16_NE
@@ -51,16 +51,16 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sam
 #	endif
 
     char error_message[512];
-    const char* exception;
+    const char* _exception;
 
-    audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraOSS));
-    LingotAudioHandlerExtraOSS* audioOSS = (LingotAudioHandlerExtraOSS*) audio->audio_handler_extra;
+    audio->audio_handler_extra = malloc(sizeof(lingot_audio_handler_oss_t));
+    lingot_audio_handler_oss_t* audio_oss = (lingot_audio_handler_oss_t*) audio->audio_handler_extra;
 
     strncpy(audio->device, device, sizeof(audio->device) - 1);
     if (!strcmp(audio->device, "default")) {
         strcpy(audio->device, "/dev/dsp");
     }
-    audioOSS->dsp = open(audio->device, O_RDONLY);
+    audio_oss->dsp = open(audio->device, O_RDONLY);
     if (sample_rate >= 44100) {
         audio->read_buffer_size_samples = 1024;
     } else if (sample_rate >= 22050) {
@@ -69,29 +69,29 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sam
         audio->read_buffer_size_samples = 256;
     }
 
-    try
+    _try
     {
 
-        if (audioOSS->dsp < 0) {
+        if (audio_oss->dsp < 0) {
             snprintf(error_message, sizeof(error_message),
                      _("Cannot open audio device '%s'.\n%s"), audio->device,
                      strerror(errno));
-            throw(error_message);
+            _throw(error_message);
         }
 
         //if (ioctl(audio->dsp, SOUND_PCM_READ_CHANNELS, &channels) < 0)
-        if (ioctl(audioOSS->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0) {
+        if (ioctl(audio_oss->dsp, SNDCTL_DSP_CHANNELS, &channels) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Error setting number of channels."), strerror(errno));
-            throw(error_message);
+            _throw(error_message);
         }
 
         // sample size
         //if (ioctl(audio->dsp, SOUND_PCM_SETFMT, &format) < 0)
-        if (ioctl(audioOSS->dsp, SNDCTL_DSP_SETFMT, &format) < 0) {
+        if (ioctl(audio_oss->dsp, SNDCTL_DSP_SETFMT, &format) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Error setting bits per sample."), strerror(errno));
-            throw(error_message);
+            _throw(error_message);
         }
 
         int fragment_size = 1;
@@ -104,44 +104,45 @@ void lingot_audio_oss_new(LingotAudioHandler* audio, const char* device, int sam
 
         param |= 0x00ff0000;
 
-        if (ioctl(audioOSS->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0) {
+        if (ioctl(audio_oss->dsp, SNDCTL_DSP_SETFRAGMENT, &param) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Error setting DMA buffer size."), strerror(errno));
-            throw(error_message);
+            _throw(error_message);
         }
 
-        if (ioctl(audioOSS->dsp, SNDCTL_DSP_SPEED, &sample_rate) < 0) {
+        if (ioctl(audio_oss->dsp, SNDCTL_DSP_SPEED, &sample_rate) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Error setting sample rate."), strerror(errno));
-            throw(error_message);
+            _throw(error_message);
         }
 
         audio->real_sample_rate = (unsigned int) sample_rate;
         audio->bytes_per_sample = 2;
-    }catch {
-        lingot_msg_add_error_with_code(exception, errno);
-        close(audioOSS->dsp);
+    } _catch {
+        lingot_msg_add_error_with_code(_exception, errno);
+        close(audio_oss->dsp);
         audio->audio_system = -1;
     }
 }
 
-void lingot_audio_oss_destroy(LingotAudioHandler* audio) {
+void lingot_audio_oss_destroy(lingot_audio_handler_t* audio) {
     if (audio->audio_system >= 0) {
-        LingotAudioHandlerExtraOSS* audioOSS = (LingotAudioHandlerExtraOSS*) audio->audio_handler_extra;
-        if (audioOSS->dsp >= 0) {
-            close(audioOSS->dsp);
-            audioOSS->dsp = -1;
+        lingot_audio_handler_oss_t* audio_oss = (lingot_audio_handler_oss_t*) audio->audio_handler_extra;
+        if (audio_oss->dsp >= 0) {
+            close(audio_oss->dsp);
+            audio_oss->dsp = -1;
         }
         free(audio->audio_handler_extra);
+        audio->audio_handler_extra = NULL;
     }
 }
 
-int lingot_audio_oss_read(LingotAudioHandler* audio) {
+int lingot_audio_oss_read(lingot_audio_handler_t* audio) {
     int samples_read = -1;
     char buffer [audio->read_buffer_size_samples * (unsigned int) audio->bytes_per_sample];
 
-    LingotAudioHandlerExtraOSS* audioOSS = (LingotAudioHandlerExtraOSS*) audio->audio_handler_extra;
-    long int bytes_read = read(audioOSS->dsp, buffer, sizeof (buffer));
+    lingot_audio_handler_oss_t* audio_oss = (lingot_audio_handler_oss_t*) audio->audio_handler_extra;
+    long int bytes_read = read(audio_oss->dsp, buffer, sizeof (buffer));
 
     if (bytes_read < 0) {
         char buff[512];
@@ -161,8 +162,7 @@ int lingot_audio_oss_read(LingotAudioHandler* audio) {
     return samples_read;
 }
 
-int lingot_audio_oss_get_audio_system_properties(
-        LingotAudioSystemProperties* result) {
+int lingot_audio_oss_get_audio_system_properties(lingot_audio_system_properties_t* result) {
 
     result->forced_sample_rate = 0;
     result->n_devices = 1;

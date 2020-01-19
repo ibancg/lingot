@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -27,41 +27,51 @@
 
 #include <pthread.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "lingot-defs.h"
-#include "lingot-complex.h"
-#include "lingot-filter.h"
 #include "lingot-config.h"
 
-#include "lingot-audio.h"
-
-#include "lingot-fft.h"
-
 typedef struct {
-    void *private;
-} LingotCore;
+    void *core_private;
+} lingot_core_t;
 
 //----------------------------------------------------------------
 
-void lingot_core_new(LingotCore*, LingotConfig*);
-void lingot_core_destroy(LingotCore*);
+void lingot_core_new(lingot_core_t*, lingot_config_t*);
+void lingot_core_destroy(lingot_core_t*);
 
 // runs the core mainloop
-void lingot_core_mainloop(LingotCore* core);
+void lingot_core_mainloop(lingot_core_t* core);
+
+void lingot_core_compute_fundamental_fequency(lingot_core_t* core);
+
+// starts the core in the calling thread (starts the audio thread)
+void lingot_core_start(lingot_core_t*);
+
+// stops the core (audio thread)
+void lingot_core_stop(lingot_core_t*);
 
 // starts the core in another thread
-void lingot_core_thread_start(LingotCore*);
+void lingot_core_thread_start(lingot_core_t*);
 
 // stops the core started in another thread
-void lingot_core_thread_stop(LingotCore*);
+void lingot_core_thread_stop(lingot_core_t*);
 
 // Thread-safe request if the core is running
-int lingot_core_thread_is_running(LingotCore*);
+int lingot_core_thread_is_running(const lingot_core_t*);
 
 // Thread-safe request to the latest computed frequency
-FLT lingot_core_thread_get_result_frequency(LingotCore*);
+FLT lingot_core_thread_get_result_frequency(lingot_core_t*);
 
 // Thread-safe access to the latest computed spectrum. The SPD is copied into
 // an internal secondary buffer that can be accessed afterwards from the calling thread
-FLT* lingot_core_thread_get_result_spd(LingotCore*);
+FLT* lingot_core_thread_get_result_spd(lingot_core_t*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //LINGOT_CORE_H

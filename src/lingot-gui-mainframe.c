@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -39,11 +39,11 @@
 #include "lingot-io-config.h"
 #include "lingot-msg.h"
 
-static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr, LingotMainFrame* frame);
-static void lingot_gui_mainframe_draw_spectrum_background(cairo_t *cr, LingotMainFrame* frame);
-void lingot_gui_mainframe_draw_gauge(cairo_t *cr, LingotMainFrame *);
-void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, LingotMainFrame *);
-void lingot_gui_mainframe_draw_labels(const LingotMainFrame*);
+static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr, lingot_main_frame_t* frame);
+static void lingot_gui_mainframe_draw_spectrum_background(cairo_t *cr, lingot_main_frame_t* frame);
+void lingot_gui_mainframe_draw_gauge(cairo_t *cr, lingot_main_frame_t *);
+void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, lingot_main_frame_t *);
+void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
 // sizes
 
@@ -73,21 +73,17 @@ static gchar* filechooser_config_last_folder = NULL;
 static const gdouble aspect_ratio_spectrum_visible = 1.14;
 static const gdouble aspect_ratio_spectrum_invisible = 2.07;
 
-// TODO: keep here?
-static int closest_note_index = 0;
-static FLT frequency = 0.0;
-
-void lingot_gui_mainframe_callback_redraw_gauge(GtkWidget *w, cairo_t *cr, LingotMainFrame* data) {
+void lingot_gui_mainframe_callback_redraw_gauge(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* data) {
     (void)w;                //  Unused parameter.
     lingot_gui_mainframe_draw_gauge(cr, data);
 }
 
-void lingot_gui_mainframe_callback_redraw_spectrum(GtkWidget* w, cairo_t *cr, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_redraw_spectrum(GtkWidget* w, cairo_t *cr, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     lingot_gui_mainframe_draw_spectrum(cr, frame);
 }
 
-void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     g_source_remove(frame->visualization_timer_uid);
     g_source_remove(frame->freq_computation_timer_uid);
@@ -95,7 +91,7 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, LingotMainFrame* frame)
     gtk_main_quit();
 }
 
-void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_about(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     (void)frame;            //  Unused parameter.
     static const gchar* authors[] = {
@@ -128,7 +124,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
     gtk_show_about_dialog(NULL,
                           "name", "Lingot",
                           "version", VERSION,
-                          "copyright", "\xC2\xA9 2004-2019 Iban Cereijo\n\xC2\xA9 2004-2019 Jairo Chapela",
+                          "copyright", "\xC2\xA9 2004-2020 Iban Cereijo\n\xC2\xA9 2004-2019 Jairo Chapela",
                           "comments", _("Accurate and easy to use musical instrument tuner"),
                           "authors", authors,
                           "artists", artists,
@@ -145,7 +141,7 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, LingotMainFrame* frame) {
     }
 }
 
-void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     gboolean visible = gtk_check_menu_item_get_active(
                 GTK_CHECK_MENU_ITEM(frame->view_spectrum_item));
@@ -159,14 +155,12 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, LingotMainFrame* 
                 aspect_ratio_spectrum_invisible;
     hints.min_aspect = aspect_ratio;
     hints.max_aspect = aspect_ratio;
-    gtk_window_set_geometry_hints(GTK_WINDOW(frame->win), frame->win, &hints,
-                                  GDK_HINT_ASPECT);
-
+    gtk_window_set_geometry_hints(GTK_WINDOW(frame->win), frame->win, &hints, GDK_HINT_ASPECT);
     gtk_widget_set_visible(frame->spectrum_frame, visible);
 }
 
 void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
-                                                 LingotMainFrame* frame) {
+                                                 lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     lingot_gui_config_dialog_show(frame, NULL);
 }
@@ -175,7 +169,7 @@ void lingot_gui_mainframe_callback_config_dialog(GtkWidget* w,
 gboolean lingot_gui_mainframe_callback_tout_visualization(gpointer data) {
     unsigned int period;
 
-    LingotMainFrame* frame = (LingotMainFrame*) data;
+    lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
     period = (unsigned int) (1000 / frame->conf.visualization_rate);
     frame->visualization_timer_uid = g_timeout_add(period,
@@ -191,7 +185,7 @@ gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(
         gpointer data) {
     unsigned int period;
 
-    LingotMainFrame* frame = (LingotMainFrame*) data;
+    lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
     period = (unsigned int) (1000 / frame->conf.calculation_rate);
     frame->freq_computation_timer_uid = g_timeout_add(period,
@@ -207,7 +201,7 @@ gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(
 /* timeout for a new gauge position computation */
 gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
     unsigned int period;
-    LingotMainFrame* frame = (LingotMainFrame*) data;
+    lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
     period = (unsigned int) (1000 / GAUGE_RATE);
     frame->gauge_computation_uid = g_timeout_add(period,
@@ -218,13 +212,13 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
     // ignore continuous component
     if (!lingot_core_thread_is_running(&frame->core) || isnan(freq)
             || (freq <= frame->conf.internal_min_frequency)) {
-        frequency = 0.0;
+        frame->frequency = 0.0;
         lingot_gauge_compute(&frame->gauge, frame->conf.gauge_rest_value);
     } else {
         FLT error_cents; // do not use, unfiltered
-        frequency = lingot_filter_filter_sample(&frame->freq_filter,
+        frame->frequency = lingot_filter_filter_sample(&frame->freq_filter,
                                                 freq);
-        closest_note_index = lingot_config_scale_get_closest_note_index(
+        frame->closest_note_index = lingot_config_scale_get_closest_note_index(
                     &frame->conf.scale, freq, frame->conf.root_frequency_error, &error_cents);
         if (!isnan(error_cents)) {
             lingot_gauge_compute(&frame->gauge, error_cents);
@@ -238,15 +232,15 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
 gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
     unsigned int period;
     GtkWidget* message_dialog;
-    LingotMainFrame* frame = (LingotMainFrame*) data;
+    lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
-    char* error_message = NULL;
-    message_type_t message_type;
+    char error_message[LINGOT_MSG_MAX_SIZE + 1];
+    lingot_msg_type_t message_type;
     int error_code;
     int more_messages;
 
     do {
-        more_messages = lingot_msg_get(&error_message, &message_type, &error_code);
+        more_messages = lingot_msg_pop(error_message, &message_type, &error_code);
 
         if (more_messages) {
             GtkWindow* parent =
@@ -254,7 +248,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
                         (frame->config_dialog != NULL) ? frame->config_dialog->win : frame->win);
             GtkButtonsType buttonsType;
 
-            char message[2000];
+            char message[2 * LINGOT_MSG_MAX_SIZE];
             char* message_pointer = message;
 
             message_pointer += snprintf(message_pointer,
@@ -270,7 +264,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
                                      "Please check that there are not other processes locking the requested device. Also, consider that some audio servers can sometimes hold the resources for a few seconds since the last time they were used. In such a case, you can try again."));
             }
 
-            if ((message_type == ERROR) && !lingot_core_thread_is_running(&frame->core)) {
+            if ((message_type == LINGOT_MSG_ERROR) && !lingot_core_thread_is_running(&frame->core)) {
                 buttonsType = GTK_BUTTONS_OK;
                 message_pointer +=
                         snprintf(message_pointer,
@@ -284,18 +278,17 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
             message_dialog = gtk_message_dialog_new(parent,
                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                    (message_type == ERROR) ? GTK_MESSAGE_ERROR :
-                                                                              ((message_type == WARNING) ? GTK_MESSAGE_WARNING : GTK_MESSAGE_INFO),
+                                                    (message_type == LINGOT_MSG_ERROR) ? GTK_MESSAGE_ERROR :
+                                                                              ((message_type == LINGOT_MSG_WARNING) ? GTK_MESSAGE_WARNING : GTK_MESSAGE_INFO),
                                                     buttonsType, "%s", message);
 
             gtk_window_set_title(GTK_WINDOW(message_dialog),
-                                 (message_type == ERROR) ? _("Error") :
-                                                           ((message_type == WARNING) ? _("Warning") : _("Info")));
+                                 (message_type == LINGOT_MSG_ERROR) ? _("Error") :
+                                                           ((message_type == LINGOT_MSG_WARNING) ? _("Warning") : _("Info")));
             gtk_window_set_icon(GTK_WINDOW(message_dialog),
                                 gtk_window_get_icon(GTK_WINDOW(frame->win)));
             gtk_dialog_run(GTK_DIALOG(message_dialog));
             gtk_widget_destroy(message_dialog);
-            free(error_message);
 
             //			if ((message_type == ERROR) && !frame->core.running) {
             //				lingot_gui_mainframe_callback_config_dialog(NULL, frame);
@@ -312,21 +305,19 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 }
 
 void lingot_gui_mainframe_callback_open_config(gpointer data,
-                                               LingotMainFrame* frame) {
+                                               lingot_main_frame_t* frame) {
     (void)data;             //  Unused parameter.
     GtkWidget * dialog = gtk_file_chooser_dialog_new(
                 _("Open Configuration File"), GTK_WINDOW(frame->win),
                 GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
                 "_Open", GTK_RESPONSE_ACCEPT, NULL);
-    GtkFileFilter *filefilter;
     char config_used = 0;
-    LingotConfig config;
-    filefilter = gtk_file_filter_new();
+    lingot_config_t config;
 
-    gtk_file_filter_set_name(filefilter,
-                             (const gchar *) _("Lingot configuration files"));
+    GtkFileFilter *filefilter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filefilter, (const gchar *) _("Lingot configuration files"));
     gtk_file_filter_add_pattern(filefilter, "*.conf");
-    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter); // ownership transferer to file_chooser
     gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
     if (filechooser_config_last_folder != NULL) {
@@ -335,40 +326,34 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
     }
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-        char *filename;
-        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        free(filechooser_config_last_folder);
-        filechooser_config_last_folder = strdup(
-                    gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+        g_free(filechooser_config_last_folder);
+        filechooser_config_last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+        gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         lingot_config_new(&config);
         lingot_io_config_load(&config, filename);
         config_used = 1;
         g_free(filename);
     }
     gtk_widget_destroy(dialog);
-    //g_free(filefilter);
 
     if (config_used) {
         lingot_gui_config_dialog_show(frame, &config);
     }
 }
 
-void lingot_gui_mainframe_callback_save_config(gpointer data, LingotMainFrame* frame) {
+void lingot_gui_mainframe_callback_save_config(gpointer data, lingot_main_frame_t* frame) {
     (void)data;             //  Unused parameter.
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
                 _("Save Configuration File"), GTK_WINDOW(frame->win),
                 GTK_FILE_CHOOSER_ACTION_SAVE, "_Cancel", GTK_RESPONSE_CANCEL,
                 "_Save", GTK_RESPONSE_ACCEPT, NULL);
-    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),
-                                                   TRUE);
-
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
     gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), _("untitled.conf"));
-    GtkFileFilter* filefilter = gtk_file_filter_new();
 
-    gtk_file_filter_set_name(filefilter,
-                             (const gchar *) _("Lingot configuration files"));
+    GtkFileFilter *filefilter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filefilter, (const gchar *) _("Lingot configuration files"));
     gtk_file_filter_add_pattern(filefilter, "*.conf");
-    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter);
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filefilter); // ownership transferer to file_chooser
     gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 
     if (filechooser_config_last_folder != NULL) {
@@ -377,12 +362,9 @@ void lingot_gui_mainframe_callback_save_config(gpointer data, LingotMainFrame* f
     }
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-        char *filename;
-        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        if (filechooser_config_last_folder != NULL)
-            free(filechooser_config_last_folder);
-        filechooser_config_last_folder = strdup(
-                    gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog)));
+        g_free(filechooser_config_last_folder);
+        filechooser_config_last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+        gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         lingot_io_config_save(&frame->conf, filename);
         g_free(filename);
     }
@@ -394,7 +376,7 @@ void lingot_gui_mainframe_callback_window_resize(GtkWidget *widget,
     (void)widget;           //  Unused parameter.
     (void)allocation;       //  Unused parameter.
 
-    const LingotMainFrame* frame = (LingotMainFrame*) data;
+    const lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
     GtkAllocation req;
     gtk_widget_get_allocation(frame->gauge_area, &req);
@@ -419,7 +401,7 @@ void lingot_gui_mainframe_callback_window_resize(GtkWidget *widget,
 
 void lingot_gui_mainframe_create(int argc, char *argv[]) {
 
-    LingotMainFrame* frame;
+    lingot_main_frame_t* frame;
 
     if (filechooser_config_last_folder == NULL) {
         char buff[1000];
@@ -427,15 +409,15 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
         filechooser_config_last_folder = strdup(buff);
     }
 
-    frame = malloc(sizeof(LingotMainFrame));
+    frame = malloc(sizeof(lingot_main_frame_t));
 
     frame->config_dialog = NULL;
 
-    LingotConfig* const conf = &frame->conf;
+    lingot_config_t* const conf = &frame->conf;
     lingot_config_new(conf);
     lingot_io_config_load(conf, CONFIG_FILE_NAME);
 
-    lingot_gauge_new(&frame->gauge, conf->gauge_rest_value); // gauge in rest situation
+    lingot_gauge_new(&frame->gauge, GAUGE_RATE, conf->gauge_rest_value); // gauge in rest situation
 
     // ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -459,26 +441,18 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
     gtk_window_set_default_icon_name("org.nongnu.lingot");
     gtk_window_set_icon_name(GTK_WINDOW(frame->win), "org.nongnu.lingot");
 
-    frame->gauge_area = GTK_WIDGET(
-                gtk_builder_get_object(builder, "gauge_area"));
-    frame->spectrum_area = GTK_WIDGET(
-                gtk_builder_get_object(builder, "spectrum_area"));
+    frame->gauge_area = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
+    frame->spectrum_area = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
 
-    frame->freq_label = GTK_WIDGET(
-                gtk_builder_get_object(builder, "freq_label"));
-    frame->tone_label = GTK_WIDGET(
-                gtk_builder_get_object(builder, "tone_label"));
-    frame->error_label = GTK_WIDGET(
-                gtk_builder_get_object(builder, "error_label"));
+    frame->freq_label = GTK_WIDGET(gtk_builder_get_object(builder, "freq_label"));
+    frame->tone_label = GTK_WIDGET(gtk_builder_get_object(builder, "tone_label"));
+    frame->error_label = GTK_WIDGET(gtk_builder_get_object(builder, "error_label"));
 
-    frame->spectrum_frame = GTK_WIDGET(
-                gtk_builder_get_object(builder, "spectrum_frame"));
-    frame->view_spectrum_item = GTK_WIDGET(
-                gtk_builder_get_object(builder, "spectrum_item"));
+    frame->spectrum_frame = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
+    frame->view_spectrum_item = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_item"));
     frame->labelsbox = GTK_WIDGET(gtk_builder_get_object(builder, "labelsbox"));
 
-    gtk_check_menu_item_set_active(
-                GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
 
     // show all
     gtk_widget_show_all(frame->win);
@@ -522,9 +496,8 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
                      G_CALLBACK(lingot_gui_mainframe_callback_window_resize), frame);
 
     GtkAccelGroup* accel_group = gtk_accel_group_new();
-    gtk_widget_add_accelerator(
-                GTK_WIDGET(gtk_builder_get_object(builder, "preferences_item")),
-                "activate", accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+    gtk_widget_add_accelerator(GTK_WIDGET(gtk_builder_get_object(builder, "preferences_item")),
+                               "activate", accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     gtk_window_add_accel_group(GTK_WINDOW(frame->win), accel_group);
 
     unsigned int period;
@@ -545,6 +518,9 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
     frame->error_dispatcher_uid = g_timeout_add(period,
                                                 lingot_gui_mainframe_callback_error_dispatcher, frame);
 
+    frame->closest_note_index = 0;
+    frame->frequency = 0;
+
     lingot_core_new(&frame->core, conf);
     lingot_core_thread_start(&frame->core);
 
@@ -553,7 +529,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
     gtk_main();
 }
 
-void lingot_gui_mainframe_destroy(LingotMainFrame* frame) {
+void lingot_gui_mainframe_destroy(lingot_main_frame_t* frame) {
 
     lingot_core_thread_stop(&frame->core);
     lingot_core_destroy(&frame->core);
@@ -587,15 +563,17 @@ typedef struct {
 static void lingot_gui_mainframe_draw_gauge_tic(cairo_t *cr,
                                                 const point_t* gaugeCenter, double radius1, double radius2,
                                                 double angle) {
-    cairo_move_to(cr, gaugeCenter->x + radius1 * sin(angle),
+    cairo_move_to(cr,
+                  gaugeCenter->x + radius1 * sin(angle),
                   gaugeCenter->y - radius1 * cos(angle));
-    cairo_rel_line_to(cr, (radius2 - radius1) * sin(angle),
+    cairo_rel_line_to(cr,
+                      (radius2 - radius1) * sin(angle),
                       (radius1 - radius2) * cos(angle));
     cairo_stroke(cr);
 }
 
 static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr,
-                                                       LingotMainFrame* frame) {
+                                                       lingot_main_frame_t* frame) {
 
     // normalized dimensions
     static const FLT gauge_gaugeCenterY = 0.94;
@@ -767,7 +745,7 @@ static void lingot_gui_mainframe_draw_gauge_background(cairo_t *cr,
                                         frequencyBarMajorTicRadius, frequencyBarRadius, 0.0);
 }
 
-void lingot_gui_mainframe_draw_gauge(cairo_t *cr, LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_gauge(cairo_t *cr, lingot_main_frame_t* frame) {
 
     // normalized dimensions
     static const FLT gauge_gaugeCenterY = 0.94;
@@ -853,7 +831,7 @@ static char* lingot_gui_mainframe_format_frequency(FLT freq, char* buff) {
     return buff;
 }
 
-void lingot_gui_mainframe_draw_spectrum_background(cairo_t *cr, LingotMainFrame *frame) {
+void lingot_gui_mainframe_draw_spectrum_background(cairo_t *cr, lingot_main_frame_t *frame) {
 
     const FLT font_size = 8 + spectrum_size_y / 30;
 
@@ -987,7 +965,7 @@ void lingot_gui_mainframe_draw_spectrum_background(cairo_t *cr, LingotMainFrame 
     }
 }
 
-void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, lingot_main_frame_t* frame) {
 
     unsigned int i;
 
@@ -1126,7 +1104,7 @@ void lingot_gui_mainframe_draw_spectrum(cairo_t *cr, LingotMainFrame* frame) {
 
 }
 
-void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
+void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t* frame) {
 
     char* note_string;
     static char error_string[30];
@@ -1135,7 +1113,7 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
 
     // draw note, error and frequency labels
 
-    if (frequency == 0.0) {
+    if (frame->frequency == 0.0) {
         note_string = "---";
         strcpy(error_string, "e = ---");
         strcpy(freq_string, "f = ---");
@@ -1143,12 +1121,12 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
     } else {
         note_string =
                 frame->conf.scale.note_name[lingot_config_scale_get_note_index(
-                    &frame->conf.scale, closest_note_index)];
+                    &frame->conf.scale, frame->closest_note_index)];
         sprintf(error_string, "e = %+2.0f cents", frame->gauge.position);
-        sprintf(freq_string, "f = %6.2f Hz", frequency);
+        sprintf(freq_string, "f = %6.2f Hz", frame->frequency);
         sprintf(octave_string, "%d",
                 lingot_config_scale_get_octave(&frame->conf.scale,
-                                               closest_note_index) + 4);
+                                               frame->closest_note_index) + 4);
     }
 
     int font_size = 9 + labelsbox_size_x / 80;
@@ -1171,8 +1149,8 @@ void lingot_gui_mainframe_draw_labels(const LingotMainFrame* frame) {
     g_free(markup);
 }
 
-void lingot_gui_mainframe_change_config(LingotMainFrame* frame,
-                                        LingotConfig* conf) {
+void lingot_gui_mainframe_change_config(lingot_main_frame_t* frame,
+                                        lingot_config_t* conf) {
     lingot_core_thread_stop(&frame->core);
     lingot_core_destroy(&frame->core);
 

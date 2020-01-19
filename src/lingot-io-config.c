@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,6 +29,7 @@
 #include <math.h>
 #include <locale.h>
 
+#include "lingot-defs.h"
 #include "lingot-io-config.h"
 #include "lingot-config-scale.h"
 #include "lingot-msg.h"
@@ -38,12 +39,12 @@
 
 #define N_MAX_OPTIONS 30
 
-static LingotConfigParameterSpec parameters[N_MAX_OPTIONS];
+static lingot_config_parameter_spec_t parameters[N_MAX_OPTIONS];
 static unsigned int parameters_count = 0;
 
 //----------------------------------------------------------------------------
 
-static void lingot_config_add_string_parameter_spec(LingotConfigParameterId id,
+static void lingot_config_add_string_parameter_spec(lingot_config_parameter_id_t id,
                                                     const char* name, unsigned int max_len, int deprecated) {
     parameters[id].id = id;
     parameters[id].type = LINGOT_PARAMETER_TYPE_STRING;
@@ -54,7 +55,7 @@ static void lingot_config_add_string_parameter_spec(LingotConfigParameterId id,
     parameters_count++;
 }
 
-static void lingot_config_add_integer_parameter_spec(LingotConfigParameterId id,
+static void lingot_config_add_integer_parameter_spec(lingot_config_parameter_id_t id,
                                                      const char* name, const char* units, int min, int max, int deprecated) {
     parameters[id].id = id;
     parameters[id].type = LINGOT_PARAMETER_TYPE_INTEGER;
@@ -66,7 +67,7 @@ static void lingot_config_add_integer_parameter_spec(LingotConfigParameterId id,
     parameters_count++;
 }
 
-static void lingot_config_add_double_parameter_spec(LingotConfigParameterId id,
+static void lingot_config_add_double_parameter_spec(lingot_config_parameter_id_t id,
                                                     const char* name, const char* units, double min, double max,
                                                     int deprecated) {
     parameters[id].id = id;
@@ -83,8 +84,8 @@ void lingot_io_config_create_parameter_specs(void) {
 
     int i = 0;
     for (i = 0; i < N_MAX_OPTIONS; i++) {
-        parameters[i].id = (LingotConfigParameterId) -1;
-        parameters[i].type = (LingotConfigParameterType) -1;
+        parameters[i].id = (lingot_config_parameter_id_t) -1;
+        parameters[i].type = (lingot_config_parameter_type_t) -1;
         parameters[i].name = NULL;
         parameters[i].units = NULL;
         parameters[i].deprecated = 0;
@@ -148,15 +149,15 @@ void lingot_io_config_create_parameter_specs(void) {
 
 }
 
-LingotConfigParameterSpec lingot_io_config_get_parameter_spec(
-        LingotConfigParameterId id) {
+lingot_config_parameter_spec_t lingot_io_config_get_parameter_spec(
+        lingot_config_parameter_id_t id) {
     return parameters[(int) id];
 }
 
 //----------------------------------------------------------------------------
 
 // internal parameters mapped to each token in the config file.
-static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
+static void lingot_config_map_parameters(lingot_config_t* config, void* params[]) {
 
     typedef struct {
         int id;
@@ -195,7 +196,7 @@ static void lingot_config_map_parameters(LingotConfig* config, void* params[]) {
     }
 }
 
-void lingot_io_config_save(LingotConfig* config, const char* filename) {
+void lingot_io_config_save(lingot_config_t* config, const char* filename) {
     unsigned int i;
     FILE* fp;
     char* lc_all;
@@ -291,7 +292,7 @@ typedef enum {
     rs_done
 } reading_scale_step_t;
 
-int lingot_io_config_load(LingotConfig* config, const char* filename) {
+int lingot_io_config_load(lingot_config_t* config, const char* filename) {
     FILE* fp;
     int line;
     unsigned int option_index;
@@ -306,7 +307,7 @@ int lingot_io_config_load(LingotConfig* config, const char* filename) {
     const char* audio_system_name = NULL;
     int parse_errors = 0;
     int scale_errors = 0;
-    LingotScale scale;
+    lingot_scale_t scale;
 
     // restore default values for non specified parameters
     lingot_config_restore_default_values(config);

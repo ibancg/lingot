@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
  *
  * This file is part of lingot.
@@ -46,10 +46,10 @@ typedef struct {
     lingot_audio_cancel_t func_cancel;
     lingot_audio_read_t func_read;
     lingot_audio_get_audio_system_properties_t func_system_properties;
-} LingotAudioSystemConnector;
+} lingot_audio_system_connector_t;
 
 static int audio_system_counter = 0;
-static LingotAudioSystemConnector audio_systems[10];
+static lingot_audio_system_connector_t audio_systems[10];
 
 int lingot_audio_system_register(const char* audio_system_name,
                                  lingot_audio_new_t func_new,
@@ -62,10 +62,10 @@ int lingot_audio_system_register(const char* audio_system_name,
 
     // printf("Found audio plugin '%s'\n", audio_system_name);
 
-    if ((size_t) (audio_system_counter + 1) >= sizeof(audio_systems)/sizeof (LingotAudioSystemConnector)) {
+    if ((size_t) (audio_system_counter + 1) >= sizeof(audio_systems)/sizeof (lingot_audio_system_connector_t)) {
         return -1;
     }
-    LingotAudioSystemConnector funcs;
+    lingot_audio_system_connector_t funcs;
     //    funcs.audio_system_index = audio_system_counter;
     funcs.audio_system_name = audio_system_name;
     funcs.func_new = func_new;
@@ -79,7 +79,7 @@ int lingot_audio_system_register(const char* audio_system_name,
     return audio_system_counter++;
 }
 
-static LingotAudioSystemConnector* lingot_audio_system_get(int audio_system_index) {
+static lingot_audio_system_connector_t* lingot_audio_system_get(int audio_system_index) {
     return ((audio_system_index >= 0) && (audio_system_index < audio_system_counter)) ?
                 &audio_systems[audio_system_index] : NULL;
 }
@@ -97,7 +97,7 @@ int lingot_audio_system_find_by_name(const char *audio_system_name)
 }
 
 const char* lingot_audio_system_get_name(int index) {
-    const LingotAudioSystemConnector* system = lingot_audio_system_get(index);
+    const lingot_audio_system_connector_t* system = lingot_audio_system_get(index);
     return system ? system->audio_system_name : NULL;
 }
 
@@ -105,15 +105,15 @@ int lingot_audio_system_get_count(void) {
     return audio_system_counter;
 }
 
-void lingot_audio_new(LingotAudioHandler* result,
+void lingot_audio_new(lingot_audio_handler_t* result,
                       int audio_system_index,
                       const char* device,
                       int sample_rate,
-                      LingotAudioProcessCallback process_callback,
+                      lingot_audio_process_callback_t process_callback,
                       void *process_callback_arg) {
 
     result->audio_system = audio_system_index;
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio_system_index);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio_system_index);
     if (system && system->func_new) {
         system->func_new(result, device, sample_rate);
 
@@ -131,9 +131,9 @@ void lingot_audio_new(LingotAudioHandler* result,
     }
 }
 
-void lingot_audio_destroy(LingotAudioHandler* audio) {
+void lingot_audio_destroy(lingot_audio_handler_t* audio) {
 
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio->audio_system);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
     if (system && system->func_destroy) {
         system->func_destroy(audio);
     }
@@ -143,10 +143,10 @@ void lingot_audio_destroy(LingotAudioHandler* audio) {
     audio->audio_system = -1;
 }
 
-int lingot_audio_read(LingotAudioHandler* audio) {
+int lingot_audio_read(lingot_audio_handler_t* audio) {
     int samples_read = -1;
 
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio->audio_system);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
     if (system && system->func_read) {
         samples_read = system->func_read(audio);
 
@@ -192,10 +192,10 @@ int lingot_audio_read(LingotAudioHandler* audio) {
     return samples_read;
 }
 
-int lingot_audio_system_get_properties(LingotAudioSystemProperties* properties,
+int lingot_audio_system_get_properties(lingot_audio_system_properties_t* properties,
                                        int audio_system_index) {
 
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio_system_index);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio_system_index);
     if (system && system->func_system_properties) {
         return system->func_system_properties(properties);
     }
@@ -203,8 +203,7 @@ int lingot_audio_system_get_properties(LingotAudioSystemProperties* properties,
     return -1;
 }
 
-void lingot_audio_system_properties_destroy(
-        LingotAudioSystemProperties* properties) {
+void lingot_audio_system_properties_destroy(lingot_audio_system_properties_t* properties) {
 
     int i;
     if (properties->devices) {
@@ -214,15 +213,17 @@ void lingot_audio_system_properties_destroy(
             }
         }
         free(properties->devices);
+        properties->devices = NULL;
     }
 }
 
 void* lingot_audio_mainloop(void* _audio) {
 
     int samples_read = 0;
-    LingotAudioHandler* audio = _audio;
+    lingot_audio_handler_t* audio = _audio;
 
     while (audio->running) {
+
         // blocking read
         samples_read = lingot_audio_read(audio);
 
@@ -244,16 +245,18 @@ void* lingot_audio_mainloop(void* _audio) {
     return NULL;
 }
 
-int lingot_audio_start(LingotAudioHandler* audio) {
+int lingot_audio_start(lingot_audio_handler_t* audio) {
 
     int result = -1;
 
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio->audio_system);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
     if (system) {
         if (system->func_start) {
             result = system->func_start(audio);
         } else {
             pthread_attr_init(&audio->thread_input_read_attr);
+
+            audio->running = 1;
 
             // detached thread.
             //  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -267,25 +270,21 @@ int lingot_audio_start(LingotAudioHandler* audio) {
         }
     }
 
-    if (result == 0) {
-        audio->running = 1;
-    }
-
     return result;
 }
 
 // function invoked when the audio thread must be cancelled
-void lingot_audio_cancel(LingotAudioHandler* audio) {
+void lingot_audio_cancel(lingot_audio_handler_t* audio) {
     // TODO: avoid
     fprintf(stderr, "warning: canceling audio thread\n");
 
-    LingotAudioSystemConnector* system = lingot_audio_system_get(audio->audio_system);
+    lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
     if (system && system->func_cancel) {
         system->func_cancel(audio);
     }
 }
 
-void lingot_audio_stop(LingotAudioHandler* audio) {
+void lingot_audio_stop(lingot_audio_handler_t* audio) {
     void* thread_result;
 
     int result;
@@ -294,9 +293,9 @@ void lingot_audio_stop(LingotAudioHandler* audio) {
 
     gettimeofday(&tout_abs, NULL );
 
-    if (audio->running == 1) {
+    if (audio->running) {
         audio->running = 0;
-        LingotAudioSystemConnector* system = lingot_audio_system_get(audio->audio_system);
+        lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
         if (system) {
             if (system->func_stop) {
                 system->func_stop(audio);

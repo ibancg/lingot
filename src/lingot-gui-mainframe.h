@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -36,8 +36,7 @@
 
 // Window that contains all controls, graphics, etc. of the tuner.
 
-
-struct _LingotMainFrame {
+typedef struct _lingot_main_frame_t {
 
     // gtk widgets
     GtkWidget* gauge_area;
@@ -51,30 +50,34 @@ struct _LingotMainFrame {
 
     GtkWidget* labelsbox;
 
-    LingotFilter freq_filter;
+    lingot_filter_t freq_filter;
 
-    LingotGauge gauge;
+    lingot_gauge_t gauge;
 
-    LingotCore core;
+    lingot_core_t core;
 
     GtkWidget* win;
 
     GdkColor gauge_color;
     GdkColor spectrum_color;
 
-    LingotConfigDialog* config_dialog;
-    LingotConfig conf;
+    lingot_config_dialog_t* config_dialog;
+    lingot_config_t conf;
 
     // timer uids
     guint visualization_timer_uid;
     guint freq_computation_timer_uid;
     guint gauge_computation_uid;
     guint error_dispatcher_uid;
-};
+
+    // filtered frequency and closest note index in the scale
+    FLT frequency;
+    int closest_note_index;
+} lingot_main_frame_t;
 
 void lingot_gui_mainframe_create(int argc, char *argv[]);
-void lingot_gui_mainframe_destroy(LingotMainFrame*);
+void lingot_gui_mainframe_destroy(lingot_main_frame_t*);
 
-void lingot_gui_mainframe_change_config(LingotMainFrame*, LingotConfig*);
+void lingot_gui_mainframe_change_config(lingot_main_frame_t*, lingot_config_t*);
 
 #endif //LINGOT_GUI_MAIN_FRAME_H
