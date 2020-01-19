@@ -36,7 +36,6 @@
 #include "lingot-audio-alsa.h"
 #include "lingot-audio-jack.h"
 #include "lingot-audio-pulseaudio.h"
-
 #include "lingot-defs.h"
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
@@ -95,33 +94,26 @@ int main(int argc, char *argv[]) {
 #   if !defined(OSS) && !defined(ALSA) && !defined(JACK) && !defined(PULSEAUDIO)
 #	error "No audio system has been defined"
 #   endif
-#	ifdef OSS
+
     lingot_audio_oss_register();
-#   endif
-#	ifdef ALSA
     lingot_audio_alsa_register();
-#   endif
-#	ifdef PULSEAUDIO
     lingot_audio_pulseaudio_register();
-#   endif
-#	ifdef JACK
     lingot_audio_jack_register();
-#   endif
 
     lingot_io_config_create_parameter_specs();
 
-    // if config file doesn't exists, i will create it.
+    // if config file doesn't exist, we create it.
     FILE* fp;
     if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {
 
         char config_dir[200];
         snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), CONFIG_DIR_NAME);
-        printf("creating directory %s ...\n", config_dir);
+        printf("Creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {
             fprintf(stderr, "Cannot create config folder '%s': %s\n", config_dir, strerror(errno));
         }
-        printf("creating file %s ...\n", CONFIG_FILE_NAME);
+        printf("Creating file %s ...\n", CONFIG_FILE_NAME);
 
         // new configuration with default values.
         lingot_config_t new_conf;
@@ -130,7 +122,7 @@ int main(int argc, char *argv[]) {
         lingot_io_config_save(&new_conf, CONFIG_FILE_NAME);
         lingot_config_destroy(&new_conf);
 
-        printf("ok\n");
+        printf("Ok\n");
 
     } else {
         fclose(fp);

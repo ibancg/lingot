@@ -25,12 +25,17 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <alsa/asoundlib.h>
 
 #include "lingot-audio.h"
 #include "lingot-defs.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
+
+typedef struct {
+    snd_pcm_t *capture_handle;
+} lingot_audio_handler_alsa_t;
 
 static snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 static const unsigned int channels = 1;
@@ -396,6 +401,13 @@ int lingot_audio_alsa_register(void)
                                         NULL,
                                         lingot_audio_alsa_read,
                                         lingot_audio_alsa_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_alsa_register(void)
+{
+    return 0;
 }
 
 #endif

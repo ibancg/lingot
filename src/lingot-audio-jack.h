@@ -22,22 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef JACK
-
 #ifndef LINGOT_AUDIO_JACK_H
 #define LINGOT_AUDIO_JACK_H
-
-#include <jack/jack.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct {
-    jack_port_t *input_port;
-    jack_client_t *client;
-    jack_nframes_t nframes;
-} lingot_audio_handler_jack_t;
 
 int lingot_audio_jack_register(void);
 
@@ -45,5 +35,4 @@ int lingot_audio_jack_register(void);
 }
 #endif
 
-#endif
 #endif

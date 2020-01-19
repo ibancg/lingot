@@ -22,20 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef ALSA
-
 #ifndef LINGOT_AUDIO_ALSA_H
 #define LINGOT_AUDIO_ALSA_H
-
-#include <alsa/asoundlib.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct {
-    snd_pcm_t *capture_handle;
-} lingot_audio_handler_alsa_t;
 
 int lingot_audio_alsa_register(void);
 
@@ -43,5 +35,4 @@ int lingot_audio_alsa_register(void);
 }
 #endif
 
-#endif
 #endif
