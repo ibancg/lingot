@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -27,11 +27,11 @@
 
 #include "../config.h"
 
-// floating point precission.
-#define FLT                  double
+// floating point precision.
+#define FLT                         double
 
-#define CONFIG_DIR_NAME           ".config/lingot/"
-#define DEFAULT_CONFIG_FILE_NAME  "lingot.conf"
+#define CONFIG_DIR_NAME             ".config/lingot/"
+#define DEFAULT_CONFIG_FILE_NAME    "lingot.conf"
 extern char CONFIG_FILE_NAME[];
 
 #define QUICK_MESSAGES
@@ -43,14 +43,11 @@ extern char CONFIG_FILE_NAME[];
 #define MID_A_FREQUENCY		440.0
 #define MID_C_FREQUENCY		261.625565
 
-/* object forward declaration */
-typedef struct _LingotMainFrame LingotMainFrame;
-
 // simple try-catch simulation, do not use throw inside loops nor nest try-catch
 // blocks
-#define try exception = 0; do
-#define throw(a) {exception = a;break;}
-#define catch while (0); if (exception != 0)
+#define _try _exception = 0; do
+#define _throw(a) { _exception = a;break; }
+#define _catch while (0); if (_exception != 0)
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846
@@ -58,8 +55,8 @@ typedef struct _LingotMainFrame LingotMainFrame;
 
 // this option allows us to throw exception from loops, it contains a goto
 // statement, but totally controlled. It fails when trying to indent code.
-//#define try exception = 0;do
-//#define throw(a) {exception = a;goto catch_label;}
-//#define catch while (0);catch_label: if (exception != 0)
+//#define _try _exception = 0;do
+//#define _throw(a) {_exception = a;goto catch_label;}
+//#define _catch while (0);catch_label: if (_exception != 0)
 
 #endif

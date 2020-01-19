@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -22,9 +22,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef ALSA
+
 #ifndef LINGOT_AUDIO_ALSA_H
 #define LINGOT_AUDIO_ALSA_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int lingot_audio_alsa_register(void);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 #endif

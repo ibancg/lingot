@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,13 +29,12 @@
  Fourier transforms.
  */
 
-#include "lingot-defs.h"
-
 #ifdef LIBFFTW
 # include <fftw3.h>
 #endif
 
-# include "lingot-complex.h"
+#include "lingot-defs.h"
+#include "lingot-complex.h"
 
 typedef struct {
 
@@ -46,16 +45,16 @@ typedef struct {
     fftw_plan fftwplan;
 #else
     // phase factor table, for FFT optimization.
-    LingotComplex* wn;
+    lingot_complex_t* wn;
 #endif
-    LingotComplex* fft_out; // complex signal in freq.
-} LingotFFTPlan;
+    lingot_complex_t* fft_out; // complex signal in freq.
+} lingot_fft_plan_t;
 
-void lingot_fft_plan_create(LingotFFTPlan*, FLT* in, unsigned int n);
-void lingot_fft_plan_destroy(LingotFFTPlan*);
+void lingot_fft_plan_create(lingot_fft_plan_t*, FLT* in, unsigned int n);
+void lingot_fft_plan_destroy(lingot_fft_plan_t*);
 
 // Full Spectral Power Distribution (SPD) esteem.
-void lingot_fft_compute_dft_and_spd(LingotFFTPlan*, FLT* out, unsigned int n_out);
+void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t*, FLT* out, unsigned int n_out);
 
 // Spectral Power Distribution (SPD) evaluation at a given frequency.
 void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2);

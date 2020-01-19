@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -111,12 +111,12 @@ int main(int argc, char *argv[]) {
         printf("Creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {
-            fprintf(stderr, "Cannot create config folder '%s': %s", config_dir, strerror(errno));
+            fprintf(stderr, "Cannot create config folder '%s': %s\n", config_dir, strerror(errno));
         }
         printf("Creating file %s ...\n", CONFIG_FILE_NAME);
 
         // new configuration with default values.
-        LingotConfig new_conf;
+        lingot_config_t new_conf;
         lingot_config_new(&new_conf);
         lingot_config_restore_default_values(&new_conf);
         lingot_io_config_save(&new_conf, CONFIG_FILE_NAME);

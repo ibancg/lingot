@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -28,6 +28,10 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "lingot-defs.h"
 
 /*
@@ -42,26 +46,31 @@ typedef struct {
 
     unsigned int N;
 
-} LingotFilter;
+} lingot_filter_t;
 
-void lingot_filter_new(LingotFilter*, unsigned int Na, unsigned int Nb, const FLT* a,
-                       const FLT* b);
+void lingot_filter_new(lingot_filter_t*,
+                       unsigned int Na, unsigned int Nb,
+                       const FLT* a, const FLT* b);
 
-void lingot_filter_reset(LingotFilter* filter);
+void lingot_filter_reset(lingot_filter_t* filter);
 
 /**
- * Design a Chebyshev type I low pass filter with Rp dB of pass band ripple
+ * Design a Chebyshev Type I low pass filter with Rp dB of pass band ripple
  * with cutoff pi*wc radians.
  */
-void lingot_filter_cheby_design(LingotFilter*, unsigned int order, FLT Rp, FLT wc);
+void lingot_filter_cheby_design(lingot_filter_t*, unsigned int order, FLT Rp, FLT wc);
 
-void lingot_filter_destroy(LingotFilter*);
+void lingot_filter_destroy(lingot_filter_t*);
 
 // Digital Filter Implementation II, in & out can overlap. Vector filtering
-void lingot_filter_filter(LingotFilter*, unsigned int n, const FLT* in,
+void lingot_filter_filter(lingot_filter_t*, unsigned int n, const FLT* in,
                           FLT* out);
 
 // sample filtering
-FLT lingot_filter_filter_sample(LingotFilter*, FLT in);
+FLT lingot_filter_filter_sample(lingot_filter_t*, FLT in);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

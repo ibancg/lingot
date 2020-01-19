@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2013-2020  Iban Cereijo
  *
  * This file is part of lingot.
  *
@@ -27,11 +27,11 @@
 
 void lingot_test_config_scale(void) {
 
-    LingotConfig _config;
-    LingotConfig* config = &_config;
+    lingot_config_t _config;
+    lingot_config_t* config = &_config;
     lingot_config_new(config);
     lingot_config_restore_default_values(config);
-    LingotScale* scale = &config->scale;
+    lingot_scale_t* scale = &config->scale;
 
     CU_ASSERT_EQUAL(lingot_config_scale_get_octave(scale, 0), 0);
     CU_ASSERT_EQUAL(lingot_config_scale_get_octave(scale, 1), 0);

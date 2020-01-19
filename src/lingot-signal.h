@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -26,17 +26,26 @@
 #define LINGOT_SIGNAL_H
 
 /*
- peak identification functions.
+ Signal processing functions, peak identification, DTFT interpolation ...
  */
 
 #include "lingot-defs.h"
 #include "lingot-config.h"
 #include "lingot-complex.h"
-#include "lingot-core.h"
+
+// Tells whether the two frequencies are harmonically related, giving the
+// multipliers to the ground frequency.
+int lingot_signal_frequencies_related(FLT freq1, FLT freq2,
+                                      FLT minFrequency,
+                                      FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq);
+
+// state-machine filter that returns the input frequency if it has been
+// hit consistently in the recent past, otherwise it returns 0.
+FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency);
 
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                                                  FLT freq,
-                                                 const LingotComplex* fft,
+                                                 const lingot_complex_t* fft,
                                                  unsigned int N,
                                                  unsigned int n_peaks,
                                                  unsigned int lowest_index,
@@ -46,7 +55,6 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                                                  FLT min_snr,
                                                  FLT min_q,
                                                  FLT min_freq,
-                                                 LingotCore* core,
                                                  short* divisor);
 
 void lingot_signal_compute_noise_level(const FLT* spd,

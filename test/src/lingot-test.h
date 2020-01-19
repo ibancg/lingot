@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2013-2020  Iban Cereijo
  *
  * This file is part of lingot.
  *
@@ -29,7 +29,7 @@
 // unit testing functions
 
 // time measurement
-void tic();
-double toc();
+void tic(void);
+double toc(void);
 
 #endif

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -25,29 +25,33 @@
 #ifndef LINGOT_AUDIO_H
 #define LINGOT_AUDIO_H
 
-#include "lingot-config.h"
-
 #include <pthread.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "lingot-config.h"
 
 #define FLT_SAMPLE_SCALE	32767.0
 
 // for audio systems that are self-driven (e.g. Jack), we need a callback function (and signature)
 // to process the audio
-typedef void (*LingotAudioProcessCallback)(FLT* read_buffer,
-                                           unsigned int read_buffer_size_samples, void *arg);
+typedef void (*lingot_audio_process_callback_t)(double* read_buffer,
+                                                unsigned int read_buffer_size_samples, void *arg);
 
 typedef struct {
 
     int audio_system;
     char device[256];
 
-    LingotAudioProcessCallback process_callback;
+    lingot_audio_process_callback_t process_callback;
     void* process_callback_arg;
 
     void* audio_handler_extra;
 
     unsigned int read_buffer_size_samples;
-    FLT* flt_read_buffer;
+    double* flt_read_buffer;
 
     unsigned int real_sample_rate;
 
@@ -65,7 +69,7 @@ typedef struct {
     // indicates whether the thread was interrupted (by the audio server, not
     // by the user)
     int interrupted;
-} LingotAudioHandler;
+} lingot_audio_handler_t;
 
 typedef struct {
 
@@ -75,18 +79,18 @@ typedef struct {
     int sample_rates [5]; // sample rates
 
     int n_devices; // number of available devices
-    char** devices; // devices
-} LingotAudioSystemProperties;
+    const char** devices; // devices
+} lingot_audio_system_properties_t;
 
 
 // set of callbacks that define the interaction with an audio system.
-typedef void (*lingot_audio_new_t) (LingotAudioHandler* audio, const char* device, int sample_rate);
-typedef void (*lingot_audio_destroy_t) (LingotAudioHandler* audio);
-typedef int  (*lingot_audio_start_t) (LingotAudioHandler* audio);
-typedef void (*lingot_audio_stop_t) (LingotAudioHandler* audio);
-typedef void (*lingot_audio_cancel_t) (LingotAudioHandler* audio);
-typedef int  (*lingot_audio_read_t) (LingotAudioHandler* audio);
-typedef int  (*lingot_audio_get_audio_system_properties_t) (LingotAudioSystemProperties* properties);
+typedef void (*lingot_audio_new_t) (lingot_audio_handler_t* audio, const char* device, int sample_rate);
+typedef void (*lingot_audio_destroy_t) (lingot_audio_handler_t* audio);
+typedef int  (*lingot_audio_start_t) (lingot_audio_handler_t* audio);
+typedef void (*lingot_audio_stop_t) (lingot_audio_handler_t* audio);
+typedef void (*lingot_audio_cancel_t) (lingot_audio_handler_t* audio);
+typedef int  (*lingot_audio_read_t) (lingot_audio_handler_t* audio);
+typedef int  (*lingot_audio_get_audio_system_properties_t) (lingot_audio_system_properties_t* properties);
 
 // registers an audio system
 int lingot_audio_system_register(const char* audio_system_name,
@@ -100,25 +104,31 @@ int lingot_audio_system_register(const char* audio_system_name,
 int lingot_audio_system_find_by_name(const char* audio_system_name);
 const char* lingot_audio_system_get_name(int index);
 int lingot_audio_system_get_count(void);
-int lingot_audio_system_get_properties(LingotAudioSystemProperties*,
+int lingot_audio_system_get_properties(lingot_audio_system_properties_t*,
                                        int audio_system_index);
 // Return status : 0 for OK, else -1.
 
-void lingot_audio_system_properties_destroy(LingotAudioSystemProperties*);
+void lingot_audio_system_properties_destroy(lingot_audio_system_properties_t*);
 
 // creates an audio handler
-void lingot_audio_new(LingotAudioHandler*,
+void lingot_audio_new(lingot_audio_handler_t*,
                       int audio_system_index,
                       const char* device,
                       int sample_rate,
-                      LingotAudioProcessCallback process_callback,
+                      lingot_audio_process_callback_t process_callback,
                       void *process_callback_arg);
 // In case of failure, audio_system is set to -1 in the LingotAudioHandler struct.
 
 // destroys an audio handler
-void lingot_audio_destroy(LingotAudioHandler*);
+void lingot_audio_destroy(lingot_audio_handler_t*);
 
-int lingot_audio_start(LingotAudioHandler*);
-void lingot_audio_stop(LingotAudioHandler*);
+void* lingot_audio_mainloop(void*);
+
+int lingot_audio_start(lingot_audio_handler_t*);
+void lingot_audio_stop(lingot_audio_handler_t*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

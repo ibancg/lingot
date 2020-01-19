@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -24,38 +24,34 @@
 
 #include "lingot-complex.h"
 
-void lingot_complex_add(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_add(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c) {
     c[0] = a[0] + b[0];
     c[1] = a[1] + b[1];
 }
 
-void lingot_complex_sub(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_sub(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c) {
     c[0] = a[0] - b[0];
     c[1] = a[1] - b[1];
 }
 
-void lingot_complex_mul(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_mul(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c) {
     c[0] = a[0] * b[0] - a[1] * b[1];
     c[1] = a[1] * b[0] + a[0] * b[1];
 }
 
-void lingot_complex_div(const LingotComplex a, const LingotComplex b,
-                        LingotComplex c) {
+void lingot_complex_div(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c) {
     FLT bm2 = b[0] * b[0] + b[1] * b[1];
     c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
     c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
 }
 
-void lingot_complex_mul_by(LingotComplex a, const LingotComplex b) {
+void lingot_complex_mul_by(lingot_complex_t a, const lingot_complex_t b) {
     double rr = a[0] * b[0] - a[1] * b[1];
     a[1] = a[1] * b[0] + a[0] * b[1];
     a[0] = rr;
 }
 
-void lingot_complex_div_by(LingotComplex a, const LingotComplex b) {
+void lingot_complex_div_by(lingot_complex_t a, const lingot_complex_t b) {
     FLT bm2 = b[0] * b[0] + b[1] * b[1];
     double rr = (a[0] * b[0] + a[1] * b[1]) / bm2;
     a[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;

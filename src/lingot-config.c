@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -36,22 +36,26 @@
 #include "lingot-i18n.h"
 #include "lingot-audio.h"
 
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
-
-void lingot_config_new(LingotConfig* config) {
+void lingot_config_new(lingot_config_t* config) {
 
     config->max_nr_iter = 10; // iterations
     config->window_type = HAMMING;
     config->optimize_internal_parameters = 0;
+
+    config->audio_system_index = -1;
+    int i;
+    for (i = 0; i < (int) (sizeof(config->audio_dev)/sizeof(config->audio_dev[0])); ++i) {
+        sprintf(config->audio_dev[i], "%s", "");
+    }
+
     lingot_config_scale_new(&config->scale);
 }
 
-void lingot_config_destroy(LingotConfig* config) {
+void lingot_config_destroy(lingot_config_t* config) {
     lingot_config_scale_destroy(&config->scale);
 }
 
-void lingot_config_copy(LingotConfig* dst, const LingotConfig* src) {
+void lingot_config_copy(lingot_config_t* dst, const lingot_config_t* src) {
     *dst = *src;
     lingot_config_scale_new(&dst->scale); // null scale that will be destroyed in the copy below
     lingot_config_scale_copy(&dst->scale, &src->scale);
@@ -59,7 +63,7 @@ void lingot_config_copy(LingotConfig* dst, const LingotConfig* src) {
 
 //----------------------------------------------------------------------------
 
-void lingot_config_restore_default_values(LingotConfig* config) {
+void lingot_config_restore_default_values(lingot_config_t* config) {
 
     config->audio_system_index = lingot_audio_system_find_by_name("ALSA");
     if (config->audio_system_index < 0) {
@@ -104,7 +108,7 @@ void lingot_config_restore_default_values(LingotConfig* config) {
 
 //----------------------------------------------------------------------------
 
-void lingot_config_update_internal_params(LingotConfig* config) {
+void lingot_config_update_internal_params(lingot_config_t* config) {
 
     // derived parameters.
 
@@ -121,7 +125,7 @@ void lingot_config_update_internal_params(LingotConfig* config) {
         config->internal_max_frequency = 20000;
     }
 
-    config->oversampling = floor(0.5 * config->sample_rate / config->internal_max_frequency);
+    config->oversampling = (unsigned int) floor(0.5 * config->sample_rate / config->internal_max_frequency);
     if (config->oversampling < 1) {
         config->oversampling = 1;
     }
@@ -152,18 +156,15 @@ void lingot_config_update_internal_params(LingotConfig* config) {
     config->min_SNR = 0.5 * config->min_overall_SNR;
     config->peak_half_width = (config->fft_size > 256) ? 2 : 1;
 
-    if (config->scale.notes == 1) {
-        config->scale.max_offset_rounded = 1200.0;
-    } else {
-        int i;
-        FLT max_offset = 0.0;
-        for (i = 1; i < config->scale.notes; i++) {
-            max_offset = MAX(max_offset, config->scale.offset_cents[i]
-                             - config->scale.offset_cents[i - 1]);
+    int i;
+    config->gauge_range = 1200.0;
+    for (i = 1; i < config->scale.notes; i++) {
+        FLT offset = config->scale.offset_cents[i] - config->scale.offset_cents[i - 1];
+        if (offset < config->gauge_range) {
+            config->gauge_range = offset;
         }
-        config->scale.max_offset_rounded = max_offset;
     }
 
-    config->gauge_rest_value = -0.45 * config->scale.max_offset_rounded;
+    config->gauge_rest_value = -0.45 * config->gauge_range;
 }
 

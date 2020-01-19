@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,9 +29,10 @@
 
 #include "lingot-config.h"
 
-typedef struct _LingotConfigDialog LingotConfigDialog;
+/* object forward declaration */
+typedef struct _lingot_main_frame_t lingot_main_frame_t;
 
-struct _LingotConfigDialog {
+typedef struct {
 
     // widgets that contains configuration information.
     GtkComboBoxText* input_system;
@@ -59,15 +60,15 @@ struct _LingotConfigDialog {
     GtkEntry* scale_name;
     GtkTreeView* scale_treeview;
 
-    LingotConfig conf; // provisional configuration.
-    LingotConfig conf_old; // restoration point for cancel.
+    lingot_config_t conf; // provisional configuration.
+    lingot_config_t conf_old; // restoration point for cancel.
 
-    LingotMainFrame* mainframe;
+    lingot_main_frame_t* mainframe;
 
     GtkWidget* win; // window
-};
+} lingot_config_dialog_t;
 
-void lingot_gui_config_dialog_destroy(LingotConfigDialog*);
-void lingot_gui_config_dialog_show(LingotMainFrame* frame, LingotConfig* config);
+void lingot_gui_config_dialog_destroy(lingot_config_dialog_t*);
+void lingot_gui_config_dialog_show(lingot_main_frame_t* frame, lingot_config_t* config);
 
 #endif // LINGOT_GUI_CONFIG_DIALOG_H

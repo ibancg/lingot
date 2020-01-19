@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2013-2020  Iban Cereijo
  *
  * This file is part of lingot.
  *
@@ -35,38 +35,4 @@
 
 void lingot_test_core(void) {
 
-    FLT multiplier1 = 0.0;
-    FLT multiplier2 = 0.0;
-
-    int rel = lingot_core_frequencies_related(100.0, 150.001, 20.0, &multiplier1,
-                                              &multiplier2);
-    CU_ASSERT_EQUAL(rel, 1);
-    CU_ASSERT_EQUAL(multiplier1, 0.5);
-
-    rel = lingot_core_frequencies_related(100.0, 200.01, 20.0, &multiplier1,
-                                          &multiplier2);
-    CU_ASSERT_EQUAL(rel, 1);
-    CU_ASSERT_EQUAL(multiplier1, 1.0);
-
-    rel = lingot_core_frequencies_related(200.0, 100.01, 20.0, &multiplier1,
-                                          &multiplier2);
-    CU_ASSERT_EQUAL(rel, 1);
-    CU_ASSERT_EQUAL(multiplier1, 0.5);
-
-    rel = lingot_core_frequencies_related(100.0, 150.001, 70.0, &multiplier1,
-                                          &multiplier2);
-    CU_ASSERT_EQUAL(rel, 0);
-
-    rel = lingot_core_frequencies_related(22.788177, 114.008917, 15.0,
-                                          &multiplier1, &multiplier2);
-    CU_ASSERT_EQUAL(rel, 1);
-    CU_ASSERT_EQUAL(multiplier1, 1.0);
-    CU_ASSERT_EQUAL(multiplier2, 0.2);
-
-
-    rel = lingot_core_frequencies_related(97.959328, 48.977020, 15.0,
-                                          &multiplier1, &multiplier2);
-    CU_ASSERT_EQUAL(rel, 1);
-    CU_ASSERT_EQUAL(multiplier1, 0.5);
-    CU_ASSERT_EQUAL(multiplier2, 1.0);
 }

@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -31,8 +31,9 @@
 #define max(a,b) (((a)<(b))?(b):(a))
 
 // given each polynomial order and coefs, with optional initial status.
-void lingot_filter_new(LingotFilter* filter, unsigned int Na, unsigned int Nb, const FLT* a,
-                       const FLT* b) {
+void lingot_filter_new(lingot_filter_t* filter,
+                       unsigned int Na, unsigned int Nb,
+                       const FLT* a, const FLT* b) {
     unsigned int i;
     filter->N = max(Na, Nb);
 
@@ -55,32 +56,35 @@ void lingot_filter_new(LingotFilter* filter, unsigned int Na, unsigned int Nb, c
     }
 }
 
-void lingot_filter_reset(LingotFilter* filter) {
+void lingot_filter_reset(lingot_filter_t* filter) {
     unsigned int i;
     for (i = 0; i <= filter->N; i++) {
         filter->s[i] = 0.0;
     }
 }
 
-void lingot_filter_destroy(LingotFilter* filter) {
+void lingot_filter_destroy(lingot_filter_t* filter) {
     free(filter->a);
     free(filter->b);
     free(filter->s);
+    filter->a = NULL;
+    filter->b = NULL;
+    filter->s = NULL;
 }
 
 // Digital Filter Implementation II, in & out can overlap.
-void lingot_filter_filter(LingotFilter* filter, unsigned int n, const FLT* in,
-                          FLT* out) {
+void lingot_filter_filter(lingot_filter_t* filter, unsigned int n,
+                          const FLT* in, FLT* out) {
     FLT w, y;
-    register unsigned int i;
-    register int j;
+    unsigned int i;
+    int j;
 
     for (i = 0; i < n; i++) {
 
         w = in[i];
         y = 0.0;
 
-        for (j = filter->N - 1; j >= 0; j--) {
+        for (j = (int) (filter->N - 1); j >= 0; j--) {
             w -= filter->a[j + 1] * filter->s[j];
             y += filter->b[j + 1] * filter->s[j];
             filter->s[j + 1] = filter->s[j];
@@ -94,7 +98,7 @@ void lingot_filter_filter(LingotFilter* filter, unsigned int n, const FLT* in,
 }
 
 // single sample filtering
-FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in) {
+FLT lingot_filter_filter_sample(lingot_filter_t* filter, FLT in) {
     FLT result;
 
     lingot_filter_filter(filter, 1, &in, &result);
@@ -102,10 +106,9 @@ FLT lingot_filter_filter_sample(LingotFilter* filter, FLT in) {
 }
 
 // vector prod
-void lingot_filter_vector_product(int n, LingotComplex* vector,
-                                  LingotComplex result) {
-    register int i;
-    LingotComplex aux1;
+void lingot_filter_vector_product(unsigned int n, lingot_complex_t* vector, lingot_complex_t result) {
+    unsigned int i;
+    lingot_complex_t aux1;
 
     result[0] = 1.0;
     result[1] = 0.0;
@@ -119,7 +122,7 @@ void lingot_filter_vector_product(int n, LingotComplex* vector,
 }
 
 // Chebyshev filters
-void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FLT wc) {
+void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, FLT Rp, FLT wc) {
     unsigned int i; // loops
     unsigned int k;
     unsigned int p;
@@ -131,7 +134,7 @@ void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FL
     FLT new_b[n + 1];
 
     // locate poles
-    LingotComplex pole[n];
+    lingot_complex_t pole[n];
 
     for (i = 0; i < n; i++) {
         pole[i][0] = 0.0;
@@ -156,7 +159,7 @@ void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FL
         pole[k][1] = cv0 * sin(t);
     }
 
-    LingotComplex gain;
+    lingot_complex_t gain;
     lingot_filter_vector_product(n, pole, gain);
 
     if ((n & 1) == 0) { // even
@@ -175,15 +178,15 @@ void lingot_filter_cheby_design(LingotFilter* filter, unsigned int n, FLT Rp, FL
     }
 
     // bilinear transform
-    LingotComplex sp[n];
+    lingot_complex_t sp[n];
 
     for (i = 0; i < n; i++) {
         sp[i][0] = (2.0 - pole[i][0] * T) / T;
         sp[i][1] = (0.0 - pole[i][1] * T) / T;
     }
 
-    LingotComplex tmp1;
-    LingotComplex aux2;
+    lingot_complex_t tmp1;
+    lingot_complex_t aux2;
 
     lingot_filter_vector_product(n, sp, tmp1);
 

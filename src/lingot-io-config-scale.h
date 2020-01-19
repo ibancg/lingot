@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -25,13 +25,21 @@
 #ifndef LINGOT_IO_CONFIG_SCALE_H
 #define LINGOT_IO_CONFIG_SCALE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "lingot-config-scale.h"
 
-int lingot_config_scale_load_scl(LingotScale* scale, char* filename);
 /* The scale argument must *not* be initialized with _new. */
+int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename);
 
 int lingot_config_scale_parse_shift(char*, double*, short int*, short int*);
 
 void lingot_config_scale_format_shift(char*, double, short int, short int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LINGOT_IO_CONFIG_SCALE_H
