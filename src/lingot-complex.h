@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -30,36 +30,36 @@
 
 // single ... complex arithmetic  :)
 
-typedef FLT LingotComplex[2];
+typedef FLT lingot_complex_t[2];
 
 /**
  * Addition. All parameters can overlap.
  */
-void lingot_complex_add(const LingotComplex a, const LingotComplex b, LingotComplex c);
+void lingot_complex_add(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c);
 
 /**
  * Subtraction. All parameters can overlap.
  */
-void lingot_complex_sub(const LingotComplex a, const LingotComplex b, LingotComplex c);
+void lingot_complex_sub(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c);
 
 /**
  * Multiplication. Parameters cannot overlap.
  */
-void lingot_complex_mul(const LingotComplex a, const LingotComplex b, LingotComplex c);
+void lingot_complex_mul(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c);
 
 /**
  * Division. Parameters cannot overlap.
  */
-void lingot_complex_div(const LingotComplex a, const LingotComplex b, LingotComplex c);
+void lingot_complex_div(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c);
 
 /**
  * Computes a *= b
  */
-void lingot_complex_mul_by(LingotComplex a, const LingotComplex b);
+void lingot_complex_mul_by(lingot_complex_t a, const lingot_complex_t b);
 
 /**
  * Computes a /= b
  */
-void lingot_complex_div_by(LingotComplex a, const LingotComplex b);
+void lingot_complex_div_by(lingot_complex_t a, const lingot_complex_t b);
 
 #endif

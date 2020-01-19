@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -24,6 +24,10 @@
 
 #ifndef LINGOT_CONFIG_H
 #define LINGOT_CONFIG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "lingot-defs.h"
 #include "lingot-config-scale.h"
@@ -93,19 +97,23 @@ typedef struct {
 
     //----------------------------------------------------------------------------
 
-    LingotScale scale;
+    lingot_scale_t scale;
 
-} LingotConfig;
+} lingot_config_t;
 
 
-void lingot_config_new(LingotConfig*);
-void lingot_config_destroy(LingotConfig*);
-void lingot_config_copy(LingotConfig* dst, const LingotConfig* src);
+void lingot_config_new(lingot_config_t*);
+void lingot_config_destroy(lingot_config_t*);
+void lingot_config_copy(lingot_config_t* dst, const lingot_config_t* src);
 
 // back to default configuration.
-void lingot_config_restore_default_values(LingotConfig*);
+void lingot_config_restore_default_values(lingot_config_t*);
 
 // derivate internal parameters from external ones.
-void lingot_config_update_internal_params(LingotConfig*);
+void lingot_config_update_internal_params(lingot_config_t*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LINGOT_CONFIG_H

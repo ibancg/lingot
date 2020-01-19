@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -29,13 +29,21 @@
 
 #include <jack/jack.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     jack_port_t *input_port;
     jack_client_t *client;
     jack_nframes_t nframes;
-} LingotAudioHandlerExtraJack;
+} lingot_audio_handler_jack_t;
 
 int lingot_audio_jack_register(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 #endif

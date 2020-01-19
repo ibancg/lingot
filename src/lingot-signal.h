@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
 
  *
@@ -45,7 +45,7 @@ FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency);
 
 FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                                                  FLT freq,
-                                                 const LingotComplex* fft,
+                                                 const lingot_complex_t* fft,
                                                  unsigned int N,
                                                  unsigned int n_peaks,
                                                  unsigned int lowest_index,

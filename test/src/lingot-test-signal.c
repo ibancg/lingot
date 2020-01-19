@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2013-2020  Iban Cereijo
  *
  * This file is part of lingot.
  *

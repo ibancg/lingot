@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2013  Iban Cereijo
+ * Copyright (C) 2013-2020  Iban Cereijo
  *
  * This file is part of lingot.
  *
@@ -35,8 +35,8 @@
 void lingot_test_io_config(void) {
 
     lingot_io_config_create_parameter_specs();
-    LingotConfig _config;
-    LingotConfig* config = &_config;
+    lingot_config_t _config;
+    lingot_config_t* config = &_config;
     lingot_config_new(config);
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(config);

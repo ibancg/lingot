@@ -1,7 +1,7 @@
 /*
  * lingot, a musical instrument tuner.
  *
- * Copyright (C) 2004-2019  Iban Cereijo.
+ * Copyright (C) 2004-2020  Iban Cereijo.
  * Copyright (C) 2004-2008  Jairo Chapela.
  *
  * This file is part of lingot.
@@ -35,15 +35,15 @@
 static snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 static const unsigned int channels = 1;
 
-void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sample_rate) {
+void lingot_audio_alsa_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
 
-    const char* exception;
+    const char* _exception;
     snd_pcm_hw_params_t* hw_params = NULL;
     int err;
     char error_message[1000];
 
-    audio->audio_handler_extra = malloc(sizeof(LingotAudioHandlerExtraALSA));
-    LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
+    audio->audio_handler_extra = malloc(sizeof(lingot_audio_handler_alsa_t));
+    lingot_audio_handler_alsa_t* audioALSA = (lingot_audio_handler_alsa_t*) audio->audio_handler_extra;
 
     if (sample_rate >= 44100) {
         audio->read_buffer_size_samples = 1024;
@@ -60,14 +60,14 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
 
     audioALSA->capture_handle = NULL;
 
-    try
+    _try
     {
         if ((err = snd_pcm_open(&audioALSA->capture_handle, device,
                                 SND_PCM_STREAM_CAPTURE, SND_PCM_NONBLOCK)) < 0) {
             snprintf(error_message, sizeof(error_message),
                      _("Cannot open audio device '%s'.\n%s"), device,
                      snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         strncpy(audio->device, device, sizeof(audio->device) - 1);
@@ -76,7 +76,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot initialize hardware parameter structure."),
                      snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         if ((err = snd_pcm_hw_params_any(audioALSA->capture_handle, hw_params))
@@ -84,21 +84,21 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot initialize hardware parameter structure."),
                      snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         if ((err = snd_pcm_hw_params_set_access(audioALSA->capture_handle,
                                                 hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot set access type."), snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         if ((err = snd_pcm_hw_params_set_format(audioALSA->capture_handle,
                                                 hw_params, sample_format)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot set sample format."), snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         unsigned int rate = (unsigned int) sample_rate;
@@ -107,7 +107,7 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
                                                    hw_params, &rate, 0)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot set sample rate."), snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         audio->real_sample_rate = rate;
@@ -116,29 +116,29 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
                                                   hw_params, channels)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot set channel number."), snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         if ((err = snd_pcm_hw_params(audioALSA->capture_handle, hw_params)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot set parameters."), snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         if ((err = snd_pcm_prepare(audioALSA->capture_handle)) < 0) {
             snprintf(error_message, sizeof(error_message), "%s\n%s",
                      _("Cannot prepare audio interface for use."),
                      snd_strerror(err));
-            throw(error_message)
+            _throw(error_message)
         }
 
         audio->bytes_per_sample = (short) snd_pcm_format_size(sample_format, 1);
-    } catch {
+    } _catch {
         if (audioALSA->capture_handle != NULL) {
             snd_pcm_close(audioALSA->capture_handle);
         }
         audio->audio_system = -1;
-        lingot_msg_add_error_with_code(exception, -err);
+        lingot_msg_add_error_with_code(_exception, -err);
     }
 
     if (hw_params != NULL) {
@@ -146,20 +146,21 @@ void lingot_audio_alsa_new(LingotAudioHandler* audio, const char* device, int sa
     }
 }
 
-void lingot_audio_alsa_destroy(LingotAudioHandler* audio) {
+void lingot_audio_alsa_destroy(lingot_audio_handler_t* audio) {
     if (audio->audio_system >= 0) {
-        LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
+        lingot_audio_handler_alsa_t* audioALSA = (lingot_audio_handler_alsa_t*) audio->audio_handler_extra;
         //        snd_pcm_drop(audioALSA->capture_handle);
         snd_pcm_close(audioALSA->capture_handle);
         free(audio->audio_handler_extra);
+        audio->audio_handler_extra = NULL;
     }
 }
 
-int lingot_audio_alsa_read(LingotAudioHandler* audio) {
+int lingot_audio_alsa_read(lingot_audio_handler_t* audio) {
     int samples_read = -1;
     char buffer[channels * audio->read_buffer_size_samples * ((size_t) audio->bytes_per_sample)];
 
-    LingotAudioHandlerExtraALSA* audioALSA = (LingotAudioHandlerExtraALSA*) audio->audio_handler_extra;
+    lingot_audio_handler_alsa_t* audioALSA = (lingot_audio_handler_alsa_t*) audio->audio_handler_extra;
     samples_read = (int) snd_pcm_readi(audioALSA->capture_handle, buffer,
                                        audio->read_buffer_size_samples);
 
@@ -208,7 +209,7 @@ int lingot_audio_alsa_read(LingotAudioHandler* audio) {
 }
 
 int lingot_audio_alsa_get_audio_system_properties(
-        LingotAudioSystemProperties* result) {
+        lingot_audio_system_properties_t* result) {
 
     result->forced_sample_rate = 0;
     result->n_devices = 0;
@@ -224,7 +225,7 @@ int lingot_audio_alsa_get_audio_system_properties(
     int status;
     int card_index = -1;
     char* card_shortname = NULL;
-    const char* exception;
+    const char* _exception;
     char error_message[1000];
     char device_name[512];
     int device_index = -1;
@@ -249,10 +250,10 @@ int lingot_audio_alsa_get_audio_system_properties(
     device_names_first->name = strdup(buff);
     device_names_first->next = NULL;
 
-    try
+    _try
     {
         result->n_devices = 1;
-        try
+        _try
         {
             for (;;) {
 
@@ -260,14 +261,14 @@ int lingot_audio_alsa_get_audio_system_properties(
                     snprintf(error_message, sizeof(error_message),
                              "warning: cannot determine card number: %s",
                              snd_strerror(status));
-                    throw(error_message)
+                    _throw(error_message)
                 }
 
                 if (card_index < 0) {
                     if (result->n_devices == 0) {
                         snprintf(error_message, sizeof(error_message),
                                  "warning: no sound cards detected");
-                        throw(error_message)
+                        _throw(error_message)
                     }
                     break;
                 }
@@ -277,7 +278,7 @@ int lingot_audio_alsa_get_audio_system_properties(
                     snprintf(error_message, sizeof(error_message),
                              "warning: cannot determine card short name: %s",
                              snd_strerror(status));
-                    throw(error_message)
+                    _throw(error_message)
                 }
 
                 sprintf(device_name, "hw:%i", card_index);
@@ -286,7 +287,7 @@ int lingot_audio_alsa_get_audio_system_properties(
                     snprintf(error_message, sizeof(error_message),
                              "warning: can't open card %i: %s\n", card_index,
                              snd_strerror(status));
-                    throw(error_message)
+                    _throw(error_message)
                 }
 
                 for (device_index = -1;;) {
@@ -296,7 +297,7 @@ int lingot_audio_alsa_get_audio_system_properties(
                         snprintf(error_message, sizeof(error_message),
                                  "warning: can't get next PCM device: %s\n",
                                  snd_strerror(status));
-                        throw(error_message)
+                        _throw(error_message)
                     }
 
                     if (device_index < 0) {
@@ -358,9 +359,9 @@ int lingot_audio_alsa_get_audio_system_properties(
 
                 snd_ctl_close(card_handler);
             }
-        }catch {
+        } _catch {
             result->n_devices = 1;
-            throw(exception)
+            _throw(_exception)
         }
 
         // copy the device names list
@@ -372,8 +373,8 @@ int lingot_audio_alsa_get_audio_system_properties(
             name_node_current = name_node_current->next;
         }
 
-    } catch {
-        fprintf(stderr, "%s", exception);
+    } _catch {
+        fprintf(stderr, "%s", _exception);
     }
 
     // dispose the device names list
