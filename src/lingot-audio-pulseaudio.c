@@ -34,6 +34,12 @@
 #include "lingot-msg.h"
 
 #include <pulse/pulseaudio.h>
+#include <pulse/simple.h>
+
+typedef struct {
+    pa_simple *client;
+    pa_sample_spec sample_spec;
+} lingot_audio_handler_pulseaudio_t;
 
 void lingot_audio_pulseaudio_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
 
@@ -377,6 +383,13 @@ int lingot_audio_pulseaudio_register(void)
                                         lingot_audio_pulseaudio_cancel,
                                         lingot_audio_pulseaudio_read,
                                         lingot_audio_pulseaudio_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_pulseaudio_register(void)
+{
+    return 0;
 }
 
 #endif

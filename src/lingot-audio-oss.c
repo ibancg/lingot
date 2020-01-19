@@ -41,8 +41,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void lingot_audio_oss_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
+typedef struct {
+    int dsp; // file handler.
+} lingot_audio_handler_oss_t;
 
+void lingot_audio_oss_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
     int channels = 1;
 #	ifdef AFMT_S16_NE
     int format = AFMT_S16_NE;
@@ -189,6 +192,13 @@ int lingot_audio_oss_register(void)
                                         NULL,
                                         lingot_audio_oss_read,
                                         lingot_audio_oss_get_audio_system_properties);
+}
+
+#else
+
+int lingot_audio_oss_register(void)
+{
+    return 0;
 }
 
 #endif
