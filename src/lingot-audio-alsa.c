@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <alsa/asoundlib.h>
+#include <time.h>
 
 #include "lingot-audio.h"
 #include "lingot-defs.h"
@@ -170,7 +171,10 @@ int lingot_audio_alsa_read(lingot_audio_handler_t* audio) {
                                        audio->read_buffer_size_samples);
 
     if (samples_read == -EAGAIN) {
-        usleep(200); // TODO: size up
+        struct timespec wait;
+        wait.tv_sec = 0;
+        wait.tv_nsec = 200000; // TODO: size up
+        nanosleep(&wait, NULL);
         samples_read = 0;
     } else {
         if (samples_read < 0) {
@@ -252,7 +256,7 @@ int lingot_audio_alsa_get_audio_system_properties(
     // the first record is the default device
     char buff[512];
     snprintf(buff, sizeof(buff), "%s <default>", _("Default Device"));
-    device_names_first->name = strdup(buff);
+    device_names_first->name = _strdup(buff);
     device_names_first->next = NULL;
 
     _try
@@ -348,7 +352,7 @@ int lingot_audio_alsa_get_audio_system_properties(
 
                         result->n_devices++;
                         struct device_name_node_t* new_name_node = (struct device_name_node_t*) malloc(sizeof(struct device_name_node_t*));
-                        new_name_node->name = strdup(device_name);
+                        new_name_node->name = _strdup(device_name);
                         new_name_node->next = NULL;
 
                         if (device_names_first == NULL) {

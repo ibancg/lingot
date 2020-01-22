@@ -406,7 +406,7 @@ void lingot_gui_mainframe_create(int argc, char *argv[]) {
     if (filechooser_config_last_folder == NULL) {
         char buff[1000];
         snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
-        filechooser_config_last_folder = strdup(buff);
+        filechooser_config_last_folder = _strdup(buff);
     }
 
     frame = malloc(sizeof(lingot_main_frame_t));

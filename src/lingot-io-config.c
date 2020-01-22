@@ -209,7 +209,7 @@ void lingot_io_config_save(lingot_config_t* config, const char* filename) {
     lc_all = setlocale(LC_ALL, NULL);
     // duplicate the string, as the next call to setlocale will destroy it
     if (lc_all) {
-        lc_all = strdup(lc_all);
+        lc_all = _strdup(lc_all);
     }
     setlocale(LC_ALL, "C");
 
@@ -371,7 +371,7 @@ int lingot_io_config_load(lingot_config_t* config, const char* filename) {
                 if (nl) {
                     *nl = '\0';
                 }
-                scale.name = strdup(char_buffer_pointer);
+                scale.name = _strdup(char_buffer_pointer);
                 continue;
             }
             if (!strcmp(char_buffer_pointer, "BASE_FREQUENCY")) {
@@ -405,7 +405,7 @@ int lingot_io_config_load(lingot_config_t* config, const char* filename) {
                         break;
                     }
 
-                    scale.note_name[i] = strdup(char_buffer_pointer);
+                    scale.note_name[i] = _strdup(char_buffer_pointer);
                     char_buffer_pointer = strtok(NULL, delim2);
 
                     if (char_buffer_pointer == NULL) {

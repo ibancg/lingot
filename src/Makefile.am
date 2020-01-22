@@ -26,8 +26,9 @@ lingot_SOURCES = \
 	lingot-config-scale.h\
 	lingot-core.c\
 	lingot-core.h\
-	lingot-defs.h\
-	lingot-msg.h\
+        lingot-defs.c\
+        lingot-defs.h\
+        lingot-msg.h\
 	lingot-msg.c\
 	lingot-gui-config-dialog.c\
 	lingot-gui-config-dialog.h\

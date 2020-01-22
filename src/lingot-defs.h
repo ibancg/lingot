@@ -25,6 +25,11 @@
 #ifndef LINGOT_DEFS_H
 #define LINGOT_DEFS_H
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "../config.h"
 
 // floating point precision.
@@ -32,7 +37,8 @@
 
 #define CONFIG_DIR_NAME             ".config/lingot/"
 #define DEFAULT_CONFIG_FILE_NAME    "lingot.conf"
-extern char CONFIG_FILE_NAME[];
+
+extern char CONFIG_FILE_NAME[200];
 
 #define QUICK_MESSAGES
 
@@ -53,10 +59,18 @@ extern char CONFIG_FILE_NAME[];
 #    define M_PI 3.14159265358979323846
 #endif
 
-// this option allows us to throw exception from loops, it contains a goto
+// This alternative allows us to throw exception from loops, it contains a goto
 // statement, but totally controlled. It fails when trying to indent code.
 //#define _try _exception = 0;do
 //#define _throw(a) {_exception = a;goto catch_label;}
 //#define _catch while (0);catch_label: if (_exception != 0)
+
+// strdup() is not part of the standard. It is POSIX, but we provide our own
+// implementation.
+char* _strdup(const char *s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
