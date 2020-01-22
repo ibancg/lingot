@@ -166,12 +166,12 @@ int lingot_gui_config_dialog_get_audio_system(GtkComboBoxText* combo) {
     return result;
 }
 
-// extracts the string between <>
+// extracts the string between <> markers
 static const gchar* lingot_gui_config_dialog_get_string(const gchar* str) {
     static char buffer[1024];
 
     const char* delim = "<>";
-    char* str_ = strdup(str);
+    char* str_ = _strdup(str);
     char* token = strtok(str_, delim);
     if ((token == str_) && (strlen(token) != strlen(str))) {
         token = strtok(NULL, delim);
@@ -193,7 +193,7 @@ void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
 
     GtkTreeModel* model = GTK_TREE_MODEL(gtk_combo_box_get_model(GTK_COMBO_BOX(combo)));
     GtkTreeIter iter;
-    char* filtered_name = strdup(device_name);
+    char* filtered_name = _strdup(device_name);
     if (gtk_tree_model_get_iter_first(model, &iter)) {
         do {
             gchar* item;
@@ -204,7 +204,7 @@ void lingot_gui_config_dialog_set_audio_device(GtkComboBoxText* combo,
             const gchar* filtered_item = lingot_gui_config_dialog_get_audio_device(item);
             if (!strcmp(device_name, filtered_item)) {
                 free(filtered_name);
-                filtered_name = strdup(item); // we strdup because we must g_free(), not free()
+                filtered_name = _strdup(item); // we strdup because we must g_free(), not free()
                 g_free(item);
                 break;
             }

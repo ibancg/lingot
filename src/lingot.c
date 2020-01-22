@@ -42,8 +42,6 @@
 #include "lingot-i18n.h"
 #include "lingot-io-config.h"
 
-char CONFIG_FILE_NAME[200];
-
 int main(int argc, char *argv[]) {
 
 #ifdef ENABLE_NLS

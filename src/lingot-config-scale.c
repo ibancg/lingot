@@ -82,18 +82,18 @@ void lingot_config_scale_restore_default_values(lingot_scale_t* scale) {
     lingot_config_scale_destroy(scale);
 
     // default 12 tones equal-tempered scale hard-coded
-    scale->name = strdup(_("Default equal-tempered scale"));
+    scale->name = _strdup(_("Default equal-tempered scale"));
     lingot_config_scale_allocate(scale, 12);
 
     scale->base_frequency = MID_C_FREQUENCY;
 
-    scale->note_name[0] = strdup(tone_string[0]);
+    scale->note_name[0] = _strdup(tone_string[0]);
     scale->offset_cents[0] = 0.0;
     scale->offset_ratios[0][0] = 1;
     scale->offset_ratios[1][0] = 1; // 1/1
 
     for (i = 1; i < scale->notes; i++) {
-        scale->note_name[i] = strdup(tone_string[i]);
+        scale->note_name[i] = _strdup(tone_string[i]);
         scale->offset_cents[i] = 100.0 * i;
         scale->offset_ratios[0][i] = -1; // not used
         scale->offset_ratios[1][i] = -1; // not used
@@ -107,11 +107,11 @@ void lingot_config_scale_copy(lingot_scale_t* dst, const lingot_scale_t* src) {
 
     *dst = *src;
 
-    dst->name = strdup(src->name);
+    dst->name = _strdup(src->name);
     lingot_config_scale_allocate(dst, dst->notes);
 
     for (i = 0; i < dst->notes; i++) {
-        dst->note_name[i] = strdup(src->note_name[i]);
+        dst->note_name[i] = _strdup(src->note_name[i]);
         dst->offset_cents[i] = src->offset_cents[i];
         dst->offset_ratios[0][i] = src->offset_ratios[0][i];
         dst->offset_ratios[1][i] = src->offset_ratios[1][i];

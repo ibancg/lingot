@@ -150,7 +150,7 @@ int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename) {
         nl = strrchr(char_buffer, '\n');
         if (nl)
             *nl = '\0';
-        scale->name = strdup(char_buffer);
+        scale->name = _strdup(char_buffer);
 
         line++;
         if (!fgets(char_buffer, MAX_LINE_SIZE, fp)) {
@@ -164,7 +164,7 @@ int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename) {
         }
         lingot_config_scale_allocate(scale, scale->notes);
 
-        scale->note_name[0] = strdup("1");
+        scale->note_name[0] = _strdup("1");
         scale->offset_cents[0] = 0.0;
         scale->offset_ratios[0][0] = 1;
         scale->offset_ratios[1][0] = 1; // 1/1
@@ -202,10 +202,10 @@ int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename) {
                 ++char_buffer_pointer1;
             }
             if (char_buffer_pointer1) {
-                scale->note_name[i] = strdup(char_buffer_pointer1);
+                scale->note_name[i] = _strdup(char_buffer_pointer1);
             } else {
                 sprintf(char_buffer, "%d", i + 1);
-                scale->note_name[i] = strdup(char_buffer);
+                scale->note_name[i] = _strdup(char_buffer);
             }
         }
     } _catch {

@@ -81,14 +81,14 @@ void lingot_audio_pulseaudio_new(lingot_audio_handler_t* audio, const char* devi
     }
 
     audio_pa->client = pa_simple_new(NULL, // Use the default server.
-                                        "Lingot", // Our application's name.
-                                        PA_STREAM_RECORD, //
-                                        device_name, //
-                                        "Lingot record thread", // Description of our stream.
-                                        &audio_pa->sample_spec, // sample format.
-                                        NULL, // Use default channel map
-                                        &buff, //
-                                        &error);
+                                     "Lingot", // Our application's name.
+                                     PA_STREAM_RECORD, //
+                                     device_name, //
+                                     "Lingot record thread", // Description of our stream.
+                                     &audio_pa->sample_spec, // sample format.
+                                     NULL, // Use default channel map
+                                     &buff, //
+                                     &error);
 
     if (!audio_pa->client) {
         char buff[512];
@@ -200,7 +200,7 @@ int lingot_audio_pulseaudio_get_audio_system_properties(lingot_audio_system_prop
     // the first record is the default source
     char buff[512];
     snprintf(buff, sizeof(buff), "%s <default>", _("Default Source"));
-    device_names_first->name = strdup(buff);
+    device_names_first->name = _strdup(buff);
     device_names_first->next = NULL;
 
     context = NULL;
@@ -323,26 +323,25 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
         return;
     }
 
-    struct device_name_node_t** device_names_last =
-            (struct device_name_node_t**) userdata;
+    struct device_name_node_t** device_names_last = (struct device_name_node_t**) userdata;
 
-            char buff[512];
-            snprintf(buff, sizeof(buff), "%s <%s>", i->description, i->name);
+    char buff[512];
+    snprintf(buff, sizeof(buff), "%s <%s>", i->description, i->name);
 
-            //	printf("%s <%s>\n", i->description, i->name);
-            //	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
-            //	printf("\t%i channels, rate %i, format %i\n", i->sample_spec.channels,
-            //			i->sample_spec.rate, i->sample_spec.format);
-            //	printf("\tlags %i\n", i->flags);
+    //	printf("%s <%s>\n", i->description, i->name);
+    //	printf("\tmonitor of: %s\n", i->monitor_of_sink_name);
+    //	printf("\t%i channels, rate %i, format %i\n", i->sample_spec.channels,
+    //			i->sample_spec.rate, i->sample_spec.format);
+    //	printf("\tlags %i\n", i->flags);
 
-            struct device_name_node_t* new_name_node =
-                    (struct device_name_node_t*) malloc(
-                                sizeof(struct device_name_node_t*));
-                    new_name_node->name = strdup(buff);
-                    new_name_node->next = NULL;
+    struct device_name_node_t* new_name_node = (struct device_name_node_t*)
+            malloc(sizeof(struct device_name_node_t*));
 
-                    (*device_names_last)->next = new_name_node;
-                    *device_names_last = new_name_node;
+    new_name_node->name = _strdup(buff);
+    new_name_node->next = NULL;
+
+    (*device_names_last)->next = new_name_node;
+    *device_names_last = new_name_node;
 }
 
 static void lingot_audio_pulseaudio_context_state_callback(pa_context *c,
