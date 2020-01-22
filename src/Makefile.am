@@ -48,6 +48,7 @@ liblingot_la_SOURCES = \
     lingot-config-scale.h\
     lingot-core.c\
     lingot-core.h\
+    lingot-defs.c\
     lingot-defs.h\
     lingot-msg.h\
     lingot-msg.c\

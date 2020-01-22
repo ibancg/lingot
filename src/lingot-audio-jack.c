@@ -220,13 +220,13 @@ int lingot_audio_jack_get_audio_system_properties(
     properties->devices = (const char**) malloc((size_t) properties->n_devices * sizeof(char*));
     char buff[512];
     snprintf(buff, sizeof(buff), "%s <default>", _("Default Port"));
-    properties->devices[0] = strdup(buff);
+    properties->devices[0] = _strdup(buff);
 
     if (ports != NULL) {
         if (properties->n_devices != 0) {
             int i;
             for (i = 0; ports[i] != NULL; i++) {
-                properties->devices[i + 1] = strdup(ports[i]);
+                properties->devices[i + 1] = _strdup(ports[i]);
             }
         }
     }

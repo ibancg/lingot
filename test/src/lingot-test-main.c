@@ -28,6 +28,7 @@ void lingot_test_core(void);
 #ifndef LINGOT_TEST_USE_LIB
 
 // TODO: lib?
+#include "lingot-defs.c"
 #include "lingot-complex.c"
 #include "lingot-msg.c"
 #include "lingot-config-scale.c"

@@ -503,7 +503,7 @@ void lingot_gui_config_dialog_scale_gui_to_data(const lingot_config_dialog_t* di
                        -1);
 
     lingot_config_scale_destroy(scale);
-    scale->name = strdup(gtk_entry_get_text(dialog->scale_name));
+    scale->name = _strdup(gtk_entry_get_text(dialog->scale_name));
     scale->base_frequency = freq;
     lingot_config_scale_allocate(scale, (short unsigned) rows);
 
@@ -518,7 +518,7 @@ void lingot_gui_config_dialog_scale_gui_to_data(const lingot_config_dialog_t* di
         g_free(shift_char);
         shift_char = NULL;
 
-        scale->note_name[i] = strdup(name); // we strdup() because we must g_free() name
+        scale->note_name[i] = _strdup(name); // we strdup() because we must g_free() name
         scale->offset_cents[i] = shift;
         scale->offset_ratios[0][i] = shift_num;
         scale->offset_ratios[1][i] = shift_den;

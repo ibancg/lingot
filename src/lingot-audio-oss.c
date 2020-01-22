@@ -170,7 +170,7 @@ int lingot_audio_oss_get_audio_system_properties(lingot_audio_system_properties_
     result->forced_sample_rate = 0;
     result->n_devices = 1;
     result->devices = (const char**) malloc((unsigned int) result->n_devices * sizeof(char*));
-    result->devices[0] = strdup("/dev/dsp");
+    result->devices[0] = _strdup("/dev/dsp");
 
     result->n_sample_rates = 5;
     result->sample_rates[0] = 8000;
