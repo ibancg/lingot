@@ -19,6 +19,8 @@ src/lingot-fft.c
 src/lingot-filter.c
 src/lingot-gauge.c
 src/lingot-gui-mainframe.c
+src/lingot-gui-gauge.c
+src/lingot-gui-spectrum.c
 src/lingot-gui-config-dialog.c
 src/lingot-gui-mainframe.glade
 src/lingot-gui-config-dialog-scale.c

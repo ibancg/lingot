@@ -31,13 +31,13 @@ extern "C" {
 
 #include "lingot-defs.h"
 
-typedef struct {
-    char* name; 					// name of the scale
-    unsigned short int notes; 		// number of notes
-    FLT* offset_cents;           // offset in cents
-    short int* offset_ratios[2]; 	// offset in ratios (pairs of integers)
-    FLT base_frequency; 			// frequency of the first note (tipically C4)
-    char** note_name; 				// note names
+typedef struct _lingot_scale_t {
+    char* name;                     // name of the scale
+    unsigned short int notes;       // number of notes
+    FLT* offset_cents;              // offset in cents
+    short int* offset_ratios[2];    // offset in ratios (pairs of integers)
+    FLT base_frequency;             // frequency of the first note (tipically C4)
+    char** note_name;               // note names
 } lingot_scale_t;
 
 void lingot_config_scale_new(lingot_scale_t*);

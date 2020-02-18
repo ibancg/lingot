@@ -126,7 +126,10 @@ int main(int argc, char *argv[]) {
         fclose(fp);
     }
 
-    lingot_gui_mainframe_create(argc, argv);
+    gtk_init(&argc, &argv);
+
+    lingot_gui_mainframe_create();
+    gtk_main();
 
     return 0;
 }

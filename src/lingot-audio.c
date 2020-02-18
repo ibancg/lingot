@@ -119,10 +119,8 @@ void lingot_audio_new(lingot_audio_handler_t* result,
 
         if (result->audio_system != -1 ) {
             // audio source read in floating point format.
-            result->flt_read_buffer = malloc(
-                        result->read_buffer_size_samples * sizeof(FLT));
-            memset(result->flt_read_buffer, 0,
-                   result->read_buffer_size_samples * sizeof(FLT));
+            result->flt_read_buffer = malloc(result->read_buffer_size_samples * sizeof(FLT));
+            memset(result->flt_read_buffer, 0, result->read_buffer_size_samples * sizeof(FLT));
             result->process_callback = process_callback;
             result->process_callback_arg = process_callback_arg;
             result->interrupted = 0;
@@ -149,44 +147,6 @@ int lingot_audio_read(lingot_audio_handler_t* audio) {
     lingot_audio_system_connector_t* system = lingot_audio_system_get(audio->audio_system);
     if (system && system->func_read) {
         samples_read = system->func_read(audio);
-
-        //#		define RATE_ESTIMATOR
-
-#		ifdef RATE_ESTIMATOR
-        static double samplerate_estimator = 0.0;
-        static unsigned long read_samples = 0;
-        static double elapsed_time = 0.0;
-
-        struct timeval tdiff, t_abs;
-        static struct timeval t_abs_old = { .tv_sec = 0, .tv_usec = 0 };
-        static FILE* fid = 0x0;
-
-        if (fid == 0x0) {
-            fid = fopen("/tmp/dump.txt", "w");
-        }
-
-        gettimeofday(&t_abs, NULL );
-
-        if ((t_abs_old.tv_sec != 0) || (t_abs_old.tv_usec != 0)) {
-
-            int i;
-            for (i = 0; i < samples_read; i++) {
-                fprintf(fid, "%f ", audio->flt_read_buffer[i]);
-                //				printf("%f ", audio->flt_read_buffer[i]);
-            }
-            //			printf("\n");
-            timersub(&t_abs, &t_abs_old, &tdiff);
-            read_samples = samples_read;
-            elapsed_time = tdiff.tv_sec + 1e-6 * tdiff.tv_usec;
-            static const double c = 0.9;
-            samplerate_estimator = c * samplerate_estimator
-                    + (1 - c) * (read_samples / elapsed_time);
-            //			printf("estimated sample rate %f (read %i samples in %f seconds)\n",
-            //					samplerate_estimator, read_samples, elapsed_time);
-
-        }
-        t_abs_old = t_abs;
-#		endif
     }
 
     return samples_read;

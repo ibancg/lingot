@@ -11,6 +11,10 @@ lingot_SOURCES = \
 	lingot-gui-config-dialog.glade\
 	lingot-gui-config-dialog-scale.c\
 	lingot-gui-config-dialog-scale.h\
+        lingot-gui-gauge.c\
+        lingot-gui-gauge.h\
+        lingot-gui-spectrum.c\
+        lingot-gui-spectrum.h\
 	lingot-gui-mainframe.c\
 	lingot-gui-mainframe.h\
 	lingot-gui-mainframe.glade\
