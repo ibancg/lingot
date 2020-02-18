@@ -275,7 +275,7 @@ void lingot_audio_stop(lingot_audio_handler_t* audio) {
                 pthread_mutex_unlock(&audio->thread_input_read_mutex);
 
                 if (result == ETIMEDOUT) {
-//                    pthread_cancel(audio->thread_input_read);
+                    pthread_cancel(audio->thread_input_read);
                     lingot_audio_cancel(audio);
                 } else {
                     pthread_join(audio->thread_input_read, &thread_result);
