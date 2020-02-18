@@ -75,9 +75,6 @@ typedef struct _lingot_main_frame_t {
     int closest_note_index;
 } lingot_main_frame_t;
 
-void lingot_gui_mainframe_create(int argc, char *argv[]);
-void lingot_gui_mainframe_destroy(lingot_main_frame_t*);
-
-void lingot_gui_mainframe_change_config(lingot_main_frame_t*, lingot_config_t*);
+lingot_main_frame_t* lingot_gui_mainframe_create();
 
 #endif //LINGOT_GUI_MAIN_FRAME_H
