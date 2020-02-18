@@ -29,12 +29,8 @@
 
 #include "lingot-gui-config-dialog.h"
 
-struct lingot_config_dialog_t;
-struct lingot_scale_t;
-struct GtkBuilder;
-
 // initialize and show the components
-void lingot_gui_config_dialog_scale_show(lingot_config_dialog_t*, GtkBuilder*);
+void lingot_gui_config_dialog_scale_create(lingot_config_dialog_t*, GtkBuilder*);
 
 // validate the information stored in the table
 int lingot_gui_config_dialog_scale_validate(const lingot_config_dialog_t* dialog,

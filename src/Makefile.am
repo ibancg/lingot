@@ -38,7 +38,11 @@ lingot_SOURCES = \
 	lingot-gui-mainframe.c\
 	lingot-gui-mainframe.h\
 	lingot-gui-mainframe.glade\
-	lingot-gauge.c\
+        lingot-gui-gauge.c\
+        lingot-gui-gauge.h\
+        lingot-gui-spectrum.c\
+        lingot-gui-spectrum.h\
+        lingot-gauge.c\
 	lingot-gauge.h\
 	lingot-filter.c\
 	lingot-filter.h\

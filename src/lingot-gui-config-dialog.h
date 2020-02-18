@@ -29,10 +29,14 @@
 
 #include "lingot-config.h"
 
-/* object forward declaration */
-typedef struct _lingot_main_frame_t lingot_main_frame_t;
+// callback when the config dialog is closed
+typedef void (*lingot_gui_config_dialog_callback_closed_t)(void* param);
 
-typedef struct {
+// callback when the config dialog changes the config
+typedef void (*lingot_gui_config_dialog_callback_config_changed_t)(lingot_config_t* config,
+                                                                   void* param);
+
+typedef struct _lingot_config_dialog_t {
 
     // widgets that contains configuration information.
     GtkComboBoxText* input_system;
@@ -63,12 +67,19 @@ typedef struct {
     lingot_config_t conf; // provisional configuration.
     lingot_config_t conf_old; // restoration point for cancel.
 
-    lingot_main_frame_t* mainframe;
-
     GtkWidget* win; // window
+
+    lingot_gui_config_dialog_callback_closed_t callback_closed;
+    lingot_gui_config_dialog_callback_config_changed_t callback_config_changed;
+    void* callback_param;
+
 } lingot_config_dialog_t;
 
+lingot_config_dialog_t *lingot_gui_config_dialog_create(lingot_config_t* config,
+                                                        lingot_config_t* old_config,
+                                                        lingot_gui_config_dialog_callback_closed_t callback_closed,
+                                                        lingot_gui_config_dialog_callback_config_changed_t callback_config_changed,
+                                                        void* callback_param);
 void lingot_gui_config_dialog_destroy(lingot_config_dialog_t*);
-void lingot_gui_config_dialog_show(lingot_main_frame_t* frame, lingot_config_t* config);
 
 #endif // LINGOT_GUI_CONFIG_DIALOG_H

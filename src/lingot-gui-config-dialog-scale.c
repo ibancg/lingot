@@ -323,8 +323,11 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 }
 
 void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
-        GtkTreeViewColumn *col, GtkCellRenderer *renderer, GtkTreeModel *model,
-        GtkTreeIter *iter, gpointer user_data) {
+        GtkTreeViewColumn *col,
+        GtkCellRenderer *renderer,
+        GtkTreeModel *model,
+        GtkTreeIter *iter,
+        gpointer user_data) {
     (void)col;              //  Unused parameter.
     gdouble freq;
     gchar buf[20];
@@ -665,7 +668,7 @@ gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
     return TRUE;
 }
 
-void lingot_gui_config_dialog_scale_show(lingot_config_dialog_t* dialog, GtkBuilder* builder) {
+void lingot_gui_config_dialog_scale_create(lingot_config_dialog_t* dialog, GtkBuilder* builder) {
 
     dialog->scale_name = GTK_ENTRY(gtk_builder_get_object(builder, "scale_name"));
     GtkWidget* scroll = GTK_WIDGET(gtk_builder_get_object(builder, "scrolledwindow1"));
