@@ -30,7 +30,9 @@
 extern "C" {
 #endif
 
-#include "../config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 // floating point precision.
 #define FLT                         double

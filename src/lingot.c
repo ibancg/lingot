@@ -31,6 +31,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "lingot-audio.h"
 #include "lingot-audio-oss.h"
 #include "lingot-audio-alsa.h"
