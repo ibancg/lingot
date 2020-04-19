@@ -36,17 +36,10 @@ EXTRA_DIST = \
 	$(lingotdoc_DATA) \
 	$(gnomemenu_DATA) \
 	$(appdata_DATA) \
-	build-aux/gitlog-to-changelog \
 	bootstrap
 
-dist-hook: gen-ChangeLog copy-SpecFiles
+dist-hook: copy-SpecFiles
 
-# Creates the ChangeLog from the git history. Extracted from GNU Hello
-.PHONY: gen-ChangeLog
-gen-ChangeLog:
-	chmod u+w ${distdir}/ChangeLog # to pass distcheck
-	$(top_srcdir)/build-aux/gitlog-to-changelog > $(distdir)/ChangeLog
-	
 # Copy all the spec files. Of course, only one is actually used.
 copy-SpecFiles:
 	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
