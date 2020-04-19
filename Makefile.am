@@ -26,61 +26,68 @@ AM_CFLAGS = -pthread -Wall -Wextra -pedantic
 
 bin_PROGRAMS = lingot
 
+lib_LTLIBRARIES = liblingot.la
+liblingot_la_SOURCES = \
+    src/lingot-audio-alsa.c \
+    src/lingot-audio-alsa.h \
+    src/lingot-audio-jack.c \
+    src/lingot-audio-jack.h \
+    src/lingot-audio-oss.c \
+    src/lingot-audio-oss.h \
+    src/lingot-audio-pulseaudio.c \
+    src/lingot-audio-pulseaudio.h \
+    src/lingot-audio.c \
+    src/lingot-audio.h \
+    src/lingot-complex.c \
+    src/lingot-complex.h \
+    src/lingot-config-scale.c \
+    src/lingot-config-scale.h \
+    src/lingot-config.c \
+    src/lingot-config.h \
+    src/lingot-core.c \
+    src/lingot-core.h \
+    src/lingot-defs.c \
+    src/lingot-defs.h \
+    src/lingot-fft.c \
+    src/lingot-fft.h \
+    src/lingot-filter.c \
+    src/lingot-filter.h \
+    src/lingot-gauge.c \
+    src/lingot-gauge.h \
+    src/lingot-i18n.h \
+    src/lingot-io-config-scale.c \
+    src/lingot-io-config-scale.h \
+    src/lingot-io-config.c \
+    src/lingot-io-config.h \
+    src/lingot-msg.c \
+    src/lingot-msg.h \
+    src/lingot-signal.c \
+    src/lingot-signal.h
+
+liblingot_la_CPPFLAGS = \
+  $(ALSA_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
+liblingot_la_LDFLAGS = -version-info 0:0:0 $(ALSA_LIBS) $(JACK_LIBS) $(LIBFFTW_LIBS) $(OSS_LIBS) $(PULSEAUDIO_LIBS)
+
 lingot_SOURCES = \
-  src/lingot-audio-alsa.c \
-  src/lingot-audio-alsa.h \
-  src/lingot-audio-jack.c \
-  src/lingot-audio-jack.h \
-  src/lingot-audio-oss.c \
-  src/lingot-audio-oss.h \
-  src/lingot-audio-pulseaudio.c \
-  src/lingot-audio-pulseaudio.h \
-  src/lingot-audio.c \
-  src/lingot-audio.h \
-  src/lingot-complex.c \
-  src/lingot-complex.h \
-  src/lingot-config-scale.c \
-  src/lingot-config-scale.h \
-  src/lingot-config.c \
-  src/lingot-config.h \
-  src/lingot-core.c \
-  src/lingot-core.h \
-  src/lingot-defs.c \
-  src/lingot-defs.h \
-  src/lingot-fft.c \
-  src/lingot-fft.h \
-  src/lingot-filter.c \
-  src/lingot-filter.h \
-  src/lingot-gauge.c \
-  src/lingot-gauge.h \
-  src/lingot-gui-config-dialog-scale.c \
-  src/lingot-gui-config-dialog-scale.h \
-  src/lingot-gui-config-dialog.c \
-  src/lingot-gui-config-dialog.glade \
-  src/lingot-gui-config-dialog.h \
-  src/lingot-gui-gauge.c \
-  src/lingot-gui-gauge.h \
-  src/lingot-gui-mainframe.c \
-  src/lingot-gui-mainframe.glade \
-  src/lingot-gui-mainframe.h \
-  src/lingot-gui-spectrum.c \
-  src/lingot-gui-spectrum.h \
-  src/lingot-i18n.h \
-  src/lingot-io-config-scale.c \
-  src/lingot-io-config-scale.h \
-  src/lingot-io-config.c \
-  src/lingot-io-config.h \
-  src/lingot-msg.c \
-  src/lingot-msg.h \
-  src/lingot-signal.c \
-  src/lingot-signal.h \
-  src/lingot.c \
-  src/lingot.gresource.xml
+    src/lingot-gui-config-dialog-scale.c \
+    src/lingot-gui-config-dialog-scale.h \
+    src/lingot-gui-config-dialog.c \
+    src/lingot-gui-config-dialog.glade \
+    src/lingot-gui-config-dialog.h \
+    src/lingot-gui-gauge.c \
+    src/lingot-gui-gauge.h \
+    src/lingot-gui-mainframe.c \
+    src/lingot-gui-mainframe.glade \
+    src/lingot-gui-mainframe.h \
+    src/lingot-gui-spectrum.c \
+    src/lingot-gui-spectrum.h \
+    src/lingot.c \
+    src/lingot.gresource.xml
 
 lingot_CPPFLAGS = \
-  $(ALSA_CFLAGS) $(GTK_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
+  $(GTK_CFLAGS)
 lingot_LDADD = \
-  $(ALSA_LIBS)   $(GTK_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_LIBS)   $(PULSEAUDIO_LIBS)
+  $(GTK_LIBS) ${lib_LTLIBRARIES}
 
 ######################################################################
 # 9 other derived objects
