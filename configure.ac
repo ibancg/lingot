@@ -1,17 +1,22 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Lingot], [1.0.2b])
+AC_INIT([Lingot],
+        [1.0.2b],
+        [Iban Cereijo <ibancg@gmail.com>],
+        [],
+        [http://lingot.nongnu.org])
+dnl useful for autoscan
+AC_PREREQ([2.69])
+AC_CONFIG_SRCDIR([src/lingot.c])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE
-AC_CONFIG_HEADERS([config.h])
-AM_MAINTAINER_MODE
-LT_INIT
 
-AC_ISC_POSIX
+AM_INIT_AUTOMAKE([-Wall])
+
+AC_CONFIG_HEADERS([config.h])
+
+AM_PROG_AR
 AC_PROG_CC
 AC_PROG_CC_STDC
-AC_HEADER_STDC
-
 AC_PROG_INTLTOOL([0.23])
 AC_PROG_MKDIR_P
 
@@ -27,9 +32,12 @@ AM_GNU_GETTEXT_VERSION([0.17])
 AC_DEFINE_UNQUOTED([LOCALEDIR], ["$localedir"],
   [directory where translations are installed])
 
+LT_INIT
 AC_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
+
+dnl This list can be checked with autoscan
 AC_CHECK_HEADERS([langinfo.h])
 AC_CHECK_HEADERS([libintl.h])
 AC_CHECK_HEADERS([locale.h])
@@ -38,7 +46,6 @@ AC_CHECK_FUNCS([floor])
 AC_CHECK_FUNCS([gettimeofday])
 AC_CHECK_FUNCS([memmove])
 AC_CHECK_FUNCS([memset])
-AC_CHECK_FUNCS([mkdir])
 AC_CHECK_FUNCS([pow])
 AC_CHECK_FUNCS([rint])
 AC_CHECK_FUNCS([setlocale])
@@ -47,12 +54,12 @@ AC_CHECK_FUNCS([strchr])
 AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([strerror])
 AC_CHECK_FUNCS([strrchr])
-AC_CHECK_FUNCS([strcasecmp])
 AC_FUNC_MALLOC
+AC_FUNC_STRTOD
+AC_TYPE_INT16_T
+AC_TYPE_SIZE_T
 
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
 
 AC_ARG_ENABLE(
   oss,
