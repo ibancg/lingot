@@ -105,6 +105,8 @@ dist_doc_DATA = \
   ChangeLog \
   NEWS \
   README \
+  README.config \
+  README.md \
   THANKS
 
 iconsdir = $(datadir)/icons/hicolor/scalable/apps
