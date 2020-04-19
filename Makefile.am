@@ -118,16 +118,16 @@ dist_gnomemenu_DATA = org.nongnu.lingot.desktop
 appdatadir = $(datadir)/metainfo
 dist_appdata_DATA = org.nongnu.lingot.appdata.xml
 
-check_datadir =
-dist_check_data_DATA = \
-  test/resources/lingot-001.conf \
-  test/resources/lingot-0_9_2b8.conf \
-  test/resources/lingot-1_0_2b.conf
-
 ######################################################################
 # 14 what goes in a distribution
 
-EXTRA_DIST = bootstrap
+# bootstrap and tests require additional dependencies but may be
+# useful to users of the tarball
+EXTRA_DIST = \
+  bootstrap \
+  test/resources/lingot-001.conf \
+  test/resources/lingot-0_9_2b8.conf \
+  test/resources/lingot-1_0_2b.conf
 
 ######################################################################
 # 15 support for test suites
