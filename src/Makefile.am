@@ -1,7 +1,3 @@
-AM_CFLAGS = \
-         -Wall -Wextra -pedantic \
-	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS)
-
 bin_PROGRAMS = lingot
 
 lingot_SOURCES = \
@@ -59,13 +55,17 @@ nodist_lingot_SOURCES = lingot-resources.c
 BUILT_SOURCES = lingot-resources.c
 
 CLEANFILES = lingot-resources.c
-		
+
 lingot-resources.c: lingot.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) ${srcdir}/lingot.gresource.xml --target=$@ --sourcedir=${srcdir} --generate-source
-        
-lingot_LDFLAGS =
 
-lingot_LDADD =  \
-	$(PACKAGE_LIBS) $(GTK_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(PULSEAUDIO_LIBS) $(GLADE_LIBS) $(LIBFFTW_LIBS) \
-	 -lpthread
-
+# The -pthread compiler and linker option links with libpthread, but
+# also selects various architecture-dependent settings.
+lingot_LDFLAGS = \
+  -pthread
+lingot_CFLAGS = \
+  -pthread \
+  -Wall -Wextra -pedantic \
+  $(ALSA_CFLAGS) $(GTK_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
+lingot_LDADD = \
+  $(ALSA_LIBS)   $(GTK_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_CFLAGS) $(PULSEAUDIO_LIBS)

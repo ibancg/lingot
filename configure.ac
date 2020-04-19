@@ -61,97 +61,67 @@ AC_TYPE_SIZE_T
 
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
 
-AC_ARG_ENABLE(
-  oss,
-  AC_HELP_STRING([--enable-oss], [use OSS @<:@default=yes@:>@]),
-  [], [enable_oss=yes])
+AC_ARG_WITH([alsa],
+  [AS_HELP_STRING([--with-alsa], [enable ALSA sound @<:@default=check@:>@])],
+  [], [with_alsa=check])
+AS_IF([test "x$with_alsa" != xno],
+  [PKG_CHECK_MODULES([ALSA], [alsa],
+    [AC_DEFINE([ALSA], [1], [Define to enable ALSA sound])],
+    [if test "x$with_alsa" != xcheck; then
+      AC_MSG_FAILURE([--with-alsa was given, but pkg-config does not find libalsa])
+     fi])])
 
-AM_CONDITIONAL([OSS], [test "x$enable_oss" = "xyes"])
-AM_COND_IF([OSS],
-    [AC_DEFINE(OSS, 1, [Define to 0 for Something else])],[])
+AC_ARG_WITH([cunit],
+  [AS_HELP_STRING([--with-cunit], [enable CUnit tests @<:@default=check@:>@])],
+  [], [with_cunit=check])
+AS_IF([test "x$with_cunit" != xno],
+  [PKG_CHECK_MODULES([CUNIT], [cunit],
+    [cunit_found=true],
+    [if test "x$with_cunit" != xcheck; then
+      AC_MSG_FAILURE([--with-cunit was given, but pkg-config does not find libcunit])
+     fi])])
+AM_CONDITIONAL([CUNIT], [test "x$cunit_found" = xtrue])
 
-if test "x$enable_oss" = "xyes"; then
-	AC_CHECK_HEADERS([fcntl.h])
-	AC_CHECK_HEADERS([sys/ioctl.h])
-	AC_SUBST(OSS_CFLAGS)
-	AC_SUBST(OSS_LIBS)
-        CFLAGS="$CFLAGS -DOSS"
-fi
+AC_ARG_WITH([fftw],
+  [AS_HELP_STRING([--with-fftw], [enable fftw Fourier transform @<:@default=check@:>@])],
+  [], [with_fftw=check])
+AS_IF([test "x$with_fftw" != xno],
+  [PKG_CHECK_MODULES([LIBFFTW], [fftw3 >= 3.2.2 fftw3f >= 3.2.2],
+    [AC_DEFINE([LIBFFTW], [1], [Define to enable fftw Fourier transform])],
+    [if test "x$with_fftw" != xcheck; then
+       AC_MSG_FAILURE([--with-fftw was given, but pkg-config does not find libfftw3 or libfftw3f])
+     else
+       AC_MSG_WARN([No libfftw was found : FFT will be slower])
+     fi])])
 
-AC_ARG_ENABLE(
-  alsa,
-  AC_HELP_STRING([--enable-alsa], [use ALSA @<:@default=yes@:>@]),
-  [], [enable_alsa=yes])
+AC_ARG_WITH([jack],
+  [AS_HELP_STRING([--with-jack], [enable JACK sound @<:@default=check@:>@])],
+  [], [with_jack=check])
+AS_IF([test "x$with_jack" != xno],
+  [PKG_CHECK_MODULES([JACK],
+    [jack >= 0.117.0],
+    [AC_DEFINE([JACK], [1], [Define to enable JACK sound])],
+    [if test "x$with_jack" != xcheck; then
+      AC_MSG_FAILURE([--with-jack was given, but pkg-config does not find libjack])
+     fi])])
 
-AM_CONDITIONAL([ALSA], [test "x$enable_alsa" = "xyes"])
-AM_COND_IF([ALSA],
-    [AC_DEFINE(ALSA, 1, [Define to 0 for Something else])],[])
+AC_ARG_WITH([oss],
+  [AS_HELP_STRING([--with-oss], [enable OSS sound @<:@default=check@:>@])],
+  [], [with_oss=yes])
+AS_IF([test "x$with_oss" != xno],
+  [AC_DEFINE([OSS], [1], [Define to enable OSS sound])
+   AC_CHECK_HEADERS([fcntl.h])
+   AC_CHECK_HEADERS([sys/ioctl.h])])
 
-if test "x$enable_alsa" = "xyes"; then
-	PKG_CHECK_MODULES([ALSA], [alsa])
-	AC_SUBST(ALSA_CFLAGS)
-	AC_SUBST(ALSA_LIBS)
-        CFLAGS="$CFLAGS -DALSA"
-fi
-
-AC_ARG_ENABLE(
-  jack,
-  AC_HELP_STRING([--enable-jack], [use JACK @<:@default=yes@:>@]),
-  [], [enable_jack=yes])
-
-AM_CONDITIONAL(JACK, test "x$enable_jack" = "xyes")
-
-if test "x$enable_jack" = "xyes"; then
-        PKG_CHECK_MODULES(JACK, jack >= 0.117.0)
-	AC_SUBST(JACK_CFLAGS)
-	AC_SUBST(JACK_LIBS)
-        CFLAGS="$CFLAGS -DJACK"
-fi
-
-AC_ARG_ENABLE(
-  pulseaudio,
-  AC_HELP_STRING([--enable-pulseaudio], [use PulseAudio @<:@default=yes@:>@]),
-  [], [enable_pulseaudio=yes])
-
-AM_CONDITIONAL(PULSEAUDIO, test "x$enable_pulseaudio" = "xyes")
-AM_COND_IF([PULSEAUDIO],
-    [AC_DEFINE(PULSEAUDIO, 1, [Define to 0 for Something else])],[])
-
-if test "x$enable_pulseaudio" = "xyes"; then
- 	PKG_CHECK_MODULES(PULSEAUDIO, libpulse-simple >= 0.9.10)
-	AC_SUBST(PULSEAUDIO_CFLAGS)
-	AC_SUBST(PULSEAUDIO_LIBS)
-        CFLAGS="$CFLAGS -DPULSEAUDIO"
-fi
-
-uselibfftw=yes
-fftw_found=no
-
-AC_ARG_ENABLE(
-  libfftw,
-  AC_HELP_STRING([--enable-libfftw], [use libfftw @<:@default=yes@:>@]),
-  [
-    if test "x$enableval" = "xno"; then
-      uselibfftw=no
-    fi
-  ])
-
-dnl AM_CONDITIONAL(HAVE_LIBFFTW, test "x$uselibfftw" = "xyes")
-
-if test "x$uselibfftw" = "xyes"; then
- PKG_CHECK_MODULES([LIBFFTW],
-                    [fftw3 >= 3.2.2
-                    fftw3f >= 3.2.2],
-                    [fftw_found=yes],
-                    [fftw_found=no])
- if test "x$fftw_found" = xyes ; then
-	AC_SUBST([LIBFFTW_CFLAGS])
-	AC_SUBST([LIBFFTW_LIBS])
-	CFLAGS="$CFLAGS -DLIBFFTW"
- else
-  AC_MSG_WARN([ No libfftw was found : FFT will be slower ])
- fi
-fi
+AC_ARG_WITH([pulseaudio],
+  [AS_HELP_STRING([--with-pulseaudio], [enable PulseAudio sound @<:@default=check@:>@])],
+  [], [with_pulseaudio=check])
+AS_IF([test "x$with_pulseaudio" != xno],
+  [PKG_CHECK_MODULES([PULSEAUDIO], [libpulse-simple >= 0.9.10],
+    [AC_DEFINE([PULSEAUDIO], [1], [Define to enable PulseAudio sound])],
+    [if test "x$with_pulseaudio" != xcheck; then
+       AC_MSG_FAILURE([--with-pulseaudio was given, but pkg-config does not find libpulse-simple])
+     fi])])
 
 AC_CONFIG_FILES([
 Makefile

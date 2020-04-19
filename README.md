@@ -42,20 +42,14 @@ create the _configure_ script, by calling:
 ./bootstrap
 ```
 
-You can enable/disable the supported audio systems with the following options passed to the
-_configure_ script, all of them enabled by default:
+The supported audio systems (alsa, oss, jack, pulseaudio) and the Fast
+Fourier Transform [libfftw](http://fftw.org) library can be
+enabled/disabled independently via options passed to the _configure_
+script.
+The following command displays all options and defaut value.
+```console
+./configure --help
 
-```
-  --enable-oss=<yes|no>
-  --enable-alsa=<yes|no>
-  --enable-jack=<yes|no>
-  --enable-pulseaudio=<yes|no>
-```
-
-Also, the depedency to [libfftw](http://fftw.org) can be enabled/disabled with
-
-```
-  --enable-libfftw=<yes|no>
 ```
 
 Below a summary of the packages needed to build a development version on _Debian-based_ systems:
