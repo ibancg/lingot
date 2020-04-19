@@ -14,7 +14,6 @@ AM_INIT_AUTOMAKE([-Wall subdir-objects])
 
 AC_CONFIG_HEADERS([config.h])
 
-AM_PROG_AR
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_INTLTOOL([0.23])
@@ -31,9 +30,6 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.17])
 AC_DEFINE_UNQUOTED([LOCALEDIR], ["$localedir"],
   [directory where translations are installed])
-
-LT_INIT
-AC_PROG_LIBTOOL
 
 AC_CHECK_LIB(m, sin)
 
