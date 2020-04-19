@@ -89,7 +89,6 @@ nodist_lingot_SOURCES = src/lingot-resources.c
 BUILT_SOURCES = src/lingot-resources.c
 src/lingot-resources.c: src/lingot.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) $< --target=$@ --sourcedir=$(srcdir)/src --generate-source
-CLEANFILES = $(BUILT_SOURCES)
 
 ######################################################################
 # 11 building documentation
@@ -117,6 +116,21 @@ dist_gnomemenu_DATA = org.nongnu.lingot.desktop
 
 appdatadir = $(datadir)/metainfo
 dist_appdata_DATA = org.nongnu.lingot.appdata.xml
+
+######################################################################
+# 13 what gets cleaned
+
+CLEANFILES = $(BUILT_SOURCES)
+
+MAINTAINERCLEANFILES = \
+  ABOUT-NLS \
+  config.rpath \
+  m4/* \
+  po/*.header \
+  po/*.sed \
+  po/*.sin \
+  po/Makevars.template \
+  po/Rules-quot
 
 ######################################################################
 # 14 what goes in a distribution
