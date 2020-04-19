@@ -1,10 +1,11 @@
-es
-gl
+# Set of available languages.
 ca
-de
-sv
 cs
-pt_BR
-it
-zh_CN
+de
+es
 fr
+gl
+it
+pt_BR
+sv
+zh_CN
