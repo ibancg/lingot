@@ -38,14 +38,6 @@ EXTRA_DIST = \
 	$(appdata_DATA) \
 	bootstrap
 
-dist-hook: copy-SpecFiles
-
-# Copy all the spec files. Of course, only one is actually used.
-copy-SpecFiles:
+dist-hook:
 	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
 	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
-	for specfile in *.spec; do \
-		if test -f $$specfile; then \
-			cp -p $$specfile $(distdir); \
-		fi \
-	done
