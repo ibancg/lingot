@@ -36,7 +36,9 @@ If you are building a release, just type:
  > ./configure
  > make install
 
-If you are building a development version obtained from our VCS you will need to
+If you are building a development version obtained from our VCS at
+https://git.savannah.nongnu.org/cgit/lingot.git
+you will need to
 create the configure script first by calling:
 
  > ./bootstrap
