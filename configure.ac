@@ -18,13 +18,12 @@ AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources])
 PKG_PROG_PKG_CONFIG([0.22])
 GLIB_GSETTINGS
 
-GETTEXT_PACKAGE=lingot
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [lingot])
-
 dnl Languages which your application supports
 ALL_LINGUAS="ca cs de es gl it pt_BR sv zh_CN fr"
 AM_GLIB_GNU_GETTEXT
+
+AC_DEFINE_UNQUOTED([LOCALEDIR], ["$localedir"],
+  [directory where translations are installed])
 
 AC_PROG_LIBTOOL
 

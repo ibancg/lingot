@@ -1,7 +1,6 @@
 AM_CFLAGS = \
          -Wall -Wextra -pedantic \
-	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS) \
-	-DLINGOT_LOCALEDIR=\""$(datadir)/locale"\"
+	$(PACKAGE_CFLAGS) $(GTK_CFLAGS) $(ALSA_CFLAGS) $(JACK_CFLAGS)
 
 bin_PROGRAMS = lingot
 
