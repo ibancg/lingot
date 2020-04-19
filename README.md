@@ -62,14 +62,15 @@ Below a summary of the packages needed to build a development version on _Debian
 
 ```console
 sudo apt-get install \
-    libtool \
     intltool \
     libasound2-dev \
-    libpulse-dev \
-    libjack-jackd2-dev \
+    libcunit1-dev \
     libfftw3-dev \
     libgtk-3-dev \
-    libcunit1-dev
+    libjack-jackd2-dev \
+    libpulse-dev \
+    libtool \
+    pkg-config
 ```
 
 ## Resources
