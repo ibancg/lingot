@@ -13,17 +13,6 @@ lingotdoc_DATA = \
 	NEWS \
 	THANKS
 
-DISTCLEANFILES = \
-	intltool-extract.in \
-	intltool-extract \
-	intltool-merge.in \
-	intltool-merge \
-	intltool-update.in \
-	intltool-update \
-	intl/* \
-	m4/* \
-	po/Makefile.in.in
-
 gnomemenudir = $(datadir)/applications
 gnomemenu_DATA = org.nongnu.lingot.desktop
 appdatadir = $(datadir)/metainfo
@@ -37,7 +26,3 @@ EXTRA_DIST = \
 	$(gnomemenu_DATA) \
 	$(appdata_DATA) \
 	bootstrap
-
-dist-hook:
-	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
-	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"

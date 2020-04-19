@@ -13,15 +13,17 @@ AC_PROG_CC_STDC
 AC_HEADER_STDC
 
 AC_PROG_INTLTOOL([0.23])
+AC_PROG_MKDIR_P
 
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources])
 PKG_PROG_PKG_CONFIG([0.22])
 GLIB_GSETTINGS
 
-dnl Languages which your application supports
-ALL_LINGUAS="ca cs de es gl it pt_BR sv zh_CN fr"
-AM_GLIB_GNU_GETTEXT
-
+dnl Switching to autopoint causes a warning about AC_PROG_MKDIR_P
+dnl being preferred.  I do not know why, but at least the culprint is
+dnl not configure.ac.
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.17])
 AC_DEFINE_UNQUOTED([LOCALEDIR], ["$localedir"],
   [directory where translations are installed])
 
@@ -30,6 +32,7 @@ AC_PROG_LIBTOOL
 AC_CHECK_LIB(m, sin)
 AC_CHECK_HEADERS([langinfo.h])
 AC_CHECK_HEADERS([libintl.h])
+AC_CHECK_HEADERS([locale.h])
 AC_CHECK_HEADERS([sys/time.h])
 AC_CHECK_FUNCS([floor])
 AC_CHECK_FUNCS([gettimeofday])
