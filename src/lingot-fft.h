@@ -29,6 +29,10 @@
  Fourier transforms.
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #ifdef LIBFFTW
 # include <fftw3.h>
 #endif

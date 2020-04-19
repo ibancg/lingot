@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 void lingot_test_io_config(void);
 void lingot_test_config_scale(void);
 void lingot_test_signal(void);
