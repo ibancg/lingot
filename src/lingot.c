@@ -31,6 +31,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "lingot-audio.h"
 #include "lingot-audio-oss.h"
 #include "lingot-audio-alsa.h"
@@ -45,9 +48,9 @@
 int main(int argc, char *argv[]) {
 
 #ifdef ENABLE_NLS
-    bindtextdomain(GETTEXT_PACKAGE, LINGOT_LOCALEDIR);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+    textdomain(PACKAGE);
 #endif
 
     // default config file.
