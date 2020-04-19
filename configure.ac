@@ -10,7 +10,7 @@ AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/lingot.c])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([-Wall])
+AM_INIT_AUTOMAKE([-Wall subdir-objects])
 
 AC_CONFIG_HEADERS([config.h])
 
@@ -126,8 +126,5 @@ AS_IF([test "x$with_pulseaudio" != xno],
 AC_CONFIG_FILES([
 Makefile
 po/Makefile.in
-src/Makefile
-icons/Makefile
-test/Makefile
 ])
 AC_OUTPUT
