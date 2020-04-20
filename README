@@ -26,7 +26,6 @@ Requirements
 * Sound card.
 * Linux kernel with audio support (OSS, ALSA, JACK or PulseAudio).
 * GTK+ library, version 3.10.
-    
 
 Installation
 ============
@@ -50,22 +49,10 @@ Lingot supports the following audio systems/servers:
   ALSA
   JACK
   PulseAudio
-  
-You can enable/disable each of them with the following options passed to the
-configure script, all of them enabled by default:
 
-  --enable-oss=<yes|no>
-  --enable-alsa=<yes|no>
-  --enable-jack=<yes|no>
-  --enable-pulseaudio=<yes|no>
+You can enable/disable each of them with options passed to the
+configure script. Please see README.md and the INSTALL file.
 
-Also, the depedency to libfftw can be enabled/disabled with
-
-  --enable-libfftw=<yes|no>
-
-Please, see the INSTALL file.
-    
-    
 Synopsis
 ========
 
@@ -80,4 +67,3 @@ will take the configuration file ~/.config/lingot/bass.conf. This is useful for
 maintaining different configurations for different instruments. It's also
 possible to load and save configuration files from the GUI. The default
 configuration file is ~/.config/lingot/lingot.conf.
-

@@ -64,6 +64,7 @@ sudo apt-get install \
     libjack-jackd2-dev \
     libpulse-dev \
     libtool \
+    libxml2-utils \
     pkg-config
 ```
 
