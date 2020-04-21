@@ -68,6 +68,9 @@ pkginclude_HEADERS = \
 
 nodist_lingot_SOURCES = src/lingot-resources.c
 
+src/lingot-resources.c: src/lingot.gresource.xml
+	$(GLIB_COMPILE_RESOURCES) $< --target=$@ --sourcedir=$(srcdir)/src --generate-source
+
 # libtool 7.3 updating library version information
 # Downstream packagers may have to override the SO version.
 lingot_shared_object_version = 0:0:0
@@ -109,34 +112,6 @@ lingot_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(GTK_CFLAGS)
 lingot_LDADD  =              $(liblingot_rdep_libs)   $(GTK_LIBS)
 
 ######################################################################
-# 9 other derived objects
-
-BUILT_SOURCES = \
-  src/lingot-resources.c \
-  lingot.pc
-
-src/lingot-resources.c: src/lingot.gresource.xml
-	$(GLIB_COMPILE_RESOURCES) $< --target=$@ --sourcedir=$(srcdir)/src --generate-source
-
-# autoconf 4.8.2 Installation Directory Variables
-# Substituting from here instead of from configure.ac ensures that the
-# user can override prefix on the Make command line.
-edit = sed \
-  -e 's|@PACKAGE_URL[@]|$(PACKAGE_URL)|g' \
-  -e 's|@PACKAGE_VERSION[@]|$(PACKAGE_VERSION)|g' \
-  -e 's|@OSS_CFLAGS[@]|$(OSS_CFLAGS)|g' \
-  -e 's|@pkgincludedir[@]|$(pkgincludedir)|g' \
-  -e 's|@libdir[@]|$(libdir)|g' \
-  -e 's|@OSS_LIBS[@]|$(OSS_LIBS)|g'
-lingot.pc: Makefile
-	rm -f $@ $@.tmp
-	srcdir=''; \
-	  test -f ./$@.in || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.in >$@.tmp
-	mv $@.tmp $@
-lingot.pc: $(srcdir)/lingot.pc.in
-
-######################################################################
 # 11 building documentation
 
 dist_man_MANS = lingot.1
@@ -167,10 +142,30 @@ dist_appdata_DATA = org.nongnu.lingot.appdata.xml
 pkgexecconfigdir = $(libdir)/pkgconfig
 pkgexecconfig_DATA = lingot.pc
 
+# autoconf 4.8.2 Installation Directory Variables
+# Substituting from here instead of from configure.ac ensures that the
+# user can override prefix on the Make command line.
+edit = sed \
+  -e 's|@PACKAGE_URL[@]|$(PACKAGE_URL)|g' \
+  -e 's|@PACKAGE_VERSION[@]|$(PACKAGE_VERSION)|g' \
+  -e 's|@OSS_CFLAGS[@]|$(OSS_CFLAGS)|g' \
+  -e 's|@pkgincludedir[@]|$(pkgincludedir)|g' \
+  -e 's|@libdir[@]|$(libdir)|g' \
+  -e 's|@OSS_LIBS[@]|$(OSS_LIBS)|g'
+lingot.pc: Makefile
+	rm -f $@ $@.tmp
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@
+lingot.pc: $(srcdir)/lingot.pc.in
+
 ######################################################################
 # 13 what gets cleaned
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = \
+  lingot.pc \
+  src/lingot-resources.c
 
 MAINTAINERCLEANFILES = \
   ABOUT-NLS \
