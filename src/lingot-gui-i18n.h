@@ -22,8 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_I18N_H
-#define LINGOT_I18N_H
+#ifndef LINGOT_GUI_I18N_H
+#define LINGOT_GUI_I18N_H
+
+// TODO: separate messages from lib and UI?
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -43,4 +45,4 @@
 #    define _(String) (String)
 #endif
 
-#endif /*LINGOT_I18N_H*/
+#endif /*LINGOT_GUI_I18N_H*/

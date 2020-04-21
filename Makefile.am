@@ -34,17 +34,23 @@ liblingot_la_SOURCES = \
     src/lingot-audio-pulseaudio.c \
     src/lingot-audio.c \
     src/lingot-complex.c \
+    src/lingot-complex.h \
     src/lingot-config-scale.c \
     src/lingot-config.c \
     src/lingot-core.c \
     src/lingot-defs.c \
+    src/lingot-defs.h \
     src/lingot-fft.c \
+    src/lingot-fft.h \
     src/lingot-filter.c \
     src/lingot-gauge.c \
+    src/lingot-gauge.h \
+    src/lingot-i18n.h \
     src/lingot-io-config-scale.c \
     src/lingot-io-config.c \
     src/lingot-msg.c \
-    src/lingot-signal.c
+    src/lingot-signal.c \
+    src/lingot-signal.h
 
 pkginclude_HEADERS = \
     src/lingot-audio-alsa.h \
@@ -52,21 +58,13 @@ pkginclude_HEADERS = \
     src/lingot-audio-oss.h \
     src/lingot-audio-pulseaudio.h \
     src/lingot-audio.h \
-    src/lingot-complex.h \
     src/lingot-config-scale.h \
     src/lingot-config.h \
     src/lingot-core.h \
-    src/lingot-defs.h \
-    src/lingot-fft.h \
     src/lingot-filter.h \
-    src/lingot-gauge.h \
-    src/lingot-i18n.h \
     src/lingot-io-config-scale.h \
     src/lingot-io-config.h \
-    src/lingot-msg.h \
-    src/lingot-signal.h
-
-nodist_lingot_SOURCES = src/lingot-resources.c
+    src/lingot-msg.h
 
 src/lingot-resources.c: src/lingot.gresource.xml
 	$(GLIB_COMPILE_RESOURCES) $< --target=$@ --sourcedir=$(srcdir)/src --generate-source
@@ -100,6 +98,7 @@ lingot_SOURCES = \
     src/lingot-gui-config-dialog.h \
     src/lingot-gui-gauge.c \
     src/lingot-gui-gauge.h \
+    src/lingot-gui-i18n.h \
     src/lingot-gui-mainframe.c \
     src/lingot-gui-mainframe.glade \
     src/lingot-gui-mainframe.h \
@@ -107,6 +106,8 @@ lingot_SOURCES = \
     src/lingot-gui-spectrum.h \
     src/lingot.c \
     src/lingot.gresource.xml
+
+nodist_lingot_SOURCES = src/lingot-resources.c
 
 lingot_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(GTK_CFLAGS)
 lingot_LDADD  =              $(liblingot_rdep_libs)   $(GTK_LIBS)

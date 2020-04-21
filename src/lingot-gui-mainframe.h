@@ -27,10 +27,12 @@
 
 #include "lingot-defs.h"
 #include "lingot-core.h"
-#include "lingot-gauge.h"
 #include "lingot-config.h"
 #include "lingot-filter.h"
 #include "lingot-gui-config-dialog.h"
+
+// TODO: internal from liblingot
+#include "lingot-gauge.h"
 
 #include <gtk/gtk.h>
 
@@ -51,7 +53,6 @@ typedef struct _lingot_main_frame_t {
     GtkWidget* labelsbox;
 
     lingot_filter_t freq_filter;
-
     lingot_gauge_t gauge;
 
     lingot_core_t core;

@@ -36,8 +36,7 @@
 #include "lingot-gui-gauge.h"
 #include "lingot-gui-spectrum.h"
 #include "lingot-gui-config-dialog.h"
-#include "lingot-gauge.h"
-#include "lingot-i18n.h"
+#include "lingot-gui-i18n.h"
 #include "lingot-io-config.h"
 #include "lingot-msg.h"
 

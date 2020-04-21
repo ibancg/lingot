@@ -30,10 +30,6 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 // floating point precision.
 #define FLT                         double
 
@@ -42,24 +38,21 @@ extern "C" {
 
 extern char CONFIG_FILE_NAME[200];
 
-#define QUICK_MESSAGES
-
-#define GTK_EVENTS_RATE      20.0
 #define GAUGE_RATE           60.0
 #define ERROR_DISPATCH_RATE	 5.0
 
 #define MID_A_FREQUENCY		440.0
 #define MID_C_FREQUENCY		261.625565
 
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
+#endif
+
 // simple try-catch simulation, do not use throw inside loops nor nest try-catch
 // blocks
 #define _try _exception = 0; do
 #define _throw(a) { _exception = a;break; }
 #define _catch while (0); if (_exception != 0)
-
-#ifndef M_PI
-#    define M_PI 3.14159265358979323846
-#endif
 
 // This alternative allows us to throw exception from loops, it contains a goto
 // statement, but totally controlled. It fails when trying to indent code.

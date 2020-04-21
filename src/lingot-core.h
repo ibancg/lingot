@@ -31,7 +31,6 @@
 extern "C" {
 #endif
 
-#include "lingot-defs.h"
 #include "lingot-config.h"
 
 typedef struct {
@@ -64,11 +63,11 @@ void lingot_core_thread_stop(lingot_core_t*);
 int lingot_core_thread_is_running(const lingot_core_t*);
 
 // Thread-safe request to the latest computed frequency
-FLT lingot_core_thread_get_result_frequency(lingot_core_t*);
+double lingot_core_thread_get_result_frequency(lingot_core_t*);
 
 // Thread-safe access to the latest computed spectrum. The SPD is copied into
 // an internal secondary buffer that can be accessed afterwards from the calling thread
-FLT* lingot_core_thread_get_result_spd(lingot_core_t*);
+double* lingot_core_thread_get_result_spd(lingot_core_t*);
 
 #ifdef __cplusplus
 }
