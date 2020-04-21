@@ -163,8 +163,9 @@ dist_gnomemenu_DATA = org.nongnu.lingot.desktop
 appdatadir = $(datadir)/metainfo
 dist_appdata_DATA = org.nongnu.lingot.appdata.xml
 
-pkg_configdir = $(libdir)/pkgconfig
-pkg_config_DATA = lingot.pc
+# Install to architecture-dependent directory. Do not distribute.
+pkgexecconfigdir = $(libdir)/pkgconfig
+pkgexecconfig_DATA = lingot.pc
 
 ######################################################################
 # 13 what gets cleaned
