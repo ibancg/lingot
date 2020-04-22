@@ -58,7 +58,7 @@ need to create the _configure_ script, by calling:
 
 The supported audio systems (alsa, oss, jack, pulseaudio) and the Fast Fourier
 Transform [libfftw](http://fftw.org) library can be enabled/disabled
-independently via options passed to the _configure_script. The following
+independently via options passed to the `configure` script. The following
 command displays all options and defaut value.
 
 ```console
