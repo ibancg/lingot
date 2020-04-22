@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/ibancg/lingot.svg?branch=master)](https://travis-ci.com/ibancg/lingot)
 
-LINGOT - A musical instrument tuner.
-====================================
+LINGOT - A musical instrument tuner
+===================================
 
 <img align="right" src="http://lingot.nongnu.org/images/lingot-black-main.png">
 
@@ -60,9 +60,9 @@ The supported audio systems (alsa, oss, jack, pulseaudio) and the Fast Fourier
 Transform [libfftw](http://fftw.org) library can be enabled/disabled
 independently via options passed to the _configure_script. The following
 command displays all options and defaut value.
+
 ```console
 ./configure --help
-
 ```
 
 Below a summary of the packages needed to build a development version on _Debian-based_ systems:
