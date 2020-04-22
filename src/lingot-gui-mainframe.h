@@ -31,9 +31,6 @@
 #include "lingot-filter.h"
 #include "lingot-gui-config-dialog.h"
 
-// TODO: internal from liblingot
-#include "lingot-gauge.h"
-
 #include <gtk/gtk.h>
 
 // Window that contains all controls, graphics, etc. of the tuner.

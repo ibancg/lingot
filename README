@@ -38,6 +38,7 @@ Requirements
   [OSS](http://www.opensound.com/oss.html) or 
   [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) support.   
 * [GTK+](https://www.gtk.org/) library, version _3.10_ or above.
+
 Installation
 ------------
 
@@ -54,13 +55,16 @@ need to create the _configure_ script, by calling:
 ```console
 ./bootstrap
 ```
+
 The supported audio systems (alsa, oss, jack, pulseaudio) and the Fast Fourier
 Transform [libfftw](http://fftw.org) library can be enabled/disabled
 independently via options passed to the `configure` script. The following
 command displays all options and defaut value.
+
 ```console
 ./configure --help
 ```
+
 Below a summary of the packages needed to build a development version on _Debian-based_ systems:
 
 ```console
@@ -97,6 +101,7 @@ configuration file is `~/.config/lingot/lingot.conf`.
 
 Resources
 ---------
+
 * [Official LINGOT website](http://lingot.nongnu.org/)
 * [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
 * [Downloads page in Savannah](http://download.savannah.gnu.org/releases/lingot/)
