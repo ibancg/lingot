@@ -34,9 +34,9 @@ extern "C" {
 typedef struct _lingot_scale_t {
     char* name;                     // name of the scale
     unsigned short int notes;       // number of notes
-    LINGOT_FLT* offset_cents;              // offset in cents
+    LINGOT_FLT* offset_cents;       // offset in cents
     short int* offset_ratios[2];    // offset in ratios (pairs of integers)
-    LINGOT_FLT base_frequency;             // frequency of the first note (tipically C4)
+    LINGOT_FLT base_frequency;      // frequency of the first note (tipically C4)
     char** note_name;               // note names
 } lingot_scale_t;
 
