@@ -28,7 +28,7 @@
 #include <signal.h>
 #include <string.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 #include "lingot-audio.h"
 #include "lingot-core.h"

@@ -30,7 +30,7 @@
 #include "lingot-complex.h"
 #include "lingot-filter.h"
 
-static int lingot_signal_is_peak(const FLT* signal, int index, unsigned short peak_half_width) {
+static int lingot_signal_is_peak(const LINGOT_FLT* signal, int index, unsigned short peak_half_width) {
     int j;
 
     for (j = 0; j < peak_half_width; j++) {
@@ -44,7 +44,7 @@ static int lingot_signal_is_peak(const FLT* signal, int index, unsigned short pe
 
 //---------------------------------------------------------------------------
 
-static FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
+static LINGOT_FLT lingot_signal_fft_bin_interpolate_quinn2_tau(LINGOT_FLT x) {
     return (0.25 * log(3 * x * x + 6 * x + 1.0)
             - 0.102062072615966
             * log(
@@ -52,14 +52,14 @@ static FLT lingot_signal_fft_bin_interpolate_quinn2_tau(FLT x) {
                 / (x + 1.0 + 0.816496580927726)));
 }
 
-static FLT lingot_signal_fft_bin_interpolate_quinn2(const lingot_complex_t y1,
+static LINGOT_FLT lingot_signal_fft_bin_interpolate_quinn2(const lingot_complex_t y1,
                                                     const lingot_complex_t y2,
                                                     const lingot_complex_t y3) {
-    FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
-    FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
-    FLT dp = -ap / (1.0 - ap);
-    FLT am = (y1[0] * y2[0] + y1[1] * y2[1]) / absy2_2;
-    FLT dm = am / (1.0 - am);
+    LINGOT_FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
+    LINGOT_FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
+    LINGOT_FLT dp = -ap / (1.0 - ap);
+    LINGOT_FLT am = (y1[0] * y2[0] + y1[1] * y2[1]) / absy2_2;
+    LINGOT_FLT dm = am / (1.0 - am);
     return 0.5 * (dp + dm)
             + lingot_signal_fft_bin_interpolate_quinn2_tau(dp * dp)
             - lingot_signal_fft_bin_interpolate_quinn2_tau(dm * dm);
@@ -70,17 +70,17 @@ static int lingot_signal_compare_int(const void *a, const void *b) {
     return (*((const int*) a) < *((const int*) b)) ? -1 : 1;
 }
 
-int lingot_signal_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
-                                        FLT* mulFreq1ToFreq, FLT* mulFreq2ToFreq) {
+int lingot_signal_frequencies_related(LINGOT_FLT freq1, LINGOT_FLT freq2, LINGOT_FLT minFrequency,
+                                        LINGOT_FLT* mulFreq1ToFreq, LINGOT_FLT* mulFreq2ToFreq) {
 
     int result = 0;
-    static const FLT tol = 5e-2; // TODO: tune
+    static const LINGOT_FLT tol = 5e-2; // TODO: tune
     static const int maxDivisor = 4;
 
     if ((freq1 != 0.0) && (freq2 != 0.0)) {
 
-        FLT smallFreq = freq1;
-        FLT bigFreq = freq2;
+        LINGOT_FLT smallFreq = freq1;
+        LINGOT_FLT bigFreq = freq2;
 
         if (bigFreq < smallFreq) {
             smallFreq = freq2;
@@ -88,8 +88,8 @@ int lingot_signal_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
         }
 
         int divisor;
-        FLT frac;
-        FLT error = -1.0;
+        LINGOT_FLT frac;
+        LINGOT_FLT error = -1.0;
         for (divisor = 1; divisor <= maxDivisor; divisor++) {
             if (minFrequency * divisor > smallFreq) {
                 break;
@@ -119,10 +119,10 @@ int lingot_signal_frequencies_related(FLT freq1, FLT freq2, FLT minFrequency,
     return result;
 }
 
-FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency) {
+LINGOT_FLT lingot_signal_frequency_locker(LINGOT_FLT freq, LINGOT_FLT minFrequency) {
 
     static int locked = 0;
-    static FLT current_frequency = -1.0;
+    static LINGOT_FLT current_frequency = -1.0;
     static int hits_counter = 0;
     static int rehits_counter = 0;
     static int rehits_up_counter = 0;
@@ -130,12 +130,12 @@ FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency) {
     static const int nhits_to_unlock = 5;
     static const int nhits_to_relock = 6;
     static const int nhits_to_relock_up = 8;
-    FLT multiplier = 0.0;
-    FLT multiplier2 = 0.0;
-    static FLT old_multiplier = 0.0;
-    static FLT old_multiplier2 = 0.0;
+    LINGOT_FLT multiplier = 0.0;
+    LINGOT_FLT multiplier2 = 0.0;
+    static LINGOT_FLT old_multiplier = 0.0;
+    static LINGOT_FLT old_multiplier2 = 0.0;
     int fail = 0;
-    FLT result = 0.0;
+    LINGOT_FLT result = 0.0;
 
     int consistent_with_current_frequency = 0;
     consistent_with_current_frequency = lingot_signal_frequencies_related(freq, current_frequency, minFrequency,
@@ -243,36 +243,36 @@ FLT lingot_signal_frequency_locker(FLT freq, FLT minFrequency) {
 // Returns a factor to multiply with in order to give more importance to higher
 // frequency harmonics. This is to give more importance to the higher divisors
 // for the same selected sets.
-static FLT lingot_signal_frequency_penalty(FLT freq) {
-    static const FLT f0 = 100;
-    static const FLT f1 = 1000;
-    static const FLT alpha0 = 0.99;
-    static const FLT alpha1 = 1;
+static LINGOT_FLT lingot_signal_frequency_penalty(LINGOT_FLT freq) {
+    static const LINGOT_FLT f0 = 100;
+    static const LINGOT_FLT f1 = 1000;
+    static const LINGOT_FLT alpha0 = 0.99;
+    static const LINGOT_FLT alpha1 = 1;
 
     // TODO: precompute
-    const FLT freqPenaltyA = (alpha0 - alpha1) / (f0 - f1);
-    const FLT freqPenaltyB = -(alpha0 * f1 - f0 * alpha1) / (f0 - f1);
+    const LINGOT_FLT freqPenaltyA = (alpha0 - alpha1) / (f0 - f1);
+    const LINGOT_FLT freqPenaltyB = -(alpha0 * f1 - f0 * alpha1) / (f0 - f1);
 
     return freq * freqPenaltyA + freqPenaltyB;
 }
 
 // search the fundamental peak given the SPD and its 2nd derivative
-FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
-                                                 FLT freq,
+LINGOT_FLT lingot_signal_estimate_fundamental_frequency(const LINGOT_FLT* snr,
+                                                 LINGOT_FLT freq,
                                                  const lingot_complex_t* fft,
                                                  unsigned int N,
                                                  unsigned int n_peaks,
                                                  unsigned int lowest_index,
                                                  unsigned int highest_index,
                                                  unsigned short peak_half_width,
-                                                 FLT delta_f_fft,
-                                                 FLT min_snr,
-                                                 FLT min_q,
-                                                 FLT min_freq,
+                                                 LINGOT_FLT delta_f_fft,
+                                                 LINGOT_FLT min_snr,
+                                                 LINGOT_FLT min_q,
+                                                 LINGOT_FLT min_freq,
                                                  short* divisor) {
     unsigned int i, j, m;
     int p_index[n_peaks];
-    FLT magnitude[n_peaks];
+    LINGOT_FLT magnitude[n_peaks];
 
     // at this moment there are no peaks.
     for (i = 0; i < n_peaks; i++)
@@ -290,18 +290,18 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     // I'll get the n_peaks maximum peaks with SNR above the required.
     for (i = lowest_index; i < highest_index; i++) {
 
-        FLT factor = 1.0;
+        LINGOT_FLT factor = 1.0;
 
         if (freq != 0.0) {
 
-            FLT f = i * delta_f_fft;
+            LINGOT_FLT f = i * delta_f_fft;
             if (fabs(f / freq - round(f / freq)) < 0.07) { // TODO: tune and put in conf
                 factor = 1.5; // TODO: tune and put in conf
             }
 
         }
 
-        FLT snri = snr[i] * factor;
+        LINGOT_FLT snri = snr[i] * factor;
 
         if ((snri > min_snr)
                 && lingot_signal_is_peak(snr, (int) i, peak_half_width)) {
@@ -340,7 +340,7 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
         return 0.0;
     }
 
-    FLT maximum = 0.0;
+    LINGOT_FLT maximum = 0.0;
 
     // search the maximum peak
     for (i = 0; i < n_found_peaks; i++)
@@ -360,8 +360,8 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     qsort(p_index, n_found_peaks, sizeof(int), &lingot_signal_compare_int);
     n_found_peaks -= delete_counter;
 
-    FLT freq_interpolated[n_found_peaks];
-    FLT delta = 0.0;
+    LINGOT_FLT freq_interpolated[n_found_peaks];
+    LINGOT_FLT delta = 0.0;
     for (i = 0; i < n_found_peaks; i++) {
         delta = lingot_signal_fft_bin_interpolate_quinn2(fft[p_index[i] - 1],
                 fft[p_index[i]], fft[p_index[i] + 1]);
@@ -369,20 +369,20 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     }
 
     // maximum ratio error
-    static const FLT ratio_tol = 0.02; // TODO: tune
+    static const LINGOT_FLT ratio_tol = 0.02; // TODO: tune
     static const short max_divisor = 4;
 
     unsigned short tone_index = 0;
     short div = 0;
-    FLT groundFreq = 0.0;
-    FLT ratios[n_found_peaks];
-    FLT error[n_found_peaks];
+    LINGOT_FLT groundFreq = 0.0;
+    LINGOT_FLT ratios[n_found_peaks];
+    LINGOT_FLT error[n_found_peaks];
     short indices_related[n_found_peaks];
     unsigned short n_indices_related = 0;
 
-    FLT best_q = 0.0;
+    LINGOT_FLT best_q = 0.0;
     short best_indices_related[n_found_peaks];
-    FLT best_f = 0;
+    LINGOT_FLT best_f = 0;
     short best_divisor = 1;
 
     // possible ground frequencies
@@ -403,9 +403,9 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
                 // add the penalties for short sets and high divisors
                 //				int highest_harmonic_index = n_indices_related - 1;
                 int highest_harmonic_index = 0;
-                FLT highest_harmonic_magnitude = 0.0;
-                FLT q = 0.0;
-                FLT f = 0.0;
+                LINGOT_FLT highest_harmonic_magnitude = 0.0;
+                LINGOT_FLT q = 0.0;
+                LINGOT_FLT f = 0.0;
                 //				FLT snrsum = 0.0;
                 for (i = 0; i < n_indices_related; i++) {
                     // add up contributions to the quality factor
@@ -468,15 +468,15 @@ FLT lingot_signal_estimate_fundamental_frequency(const FLT* snr,
     return best_f;
 }
 
-void lingot_signal_compute_noise_level(const FLT* spd,
+void lingot_signal_compute_noise_level(const LINGOT_FLT* spd,
                                        int N,
                                        int cbuffer_size,
-                                       FLT* noise_level) {
+                                       LINGOT_FLT* noise_level) {
 
     // low pass IIR filter.
-    const FLT c = 0.1;
-    const FLT filter_a[] = { 1.0, c - 1.0 };
-    const FLT filter_b[] = { c };
+    const LINGOT_FLT c = 0.1;
+    const LINGOT_FLT filter_a[] = { 1.0, c - 1.0 };
+    const LINGOT_FLT filter_b[] = { c };
     static char initialized = 0;
     static lingot_filter_t filter;
 
@@ -495,7 +495,7 @@ void lingot_signal_compute_noise_level(const FLT* spd,
 //---------------------------------------------------------------------------
 
 // generates a N-sample window
-void lingot_signal_window(int N, FLT* out, window_type_t window_type) {
+void lingot_signal_window(int N, LINGOT_FLT* out, window_type_t window_type) {
     int i;
     switch (window_type) {
     case HANNING:

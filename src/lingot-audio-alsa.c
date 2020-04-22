@@ -33,7 +33,7 @@
 #include <time.h>
 
 #include "lingot-audio.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-audio-alsa.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"

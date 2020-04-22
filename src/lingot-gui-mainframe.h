@@ -25,7 +25,7 @@
 #ifndef LINGOT_GUI_MAIN_FRAME_H
 #define LINGOT_GUI_MAIN_FRAME_H
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-core.h"
 #include "lingot-config.h"
 #include "lingot-filter.h"
@@ -69,9 +69,9 @@ typedef struct _lingot_main_frame_t {
     guint error_dispatcher_uid;
 
     // filtered frequency and closest note index in the scale
-    FLT frequency;
+    LINGOT_FLT frequency;
     // filtered position for the gauge
-    FLT gauge_pos;
+    LINGOT_FLT gauge_pos;
 
     int closest_note_index;
 } lingot_main_frame_t;

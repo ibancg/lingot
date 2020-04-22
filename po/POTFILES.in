@@ -8,7 +8,7 @@ src/lingot-complex.c
 src/lingot-config-scale.c
 src/lingot-config.c
 src/lingot-core.c
-src/lingot-defs.c
+src/lingot-defs-internal.c
 src/lingot-fft.c
 src/lingot-filter.c
 src/lingot-gui-config-dialog-scale.c

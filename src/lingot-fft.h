@@ -43,7 +43,7 @@
 typedef struct {
 
     unsigned int n;
-    FLT* in;
+    LINGOT_FLT* in;
 
 #ifdef LIBFFTW
     fftw_plan fftwplan;
@@ -54,17 +54,17 @@ typedef struct {
     lingot_complex_t* fft_out; // complex signal in freq.
 } lingot_fft_plan_t;
 
-void lingot_fft_plan_create(lingot_fft_plan_t*, FLT* in, unsigned int n);
+void lingot_fft_plan_create(lingot_fft_plan_t*, LINGOT_FLT* in, unsigned int n);
 void lingot_fft_plan_destroy(lingot_fft_plan_t*);
 
 // Full Spectral Power Distribution (SPD) esteem.
-void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t*, FLT* out, unsigned int n_out);
+void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t*, LINGOT_FLT* out, unsigned int n_out);
 
 // Spectral Power Distribution (SPD) evaluation at a given frequency.
-void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2);
+void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_FLT dw, LINGOT_FLT* out, unsigned int N2);
 
 // Evaluates first and second SPD derivatives at frequency w.
-void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0,
-                               FLT* out_d1, FLT* out_d2);
+void lingot_fft_spd_diffs_eval(const LINGOT_FLT* in, unsigned int N, LINGOT_FLT w, LINGOT_FLT* out_d0,
+                               LINGOT_FLT* out_d1, LINGOT_FLT* out_d2);
 
 #endif

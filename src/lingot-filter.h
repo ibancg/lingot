@@ -40,9 +40,9 @@ extern "C" {
 
 typedef struct {
 
-    FLT* a;
-    FLT* b; // coefs
-    FLT* s; // status
+    LINGOT_FLT* a;
+    LINGOT_FLT* b; // coefs
+    LINGOT_FLT* s; // status
 
     unsigned int N;
 
@@ -50,7 +50,7 @@ typedef struct {
 
 void lingot_filter_new(lingot_filter_t*,
                        unsigned int Na, unsigned int Nb,
-                       const FLT* a, const FLT* b);
+                       const LINGOT_FLT* a, const LINGOT_FLT* b);
 
 void lingot_filter_reset(lingot_filter_t* filter);
 
@@ -58,16 +58,16 @@ void lingot_filter_reset(lingot_filter_t* filter);
  * Design a Chebyshev Type I low pass filter with Rp dB of pass band ripple
  * with cutoff pi*wc radians.
  */
-void lingot_filter_cheby_design(lingot_filter_t*, unsigned int order, FLT Rp, FLT wc);
+void lingot_filter_cheby_design(lingot_filter_t*, unsigned int order, LINGOT_FLT Rp, LINGOT_FLT wc);
 
 void lingot_filter_destroy(lingot_filter_t*);
 
 // Digital Filter Implementation II, in & out can overlap. Vector filtering
-void lingot_filter_filter(lingot_filter_t*, unsigned int n, const FLT* in,
-                          FLT* out);
+void lingot_filter_filter(lingot_filter_t*, unsigned int n, const LINGOT_FLT* in,
+                          LINGOT_FLT* out);
 
 // sample filtering
-FLT lingot_filter_filter_sample(lingot_filter_t*, FLT in);
+LINGOT_FLT lingot_filter_filter_sample(lingot_filter_t*, LINGOT_FLT in);
 
 #ifdef __cplusplus
 }

@@ -38,8 +38,8 @@ liblingot_la_SOURCES = \
     src/lingot-config-scale.c \
     src/lingot-config.c \
     src/lingot-core.c \
-    src/lingot-defs.c \
-    src/lingot-defs.h \
+    src/lingot-defs-internal.c \
+    src/lingot-defs-internal.h \
     src/lingot-fft.c \
     src/lingot-fft.h \
     src/lingot-filter.c \
@@ -57,6 +57,7 @@ pkginclude_HEADERS = \
     src/lingot-config-scale.h \
     src/lingot-config.h \
     src/lingot-core.h \
+    src/lingot-defs.h \
     src/lingot-filter.h \
     src/lingot-msg.h
 
