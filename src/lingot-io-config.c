@@ -238,7 +238,7 @@ void lingot_io_config_save(lingot_config_t* config, const char* filename) {
                 fprintf(fp, "%d", *((unsigned int*) param));
                 break;
             case LINGOT_PARAMETER_TYPE_FLOAT:
-                fprintf(fp, "%0.3f", *((FLT*) param));
+                fprintf(fp, "%0.3f", *((LINGOT_FLT*) param));
                 break;
             case LINGOT_PARAMETER_TYPE_AUDIO_SYSTEM:
                 fprintf(fp, "%s", lingot_audio_system_get_name(*((int*) param)));
@@ -578,7 +578,7 @@ int lingot_io_config_load(lingot_config_t* config, const char* filename) {
                 sscanf(char_buffer_pointer, "%lf", &double_value);
                 if ((double_value >= parameters[option_index].float_min)
                         && (double_value <= parameters[option_index].float_max)) {
-                    *((FLT*) param) = double_value;
+                    *((LINGOT_FLT*) param) = double_value;
                 } else {
                     fprintf(stderr,
                             "error: parse error at line %i, '%s = %s': out of bounds (minimum %0.3f, maximum %0.3f), assuming default value %0.3f\n",
@@ -586,7 +586,7 @@ int lingot_io_config_load(lingot_config_t* config, const char* filename) {
                             char_buffer_pointer,
                             parameters[option_index].float_min,
                             parameters[option_index].float_max,
-                            *((FLT*) param));
+                            *((LINGOT_FLT*) param));
                     parse_errors = 1;
                 }
                 break;

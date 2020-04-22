@@ -135,7 +135,7 @@ void lingot_config_update_internal_params(lingot_config_t* config) {
     if (config->internal_max_frequency > 5000) {
         fft_size = 1024;
     }
-    FLT temporal_window = 1.0 * config->fft_size * config->oversampling
+    LINGOT_FLT temporal_window = 1.0 * config->fft_size * config->oversampling
             / config->sample_rate;
     if (temporal_window < 0.3) {
         temporal_window = 0.3;
@@ -159,7 +159,7 @@ void lingot_config_update_internal_params(lingot_config_t* config) {
     int i;
     config->gauge_range = 1200.0;
     for (i = 1; i < config->scale.notes; i++) {
-        FLT offset = config->scale.offset_cents[i] - config->scale.offset_cents[i - 1];
+        LINGOT_FLT offset = config->scale.offset_cents[i] - config->scale.offset_cents[i - 1];
         if (offset < config->gauge_range) {
             config->gauge_range = offset;
         }

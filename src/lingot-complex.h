@@ -30,7 +30,7 @@
 
 // single ... complex arithmetic  :)
 
-typedef FLT lingot_complex_t[2];
+typedef LINGOT_FLT lingot_complex_t[2];
 
 /**
  * Addition. All parameters can overlap.

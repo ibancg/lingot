@@ -69,9 +69,9 @@ typedef struct _lingot_main_frame_t {
     guint error_dispatcher_uid;
 
     // filtered frequency and closest note index in the scale
-    FLT frequency;
+    LINGOT_FLT frequency;
     // filtered position for the gauge
-    FLT gauge_pos;
+    LINGOT_FLT gauge_pos;
 
     int closest_note_index;
 } lingot_main_frame_t;

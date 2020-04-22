@@ -30,10 +30,10 @@ extern "C" {
 #endif
 
 // floating point precision.
-#define FLT                 double
+#define LINGOT_FLT                 double
 
-#define MID_A_FREQUENCY		440.0
-#define MID_C_FREQUENCY		261.625565
+#define LINGOT_MID_A_FREQUENCY		440.0
+#define LINGOT_MID_C_FREQUENCY		261.625565
 
 #ifdef __cplusplus
 }

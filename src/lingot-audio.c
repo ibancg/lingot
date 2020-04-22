@@ -119,8 +119,8 @@ void lingot_audio_new(lingot_audio_handler_t* result,
 
         if (result->audio_system != -1 ) {
             // audio source read in floating point format.
-            result->flt_read_buffer = malloc(result->read_buffer_size_samples * sizeof(FLT));
-            memset(result->flt_read_buffer, 0, result->read_buffer_size_samples * sizeof(FLT));
+            result->flt_read_buffer = malloc(result->read_buffer_size_samples * sizeof(LINGOT_FLT));
+            memset(result->flt_read_buffer, 0, result->read_buffer_size_samples * sizeof(LINGOT_FLT));
             result->process_callback = process_callback;
             result->process_callback_arg = process_callback_arg;
             result->interrupted = 0;

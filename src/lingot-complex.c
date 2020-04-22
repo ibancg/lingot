@@ -40,7 +40,7 @@ void lingot_complex_mul(const lingot_complex_t a, const lingot_complex_t b, ling
 }
 
 void lingot_complex_div(const lingot_complex_t a, const lingot_complex_t b, lingot_complex_t c) {
-    FLT bm2 = b[0] * b[0] + b[1] * b[1];
+    LINGOT_FLT bm2 = b[0] * b[0] + b[1] * b[1];
     c[0] = (a[0] * b[0] + a[1] * b[1]) / bm2;
     c[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
 }
@@ -52,7 +52,7 @@ void lingot_complex_mul_by(lingot_complex_t a, const lingot_complex_t b) {
 }
 
 void lingot_complex_div_by(lingot_complex_t a, const lingot_complex_t b) {
-    FLT bm2 = b[0] * b[0] + b[1] * b[1];
+    LINGOT_FLT bm2 = b[0] * b[0] + b[1] * b[1];
     double rr = (a[0] * b[0] + a[1] * b[1]) / bm2;
     a[1] = (a[1] * b[0] - a[0] * b[1]) / bm2;
     a[0] = rr;

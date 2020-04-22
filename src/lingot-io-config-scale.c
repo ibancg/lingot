@@ -121,7 +121,7 @@ int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename) {
         return 0;
     }
 
-    scale->base_frequency = MID_C_FREQUENCY;
+    scale->base_frequency = LINGOT_MID_C_FREQUENCY;
 
     _try
     {
