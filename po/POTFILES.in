@@ -11,7 +11,6 @@ src/lingot-core.c
 src/lingot-defs.c
 src/lingot-fft.c
 src/lingot-filter.c
-src/lingot-gauge.c
 src/lingot-gui-config-dialog-scale.c
 src/lingot-gui-config-dialog.c
 src/lingot-gui-config-dialog.glade

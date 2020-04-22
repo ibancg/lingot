@@ -56,7 +56,7 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* fr
     lingot_core_thread_stop(&frame->core);
     lingot_core_destroy(&frame->core);
 
-    lingot_gauge_destroy(&frame->gauge);
+    lingot_filter_destroy(&frame->gauge_filter);
     lingot_filter_destroy(&frame->freq_filter);
     lingot_config_destroy(&frame->conf);
     if (frame->config_dialog) {
@@ -209,7 +209,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
     if (!lingot_core_thread_is_running(&frame->core) || isnan(freq)
             || (freq <= frame->conf.internal_min_frequency)) {
         frame->frequency = 0.0;
-        lingot_gauge_compute(&frame->gauge, frame->conf.gauge_rest_value);
+        frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, frame->conf.gauge_rest_value);
     } else {
         FLT error_cents; // do not use, unfiltered
         frame->frequency = lingot_filter_filter_sample(&frame->freq_filter,
@@ -217,7 +217,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
         frame->closest_note_index = lingot_config_scale_get_closest_note_index(
                     &frame->conf.scale, freq, frame->conf.root_frequency_error, &error_cents);
         if (!isnan(error_cents)) {
-            lingot_gauge_compute(&frame->gauge, error_cents);
+            frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, error_cents);
         }
     }
 
@@ -383,7 +383,47 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     lingot_config_new(conf);
     lingot_io_config_load(conf, CONFIG_FILE_NAME);
 
-    lingot_gauge_new(&frame->gauge, GAUGE_RATE, conf->gauge_rest_value); // gauge in rest situation
+    //
+    // ----- ERROR GAUGE FILTER CONFIGURATION -----
+    //
+    // dynamic model of the gauge:
+    //
+    //               2
+    //              d                              d
+    //              --- s(t) = k (e(t) - s(t)) - q -- s(t)
+    //                2                            dt
+    //              dt
+    //
+    // acceleration of gauge position 's(t)' linearly depends on the difference
+    // respect to the input stimulus 'e(t)' (destination position). Inserting
+    // a friction coefficient 'q', the acceleration proportionally diminishes with
+    // the velocity (typical friction in mechanics). 'k' is the adaptation
+    // constant, and depends on the gauge mass.
+    //
+    // with the following derivative approximations (valid for high sample rate):
+    //
+    //                 d
+    //                 -- s(t) ~= (s[n] - s[n - 1])*fs
+    //                 dt
+    //
+    //            2
+    //           d                                            2
+    //           --- s(t) ~= (s[n] - 2*s[n - 1] + s[n - 2])*fs
+    //             2
+    //           dt
+    //
+    // we can obtain a difference equation, and implement it with an IIR digital
+    // filter.
+    //
+
+    const FLT gauge_filter_k = 60; // adaptation constant.
+    const FLT gauge_filter_q = 6; // friction coefficient.
+    const FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE), -GAUGE_RATE
+                                   * (gauge_filter_q + 2.0 * GAUGE_RATE), GAUGE_RATE * GAUGE_RATE };
+    const FLT gauge_filter_b[] = { gauge_filter_k };
+
+    lingot_filter_new(&frame->gauge_filter, 2, 0, gauge_filter_a, gauge_filter_b);
+    frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, conf->gauge_rest_value);
 
     // ----- FREQUENCY FILTER CONFIGURATION ------
 
@@ -513,7 +553,7 @@ void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t* frame) {
         note_string =
                 frame->conf.scale.note_name[lingot_config_scale_get_note_index(
                     &frame->conf.scale, frame->closest_note_index)];
-        sprintf(error_string, "e = %+2.0f cents", frame->gauge.position);
+        sprintf(error_string, "e = %+2.0f cents", frame->gauge_pos);
         sprintf(freq_string, "f = %6.2f Hz", frame->frequency);
         sprintf(octave_string, "%d",
                 lingot_config_scale_get_octave(&frame->conf.scale,

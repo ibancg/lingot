@@ -53,7 +53,7 @@ typedef struct _lingot_main_frame_t {
     GtkWidget* labelsbox;
 
     lingot_filter_t freq_filter;
-    lingot_gauge_t gauge;
+    lingot_filter_t gauge_filter;
 
     lingot_core_t core;
 
@@ -73,6 +73,9 @@ typedef struct _lingot_main_frame_t {
 
     // filtered frequency and closest note index in the scale
     FLT frequency;
+    // filtered position for the gauge
+    FLT gauge_pos;
+
     int closest_note_index;
 } lingot_main_frame_t;
 

@@ -85,8 +85,6 @@ liblingot_la_LDFLAGS = $(AM_LDFLAGS) \
   -Wl,--no-undefined
 
 lingot_SOURCES = \
-    src/lingot-gauge.c \
-    src/lingot-gauge.h \
     src/lingot-gui-config-dialog-scale.c \
     src/lingot-gui-config-dialog-scale.h \
     src/lingot-gui-config-dialog.c \
@@ -127,7 +125,6 @@ dist_doc_DATA = \
   NEWS \
   README \
   README.config \
-  README.md \
   THANKS
 
 iconsdir = $(datadir)/icons/hicolor/scalable/apps
