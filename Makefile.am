@@ -51,8 +51,6 @@ lingot_SOURCES = \
   src/lingot-fft.h \
   src/lingot-filter.c \
   src/lingot-filter.h \
-  src/lingot-gauge.c \
-  src/lingot-gauge.h \
   src/lingot-gui-config-dialog-scale.c \
   src/lingot-gui-config-dialog-scale.h \
   src/lingot-gui-config-dialog.c \
