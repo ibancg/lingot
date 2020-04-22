@@ -28,7 +28,7 @@
 #include <time.h>
 #include <errno.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-audio.h"
 
 #include "lingot-core.h"

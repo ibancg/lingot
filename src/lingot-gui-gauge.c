@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-gui-mainframe.h"
 
 static int gauge_size_x = 0;

@@ -26,7 +26,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gui-config-dialog-scale.h"
 #include "lingot-msg.h"

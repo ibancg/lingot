@@ -30,7 +30,7 @@
 #include "lingot-config-scale.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 void lingot_config_scale_new(lingot_scale_t* scale) {
 

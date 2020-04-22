@@ -29,7 +29,7 @@
 #include <math.h>
 #include <locale.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-config.h"
 #include "lingot-config-scale.h"
 #include "lingot-msg.h"

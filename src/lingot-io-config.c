@@ -29,7 +29,7 @@
 #include <math.h>
 #include <locale.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-io-config.h"
 #include "lingot-config-scale.h"
 #include "lingot-msg.h"
@@ -41,6 +41,8 @@
 
 static lingot_config_parameter_spec_t parameters[N_MAX_OPTIONS];
 static unsigned int parameters_count = 0;
+
+char CONFIG_FILE_NAME[];
 
 //----------------------------------------------------------------------------
 

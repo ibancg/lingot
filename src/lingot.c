@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 
     // default config file.
     snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
-             "%s/" CONFIG_DIR_NAME DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
+             "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
 
     // TODO: indicate complete config file path
     if ((argc > 3) || (argc == 2)) {
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             case 'c':
                 snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
                          "%s/%s%s.conf", getenv("HOME"),
-                         CONFIG_DIR_NAME, optarg);
+                         LINGOT_CONFIG_DIR_NAME, optarg);
                 printf("using config file %s\n", CONFIG_FILE_NAME);
                 break;
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {
 
         char config_dir[200];
-        snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), CONFIG_DIR_NAME);
+        snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
         printf("Creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {

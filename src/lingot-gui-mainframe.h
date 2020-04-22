@@ -25,7 +25,7 @@
 #ifndef LINGOT_GUI_MAIN_FRAME_H
 #define LINGOT_GUI_MAIN_FRAME_H
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-core.h"
 #include "lingot-config.h"
 #include "lingot-filter.h"

@@ -29,7 +29,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
@@ -39,6 +39,9 @@
 #include "lingot-i18n.h"
 #include "lingot-io-config.h"
 #include "lingot-msg.h"
+
+#define GAUGE_RATE           60.0
+#define ERROR_DISPATCH_RATE	 5.0
 
 void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
@@ -371,7 +374,7 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     if (filechooser_config_last_folder == NULL) {
         char buff[1000];
-        snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
+        snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
         filechooser_config_last_folder = _strdup(buff);
     }
 

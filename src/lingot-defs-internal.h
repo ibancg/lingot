@@ -22,18 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_DEFS_H
-#define LINGOT_DEFS_H
+#ifndef LINGOT_INTERNAL_DEFS_H
+#define LINGOT_INTERNAL_DEFS_H
+
+#include "lingot-defs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// floating point precision.
-#define FLT                 double
+// simple try-catch simulation, do not use throw inside loops nor nest try-catch
+// blocks
+#define _try _exception = 0; do
+#define _throw(a) { _exception = a;break; }
+#define _catch while (0); if (_exception != 0)
 
-#define MID_A_FREQUENCY		440.0
-#define MID_C_FREQUENCY		261.625565
+// This alternative allows us to throw exception from loops, it contains a goto
+// statement, but totally controlled. It fails when trying to indent code.
+//#define _try _exception = 0;do
+//#define _throw(a) {_exception = a;goto catch_label;}
+//#define _catch while (0);catch_label: if (_exception != 0)
+
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
+#endif
+
+// strdup() is not part of the standard. It is POSIX, but we provide our own
+// implementation.
+char* _strdup(const char *s);
 
 #ifdef __cplusplus
 }
