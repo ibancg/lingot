@@ -29,7 +29,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
@@ -39,6 +39,9 @@
 #include "lingot-i18n.h"
 #include "lingot-io-config.h"
 #include "lingot-msg.h"
+
+#define GAUGE_RATE           60.0
+#define ERROR_DISPATCH_RATE	 5.0
 
 void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
@@ -203,7 +206,7 @@ gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(gpointe
 gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
     lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
-    FLT freq = lingot_core_thread_get_result_frequency(&frame->core);
+    LINGOT_FLT freq = lingot_core_thread_get_result_frequency(&frame->core);
 
     // ignore continuous component
     if (!lingot_core_thread_is_running(&frame->core) || isnan(freq)
@@ -211,7 +214,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
         frame->frequency = 0.0;
         frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, frame->conf.gauge_rest_value);
     } else {
-        FLT error_cents; // do not use, unfiltered
+        LINGOT_FLT error_cents; // do not use, unfiltered
         frame->frequency = lingot_filter_filter_sample(&frame->freq_filter,
                                                        freq);
         frame->closest_note_index = lingot_config_scale_get_closest_note_index(
@@ -371,7 +374,7 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     if (filechooser_config_last_folder == NULL) {
         char buff[1000];
-        snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), CONFIG_DIR_NAME);
+        snprintf(buff, sizeof(buff), "%s/%s", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
         filechooser_config_last_folder = _strdup(buff);
     }
 
@@ -416,11 +419,11 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     // filter.
     //
 
-    const FLT gauge_filter_k = 60; // adaptation constant.
-    const FLT gauge_filter_q = 6; // friction coefficient.
-    const FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE), -GAUGE_RATE
+    const LINGOT_FLT gauge_filter_k = 60; // adaptation constant.
+    const LINGOT_FLT gauge_filter_q = 6; // friction coefficient.
+    const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE), -GAUGE_RATE
                                    * (gauge_filter_q + 2.0 * GAUGE_RATE), GAUGE_RATE * GAUGE_RATE };
-    const FLT gauge_filter_b[] = { gauge_filter_k };
+    const LINGOT_FLT gauge_filter_b[] = { gauge_filter_k };
 
     lingot_filter_new(&frame->gauge_filter, 2, 0, gauge_filter_a, gauge_filter_b);
     frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, conf->gauge_rest_value);
@@ -428,8 +431,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     // ----- FREQUENCY FILTER CONFIGURATION ------
 
     // low pass IIR filter.
-    FLT freq_filter_a[] = { 1.0, -0.5 };
-    FLT freq_filter_b[] = { 0.5 };
+    LINGOT_FLT freq_filter_a[] = { 1.0, -0.5 };
+    LINGOT_FLT freq_filter_b[] = { 0.5 };
 
     lingot_filter_new(&frame->freq_filter, 1, 0, freq_filter_a, freq_filter_b);
 

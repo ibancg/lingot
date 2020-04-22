@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-gui-mainframe.h"
 
 static int gauge_size_x = 0;
@@ -41,8 +41,8 @@ static void lingot_gui_mainframe_cairo_set_source_argb(cairo_t *cr,
 }
 
 typedef struct {
-    FLT x;
-    FLT y;
+    LINGOT_FLT x;
+    LINGOT_FLT y;
 } point_t;
 
 static void lingot_gui_gauge_draw_tic(cairo_t *cr,
@@ -61,21 +61,21 @@ static void lingot_gui_gauge_redraw_background(cairo_t *cr,
                                                lingot_main_frame_t* frame) {
 
     // normalized dimensions
-    static const FLT gauge_gaugeCenterY = 0.94;
-    static const FLT gauge_centsBarStroke = 0.025;
-    static const FLT gauge_centsBarRadius = 0.75;
-    static const FLT gauge_centsBarMajorTicRadius = 0.04;
-    static const FLT gauge_centsBarMinorTicRadius = 0.03;
-    static const FLT gauge_centsBarMajorTicStroke = 0.03;
-    static const FLT gauge_centsBarMinorTicStroke = 0.01;
-    static const FLT gauge_centsTextSize = 0.09;
-    static const FLT gauge_frequencyBarStroke = 0.025;
-    static const FLT gauge_frequencyBarRadius = 0.78;
-    static const FLT gauge_frequencyBarMajorTicRadius = 0.04;
-    static const FLT gauge_okBarStroke = 0.07;
-    static const FLT gauge_okBarRadius = 0.48;
+    static const LINGOT_FLT gauge_gaugeCenterY = 0.94;
+    static const LINGOT_FLT gauge_centsBarStroke = 0.025;
+    static const LINGOT_FLT gauge_centsBarRadius = 0.75;
+    static const LINGOT_FLT gauge_centsBarMajorTicRadius = 0.04;
+    static const LINGOT_FLT gauge_centsBarMinorTicRadius = 0.03;
+    static const LINGOT_FLT gauge_centsBarMajorTicStroke = 0.03;
+    static const LINGOT_FLT gauge_centsBarMinorTicStroke = 0.01;
+    static const LINGOT_FLT gauge_centsTextSize = 0.09;
+    static const LINGOT_FLT gauge_frequencyBarStroke = 0.025;
+    static const LINGOT_FLT gauge_frequencyBarRadius = 0.78;
+    static const LINGOT_FLT gauge_frequencyBarMajorTicRadius = 0.04;
+    static const LINGOT_FLT gauge_okBarStroke = 0.07;
+    static const LINGOT_FLT gauge_okBarRadius = 0.48;
 
-    static const FLT overtureAngle = 65.0 * M_PI / 180.0;
+    static const LINGOT_FLT overtureAngle = 65.0 * M_PI / 180.0;
 
     // colors
     static const unsigned int gauge_centsBarColor = 0x333355;
@@ -95,21 +95,21 @@ static void lingot_gui_gauge_redraw_background(cairo_t *cr,
                 + height * gauge_gaugeCenterY;
     }
 
-    const FLT centsBarRadius = height * gauge_centsBarRadius;
-    const FLT centsBarStroke = height * gauge_centsBarStroke;
-    const FLT centsBarMajorTicRadius = centsBarRadius
+    const LINGOT_FLT centsBarRadius = height * gauge_centsBarRadius;
+    const LINGOT_FLT centsBarStroke = height * gauge_centsBarStroke;
+    const LINGOT_FLT centsBarMajorTicRadius = centsBarRadius
             - height * gauge_centsBarMajorTicRadius;
-    const FLT centsBarMinorTicRadius = centsBarRadius
+    const LINGOT_FLT centsBarMinorTicRadius = centsBarRadius
             - height * gauge_centsBarMinorTicRadius;
-    const FLT centsBarMajorTicStroke = height * gauge_centsBarMajorTicStroke;
-    const FLT centsBarMinorTicStroke = height * gauge_centsBarMinorTicStroke;
-    const FLT centsTextSize = height * gauge_centsTextSize;
-    const FLT frequencyBarRadius = height * gauge_frequencyBarRadius;
-    const FLT frequencyBarMajorTicRadius = frequencyBarRadius
+    const LINGOT_FLT centsBarMajorTicStroke = height * gauge_centsBarMajorTicStroke;
+    const LINGOT_FLT centsBarMinorTicStroke = height * gauge_centsBarMinorTicStroke;
+    const LINGOT_FLT centsTextSize = height * gauge_centsTextSize;
+    const LINGOT_FLT frequencyBarRadius = height * gauge_frequencyBarRadius;
+    const LINGOT_FLT frequencyBarMajorTicRadius = frequencyBarRadius
             + height * gauge_frequencyBarMajorTicRadius;
-    const FLT frequencyBarStroke = height * gauge_frequencyBarStroke;
-    const FLT okBarRadius = height * gauge_okBarRadius;
-    const FLT okBarStroke = height * gauge_okBarStroke;
+    const LINGOT_FLT frequencyBarStroke = height * gauge_frequencyBarStroke;
+    const LINGOT_FLT okBarRadius = height * gauge_okBarRadius;
+    const LINGOT_FLT okBarStroke = height * gauge_okBarStroke;
 
     cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
     cairo_save(cr);
@@ -241,15 +241,15 @@ void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* fra
     }
 
     // normalized dimensions
-    static const FLT gauge_gaugeCenterY = 0.94;
-    static const FLT gauge_gaugeLength = 0.85;
-    static const FLT gauge_gaugeLengthBack = 0.08;
-    static const FLT gauge_gaugeCenterRadius = 0.045;
-    static const FLT gauge_gaugeStroke = 0.012;
-    static const FLT gauge_gaugeShadowOffsetX = 0.015;
-    static const FLT gauge_gaugeShadowOffsetY = 0.01;
+    static const LINGOT_FLT gauge_gaugeCenterY = 0.94;
+    static const LINGOT_FLT gauge_gaugeLength = 0.85;
+    static const LINGOT_FLT gauge_gaugeLengthBack = 0.08;
+    static const LINGOT_FLT gauge_gaugeCenterRadius = 0.045;
+    static const LINGOT_FLT gauge_gaugeStroke = 0.012;
+    static const LINGOT_FLT gauge_gaugeShadowOffsetX = 0.015;
+    static const LINGOT_FLT gauge_gaugeShadowOffsetY = 0.01;
 
-    static const FLT overtureAngle = 65.0 * M_PI / 180.0;
+    static const LINGOT_FLT overtureAngle = 65.0 * M_PI / 180.0;
 
     // colors
     static const unsigned int gauge_gaugeColor = 0xaa3333;
@@ -269,10 +269,10 @@ void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* fra
     const point_t gaugeShadowCenter = { .x = gaugeCenter.x
                                         + height * gauge_gaugeShadowOffsetX, .y = gaugeCenter.y
                                         + height * gauge_gaugeShadowOffsetY };
-    const FLT gaugeLength = height * gauge_gaugeLength;
-    const FLT gaugeLengthBack = height * gauge_gaugeLengthBack;
-    const FLT gaugeCenterRadius = height * gauge_gaugeCenterRadius;
-    const FLT gaugeStroke = height * gauge_gaugeStroke;
+    const LINGOT_FLT gaugeLength = height * gauge_gaugeLength;
+    const LINGOT_FLT gaugeLengthBack = height * gauge_gaugeLengthBack;
+    const LINGOT_FLT gaugeCenterRadius = height * gauge_gaugeCenterRadius;
+    const LINGOT_FLT gaugeStroke = height * gauge_gaugeStroke;
 
     lingot_gui_gauge_redraw_background(cr, frame);
 

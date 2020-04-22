@@ -33,13 +33,13 @@
 // given each polynomial order and coefs, with optional initial status.
 void lingot_filter_new(lingot_filter_t* filter,
                        unsigned int Na, unsigned int Nb,
-                       const FLT* a, const FLT* b) {
+                       const LINGOT_FLT* a, const LINGOT_FLT* b) {
     unsigned int i;
     filter->N = max(Na, Nb);
 
-    filter->a = malloc((filter->N + 1) * sizeof(FLT));
-    filter->b = malloc((filter->N + 1) * sizeof(FLT));
-    filter->s = malloc((filter->N + 1) * sizeof(FLT));
+    filter->a = malloc((filter->N + 1) * sizeof(LINGOT_FLT));
+    filter->b = malloc((filter->N + 1) * sizeof(LINGOT_FLT));
+    filter->s = malloc((filter->N + 1) * sizeof(LINGOT_FLT));
 
     for (i = 0; i <= filter->N; i++) {
         filter->a[i] = 0.0;
@@ -47,8 +47,8 @@ void lingot_filter_new(lingot_filter_t* filter,
         filter->s[i] = 0.0;
     }
 
-    memcpy(filter->a, a, (Na + 1) * sizeof(FLT));
-    memcpy(filter->b, b, (Nb + 1) * sizeof(FLT));
+    memcpy(filter->a, a, (Na + 1) * sizeof(LINGOT_FLT));
+    memcpy(filter->b, b, (Nb + 1) * sizeof(LINGOT_FLT));
 
     for (i = 0; i <= filter->N; i++) {
         filter->a[i] /= a[0]; // polynomial normalization.
@@ -74,8 +74,8 @@ void lingot_filter_destroy(lingot_filter_t* filter) {
 
 // Digital Filter Implementation II, in & out can overlap.
 void lingot_filter_filter(lingot_filter_t* filter, unsigned int n,
-                          const FLT* in, FLT* out) {
-    FLT w, y;
+                          const LINGOT_FLT* in, LINGOT_FLT* out) {
+    LINGOT_FLT w, y;
     unsigned int i;
     int j;
 
@@ -98,8 +98,8 @@ void lingot_filter_filter(lingot_filter_t* filter, unsigned int n,
 }
 
 // single sample filtering
-FLT lingot_filter_filter_sample(lingot_filter_t* filter, FLT in) {
-    FLT result;
+LINGOT_FLT lingot_filter_filter_sample(lingot_filter_t* filter, LINGOT_FLT in) {
+    LINGOT_FLT result;
 
     lingot_filter_filter(filter, 1, &in, &result);
     return result;
@@ -122,16 +122,16 @@ void lingot_filter_vector_product(unsigned int n, lingot_complex_t* vector, ling
 }
 
 // Chebyshev filters
-void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, FLT Rp, FLT wc) {
+void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, LINGOT_FLT Rp, LINGOT_FLT wc) {
     unsigned int i; // loops
     unsigned int k;
     unsigned int p;
 
-    FLT a[n + 1];
-    FLT b[n + 1];
+    LINGOT_FLT a[n + 1];
+    LINGOT_FLT b[n + 1];
 
-    FLT new_a[n + 1];
-    FLT new_b[n + 1];
+    LINGOT_FLT new_a[n + 1];
+    LINGOT_FLT new_b[n + 1];
 
     // locate poles
     lingot_complex_t pole[n];
@@ -141,17 +141,17 @@ void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, FLT Rp,
         pole[i][1] = 0.0;
     }
 
-    FLT T = 2.0;
+    LINGOT_FLT T = 2.0;
     // 2Hz
-    FLT W = 2.0 / T * tan(M_PI * wc / T);
+    LINGOT_FLT W = 2.0 / T * tan(M_PI * wc / T);
 
-    FLT epsilon = sqrt(pow(10.0, 0.1 * Rp) - 1);
-    FLT v0 = asinh(1 / epsilon) / n;
+    LINGOT_FLT epsilon = sqrt(pow(10.0, 0.1 * Rp) - 1);
+    LINGOT_FLT v0 = asinh(1 / epsilon) / n;
 
-    FLT sv0 = sinh(v0);
-    FLT cv0 = cosh(v0);
+    LINGOT_FLT sv0 = sinh(v0);
+    LINGOT_FLT cv0 = cosh(v0);
 
-    FLT t;
+    LINGOT_FLT t;
 
     for (i = -(n - 1), k = 0; k < n; i += 2, k++) {
         t = M_PI * i / (2.0 * n);
@@ -163,12 +163,12 @@ void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, FLT Rp,
     lingot_filter_vector_product(n, pole, gain);
 
     if ((n & 1) == 0) { // even
-        FLT f = pow(10.0, -0.05 * Rp);
+        LINGOT_FLT f = pow(10.0, -0.05 * Rp);
         gain[0] *= f;
         gain[1] *= f;
     }
 
-    FLT f = pow(W, n);
+    LINGOT_FLT f = pow(W, n);
     gain[0] *= f;
     gain[1] *= f;
 
@@ -221,11 +221,11 @@ void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, FLT Rp,
 
     // iterate over the conjugate pairs
     for (p = 0; p < n / 2; p++) {
-        FLT b1 = 2.0;
-        FLT b2 = 1.0;
+        LINGOT_FLT b1 = 2.0;
+        LINGOT_FLT b2 = 1.0;
 
-        FLT a1 = -2.0 * pole[p][0];
-        FLT a2 = pole[p][0] * pole[p][0] + pole[p][1] * pole[p][1];
+        LINGOT_FLT a1 = -2.0 * pole[p][0];
+        LINGOT_FLT a2 = pole[p][0] * pole[p][0] + pole[p][1] * pole[p][1];
 
         // 2nd order subfilter per each pair
         new_a[1] = a[1] + a1 * a[0];

@@ -32,6 +32,11 @@ extern "C" {
 #include "lingot-config.h"
 #include "lingot-io-config-scale.h"
 
+extern char CONFIG_FILE_NAME[200];
+
+#define LINGOT_CONFIG_DIR_NAME             ".config/lingot/"
+#define LINGOT_DEFAULT_CONFIG_FILE_NAME    "lingot.conf"
+
 // configuration parameter identifier
 typedef enum {
     LINGOT_PARAMETER_ID_AUDIO_SYSTEM, //

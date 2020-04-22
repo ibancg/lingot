@@ -41,7 +41,7 @@
  DTFT functions.
  */
 
-void lingot_fft_plan_create(lingot_fft_plan_t* result, FLT* in, unsigned int n) {
+void lingot_fft_plan_create(lingot_fft_plan_t* result, LINGOT_FLT* in, unsigned int n) {
 
     result->n = n;
     result->in = in;
@@ -124,7 +124,7 @@ void lingot_fft_fft(lingot_fft_plan_t* plan) {
 
 #endif
 
-void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, FLT* out, unsigned int n_out) {
+void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, unsigned int n_out) {
 
     unsigned int i;
     double _1_N2 = 1.0 / (plan->n * plan->n);
@@ -147,10 +147,10 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, FLT* out, unsigned 
 /* Spectral Power Distribution estimation, selectively in frequency, by DFT.
  transforms signal in of N1 samples from frequency wi, with sample
  separation of dw rads, storing the result on buffer out with N2 samples. */
-void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2) {
-    FLT Xr, Xi;
-    FLT wn;
-    const FLT N1_2 = N1 * N1;
+void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_FLT dw, LINGOT_FLT* out, unsigned int N2) {
+    LINGOT_FLT Xr, Xi;
+    LINGOT_FLT wn;
+    const LINGOT_FLT N1_2 = N1 * N1;
     unsigned int i;
     unsigned int n;
 
@@ -170,20 +170,20 @@ void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, uns
     }
 }
 
-void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0,
-                               FLT* out_d1, FLT* out_d2) {
-    FLT x_cos_wn;
-    FLT x_sin_wn;
-    const FLT N2 = N * N;
+void lingot_fft_spd_diffs_eval(const LINGOT_FLT* in, unsigned int N, LINGOT_FLT w, LINGOT_FLT* out_d0,
+                               LINGOT_FLT* out_d1, LINGOT_FLT* out_d2) {
+    LINGOT_FLT x_cos_wn;
+    LINGOT_FLT x_sin_wn;
+    const LINGOT_FLT N2 = N * N;
 
     unsigned int n;
 
-    FLT SUM_x_sin_wn = 0.0;
-    FLT SUM_x_cos_wn = 0.0;
-    FLT SUM_x_n_sin_wn = 0.0;
-    FLT SUM_x_n_cos_wn = 0.0;
-    FLT SUM_x_n2_sin_wn = 0.0;
-    FLT SUM_x_n2_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_n_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_n_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_n2_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_n2_cos_wn = 0.0;
 
     for (n = 0; n < N; n++) {
 
@@ -198,7 +198,7 @@ void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0
         SUM_x_n2_cos_wn += x_cos_wn * n * n;
     }
 
-    FLT N_2 = N * N;
+    LINGOT_FLT N_2 = N * N;
     *out_d0 = (SUM_x_cos_wn * SUM_x_cos_wn + SUM_x_sin_wn * SUM_x_sin_wn) / N2;
     *out_d1 = 2.0
             * (SUM_x_sin_wn * SUM_x_n_cos_wn - SUM_x_cos_wn * SUM_x_n_sin_wn)

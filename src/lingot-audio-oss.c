@@ -30,7 +30,7 @@
 
 #include "lingot-audio.h"
 #include "lingot-msg.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-audio-oss.h"
 #include "lingot-i18n.h"
 

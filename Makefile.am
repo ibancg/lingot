@@ -45,7 +45,8 @@ lingot_SOURCES = \
   src/lingot-config.h \
   src/lingot-core.c \
   src/lingot-core.h \
-  src/lingot-defs.c \
+  src/lingot-defs-internal.c \
+  src/lingot-defs-internal.h \
   src/lingot-defs.h \
   src/lingot-fft.c \
   src/lingot-fft.h \

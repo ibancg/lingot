@@ -25,25 +25,25 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-gui-mainframe.h"
 
 static int spectrum_size_x = 0;
 static int spectrum_size_y = 0;
 
-static FLT spectrum_bottom_margin;
-static FLT spectrum_top_margin;
-static FLT spectrum_left_margin;
-static FLT spectrum_right_margin;
+static LINGOT_FLT spectrum_bottom_margin;
+static LINGOT_FLT spectrum_top_margin;
+static LINGOT_FLT spectrum_left_margin;
+static LINGOT_FLT spectrum_right_margin;
 
-static FLT spectrum_inner_x;
-static FLT spectrum_inner_y;
+static LINGOT_FLT spectrum_inner_x;
+static LINGOT_FLT spectrum_inner_y;
 
-static const FLT spectrum_min_db = 0; // TODO
-static const FLT spectrum_max_db = 52;
-static FLT spectrum_db_density = 0;
+static const LINGOT_FLT spectrum_min_db = 0; // TODO
+static const LINGOT_FLT spectrum_max_db = 52;
+static LINGOT_FLT spectrum_db_density = 0;
 
-static char* lingot_gui_spectrum_format_frequency(FLT freq, char* buff) {
+static char* lingot_gui_spectrum_format_frequency(LINGOT_FLT freq, char* buff) {
     if (freq == 0.0) {
         sprintf(buff, "0 Hz");
     } else if (floor(freq) == freq)
@@ -63,7 +63,7 @@ static char* lingot_gui_spectrum_format_frequency(FLT freq, char* buff) {
     return buff;
 }
 
-static FLT lingot_gui_spectrum_get_in_bounds(FLT value, FLT min, FLT max) {
+static LINGOT_FLT lingot_gui_spectrum_get_in_bounds(LINGOT_FLT value, LINGOT_FLT min, LINGOT_FLT max) {
     if (value < min) {
         value = min;
     } else if (value > max) {
@@ -74,7 +74,7 @@ static FLT lingot_gui_spectrum_get_in_bounds(FLT value, FLT min, FLT max) {
 
 static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame_t *frame) {
 
-    const FLT font_size = 8 + spectrum_size_y / 30;
+    const LINGOT_FLT font_size = 8 + spectrum_size_y / 30;
 
     static char buff[10];
     static char buff2[10];
@@ -123,7 +123,7 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
     cairo_stroke(cr);
 
     // choose scale factor
-    const FLT spectrum_max_frequency = 0.5 * frame->conf.sample_rate
+    const LINGOT_FLT spectrum_max_frequency = 0.5 * frame->conf.sample_rate
             / frame->conf.oversampling;
 
     // scale factors (in KHz) to draw the grid. We will choose the smaller
@@ -137,12 +137,12 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
             break;
     }
 
-    FLT scale = scales[i];
-    FLT grid_width = 1e3 * scales[i] * spectrum_inner_x
+    LINGOT_FLT scale = scales[i];
+    LINGOT_FLT grid_width = 1e3 * scales[i] * spectrum_inner_x
             / spectrum_max_frequency;
 
-    FLT freq = 0.0;
-    FLT x;
+    LINGOT_FLT freq = 0.0;
+    LINGOT_FLT x;
     for (x = 0.0; x <= spectrum_inner_x; x += grid_width) {
         cairo_move_to(cr, spectrum_left_margin + x, spectrum_top_margin);
         cairo_rel_line_to(cr, 0, spectrum_inner_y + 3); // TODO: proportion
@@ -179,7 +179,7 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
 
     const int db_scale = db_scales[i];
 
-    FLT y = 0;
+    LINGOT_FLT y = 0;
     int i0 = (int) ceil(spectrum_min_db / db_scale);
     if (spectrum_min_db < 0.0) {
         i0--;
@@ -225,23 +225,23 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_set_line_width(cr, 1.0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
 
-        FLT x;
-        FLT y = -1;
+        LINGOT_FLT x;
+        LINGOT_FLT y = -1;
 
         const unsigned int min_index = 0;
         const unsigned int max_index = data->conf.fft_size / 2;
 
-        FLT index_density = spectrum_inner_x / max_index;
+        LINGOT_FLT index_density = spectrum_inner_x / max_index;
         // TODO: step
         const unsigned int index_step = 1;
 
         static const double dashed1[] = { 5.0, 5.0 };
         static int len1 = sizeof(dashed1) / sizeof(dashed1[0]);
 
-        const FLT x0 = spectrum_left_margin;
-        const FLT y0 = spectrum_size_y - spectrum_bottom_margin;
+        const LINGOT_FLT x0 = spectrum_left_margin;
+        const LINGOT_FLT y0 = spectrum_size_y - spectrum_bottom_margin;
 
-        FLT dydxm1 = 0;
+        LINGOT_FLT dydxm1 = 0;
 
         cairo_set_source_rgba(cr, 0.13, 1.0, 0.13, 1.0);
 
@@ -251,7 +251,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_clip(cr);
         cairo_new_path(cr); // path not consumed by clip()
 
-        FLT* spd = lingot_core_thread_get_result_spd(&data->core);
+        LINGOT_FLT* spd = lingot_core_thread_get_result_spd(&data->core);
 
         y = -spectrum_db_density
                 * lingot_gui_spectrum_get_in_bounds(spd[min_index],
@@ -260,10 +260,10 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_move_to(cr, 0, 0);
         cairo_line_to(cr, 0, y);
 
-        FLT yp1 = -spectrum_db_density
+        LINGOT_FLT yp1 = -spectrum_db_density
                 * lingot_gui_spectrum_get_in_bounds(spd[min_index + 1],
                 spectrum_min_db, spectrum_max_db);
-        FLT ym1 = y;
+        LINGOT_FLT ym1 = y;
 
         for (i = index_step; i < max_index - 1; i += index_step) {
 
@@ -273,12 +273,12 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
             yp1 = -spectrum_db_density
                     * lingot_gui_spectrum_get_in_bounds(spd[i + 1],
                     spectrum_min_db, spectrum_max_db);
-            FLT dydx = (yp1 - ym1) / (2 * index_density);
-            static const FLT dx = 0.4;
-            FLT x1 = x - (1 - dx) * index_density;
-            FLT x2 = x - dx * index_density;
-            FLT y1 = ym1 + dydxm1 * dx;
-            FLT y2 = y - dydx * dx;
+            LINGOT_FLT dydx = (yp1 - ym1) / (2 * index_density);
+            static const LINGOT_FLT dx = 0.4;
+            LINGOT_FLT x1 = x - (1 - dx) * index_density;
+            LINGOT_FLT x2 = x - dx * index_density;
+            LINGOT_FLT y1 = ym1 + dydxm1 * dx;
+            LINGOT_FLT y2 = y - dydx * dx;
 
             dydxm1 = dydx;
             cairo_curve_to(cr, x1, y1, x2, y2, x, y);
@@ -295,7 +295,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         //		cairo_restore(cr);
         cairo_stroke(cr);
 
-        FLT freq = lingot_core_thread_get_result_frequency(&data->core);
+        LINGOT_FLT freq = lingot_core_thread_get_result_frequency(&data->core);
 
         if (freq != 0.0) {
 
@@ -333,7 +333,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_set_dash(cr, dashed1, len1, 0);
         cairo_set_source_rgba(cr, 1.0, 1.0, 0.2, 1.0);
 
-        FLT y_min = -spectrum_db_density
+        LINGOT_FLT y_min = -spectrum_db_density
                 * lingot_gui_spectrum_get_in_bounds(data->conf.min_overall_SNR,
                                                      spectrum_min_db,
                                                      spectrum_max_db); // dB.

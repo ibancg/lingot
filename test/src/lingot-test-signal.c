@@ -35,8 +35,8 @@ void lingot_test_signal(void) {
 
     // -------------------------------------------------------------------------------------------
 
-    FLT multiplier1 = 0.0;
-    FLT multiplier2 = 0.0;
+    LINGOT_FLT multiplier1 = 0.0;
+    LINGOT_FLT multiplier2 = 0.0;
 
     int rel = lingot_signal_frequencies_related(100.0, 150.001, 20.0, &multiplier1,
                                                 &multiplier2);
@@ -75,8 +75,8 @@ void lingot_test_signal(void) {
     int N = 16;
     int i = 0;
     int n = 5;
-    FLT* spd = malloc((size_t) N * sizeof(FLT));
-    FLT* noise = malloc((size_t) N * sizeof(FLT));
+    LINGOT_FLT* spd = malloc((size_t) N * sizeof(LINGOT_FLT));
+    LINGOT_FLT* noise = malloc((size_t) N * sizeof(LINGOT_FLT));
 
     for (i = 0; i < N; i++) {
         spd[i] = i + 1;
@@ -123,8 +123,8 @@ void lingot_test_signal(void) {
     N = 512;
     i = 0;
     n = 30;
-    spd = malloc((size_t) N * sizeof(FLT));
-    noise = malloc((size_t) N * sizeof(FLT));
+    spd = malloc((size_t) N * sizeof(LINGOT_FLT));
+    noise = malloc((size_t) N * sizeof(LINGOT_FLT));
 
     for (i = 0; i < N; i++) {
         spd[i] = N - i;

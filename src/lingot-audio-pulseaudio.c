@@ -32,7 +32,7 @@
 #include <string.h>
 
 #include "lingot-audio.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-audio-pulseaudio.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
