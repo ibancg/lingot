@@ -67,6 +67,24 @@ sudo apt-get install \
     pkg-config
 ```
 
+## Synopsis
+
+```console
+lingot [-c config]
+```
+
+The `-c` option causes the search of a file named `{config}.conf` in the
+`~/.config/lingot/` folder. For example:
+
+```console
+lingot -c bass
+```
+
+will take the configuration file `~/.config/lingot/bass.conf`. This is useful for
+maintaining different configurations for different instruments. It's also
+possible to load and save configuration files from the GUI. The default
+configuration file is `~/.config/lingot/lingot.conf`.
+
 ## Resources
 
 * [Official LINGOT website](http://lingot.nongnu.org/)
