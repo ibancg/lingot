@@ -43,11 +43,7 @@ liblingot_la_SOURCES = \
     src/lingot-fft.c \
     src/lingot-fft.h \
     src/lingot-filter.c \
-    src/lingot-gauge.c \
-    src/lingot-gauge.h \
     src/lingot-i18n.h \
-    src/lingot-io-config-scale.c \
-    src/lingot-io-config.c \
     src/lingot-msg.c \
     src/lingot-signal.c \
     src/lingot-signal.h
@@ -62,8 +58,6 @@ pkginclude_HEADERS = \
     src/lingot-config.h \
     src/lingot-core.h \
     src/lingot-filter.h \
-    src/lingot-io-config-scale.h \
-    src/lingot-io-config.h \
     src/lingot-msg.h
 
 src/lingot-resources.c: src/lingot.gresource.xml
@@ -91,6 +85,8 @@ liblingot_la_LDFLAGS = $(AM_LDFLAGS) \
   -Wl,--no-undefined
 
 lingot_SOURCES = \
+    src/lingot-gauge.c \
+    src/lingot-gauge.h \
     src/lingot-gui-config-dialog-scale.c \
     src/lingot-gui-config-dialog-scale.h \
     src/lingot-gui-config-dialog.c \
@@ -104,6 +100,10 @@ lingot_SOURCES = \
     src/lingot-gui-mainframe.h \
     src/lingot-gui-spectrum.c \
     src/lingot-gui-spectrum.h \
+    src/lingot-io-config-scale.c \
+    src/lingot-io-config-scale.h \
+    src/lingot-io-config.c \
+    src/lingot-io-config.h \
     src/lingot.c \
     src/lingot.gresource.xml
 
