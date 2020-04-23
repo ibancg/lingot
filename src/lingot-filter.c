@@ -25,6 +25,7 @@
 #include <memory.h>
 #include <math.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-complex.h"
 #include "lingot-filter.h"
 

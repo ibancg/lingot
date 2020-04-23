@@ -29,6 +29,14 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+#ifndef VERSION
+#  define VERSION "unknown"
+#endif
+
 #include "lingot-config.h"
 #include "lingot-io-config-scale.h"
 

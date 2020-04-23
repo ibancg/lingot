@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-filter.h"
 #include "lingot-audio.h"
 #include "lingot-fft.h"
