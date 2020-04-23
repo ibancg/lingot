@@ -22,7 +22,11 @@ SUBDIRS = po
 # The -pthread compiler and linker option links with libpthread, but
 # also selects various architecture-dependent settings.
 AM_LDFLAGS = -pthread -Wl,--as-needed
-AM_CFLAGS = -pthread -Wall -Wextra -pedantic
+# The glib-compile-resources was generating strings longer than the
+# supported by the standard, adding warnings to the build output. The
+# flag -Wno-overlength-strings seems right, since we are compiling
+# our own generated code.
+AM_CFLAGS = -pthread -Wall -Wextra -pedantic -Wno-overlength-strings
 
 bin_PROGRAMS = lingot
 
