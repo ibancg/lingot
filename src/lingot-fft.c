@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-fft.h"
 #include "lingot-config.h"
 
@@ -51,7 +52,7 @@ void lingot_fft_plan_create(lingot_fft_plan_t* result, LINGOT_FLT* in, unsigned 
     memset(result->fft_out, 0, n * sizeof(fftw_complex));
     result->fftwplan = fftw_plan_dft_r2c_1d((int) n, in, result->fft_out, FFTW_ESTIMATE);
 #else
-    FLT alpha;
+    LINGOT_FLT alpha;
 
     // twiddle factors
     result->wn = (lingot_complex_t*) malloc((n >> 1) * sizeof(lingot_complex_t));
@@ -83,7 +84,7 @@ void lingot_fft_plan_destroy(lingot_fft_plan_t* plan) {
 
 #ifndef LIBFFTW
 
-void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsigned long int N,
+void _lingot_fft_fft(LINGOT_FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsigned long int N,
                      unsigned long int offset, unsigned long int d1, unsigned long int step) {
     lingot_complex_t X1, X2;
     unsigned long int Np2 = (N >> 1); // N/2
@@ -137,7 +138,7 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, un
     lingot_fft_fft(plan);
 #endif
 
-    // esteem of SPD from FFT. (normalized squared module)
+    // estimation of SPD from FFT. (normalized squared module)
     for (i = 0; i < n_out; i++) {
         out[i] = (plan->fft_out[i][0] * plan->fft_out[i][0]
                 + plan->fft_out[i][1] * plan->fft_out[i][1]) * _1_N2;
@@ -150,7 +151,7 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, un
 void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_FLT dw, LINGOT_FLT* out, unsigned int N2) {
     LINGOT_FLT Xr, Xi;
     LINGOT_FLT wn;
-    const LINGOT_FLT N1_2 = N1 * N1;
+    const LINGOT_FLT _1_N2 = 1.0 / (N1 * N1);
     unsigned int i;
     unsigned int n;
 
@@ -166,7 +167,7 @@ void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_
             Xi = Xi - sin(wn) * in[n];
         }
 
-        out[i] = (Xr * Xr + Xi * Xi) / N1_2; // normalized squared module.
+        out[i] = (Xr * Xr + Xi * Xi) * _1_N2; // normalized squared module.
     }
 }
 
