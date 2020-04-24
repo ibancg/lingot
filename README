@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/ibancg/lingot.svg?branch=master)](https://travis-ci.com/ibancg/lingot)
+[![C/C++ CI](https://github.com/ibancg/lingot/workflows/C/C++%20CI/badge.svg)](https://github.com/ibancg/lingot/actions)
 
 LINGOT - A musical instrument tuner
 ===================================

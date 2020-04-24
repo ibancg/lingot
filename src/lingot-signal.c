@@ -25,10 +25,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <complex.h>
 
 #include "lingot-defs-internal.h"
 #include "lingot-signal.h"
-#include "lingot-complex.h"
 #include "lingot-filter.h"
 
 static int lingot_signal_is_peak(const LINGOT_FLT* signal, int index, unsigned short peak_half_width) {
@@ -53,13 +53,12 @@ static LINGOT_FLT lingot_signal_fft_bin_interpolate_quinn2_tau(LINGOT_FLT x) {
                 / (x + 1.0 + 0.816496580927726)));
 }
 
-static LINGOT_FLT lingot_signal_fft_bin_interpolate_quinn2(const lingot_complex_t y1,
-                                                    const lingot_complex_t y2,
-                                                    const lingot_complex_t y3) {
-    LINGOT_FLT absy2_2 = y2[0] * y2[0] + y2[1] * y2[1];
-    LINGOT_FLT ap = (y3[0] * y2[0] + y3[1] * y2[1]) / absy2_2;
+static LINGOT_FLT lingot_signal_fft_bin_interpolate_quinn2(const LINGOT_FLT complex y1,
+                                                           const LINGOT_FLT complex y2,
+                                                           const LINGOT_FLT complex y3) {
+    LINGOT_FLT ap = creal(y3 / y2);
     LINGOT_FLT dp = -ap / (1.0 - ap);
-    LINGOT_FLT am = (y1[0] * y2[0] + y1[1] * y2[1]) / absy2_2;
+    LINGOT_FLT am = creal(y1 / y2);
     LINGOT_FLT dm = am / (1.0 - am);
     return 0.5 * (dp + dm)
             + lingot_signal_fft_bin_interpolate_quinn2_tau(dp * dp)
@@ -72,7 +71,7 @@ static int lingot_signal_compare_int(const void *a, const void *b) {
 }
 
 int lingot_signal_frequencies_related(LINGOT_FLT freq1, LINGOT_FLT freq2, LINGOT_FLT minFrequency,
-                                        LINGOT_FLT* mulFreq1ToFreq, LINGOT_FLT* mulFreq2ToFreq) {
+                                      LINGOT_FLT* mulFreq1ToFreq, LINGOT_FLT* mulFreq2ToFreq) {
 
     int result = 0;
     static const LINGOT_FLT tol = 5e-2; // TODO: tune
@@ -259,18 +258,18 @@ static LINGOT_FLT lingot_signal_frequency_penalty(LINGOT_FLT freq) {
 
 // search the fundamental peak given the SPD and its 2nd derivative
 LINGOT_FLT lingot_signal_estimate_fundamental_frequency(const LINGOT_FLT* snr,
-                                                 LINGOT_FLT freq,
-                                                 const lingot_complex_t* fft,
-                                                 unsigned int N,
-                                                 unsigned int n_peaks,
-                                                 unsigned int lowest_index,
-                                                 unsigned int highest_index,
-                                                 unsigned short peak_half_width,
-                                                 LINGOT_FLT delta_f_fft,
-                                                 LINGOT_FLT min_snr,
-                                                 LINGOT_FLT min_q,
-                                                 LINGOT_FLT min_freq,
-                                                 short* divisor) {
+                                                        LINGOT_FLT freq,
+                                                        const LINGOT_FLT complex* fft,
+                                                        unsigned int N,
+                                                        unsigned int n_peaks,
+                                                        unsigned int lowest_index,
+                                                        unsigned int highest_index,
+                                                        unsigned short peak_half_width,
+                                                        LINGOT_FLT delta_f_fft,
+                                                        LINGOT_FLT min_snr,
+                                                        LINGOT_FLT min_q,
+                                                        LINGOT_FLT min_freq,
+                                                        short* divisor) {
     unsigned int i, j, m;
     int p_index[n_peaks];
     LINGOT_FLT magnitude[n_peaks];
