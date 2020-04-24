@@ -27,7 +27,6 @@
 #include <math.h>
 
 #include "lingot-test.h"
-#include "lingot-complex.h"
 #include "lingot-filter.h"
 #include "lingot-signal.h"
 

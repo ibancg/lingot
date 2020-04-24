@@ -31,6 +31,7 @@
 #include <string.h>
 #include <complex.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-fft.h"
 #include "lingot-config.h"
 
