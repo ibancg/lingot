@@ -37,8 +37,6 @@ lingot_SOURCES = \
   src/lingot-audio-pulseaudio.h \
   src/lingot-audio.c \
   src/lingot-audio.h \
-  src/lingot-complex.c \
-  src/lingot-complex.h \
   src/lingot-config-scale.c \
   src/lingot-config-scale.h \
   src/lingot-config.c \
@@ -159,6 +157,7 @@ check_PROGRAMS = lingot_test
 lingot_test_SOURCES = \
   test/src/lingot-test-config-scale.c \
   test/src/lingot-test-core.c \
+  test/src/lingot-test-filter.c \
   test/src/lingot-test-io-config.c \
   test/src/lingot-test-main.c \
   test/src/lingot-test-signal.c \

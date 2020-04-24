@@ -31,7 +31,8 @@
 
 #include "lingot-defs.h"
 #include "lingot-config.h"
-#include "lingot-complex.h"
+
+#include <complex.h>
 
 // Tells whether the two frequencies are harmonically related, giving the
 // multipliers to the ground frequency.
@@ -44,18 +45,18 @@ int lingot_signal_frequencies_related(LINGOT_FLT freq1, LINGOT_FLT freq2,
 LINGOT_FLT lingot_signal_frequency_locker(LINGOT_FLT freq, LINGOT_FLT minFrequency);
 
 LINGOT_FLT lingot_signal_estimate_fundamental_frequency(const LINGOT_FLT* snr,
-                                                 LINGOT_FLT freq,
-                                                 const lingot_complex_t* fft,
-                                                 unsigned int N,
-                                                 unsigned int n_peaks,
-                                                 unsigned int lowest_index,
-                                                 unsigned int highest_index,
-                                                 unsigned short peak_half_width,
-                                                 LINGOT_FLT delta_f_fft,
-                                                 LINGOT_FLT min_snr,
-                                                 LINGOT_FLT min_q,
-                                                 LINGOT_FLT min_freq,
-                                                 short* divisor);
+                                                        LINGOT_FLT freq,
+                                                        const LINGOT_FLT complex* fft,
+                                                        unsigned int N,
+                                                        unsigned int n_peaks,
+                                                        unsigned int lowest_index,
+                                                        unsigned int highest_index,
+                                                        unsigned short peak_half_width,
+                                                        LINGOT_FLT delta_f_fft,
+                                                        LINGOT_FLT min_snr,
+                                                        LINGOT_FLT min_q,
+                                                        LINGOT_FLT min_freq,
+                                                        short* divisor);
 
 void lingot_signal_compute_noise_level(const LINGOT_FLT* spd,
                                        int N,

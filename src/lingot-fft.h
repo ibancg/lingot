@@ -38,7 +38,7 @@
 #endif
 
 #include "lingot-defs.h"
-#include "lingot-complex.h"
+#include <complex.h>
 
 typedef struct {
 
@@ -49,9 +49,9 @@ typedef struct {
     fftw_plan fftwplan;
 #else
     // phase factor table, for FFT optimization.
-    lingot_complex_t* wn;
+    LINGOT_FLT complex* wn;
 #endif
-    lingot_complex_t* fft_out; // complex signal in freq.
+    LINGOT_FLT complex* fft_out; // complex signal in freq.
 } lingot_fft_plan_t;
 
 void lingot_fft_plan_create(lingot_fft_plan_t*, LINGOT_FLT* in, unsigned int n);

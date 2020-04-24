@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-filter.h"
 #include "lingot-audio.h"
 #include "lingot-fft.h"
@@ -449,7 +450,7 @@ void lingot_core_compute_fundamental_fequency(lingot_core_t *core_) {
     short divisor = 1;
     LINGOT_FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
                                                           0.5 * core->freq,
-                                                          (const lingot_complex_t*) core->fftplan.fft_out,
+                                                                 core->fftplan.fft_out,
                                                           spd_size,
                                                           conf->peak_number,
                                                           lowest_index,
