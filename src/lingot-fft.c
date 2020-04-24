@@ -29,13 +29,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <complex.h>
 
 #include "lingot-fft.h"
 #include "lingot-config.h"
-
-#ifndef LIBFFTW
-#include "lingot-complex.h"
-#endif
 
 /*
  DTFT functions.
@@ -51,19 +48,16 @@ void lingot_fft_plan_create(lingot_fft_plan_t* result, LINGOT_FLT* in, unsigned 
     memset(result->fft_out, 0, n * sizeof(fftw_complex));
     result->fftwplan = fftw_plan_dft_r2c_1d((int) n, in, result->fft_out, FFTW_ESTIMATE);
 #else
-    FLT alpha;
 
     // twiddle factors
-    result->wn = (lingot_complex_t*) malloc((n >> 1) * sizeof(lingot_complex_t));
+    result->wn = (LINGOT_FLT complex*) malloc((n >> 1) * sizeof(LINGOT_FLT complex));
 
     unsigned int i;
     for (i = 0; i < (n >> 1); i++) {
-        alpha = -2.0 * i * M_PI / n;
-        result->wn[i][0] = cos(alpha);
-        result->wn[i][1] = sin(alpha);
+        result->wn[i] = cexp(-2.0 * i * I * M_PI / n);
     }
-    result->fft_out = malloc(n * sizeof(lingot_complex_t)); // complex signal in freq domain.
-    memset(result->fft_out, 0, n * sizeof(lingot_complex_t));
+    result->fft_out = malloc(n * sizeof(LINGOT_FLT complex)); // complex signal in freq domain.
+    memset(result->fft_out, 0, n * sizeof(LINGOT_FLT complex));
 #endif
 
 }
@@ -83,22 +77,19 @@ void lingot_fft_plan_destroy(lingot_fft_plan_t* plan) {
 
 #ifndef LIBFFTW
 
-void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsigned long int N,
+void _lingot_fft_fft(LINGOT_FLT* in, LINGOT_FLT complex* out, LINGOT_FLT complex* wn, unsigned long int N,
                      unsigned long int offset, unsigned long int d1, unsigned long int step) {
-    lingot_complex_t X1, X2;
+    LINGOT_FLT complex X1, X2;
     unsigned long int Np2 = (N >> 1); // N/2
     unsigned long int a, b, c, q;
 
     if (N == 2) { // butterfly for N = 2;
 
-        X1[0] = in[offset];
-        X1[1] = 0.0;
-        X2[0] = in[offset + step];
-        X2[1] = 0.0;
+        X1 = in[offset];
+        X2 = in[offset + step];
 
-        lingot_complex_add(X1, X2, out[d1]);
-        lingot_complex_sub(X1, X2, out[d1 + Np2]);
-
+        out[d1]         = X1 + X2;
+        out[d1 + Np2]   = X1 - X2;
         return;
     }
 
@@ -110,11 +101,10 @@ void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsig
         a = q + d1;
         b = a + Np2;
 
-        X1[0] = out[a][0];
-        X1[1] = out[a][1];
-        lingot_complex_mul(out[b], wn[c], X2);
-        lingot_complex_add(X1, X2, out[a]);
-        lingot_complex_sub(X1, X2, out[b]);
+        X1 = out[a];
+        X2 = out[b] * wn[c];
+        out[a] = X1 + X2;
+        out[b] = X1 - X2;
     }
 }
 
@@ -137,10 +127,12 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, un
     lingot_fft_fft(plan);
 #endif
 
-    // esteem of SPD from FFT. (normalized squared module)
+    typedef LINGOT_FLT lingot_complex_t[2];
+    lingot_complex_t* _out = (lingot_complex_t*) plan->fft_out;
+
+    // estimation of SPD from FFT. (normalized squared module)
     for (i = 0; i < n_out; i++) {
-        out[i] = (plan->fft_out[i][0] * plan->fft_out[i][0]
-                + plan->fft_out[i][1] * plan->fft_out[i][1]) * _1_N2;
+        out[i] = (_out[i][0] * _out[i][0] + _out[i][1] * _out[i][1]) * _1_N2;
     }
 }
 

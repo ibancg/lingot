@@ -4,11 +4,9 @@ src/lingot-audio-jack.c
 src/lingot-audio-oss.c
 src/lingot-audio-pulseaudio.c
 src/lingot-audio.c
-src/lingot-complex.c
 src/lingot-config-scale.c
 src/lingot-config.c
 src/lingot-core.c
-src/lingot-defs-internal.c
 src/lingot-fft.c
 src/lingot-filter.c
 src/lingot-gui-config-dialog-scale.c
@@ -21,5 +19,4 @@ src/lingot-gui-spectrum.c
 src/lingot-io-config-scale.c
 src/lingot-io-config.c
 src/lingot-msg.c
-src/lingot-signal.c
 src/lingot.c

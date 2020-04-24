@@ -37,8 +37,6 @@ lingot_SOURCES = \
   src/lingot-audio-pulseaudio.h \
   src/lingot-audio.c \
   src/lingot-audio.h \
-  src/lingot-complex.c \
-  src/lingot-complex.h \
   src/lingot-config-scale.c \
   src/lingot-config-scale.h \
   src/lingot-config.c \
