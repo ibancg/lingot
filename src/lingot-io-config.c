@@ -269,7 +269,7 @@ void lingot_io_config_save(lingot_config_t *config, const char* filename) {
 
     int result = json_object_to_file_ext(filename, doc, JSON_C_TO_STRING_PRETTY);
     if (result == -1) {
-        fprintf(stderr, "error saving config file: %s\n", json_util_get_last_err());
+        fprintf(stderr, "error saving config file\n");
     }
     json_object_put(doc);
 }
@@ -293,7 +293,7 @@ int lingot_io_config_load(lingot_config_t* config, const char* filename) {
 
     json_object* doc = json_object_from_file(filename);
     if (!doc) {
-        fprintf(stderr, "error reading config file: %s\n", json_util_get_last_err());
+        fprintf(stderr, "error reading config file");
         return 0;
     }
 
