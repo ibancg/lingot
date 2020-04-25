@@ -34,6 +34,7 @@
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-gui-gauge.h"
+#include "lingot-gui-strobe-disc.h"
 #include "lingot-gui-spectrum.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-i18n.h"
@@ -42,7 +43,6 @@
 
 #define GAUGE_RATE           60.0
 #define ERROR_DISPATCH_RATE	 5.0
-void lingot_gui_mainframe_draw_strobe(cairo_t *cr, lingot_main_frame_t *);
 
 void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
@@ -50,9 +50,6 @@ static gchar* filechooser_config_last_folder = NULL;
 
 static const gdouble aspect_ratio_spectrum_visible = 1.14;
 static const gdouble aspect_ratio_spectrum_invisible = 2.07;
-
-double strobe_angle = 0.0;
-cairo_surface_t* strobe_image = NULL;
 
 void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
@@ -229,9 +226,8 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
         }
     }
 
-    strobe_angle += 1e-1 * frame->gauge_pos / GAUGE_RATE;
+    lingot_gui_strobe_disc_set_error(frame->gauge_pos);
     return 1;
-
 }
 
 /* timeout for dispatching the error queue */
@@ -455,7 +451,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     gtk_window_set_default_icon_name("org.nongnu.lingot");
     gtk_window_set_icon_name(GTK_WINDOW(frame->win), "org.nongnu.lingot");
 
-    strobe_image = cairo_image_surface_create_from_png("src/lingot-strobe.png");
+    lingot_gui_strobe_disc_init(GAUGE_RATE);
+
     frame->gauge_area = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
     frame->spectrum_area = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
 
@@ -499,8 +496,10 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_save_config),
                      frame);
 
+//    g_signal_connect(frame->gauge_area, "draw",
+//                     G_CALLBACK(lingot_gui_gauge_redraw), frame);
     g_signal_connect(frame->gauge_area, "draw",
-                     G_CALLBACK(lingot_gui_gauge_redraw), frame);
+                     G_CALLBACK(lingot_gui_strobe_disc_redraw), frame);
     g_signal_connect(frame->spectrum_area, "draw",
                      G_CALLBACK(lingot_gui_spectrum_redraw), frame);
     g_signal_connect(frame->win, "destroy",
@@ -541,27 +540,6 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 }
 
 // ---------------------------------------------------------------------------
-
-void lingot_gui_mainframe_draw_strobe(cairo_t *cr, lingot_main_frame_t* frame) {
-
-    const int width = gauge_size_x;
-    int height = gauge_size_y;
-
-    cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-    const GdkRectangle r = { .x = 0, .y = 0, .width = gauge_size_x, .height = gauge_size_y };
-    gdk_cairo_rectangle(cr, &r);
-    cairo_fill_preserve(cr);
-
-    int w = cairo_image_surface_get_width(strobe_image);
-    int h = cairo_image_surface_get_height(strobe_image);
-
-    cairo_translate(cr, width / 2.0, 1.5 * height);
-    cairo_rotate(cr, strobe_angle);
-    double s = 1.5 * width / w;
-    cairo_scale(cr, s, s);
-    cairo_translate(cr, -w / 2.0, -h / 2.0);
-    cairo_set_source_surface(cr, strobe_image, 0, 0);
-    cairo_paint(cr);
 
 
 void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t* frame) {
