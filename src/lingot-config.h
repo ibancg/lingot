@@ -50,29 +50,29 @@ typedef struct {
     int sample_rate; // hardware sample rate.
     unsigned int oversampling; // oversampling factor.
 
-    FLT root_frequency_error; // deviation of the above root frequency.
+    LINGOT_FLT root_frequency_error; // deviation of the above root frequency.
 
-    FLT min_frequency; // minimum frequency of the instrument.
-    FLT max_frequency; // maximum frequency of the instrument.
+    LINGOT_FLT min_frequency; // minimum frequency of the instrument.
+    LINGOT_FLT max_frequency; // maximum frequency of the instrument.
 
     int optimize_internal_parameters;
 
-    FLT internal_min_frequency; // minimum valid frequency.
-    FLT internal_max_frequency; // maximum frequency we want to tune.
+    LINGOT_FLT internal_min_frequency; // minimum valid frequency.
+    LINGOT_FLT internal_max_frequency; // maximum frequency we want to tune.
 
     unsigned int fft_size; // number of samples of the FFT.
 
-    FLT calculation_rate;
-    FLT visualization_rate;
+    LINGOT_FLT calculation_rate;
+    LINGOT_FLT visualization_rate;
 
-    FLT temporal_window; // duration in seconds of the temporal window.
+    LINGOT_FLT temporal_window; // duration in seconds of the temporal window.
 
     // samples stored in the temporal window (internal parameter).
     unsigned int temporal_buffer_size;
 
     // minimum SNR required for the overall set of peaks and for each peak
-    FLT min_overall_SNR; // dB
-    FLT min_SNR; // dB
+    LINGOT_FLT min_overall_SNR; // dB
+    LINGOT_FLT min_SNR; // dB
 
     window_type_t window_type;
 
@@ -90,10 +90,10 @@ typedef struct {
     //----------------------------------------------------------------------------
 
     // global range for the gauge in cents
-    FLT gauge_range;
+    LINGOT_FLT gauge_range;
 
     // gauge rest value in cents
-    FLT gauge_rest_value;
+    LINGOT_FLT gauge_rest_value;
 
     //----------------------------------------------------------------------------
 

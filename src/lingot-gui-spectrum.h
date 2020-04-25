@@ -22,31 +22,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOT_GAUGE_H
-#define LINGOT_GAUGE_H
+#ifndef LINGOT_GUI_SPECTRUM_H
+#define LINGOT_GUI_SPECTRUM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// Drawing routines for the spectrum widget.
 
-#include "lingot-defs.h"
-#include "lingot-filter.h"
+#include <gtk/gtk.h>
+#include "lingot-gui-mainframe.h"
 
-/*
- * Implements the dynamic behaviour of the gauge with a digital filter.
- */
+void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* data);
 
-typedef struct {
-    lingot_filter_t filter;
-    FLT position;
-} lingot_gauge_t;
-
-void lingot_gauge_new(lingot_gauge_t*, FLT gauge_rate, FLT initial_position);
-void lingot_gauge_destroy(lingot_gauge_t*);
-void lingot_gauge_compute(lingot_gauge_t*, FLT position);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /*LINGOT_GAUGE_H*/
+#endif // LINGOT_GUI_SPECTRUM_H

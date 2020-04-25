@@ -30,7 +30,7 @@
 #include "lingot-config-scale.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 void lingot_config_scale_new(lingot_scale_t* scale) {
 
@@ -50,7 +50,7 @@ void lingot_config_scale_allocate(lingot_scale_t* scale, unsigned short int note
     for (i = 0; i < notes; i++) {
         scale->note_name[i] = NULL;
     }
-    scale->offset_cents = malloc(notes * sizeof(FLT));
+    scale->offset_cents = malloc(notes * sizeof(LINGOT_FLT));
     scale->offset_ratios[0] = malloc(notes * sizeof(short int));
     scale->offset_ratios[1] = malloc(notes * sizeof(short int));
 }
@@ -85,7 +85,7 @@ void lingot_config_scale_restore_default_values(lingot_scale_t* scale) {
     scale->name = _strdup(_("Default equal-tempered scale"));
     lingot_config_scale_allocate(scale, 12);
 
-    scale->base_frequency = MID_C_FREQUENCY;
+    scale->base_frequency = LINGOT_MID_C_FREQUENCY;
 
     scale->note_name[0] = _strdup(tone_string[0]);
     scale->offset_cents[0] = 0.0;
@@ -129,12 +129,12 @@ int lingot_config_scale_get_note_index(const lingot_scale_t* scale, int index) {
     return r < 0 ? r + scale->notes : r;
 }
 
-FLT lingot_config_scale_get_absolute_offset(const lingot_scale_t* scale, int index) {
+LINGOT_FLT lingot_config_scale_get_absolute_offset(const lingot_scale_t* scale, int index) {
     return lingot_config_scale_get_octave(scale, index) * 1200.0
             + scale->offset_cents[lingot_config_scale_get_note_index(scale, index)];
 }
 
-FLT lingot_config_scale_get_frequency(const lingot_scale_t* scale, int index) {
+LINGOT_FLT lingot_config_scale_get_frequency(const lingot_scale_t* scale, int index) {
     return scale->base_frequency
             * pow(2.0,
                   lingot_config_scale_get_absolute_offset(scale, index)
@@ -142,12 +142,12 @@ FLT lingot_config_scale_get_frequency(const lingot_scale_t* scale, int index) {
 }
 
 int lingot_config_scale_get_closest_note_index(const lingot_scale_t* scale,
-                                               FLT freq, FLT deviation, FLT* error_cents) {
+                                               LINGOT_FLT freq, LINGOT_FLT deviation, LINGOT_FLT* error_cents) {
 
     int note_index = 0;
     int index;
 
-    FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
+    LINGOT_FLT offset = 1200.0 * log2(freq / scale->base_frequency) - deviation;
     int octave = (int) floor(offset / 1200);
     offset = fmod(offset, 1200.0);
     if (offset < 0.0) {
@@ -157,8 +157,8 @@ int lingot_config_scale_get_closest_note_index(const lingot_scale_t* scale,
     index = (int) floor(scale->notes * offset / 1200.0);
 
     // TODO: bisection?, avoid loop?
-    FLT pitch_inf;
-    FLT pitch_sup;
+    LINGOT_FLT pitch_inf;
+    LINGOT_FLT pitch_sup;
     int n = 0;
     for (;;) {
         n++;

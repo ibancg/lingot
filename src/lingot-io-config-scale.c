@@ -31,7 +31,7 @@
 #include "lingot-io-config-scale.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 
 int lingot_config_scale_parse_shift(char* char_buffer, double* cents,
                                     short int* numerator, short int* denominator) {
@@ -121,7 +121,7 @@ int lingot_config_scale_load_scl(lingot_scale_t* scale, char* filename) {
         return 0;
     }
 
-    scale->base_frequency = MID_C_FREQUENCY;
+    scale->base_frequency = LINGOT_MID_C_FREQUENCY;
 
     _try
     {

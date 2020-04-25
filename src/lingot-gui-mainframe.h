@@ -25,9 +25,8 @@
 #ifndef LINGOT_GUI_MAIN_FRAME_H
 #define LINGOT_GUI_MAIN_FRAME_H
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-core.h"
-#include "lingot-gauge.h"
 #include "lingot-config.h"
 #include "lingot-filter.h"
 #include "lingot-gui-config-dialog.h"
@@ -51,8 +50,7 @@ typedef struct _lingot_main_frame_t {
     GtkWidget* labelsbox;
 
     lingot_filter_t freq_filter;
-
-    lingot_gauge_t gauge;
+    lingot_filter_t gauge_filter;
 
     lingot_core_t core;
 
@@ -71,13 +69,13 @@ typedef struct _lingot_main_frame_t {
     guint error_dispatcher_uid;
 
     // filtered frequency and closest note index in the scale
-    FLT frequency;
+    LINGOT_FLT frequency;
+    // filtered position for the gauge
+    LINGOT_FLT gauge_pos;
+
     int closest_note_index;
 } lingot_main_frame_t;
 
-void lingot_gui_mainframe_create(int argc, char *argv[]);
-void lingot_gui_mainframe_destroy(lingot_main_frame_t*);
-
-void lingot_gui_mainframe_change_config(lingot_main_frame_t*, lingot_config_t*);
+lingot_main_frame_t* lingot_gui_mainframe_create();
 
 #endif //LINGOT_GUI_MAIN_FRAME_H

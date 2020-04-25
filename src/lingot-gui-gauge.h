@@ -22,25 +22,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOTI18N_H
-#define LINGOTI18N_H
+#ifndef LINGOT_GUI_GAUGE_H
+#define LINGOT_GUI_GAUGE_H
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+// Drawing routines for the gauge widget.
 
-#ifdef DISABLE_NLS
-#undef ENABLE_NLS
-#endif
+#include <gtk/gtk.h>
+#include "lingot-gui-mainframe.h"
 
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#include <locale.h>
-#include <langinfo.h>
-#undef _
-#    define _(String) (const char*) gettext (String)
-#else
-#    define _(String) (String)
-#endif
+void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t *);
 
-#endif /*LINGOTI18N_H*/
+#endif // LINGOT_GUI_GAUGE_H

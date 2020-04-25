@@ -20,21 +20,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 void lingot_test_io_config(void);
 void lingot_test_config_scale(void);
 void lingot_test_signal(void);
 void lingot_test_core(void);
+void lingot_test_filter(void);
 
 #ifndef LINGOT_TEST_USE_LIB
 
 // TODO: lib?
-#include "lingot-defs.c"
-#include "lingot-complex.c"
+#include "lingot-defs-internal.c"
 #include "lingot-msg.c"
 #include "lingot-config-scale.c"
 #include "lingot-config.c"
-#include "lingot-io-config.c"
-#include "lingot-io-config-scale.c"
 #include "lingot-audio.c"
 #include "lingot-audio-alsa.c"
 #include "lingot-audio-oss.c"
@@ -53,6 +55,9 @@ void lingot_test_core(void);
 #include "lingot-audio-pulseaudio.h"
 
 #endif
+
+#include "lingot-io-config.c"
+#include "lingot-io-config-scale.c"
 
 #include <stdio.h>
 #include <string.h>
@@ -93,6 +98,7 @@ int main(void) {
          (NULL == CU_add_test(pSuite, "lingot_config_scale", lingot_test_config_scale)) || //
          (NULL == CU_add_test(pSuite, "lingot_signal", lingot_test_signal)) || //
          (NULL == CU_add_test(pSuite, "lingot_core", lingot_test_core)) || //
+         (NULL == CU_add_test(pSuite, "lingot_filter", lingot_test_filter)) || //
          0) {
         CU_cleanup_registry();
         return CU_get_error();

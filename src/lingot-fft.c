@@ -22,22 +22,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <complex.h>
 
+#include "lingot-defs-internal.h"
 #include "lingot-fft.h"
 #include "lingot-config.h"
-
-#ifndef LIBFFTW
-#include "lingot-complex.h"
-#endif
 
 /*
  DTFT functions.
  */
 
-void lingot_fft_plan_create(lingot_fft_plan_t* result, FLT* in, unsigned int n) {
+void lingot_fft_plan_create(lingot_fft_plan_t* result, LINGOT_FLT* in, unsigned int n) {
 
     result->n = n;
     result->in = in;
@@ -47,19 +49,16 @@ void lingot_fft_plan_create(lingot_fft_plan_t* result, FLT* in, unsigned int n) 
     memset(result->fft_out, 0, n * sizeof(fftw_complex));
     result->fftwplan = fftw_plan_dft_r2c_1d((int) n, in, result->fft_out, FFTW_ESTIMATE);
 #else
-    FLT alpha;
 
     // twiddle factors
-    result->wn = (lingot_complex_t*) malloc((n >> 1) * sizeof(lingot_complex_t));
+    result->wn = (LINGOT_FLT complex*) malloc((n >> 1) * sizeof(LINGOT_FLT complex));
 
     unsigned int i;
     for (i = 0; i < (n >> 1); i++) {
-        alpha = -2.0 * i * M_PI / n;
-        result->wn[i][0] = cos(alpha);
-        result->wn[i][1] = sin(alpha);
+        result->wn[i] = cexp(-2.0 * i * I * M_PI / n);
     }
-    result->fft_out = malloc(n * sizeof(lingot_complex_t)); // complex signal in freq domain.
-    memset(result->fft_out, 0, n * sizeof(lingot_complex_t));
+    result->fft_out = malloc(n * sizeof(LINGOT_FLT complex)); // complex signal in freq domain.
+    memset(result->fft_out, 0, n * sizeof(LINGOT_FLT complex));
 #endif
 
 }
@@ -79,22 +78,19 @@ void lingot_fft_plan_destroy(lingot_fft_plan_t* plan) {
 
 #ifndef LIBFFTW
 
-void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsigned long int N,
+void _lingot_fft_fft(LINGOT_FLT* in, LINGOT_FLT complex* out, LINGOT_FLT complex* wn, unsigned long int N,
                      unsigned long int offset, unsigned long int d1, unsigned long int step) {
-    lingot_complex_t X1, X2;
+    LINGOT_FLT complex X1, X2;
     unsigned long int Np2 = (N >> 1); // N/2
     unsigned long int a, b, c, q;
 
     if (N == 2) { // butterfly for N = 2;
 
-        X1[0] = in[offset];
-        X1[1] = 0.0;
-        X2[0] = in[offset + step];
-        X2[1] = 0.0;
+        X1 = in[offset];
+        X2 = in[offset + step];
 
-        lingot_complex_add(X1, X2, out[d1]);
-        lingot_complex_sub(X1, X2, out[d1 + Np2]);
-
+        out[d1]         = X1 + X2;
+        out[d1 + Np2]   = X1 - X2;
         return;
     }
 
@@ -106,11 +102,10 @@ void _lingot_fft_fft(FLT* in, lingot_complex_t* out, lingot_complex_t* wn, unsig
         a = q + d1;
         b = a + Np2;
 
-        X1[0] = out[a][0];
-        X1[1] = out[a][1];
-        lingot_complex_mul(out[b], wn[c], X2);
-        lingot_complex_add(X1, X2, out[a]);
-        lingot_complex_sub(X1, X2, out[b]);
+        X1 = out[a];
+        X2 = out[b] * wn[c];
+        out[a] = X1 + X2;
+        out[b] = X1 - X2;
     }
 }
 
@@ -120,7 +115,7 @@ void lingot_fft_fft(lingot_fft_plan_t* plan) {
 
 #endif
 
-void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, FLT* out, unsigned int n_out) {
+void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, unsigned int n_out) {
 
     unsigned int i;
     double _1_N2 = 1.0 / (plan->n * plan->n);
@@ -133,20 +128,22 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, FLT* out, unsigned 
     lingot_fft_fft(plan);
 #endif
 
-    // esteem of SPD from FFT. (normalized squared module)
+    typedef LINGOT_FLT lingot_complex_t[2];
+    lingot_complex_t* _out = (lingot_complex_t*) plan->fft_out;
+
+    // estimation of SPD from FFT. (normalized squared module)
     for (i = 0; i < n_out; i++) {
-        out[i] = (plan->fft_out[i][0] * plan->fft_out[i][0]
-                + plan->fft_out[i][1] * plan->fft_out[i][1]) * _1_N2;
+        out[i] = (_out[i][0] * _out[i][0] + _out[i][1] * _out[i][1]) * _1_N2;
     }
 }
 
 /* Spectral Power Distribution estimation, selectively in frequency, by DFT.
  transforms signal in of N1 samples from frequency wi, with sample
  separation of dw rads, storing the result on buffer out with N2 samples. */
-void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, unsigned int N2) {
-    FLT Xr, Xi;
-    FLT wn;
-    const FLT N1_2 = N1 * N1;
+void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_FLT dw, LINGOT_FLT* out, unsigned int N2) {
+    LINGOT_FLT Xr, Xi;
+    LINGOT_FLT wn;
+    const LINGOT_FLT N1_2 = N1 * N1;
     unsigned int i;
     unsigned int n;
 
@@ -166,20 +163,20 @@ void lingot_fft_spd_eval(FLT* in, unsigned int N1, FLT wi, FLT dw, FLT* out, uns
     }
 }
 
-void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0,
-                               FLT* out_d1, FLT* out_d2) {
-    FLT x_cos_wn;
-    FLT x_sin_wn;
-    const FLT N2 = N * N;
+void lingot_fft_spd_diffs_eval(const LINGOT_FLT* in, unsigned int N, LINGOT_FLT w, LINGOT_FLT* out_d0,
+                               LINGOT_FLT* out_d1, LINGOT_FLT* out_d2) {
+    LINGOT_FLT x_cos_wn;
+    LINGOT_FLT x_sin_wn;
+    const LINGOT_FLT N2 = N * N;
 
     unsigned int n;
 
-    FLT SUM_x_sin_wn = 0.0;
-    FLT SUM_x_cos_wn = 0.0;
-    FLT SUM_x_n_sin_wn = 0.0;
-    FLT SUM_x_n_cos_wn = 0.0;
-    FLT SUM_x_n2_sin_wn = 0.0;
-    FLT SUM_x_n2_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_n_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_n_cos_wn = 0.0;
+    LINGOT_FLT SUM_x_n2_sin_wn = 0.0;
+    LINGOT_FLT SUM_x_n2_cos_wn = 0.0;
 
     for (n = 0; n < N; n++) {
 
@@ -194,7 +191,7 @@ void lingot_fft_spd_diffs_eval(const FLT* in, unsigned int N, FLT w, FLT* out_d0
         SUM_x_n2_cos_wn += x_cos_wn * n * n;
     }
 
-    FLT N_2 = N * N;
+    LINGOT_FLT N_2 = N * N;
     *out_d0 = (SUM_x_cos_wn * SUM_x_cos_wn + SUM_x_sin_wn * SUM_x_sin_wn) / N2;
     *out_d1 = 2.0
             * (SUM_x_sin_wn * SUM_x_n_cos_wn - SUM_x_cos_wn * SUM_x_n_sin_wn)

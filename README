@@ -1,81 +1,107 @@
-LINGOT - A musical instrument tuner.
+[![C/C++ CI](https://github.com/ibancg/lingot/workflows/C/C++%20CI/badge.svg)](https://github.com/ibancg/lingot/actions)
 
-Written by:
+LINGOT - A musical instrument tuner
+===================================
 
-  Iban Cereijo <ibancg@gmail.com>
-  Jairo Chapela <jairochapela@gmail.com>
+<img align="right" src="http://lingot.nongnu.org/images/lingot-black-main.png">
 
-Copyright (C) 2004-2020 Iban Cereijo
-Copyright (C) 2004-2019 Jairo Chapela
+LINGOT is a musical instrument tuner. It’s accurate, easy to use, and highly 
+configurable. Originally conceived to tune electric guitars, it can be used to
+tune other instruments.
+
+It looks like an analogue tuner, with a gauge indicating the relative shift to
+a certain note, determined automatically as the closest note to the estimated 
+frequency.
 
 
-Description
-===========
+Main features
+-------------
 
-Lingot is a musical instrument tuner. It's accurate, easy to use, and highly
-configurable. Originally conceived to tune electric guitars, it can now be used
-to tune other instruments.
-
-It looks like an analog tuner, with a gauge indicating the relative shift to a
-certain note found automatically as the closest note to the estimated frequency.
-
+* It is free software, distributed under the 
+  [GPL license](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).   
+* Quick and accurate, perfect for real-time microtonal tuning. 
+* Easy to use. Just plug in your instrument and run it. 
+* _LINGOT_ is a universal tuner. It can tune many musical instruments, you only
+  need to provide the scale _temperaments_. For that purpose, it supports the 
+  [.scl format](http://www.huygens-fokker.org/scala/scl_format.html) from the 
+  [Scala project](http://www.huygens-fokker.org/scala/).   
+* Configurable via GUI. It is possible to change any parameter while the
+  program is running, without editing any file.
 
 Requirements
-============
+------------
 
-* Sound card.
-* Linux kernel with audio support (OSS, ALSA, JACK or PulseAudio).
-* GTK+ library, version 3.10.
-    
+* A modest computer running _GNU/Linux_. 
+* A sound card with line-in or microphone input. 
+* [Jack](http://www.jackaudio.org/), 
+  [ALSA](https://www.alsa-project.org/main/index.php/Main_Page), 
+  [OSS](http://www.opensound.com/oss.html) or 
+  [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) support.   
+* [GTK+](https://www.gtk.org/) library, version _3.10_ or above.
 
 Installation
-============
+------------
 
 If you are building a release, just type:
 
- > ./configure
- > make install
+```console
+./configure
+make install
+```
 
-If you are building a development version obtained from our VCS you will need to
-create the configure script first by calling:
+If you are building a development version obtained from our VCS you will first
+need to create the _configure_ script, by calling:
 
- > ./bootstrap
+```console
+./bootstrap
+```
 
+The supported audio systems (alsa, oss, jack, pulseaudio) and the Fast Fourier
+Transform [libfftw](http://fftw.org) library can be enabled/disabled
+independently via options passed to the `configure` script. The following
+command displays all options and defaut value.
 
-Lingot supports the following audio systems/servers:
+```console
+./configure --help
+```
 
-  OSS
-  ALSA
-  JACK
-  PulseAudio
-  
-You can enable/disable each of them with the following options passed to the
-configure script, all of them enabled by default:
+Below a summary of the packages needed to build a development version on _Debian-based_ systems:
 
-  --enable-oss=<yes|no>
-  --enable-alsa=<yes|no>
-  --enable-jack=<yes|no>
-  --enable-pulseaudio=<yes|no>
+```console
+sudo apt-get install \
+    intltool \
+    libasound2-dev \
+    libcunit1-dev \
+    libfftw3-dev \
+    libgtk-3-dev \
+    libjack-jackd2-dev \
+    libpulse-dev \
+    libtool \
+    pkg-config
+```
 
-Also, the depedency to libfftw can be enabled/disabled with
-
-  --enable-libfftw=<yes|no>
-
-Please, see the INSTALL file.
-    
-    
 Synopsis
-========
+--------
 
-    lingot [-c config]
+```console
+lingot [-c config]
+```
 
-The -c option causes the search of a file named {config}.conf in the
-~/.config/lingot/ folder. For example:
+The `-c` option causes the search of a file named `{config}.conf` in the
+`~/.config/lingot/` folder. For example:
 
-    lingot -c bass
+```console
+lingot -c bass
+```
 
-will take the configuration file ~/.config/lingot/bass.conf. This is useful for
-maintaining different configurations for different instruments. It's also
+will take the configuration file `~/.config/lingot/bass.conf`. This is useful
+for maintaining different configurations for different instruments. It's also
 possible to load and save configuration files from the GUI. The default
-configuration file is ~/.config/lingot/lingot.conf.
+configuration file is `~/.config/lingot/lingot.conf`.
 
+Resources
+---------
+
+* [Official LINGOT website](http://lingot.nongnu.org/)
+* [Project page in Savannah](https://savannah.nongnu.org/projects/lingot/)
+* [Downloads page in Savannah](http://download.savannah.gnu.org/releases/lingot/)

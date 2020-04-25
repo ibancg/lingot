@@ -22,13 +22,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #ifdef PULSEAUDIO
 
 #include <stdio.h>
 #include <string.h>
 
 #include "lingot-audio.h"
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-audio-pulseaudio.h"
 #include "lingot-i18n.h"
 #include "lingot-msg.h"

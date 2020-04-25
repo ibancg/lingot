@@ -25,49 +25,15 @@
 #ifndef LINGOT_DEFS_H
 #define LINGOT_DEFS_H
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "../config.h"
-
 // floating point precision.
-#define FLT                         double
+#define LINGOT_FLT                 double
 
-#define CONFIG_DIR_NAME             ".config/lingot/"
-#define DEFAULT_CONFIG_FILE_NAME    "lingot.conf"
-
-extern char CONFIG_FILE_NAME[200];
-
-#define QUICK_MESSAGES
-
-#define GTK_EVENTS_RATE      20.0
-#define GAUGE_RATE           60.0
-#define ERROR_DISPATCH_RATE	 5.0
-
-#define MID_A_FREQUENCY		440.0
-#define MID_C_FREQUENCY		261.625565
-
-// simple try-catch simulation, do not use throw inside loops nor nest try-catch
-// blocks
-#define _try _exception = 0; do
-#define _throw(a) { _exception = a;break; }
-#define _catch while (0); if (_exception != 0)
-
-#ifndef M_PI
-#    define M_PI 3.14159265358979323846
-#endif
-
-// This alternative allows us to throw exception from loops, it contains a goto
-// statement, but totally controlled. It fails when trying to indent code.
-//#define _try _exception = 0;do
-//#define _throw(a) {_exception = a;goto catch_label;}
-//#define _catch while (0);catch_label: if (_exception != 0)
-
-// strdup() is not part of the standard. It is POSIX, but we provide our own
-// implementation.
-char* _strdup(const char *s);
+#define LINGOT_MID_A_FREQUENCY		440.0
+#define LINGOT_MID_C_FREQUENCY		261.625565
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "lingot-defs.h"
+#include "lingot-defs-internal.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gui-config-dialog-scale.h"
 #include "lingot-msg.h"
@@ -277,9 +277,9 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
         gdouble shiftf2, freq2;
 
         if (!strcmp(new_text, _("mid-A"))) {
-            freq = MID_A_FREQUENCY;
+            freq = LINGOT_MID_A_FREQUENCY;
         } else if (!strcmp(new_text, _("mid-C"))) {
-            freq = MID_C_FREQUENCY;
+            freq = LINGOT_MID_C_FREQUENCY;
         } else {
             sscanf(new_text, "%lg", &freq);
             // TODO: validation
@@ -323,8 +323,11 @@ void lingot_gui_config_dialog_scale_tree_cell_edited_callback(
 }
 
 void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
-        GtkTreeViewColumn *col, GtkCellRenderer *renderer, GtkTreeModel *model,
-        GtkTreeIter *iter, gpointer user_data) {
+        GtkTreeViewColumn *col,
+        GtkCellRenderer *renderer,
+        GtkTreeModel *model,
+        GtkTreeIter *iter,
+        gpointer user_data) {
     (void)col;              //  Unused parameter.
     gdouble freq;
     gchar buf[20];
@@ -339,9 +342,9 @@ void lingot_gui_config_dialog_scale_tree_frequency_cell_data_function(
                 + (gtk_combo_box_get_active(
                        GTK_COMBO_BOX(config_dialog->octave)) - 4));
 
-    if (fabs(freq - MID_A_FREQUENCY) < 1e-3) {
+    if (fabs(freq - LINGOT_MID_A_FREQUENCY) < 1e-3) {
         g_object_set(renderer, "text", _("mid-A"), NULL);
-    } else if (fabs(freq - MID_C_FREQUENCY) < 1e-3) {
+    } else if (fabs(freq - LINGOT_MID_C_FREQUENCY) < 1e-3) {
         g_object_set(renderer, "text", _("mid-C"), NULL);
     } else {
         g_snprintf(buf, sizeof(buf), "%.4f", freq);
@@ -538,7 +541,7 @@ void lingot_gui_config_dialog_scale_data_to_gui(lingot_config_dialog_t* dialog, 
     int i;
     for (i = 0; i < scale->notes; i++) {
         gtk_tree_store_append(store, &iter2, NULL);
-        FLT freq = scale->base_frequency
+        LINGOT_FLT freq = scale->base_frequency
                 * pow(2.0, scale->offset_cents[i] / 1200.0);
         lingot_config_scale_format_shift(buff, scale->offset_cents[i],
                                          scale->offset_ratios[0][i], scale->offset_ratios[1][i]);
@@ -665,7 +668,7 @@ gboolean lingot_gui_config_dialog_scale_table_query_tooltip(GtkWidget *widget,
     return TRUE;
 }
 
-void lingot_gui_config_dialog_scale_show(lingot_config_dialog_t* dialog, GtkBuilder* builder) {
+void lingot_gui_config_dialog_scale_create(lingot_config_dialog_t* dialog, GtkBuilder* builder) {
 
     dialog->scale_name = GTK_ENTRY(gtk_builder_get_object(builder, "scale_name"));
     GtkWidget* scroll = GTK_WIDGET(gtk_builder_get_object(builder, "scrolledwindow1"));

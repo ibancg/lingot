@@ -22,25 +22,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef LINGOTI18N_H
-#define LINGOTI18N_H
+#ifndef LINGOT_INTERNAL_DEFS_H
+#define LINGOT_INTERNAL_DEFS_H
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
+#include "lingot-defs.h"
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifdef DISABLE_NLS
-#undef ENABLE_NLS
+// simple try-catch simulation, do not use throw inside loops nor nest try-catch
+// blocks
+#define _try _exception = 0; do
+#define _throw(a) { _exception = a;break; }
+#define _catch while (0); if (_exception != 0)
+
+// This alternative allows us to throw exception from loops, it contains a goto
+// statement, but totally controlled. It fails when trying to indent code.
+//#define _try _exception = 0;do
+//#define _throw(a) {_exception = a;goto catch_label;}
+//#define _catch while (0);catch_label: if (_exception != 0)
+
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
 #endif
 
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#include <locale.h>
-#include <langinfo.h>
-#undef _
-#    define _(String) (const char*) gettext (String)
-#else
-#    define _(String) (String)
+// strdup() is not part of the standard. It is POSIX, but we provide our own
+// implementation.
+char* _strdup(const char *s);
+
+#ifdef __cplusplus
+}
 #endif
 
-#endif /*LINGOTI18N_H*/
+#endif

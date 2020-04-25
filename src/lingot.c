@@ -31,6 +31,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "lingot-audio.h"
 #include "lingot-audio-oss.h"
 #include "lingot-audio-alsa.h"
@@ -45,14 +48,14 @@
 int main(int argc, char *argv[]) {
 
 #ifdef ENABLE_NLS
-    bindtextdomain(GETTEXT_PACKAGE, LINGOT_LOCALEDIR);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+    textdomain(PACKAGE);
 #endif
 
     // default config file.
     snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
-             "%s/" CONFIG_DIR_NAME DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
+             "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
 
     // TODO: indicate complete config file path
     if ((argc > 3) || (argc == 2)) {
@@ -74,7 +77,7 @@ int main(int argc, char *argv[]) {
             case 'c':
                 snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
                          "%s/%s%s.conf", getenv("HOME"),
-                         CONFIG_DIR_NAME, optarg);
+                         LINGOT_CONFIG_DIR_NAME, optarg);
                 printf("using config file %s\n", CONFIG_FILE_NAME);
                 break;
 
@@ -105,7 +108,7 @@ int main(int argc, char *argv[]) {
     if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {
 
         char config_dir[200];
-        snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), CONFIG_DIR_NAME);
+        snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
         printf("Creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {
@@ -126,7 +129,10 @@ int main(int argc, char *argv[]) {
         fclose(fp);
     }
 
-    lingot_gui_mainframe_create(argc, argv);
+    gtk_init(&argc, &argv);
+
+    lingot_gui_mainframe_create();
+    gtk_main();
 
     return 0;
 }
