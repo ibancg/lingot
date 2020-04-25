@@ -81,6 +81,16 @@ void lingot_test_io_config(void) {
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(config);
 
+    const char* filename = LINGOT_TEST_RESOURCES_PATH "resources/lingot-001.conf";
+
+    FILE *file;
+    if ((file = fopen(filename, "r"))) {
+        fclose(file);
+    } else {
+        fprintf(stderr, "%s\n", "warning: test resource files not available");
+        return; // we allow the test resources to be not present for the distcheck.
+    }
+
     // old file with obsolete options
     // ------------------------------
 
@@ -101,11 +111,9 @@ void lingot_test_io_config(void) {
 
     check_config(config);
 
-    setlocale(LC_NUMERIC, "de_DE.UTF-8");
-
     // we check that we can save and load it again
 
-    const char* filename = tmpnam(NULL);
+    filename = tmpnam(NULL);
     lingot_io_config_save(config, filename);
     ok = lingot_io_config_load(config, filename);
     CU_ASSERT(ok);
