@@ -35,10 +35,24 @@ double strobe_angle = 0.0;
 double strobe_angle_computation_rate = 0.0;
 cairo_surface_t* strobe_image = NULL;
 
+extern GResource *lingot_get_resource (void);
+
+static cairo_status_t read_png(void* closure,
+                               unsigned char* data,
+                               unsigned int length) {
+    GInputStream* is = closure;
+    gsize res = g_input_stream_read (is, data, length, NULL, NULL);
+    return res ? CAIRO_STATUS_SUCCESS : CAIRO_STATUS_READ_ERROR;
+}
+
 void lingot_gui_strobe_disc_init(double computation_rate) {
 
+    GInputStream* is = g_resources_open_stream("/org/nongnu/lingot/lingot-strobe.png",
+                                               G_RESOURCE_LOOKUP_FLAGS_NONE,
+                                               NULL);
     strobe_angle_computation_rate = computation_rate;
-    strobe_image = cairo_image_surface_create_from_png("src/lingot-strobe.png");
+    strobe_image = cairo_image_surface_create_from_png_stream(read_png, is);
+    g_object_unref(is);
 }
 
 void lingot_gui_strobe_disc_set_error(double error) {
