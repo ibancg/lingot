@@ -24,10 +24,8 @@
 
 #include <assert.h>
 #include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <locale.h>
 
 #include "lingot-defs-internal.h"
 #include "lingot-config.h"

@@ -31,10 +31,46 @@
 #include "lingot-io-config.h"
 
 #include <memory.h>
+#include <locale.h>
 
 #ifndef LINGOT_TEST_RESOURCES_PATH
-#define LINGOT_TEST_RESOURCES_PATH ""
+#define LINGOT_TEST_RESOURCES_PATH "test/"
 #endif
+
+static void check_config(const lingot_config_t* config) {
+#ifdef PULSEAUDIO
+    CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
+    CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index], "alsa_input.pci-0000_00_1b.0.analog-stereo"));
+#endif
+    CU_ASSERT_EQUAL(config->sample_rate, 44100);
+    CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
+    CU_ASSERT_EQUAL(config->fft_size, 512);
+    CU_ASSERT_EQUAL(config->sample_rate, 44100);
+    CU_ASSERT_EQUAL(config->temporal_window, 0.3);
+    CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
+    CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
+    CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
+    CU_ASSERT_EQUAL(config->min_frequency, 82.41);
+    CU_ASSERT_EQUAL(config->max_frequency, 329.63);
+
+    CU_ASSERT(!strcmp(config->scale.name, "Default equal-tempered scale"));
+    CU_ASSERT_EQUAL(config->scale.notes, 12);
+    CU_ASSERT_EQUAL(config->scale.base_frequency, 261.625565);
+    CU_ASSERT(!strcmp(config->scale.note_name[1], "C#"));
+    CU_ASSERT(!strcmp(config->scale.note_name[11], "B"));
+
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[0][0], 1);
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[1][0], 1); // defined as ratio
+    CU_ASSERT_EQUAL(config->scale.offset_cents[0], 0.0);
+
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[0][1], -1);
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[1][1], -1); // not defined as ratio
+    CU_ASSERT_EQUAL(config->scale.offset_cents[1], 100.5);  // defined as shift in cents
+
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[0][11], -1);
+    CU_ASSERT_EQUAL(config->scale.offset_ratios[1][11], -1); // not defined as ratio
+    CU_ASSERT_EQUAL(config->scale.offset_cents[11], 1100.1); // defined as shift in cents
+}
 
 void lingot_test_io_config(void) {
 
@@ -45,108 +81,46 @@ void lingot_test_io_config(void) {
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(config);
 
+    const char* filename = LINGOT_TEST_RESOURCES_PATH "resources/lingot-001.conf";
+
+    FILE *file;
+    if ((file = fopen(filename, "r"))) {
+        fclose(file);
+    } else {
+        fprintf(stderr, "%s\n", "warning: test resource files not available");
+        return; // we allow the test resources to be not present for the distcheck.
+    }
+
     // old file with obsolete options
     // ------------------------------
 
     int ok;
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-001.conf");
 
-    if (ok) { // TODO: assert
-
-        CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
-        CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index],
-                  "alsa_input.pci-0000_00_1b.0.analog-stereo"));
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->fft_size, 512);
-        CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
-        CU_ASSERT_EQUAL(config->calculation_rate, 20.0);
-        CU_ASSERT_EQUAL(config->visualization_rate, 30.0);
-    } else {
-        fprintf(stderr, "warning: cannot find unit test resources\n");
-    }
+    CU_ASSERT(!ok); // Backwards compatibility broken. Testing that there is no crash
 
     // recent file
     // -----------
 
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-0_9_2b8.conf");
-    if (ok) { // TODO: assert
-
-#ifdef PULSEAUDIO
-        CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
-        CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index], "default"));
-#endif
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
-        CU_ASSERT_EQUAL(config->fft_size, 512);
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->temporal_window, 0.3);
-        CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
-        CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
-        CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
-        CU_ASSERT_EQUAL(config->min_frequency, 82.41);
-        CU_ASSERT_EQUAL(config->max_frequency, 329.63);
-
-        CU_ASSERT(!strcmp(config->scale.name, "Default equal-tempered scale"));
-        CU_ASSERT_EQUAL(config->scale.notes, 12);
-        CU_ASSERT_EQUAL(config->scale.base_frequency, 261.625565);
-        CU_ASSERT(!strcmp(config->scale.note_name[1], "C#"));
-        CU_ASSERT(!strcmp(config->scale.note_name[11], "B"));
-
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][0], 1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][0], 1); // defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[0], 0.0);
-
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][1], -1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][1], -1); // not defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[1], 100.0);  // defined as shift in cents
-
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][11], -1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][11], -1); // not defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[11], 1100.0); // defined as shift in cents
-    } else {
-        fprintf(stderr, "warning: cannot find unit test resources\n");
-    }
+    CU_ASSERT(!ok); // Backwards compatibility broken. Testing that there is no crash
 
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-1_0_2b.conf");
-    if (ok) { // TODO: assert
 
-#ifdef PULSEAUDIO
-        CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
-        CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index], "alsa_input.pci-0000_00_1b.0.analog-stereo"));
-#endif
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
-        CU_ASSERT_EQUAL(config->fft_size, 512);
-        CU_ASSERT_EQUAL(config->sample_rate, 44100);
-        CU_ASSERT_EQUAL(config->temporal_window, 0.3);
-        CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
-        CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
-        CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
-        CU_ASSERT_EQUAL(config->min_frequency, 82.41);
-        CU_ASSERT_EQUAL(config->max_frequency, 329.63);
+    CU_ASSERT(ok);
 
-        CU_ASSERT(!strcmp(config->scale.name, "Default equal-tempered scale"));
-        CU_ASSERT_EQUAL(config->scale.notes, 12);
-        CU_ASSERT_EQUAL(config->scale.base_frequency, 261.625565);
-        CU_ASSERT(!strcmp(config->scale.note_name[1], "C#"));
-        CU_ASSERT(!strcmp(config->scale.note_name[11], "B"));
+    check_config(config);
 
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][0], 1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][0], 1); // defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[0], 0.0);
+    // we check that we can save and load it again
 
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][1], -1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][1], -1); // not defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[1], 100.0);  // defined as shift in cents
+    filename = tmpnam(NULL);
+    lingot_io_config_save(config, filename);
+    ok = lingot_io_config_load(config, filename);
+    CU_ASSERT(ok);
+    check_config(config);
 
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][11], -1);
-        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][11], -1); // not defined as ratio
-        CU_ASSERT_EQUAL(config->scale.offset_cents[11], 1100.0); // defined as shift in cents
-    } else {
-        fprintf(stderr, "warning: cannot find unit test resources\n");
-    }
+    ok = !remove(filename);
+    CU_ASSERT(ok);
 
     lingot_config_destroy(config);
 }
