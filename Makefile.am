@@ -69,6 +69,8 @@ lingot_SOURCES = \
   src/lingot-io-config-scale.h \
   src/lingot-io-config.c \
   src/lingot-io-config.h \
+  src/lingot-io-ui-settings.c \
+  src/lingot-io-ui-settings.h \
   src/lingot-msg.c \
   src/lingot-msg.h \
   src/lingot-signal.c \

@@ -64,7 +64,7 @@ void lingot_gui_config_dialog_callback_button_ok(GtkButton *button,
     (void)button;           //  Unused parameter.
     if (lingot_gui_config_dialog_apply(dialog)) {
         // dumps the current config to the config file
-        lingot_io_config_save(&dialog->conf, CONFIG_FILE_NAME);
+        lingot_io_config_save(&dialog->conf, LINGOT_CONFIG_FILE_NAME);
         // we already applied the config, we disable the rollback
         dialog->callback_config_changed = NULL;
         gtk_widget_destroy(dialog->win);
