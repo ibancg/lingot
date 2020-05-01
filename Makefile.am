@@ -75,6 +75,7 @@ lingot_SOURCES = \
   src/lingot-msg.h \
   src/lingot-signal.c \
   src/lingot-signal.h \
+  src/lingot-strobe.png \
   src/lingot.c \
   src/lingot.gresource.xml
 
