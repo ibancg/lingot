@@ -57,6 +57,7 @@ AC_TYPE_INT16_T
 AC_TYPE_SIZE_T
 
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
+PKG_CHECK_MODULES([JSON], [json-c >= 0.10.0])
 
 AC_ARG_WITH([alsa],
   [AS_HELP_STRING([--with-alsa], [enable ALSA sound @<:@default=check@:>@])],

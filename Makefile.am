@@ -75,9 +75,9 @@ lingot_SOURCES = \
   src/lingot.gresource.xml
 
 lingot_CPPFLAGS = \
-  $(ALSA_CFLAGS) $(GTK_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
+  $(ALSA_CFLAGS) $(GTK_CFLAGS) $(JSON_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
 lingot_LDADD = \
-  $(ALSA_LIBS)   $(GTK_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_LIBS)   $(PULSEAUDIO_LIBS)
+  $(ALSA_LIBS)   $(GTK_LIBS)   $(JSON_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_LIBS)   $(PULSEAUDIO_LIBS)
 
 ######################################################################
 # 9 other derived objects
@@ -137,7 +137,8 @@ EXTRA_DIST = \
   bootstrap \
   test/resources/lingot-001.conf \
   test/resources/lingot-0_9_2b8.conf \
-  test/resources/lingot-1_0_2b.conf
+  test/resources/lingot-1_0_2b.conf \
+  test/resources/lingot-1_1_0.conf
 
 ######################################################################
 # 15 support for test suites
@@ -166,8 +167,8 @@ lingot_test_SOURCES = \
 
 lingot_test_CPPFLAGS = \
   -I$(srcdir)/src \
-  $(ALSA_CFLAGS) $(CUNIT_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
+  $(ALSA_CFLAGS) $(CUNIT_CFLAGS) $(JSON_CFLAGS) $(JACK_CFLAGS) $(LIBFFTW_CFLAGS) $(OSS_CFLAGS) $(PULSEAUDIO_CFLAGS)
 lingot_test_LDADD = \
-  $(ALSA_LIBS)   $(CUNIT_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_LIBS)   $(PULSEAUDIO_LIBS)
+  $(ALSA_LIBS)   $(CUNIT_LIBS)   $(JSON_LIBS)   $(JACK_LIBS)   $(LIBFFTW_LIBS)   $(OSS_LIBS)   $(PULSEAUDIO_LIBS)
 
 endif
