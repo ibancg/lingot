@@ -34,10 +34,12 @@
 #include "lingot-config.h"
 #include "lingot-gui-mainframe.h"
 #include "lingot-gui-gauge.h"
+#include "lingot-gui-strobe-disc.h"
 #include "lingot-gui-spectrum.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gui-i18n.h"
 #include "lingot-io-config.h"
+#include "lingot-io-ui-settings.h"
 #include "lingot-msg.h"
 
 #define GAUGE_RATE           60.0
@@ -47,11 +49,30 @@ void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
 static gchar* filechooser_config_last_folder = NULL;
 
-static const gdouble aspect_ratio_spectrum_visible = 1.14;
-static const gdouble aspect_ratio_spectrum_invisible = 2.07;
+//static const gdouble aspect_ratio_spectrum_visible = 1.14;
+//static const gdouble aspect_ratio_spectrum_invisible = 2.07;
+
+void lingot_gui_mainframe_callback_hide(GtkWidget* w, lingot_main_frame_t* frame) {
+    (void)w;                //  Unused parameter.
+
+    gint win_width;
+    gint win_height;
+    gint win_pos_x;
+    gint win_pos_y;
+    gtk_window_get_size(frame->win, &win_width, &win_height);
+    gtk_window_get_position(frame->win, &win_pos_x, &win_pos_y);
+    ui_settings.win_pos_x = win_pos_x;
+    ui_settings.win_pos_y = win_pos_y;
+    ui_settings.win_width = win_width;
+    ui_settings.win_height = win_height;
+    ui_settings.spectrum_visible = gtk_check_menu_item_get_active(frame->view_spectrum_item);
+    ui_settings.gauge_visible = gtk_check_menu_item_get_active(frame->view_gauge_item);
+    lingot_io_ui_settings_save();
+}
 
 void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
+
     g_source_remove(frame->visualization_timer_uid);
     g_source_remove(frame->freq_computation_timer_uid);
     g_source_remove(frame->gauge_computation_uid);
@@ -122,20 +143,29 @@ void lingot_gui_mainframe_callback_about(GtkWidget* w, lingot_main_frame_t* fram
 
 void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
-    gboolean visible = gtk_check_menu_item_get_active(
-                GTK_CHECK_MENU_ITEM(frame->view_spectrum_item));
-
-    GtkAllocation alloc;
-    gtk_widget_get_allocation(frame->win, &alloc);
-    GdkGeometry hints;
-    gdouble aspect_ratio =
-            visible ?
-                aspect_ratio_spectrum_visible :
-                aspect_ratio_spectrum_invisible;
-    hints.min_aspect = aspect_ratio;
-    hints.max_aspect = aspect_ratio;
-    gtk_window_set_geometry_hints(GTK_WINDOW(frame->win), frame->win, &hints, GDK_HINT_ASPECT);
+    gboolean visible = gtk_check_menu_item_get_active(frame->view_spectrum_item);
     gtk_widget_set_visible(frame->spectrum_frame, visible);
+}
+
+void lingot_gui_mainframe_update_gauge_area_tooltip(lingot_main_frame_t* frame) {
+    gtk_widget_set_tooltip_text(frame->gauge_area,
+                                gtk_check_menu_item_get_active(frame->view_gauge_item) ?
+                                    _("Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with enough notes, to have a higher resolution in this gauge (12 notes per scale is a safe option).") :
+                                    _("Shows the error as a rotating disc which speed depends on the error in cents to the desired note. The disc will be still then the played note is in tune."));
+}
+
+void lingot_gui_mainframe_callback_view_gauge(GtkWidget* w, lingot_main_frame_t* frame) {
+    (void)w;                //  Unused parameter.
+    gboolean on = gtk_check_menu_item_get_active(frame->view_gauge_item);
+    gtk_check_menu_item_set_active(frame->view_strobe_disc_item, !on);
+    lingot_gui_mainframe_update_gauge_area_tooltip(frame);
+}
+
+void lingot_gui_mainframe_callback_view_strobe_disc(GtkWidget* w, lingot_main_frame_t* frame) {
+    (void)w;                //  Unused parameter.
+    gboolean on = gtk_check_menu_item_get_active(frame->view_strobe_disc_item);
+    gtk_check_menu_item_set_active(frame->view_gauge_item, !on);
+    lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
 // callback from the config dialof when it is closed
@@ -169,7 +199,7 @@ static void lingot_gui_mainframe_open_config_dialog(lingot_main_frame_t* frame,
                                                                (lingot_gui_config_dialog_callback_config_changed_t) lingot_gui_mainframe_callback_config_dialog_changed_config,
                                                                frame);
         gtk_window_set_icon(GTK_WINDOW(frame->config_dialog->win),
-                            gtk_window_get_icon(GTK_WINDOW(frame->win)));
+                            gtk_window_get_icon(frame->win));
     } else {
         gtk_window_present(GTK_WINDOW(frame->config_dialog->win));
     }
@@ -213,6 +243,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
             || (freq <= frame->conf.internal_min_frequency)) {
         frame->frequency = 0.0;
         frame->gauge_pos = lingot_filter_filter_sample(&frame->gauge_filter, frame->conf.gauge_rest_value);
+        // lingot_gauge_compute(&frame->gauge, 0.0); // strobe still
     } else {
         LINGOT_FLT error_cents; // do not use, unfiltered
         frame->frequency = lingot_filter_filter_sample(&frame->freq_filter,
@@ -224,6 +255,7 @@ gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
         }
     }
 
+    lingot_gui_strobe_disc_set_error(frame->gauge_pos);
     return 1;
 }
 
@@ -242,7 +274,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
 
         if (more_messages) {
             GtkWindow* parent =
-                    GTK_WINDOW((frame->config_dialog != NULL) ? frame->config_dialog->win : frame->win);
+                    (frame->config_dialog != NULL) ? GTK_WINDOW(frame->config_dialog->win) : frame->win;
             GtkButtonsType buttonsType;
 
             char message[2 * LINGOT_MSG_MAX_SIZE];
@@ -281,7 +313,7 @@ gboolean lingot_gui_mainframe_callback_error_dispatcher(gpointer data) {
                                  (message_type == LINGOT_MSG_ERROR) ? _("Error") :
                                                                       ((message_type == LINGOT_MSG_WARNING) ? _("Warning") : _("Info")));
             gtk_window_set_icon(GTK_WINDOW(message_dialog),
-                                gtk_window_get_icon(GTK_WINDOW(frame->win)));
+                                gtk_window_get_icon(frame->win));
             gtk_dialog_run(GTK_DIALOG(message_dialog));
             gtk_widget_destroy(message_dialog);
 
@@ -299,7 +331,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
                                                lingot_main_frame_t* frame) {
     (void)data;             //  Unused parameter.
     GtkWidget * dialog = gtk_file_chooser_dialog_new(
-                _("Open Configuration File"), GTK_WINDOW(frame->win),
+                _("Open Configuration File"), frame->win,
                 GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
                 "_Open", GTK_RESPONSE_ACCEPT, NULL);
     char config_used = 0;
@@ -341,7 +373,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
 void lingot_gui_mainframe_callback_save_config(gpointer data, lingot_main_frame_t* frame) {
     (void)data;             //  Unused parameter.
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
-                _("Save Configuration File"), GTK_WINDOW(frame->win),
+                _("Save Configuration File"), frame->win,
                 GTK_FILE_CHOOSER_ACTION_SAVE, "_Cancel", GTK_RESPONSE_CANCEL,
                 "_Save", GTK_RESPONSE_ACCEPT, NULL);
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
@@ -368,6 +400,14 @@ void lingot_gui_mainframe_callback_save_config(gpointer data, lingot_main_frame_
     gtk_widget_destroy(dialog);
 }
 
+void lingot_gui_gauge_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
+    if (gtk_check_menu_item_get_active(frame->view_gauge_item)) {
+        lingot_gui_gauge_redraw(w, cr, frame);
+    } else{
+        lingot_gui_strobe_disc_redraw(w, cr, frame);
+    }
+}
+
 lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     lingot_main_frame_t* frame;
@@ -384,7 +424,7 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     lingot_config_t* const conf = &frame->conf;
     lingot_config_new(conf);
-    lingot_io_config_load(conf, CONFIG_FILE_NAME);
+    lingot_io_config_load(conf, LINGOT_CONFIG_FILE_NAME);
 
     //
     // ----- ERROR GAUGE FILTER CONFIGURATION -----
@@ -443,10 +483,12 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     gtk_builder_add_from_resource(builder, "/org/nongnu/lingot/lingot-gui-mainframe.glade", NULL);
 
-    frame->win = GTK_WIDGET(gtk_builder_get_object(builder, "window1"));
+    frame->win = GTK_WINDOW(gtk_builder_get_object(builder, "window1"));
 
     gtk_window_set_default_icon_name("org.nongnu.lingot");
-    gtk_window_set_icon_name(GTK_WINDOW(frame->win), "org.nongnu.lingot");
+    gtk_window_set_icon_name(frame->win, "org.nongnu.lingot");
+
+    lingot_gui_strobe_disc_init(GAUGE_RATE);
 
     frame->gauge_area = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
     frame->spectrum_area = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
@@ -456,22 +498,10 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     frame->error_label = GTK_WIDGET(gtk_builder_get_object(builder, "error_label"));
 
     frame->spectrum_frame = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
-    frame->view_spectrum_item = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_item"));
+    frame->view_spectrum_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "spectrum_item"));
+    frame->view_gauge_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "gauge_item"));
+    frame->view_strobe_disc_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "strobe_disc_item"));
     frame->labelsbox = GTK_WIDGET(gtk_builder_get_object(builder, "labelsbox"));
-
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(frame->view_spectrum_item), TRUE);
-
-    // show all
-    gtk_widget_show_all(frame->win);
-
-    GtkAllocation alloc;
-    gtk_widget_get_allocation(frame->win, &alloc);
-    GdkGeometry hints;
-    gdouble aspect_ratio = aspect_ratio_spectrum_visible;
-    hints.min_aspect = aspect_ratio;
-    hints.max_aspect = aspect_ratio;
-    gtk_window_set_geometry_hints(GTK_WINDOW(frame->win), frame->win, &hints,
-                                  GDK_HINT_ASPECT);
 
     // GTK signals
     g_signal_connect(gtk_builder_get_object(builder, "preferences_item"),
@@ -481,8 +511,14 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
                      G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
     g_signal_connect(gtk_builder_get_object(builder, "about_item"), "activate",
                      G_CALLBACK(lingot_gui_mainframe_callback_about), frame);
-    g_signal_connect(gtk_builder_get_object(builder, "spectrum_item"),
+    g_signal_connect(frame->view_spectrum_item,
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_spectrum),
+                     frame);
+    g_signal_connect(frame->view_gauge_item,
+                     "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_gauge),
+                     frame);
+    g_signal_connect(frame->view_strobe_disc_item,
+                     "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_strobe_disc),
                      frame);
     g_signal_connect(gtk_builder_get_object(builder, "open_config_item"),
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_open_config),
@@ -492,16 +528,28 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
                      frame);
 
     g_signal_connect(frame->gauge_area, "draw",
-                     G_CALLBACK(lingot_gui_gauge_redraw), frame);
+                     G_CALLBACK(lingot_gui_gauge_strobe_disc_redraw), frame);
     g_signal_connect(frame->spectrum_area, "draw",
                      G_CALLBACK(lingot_gui_spectrum_redraw), frame);
+    g_signal_connect(frame->win, "hide",
+                     G_CALLBACK(lingot_gui_mainframe_callback_hide), frame);
     g_signal_connect(frame->win, "destroy",
                      G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
 
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     gtk_widget_add_accelerator(GTK_WIDGET(gtk_builder_get_object(builder, "preferences_item")),
                                "activate", accel_group, 'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-    gtk_window_add_accel_group(GTK_WINDOW(frame->win), accel_group);
+    gtk_window_add_accel_group(frame->win, accel_group);
+
+    gtk_check_menu_item_set_active(frame->view_spectrum_item, ui_settings.spectrum_visible);
+    gtk_check_menu_item_set_active(frame->view_gauge_item, ui_settings.gauge_visible);
+
+    if (ui_settings.win_width > 0) {
+        gtk_window_resize(frame->win, ui_settings.win_width, ui_settings.win_height);
+    }
+
+    // show all
+    gtk_widget_show_all(GTK_WIDGET(frame->win));
 
     unsigned int period;
     period = (unsigned int) (1000 / conf->visualization_rate);

@@ -101,17 +101,22 @@ lingot_SOURCES = \
     src/lingot-gui-mainframe.h \
     src/lingot-gui-spectrum.c \
     src/lingot-gui-spectrum.h \
+    src/lingot-gui-strobe-disc.c \
+    src/lingot-gui-strobe-disc.h \
     src/lingot-io-config-scale.c \
     src/lingot-io-config-scale.h \
     src/lingot-io-config.c \
     src/lingot-io-config.h \
+    src/lingot-io-ui-settings.c \
+    src/lingot-io-ui-settings.h \
+    src/lingot-strobe.png \
     src/lingot.c \
     src/lingot.gresource.xml
 
 nodist_lingot_SOURCES = src/lingot-resources.c
 
-lingot_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(GTK_CFLAGS)
-lingot_LDADD  =              $(liblingot_rdep_libs)   $(GTK_LIBS)
+lingot_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(GTK_CFLAGS) $(JSON_CFLAGS)
+lingot_LDADD  =              $(liblingot_rdep_libs)   $(GTK_LIBS)   $(JSON_LIBS)
 
 ######################################################################
 # 11 building documentation
@@ -202,7 +207,8 @@ EXTRA_DIST = \
   lingot.pc.in \
   test/resources/lingot-001.conf \
   test/resources/lingot-0_9_2b8.conf \
-  test/resources/lingot-1_0_2b.conf
+  test/resources/lingot-1_0_2b.conf \
+  test/resources/lingot-1_1_0.conf
 
 ######################################################################
 # 15 support for test suites
@@ -232,7 +238,7 @@ lingot_test_SOURCES = \
   test/src/lingot-test.c \
   test/src/lingot-test.h
 
-lingot_test_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(CUNIT_CFLAGS)
-lingot_test_LDADD  =              $(liblingot_rdep_libs)   $(CUNIT_LIBS)
+lingot_test_CFLAGS = $(AM_CFLAGS) $(liblingot_rdep_cflags) $(CUNIT_CFLAGS) $(JSON_CFLAGS)
+lingot_test_LDADD  =              $(liblingot_rdep_libs)   $(CUNIT_LIBS)   $(JSON_LIBS)
 
 endif

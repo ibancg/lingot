@@ -41,7 +41,9 @@ typedef struct _lingot_main_frame_t {
     GtkWidget* gauge_area;
     GtkWidget* spectrum_area;
     GtkWidget* tone_label;
-    GtkWidget* view_spectrum_item;
+    GtkCheckMenuItem* view_spectrum_item;
+    GtkCheckMenuItem* view_gauge_item;
+    GtkCheckMenuItem* view_strobe_disc_item;
     GtkWidget* spectrum_frame;
 
     GtkWidget* freq_label;
@@ -54,7 +56,7 @@ typedef struct _lingot_main_frame_t {
 
     lingot_core_t core;
 
-    GtkWidget* win;
+    GtkWindow* win;
 
     GdkColor gauge_color;
     GdkColor spectrum_color;
