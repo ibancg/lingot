@@ -142,7 +142,8 @@ EXTRA_DIST = \
   bootstrap \
   test/resources/lingot-001.conf \
   test/resources/lingot-0_9_2b8.conf \
-  test/resources/lingot-1_0_2b.conf
+  test/resources/lingot-1_0_2b.conf \
+  test/resources/lingot-1_1_0.conf
 
 ######################################################################
 # 15 support for test suites
