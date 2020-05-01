@@ -29,8 +29,8 @@
 #include "lingot-defs-internal.h"
 #include "lingot-gui-config-dialog.h"
 #include "lingot-gui-config-dialog-scale.h"
+#include "lingot-gui-i18n.h"
 #include "lingot-msg.h"
-#include "lingot-i18n.h"
 #include "lingot-io-config-scale.h"
 
 enum {

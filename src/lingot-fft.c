@@ -143,7 +143,7 @@ void lingot_fft_compute_dft_and_spd(lingot_fft_plan_t* plan, LINGOT_FLT* out, un
 void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_FLT dw, LINGOT_FLT* out, unsigned int N2) {
     LINGOT_FLT Xr, Xi;
     LINGOT_FLT wn;
-    const LINGOT_FLT N1_2 = N1 * N1;
+    const LINGOT_FLT _1_N2 = 1.0 / (N1 * N1);
     unsigned int i;
     unsigned int n;
 
@@ -159,7 +159,7 @@ void lingot_fft_spd_eval(LINGOT_FLT* in, unsigned int N1, LINGOT_FLT wi, LINGOT_
             Xi = Xi - sin(wn) * in[n];
         }
 
-        out[i] = (Xr * Xr + Xi * Xi) / N1_2; // normalized squared module.
+        out[i] = (Xr * Xr + Xi * Xi) * _1_N2; // normalized squared module.
     }
 }
 

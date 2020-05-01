@@ -211,7 +211,7 @@ void lingot_core_new(lingot_core_t* core_, lingot_config_t* conf) {
 
         // ------------------------------------------------------------
 
-//        core->running = 1;
+        //        core->running = 1;
     }
 
     core->freq = 0.0;
@@ -449,18 +449,18 @@ void lingot_core_compute_fundamental_fequency(lingot_core_t *core_) {
 
     short divisor = 1;
     LINGOT_FLT f0 = lingot_signal_estimate_fundamental_frequency(core->SPL,
-                                                          0.5 * core->freq,
+                                                                 0.5 * core->freq,
                                                                  core->fftplan.fft_out,
-                                                          spd_size,
-                                                          conf->peak_number,
-                                                          lowest_index,
-                                                          highest_index,
-                                                          (unsigned short) conf->peak_half_width,
-                                                          index2f,
-                                                          conf->min_SNR,
-                                                          conf->min_overall_SNR,
-                                                          conf->internal_min_frequency,
-                                                          &divisor);
+                                                                 spd_size,
+                                                                 conf->peak_number,
+                                                                 lowest_index,
+                                                                 highest_index,
+                                                                 (unsigned short) conf->peak_half_width,
+                                                                 index2f,
+                                                                 conf->min_SNR,
+                                                                 conf->min_overall_SNR,
+                                                                 conf->internal_min_frequency,
+                                                                 &divisor);
 
     LINGOT_FLT w;
     LINGOT_FLT w0 = (f0 == 0.0) ?

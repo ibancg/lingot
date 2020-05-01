@@ -14,10 +14,13 @@ AM_INIT_AUTOMAKE([-Wall subdir-objects])
 
 AC_CONFIG_HEADERS([config.h])
 
+AM_PROG_AR
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_INTLTOOL([0.23])
 AC_PROG_MKDIR_P
+
+LT_INIT
 
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources])
 PKG_PROG_PKG_CONFIG([0.22])
@@ -27,9 +30,14 @@ dnl Switching to autopoint causes a warning about AC_PROG_MKDIR_P
 dnl being preferred.  I do not know why, but at least the culprint is
 dnl not configure.ac.
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.19])
+
+dnl For src/lingot.c
 AC_DEFINE_UNQUOTED([LOCALEDIR], ["$localedir"],
   [directory where translations are installed])
+
+dnl For po/Makefile.in.in
+AC_SUBST([GETTEXT_PACKAGE], [lingot])
 
 AC_CHECK_LIB(m, sin)
 

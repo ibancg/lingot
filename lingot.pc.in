@@ -1,0 +1,21 @@
+# https://people.freedesktop.org/~dbn/pkg-config-guide.html
+
+Name: lingot
+Description: lingot musical instrument tuner
+URL: @PACKAGE_URL@
+Version: @PACKAGE_VERSION@
+
+# When a compilation needs the library headers:
+Cflags: @OSS_CFLAGS@ -I@pkgincludedir@
+
+# When linking against the shared library:
+Libs: -L@libdir@ -llingot
+
+# When linking against the static archive:
+Libs.private: @OSS_LIBS@
+
+# Let pkg-config extend Cflags and Libs.
+Requires: fftw3 >= 3.2.2 fftw3f >= 3.2.2 gtk+-3.0 >= 3.10
+
+# Let pkg-config extend Cflags and Libs.private.
+Requires.private: alsa jack >= 0.117.0 libpulse-simple >= 0.9.10

@@ -37,7 +37,7 @@
 #include "lingot-gui-strobe-disc.h"
 #include "lingot-gui-spectrum.h"
 #include "lingot-gui-config-dialog.h"
-#include "lingot-i18n.h"
+#include "lingot-gui-i18n.h"
 #include "lingot-io-config.h"
 #include "lingot-io-ui-settings.h"
 #include "lingot-msg.h"

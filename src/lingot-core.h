@@ -31,7 +31,6 @@
 extern "C" {
 #endif
 
-#include "lingot-defs.h"
 #include "lingot-config.h"
 
 typedef struct {
