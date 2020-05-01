@@ -37,7 +37,7 @@
 #define LINGOT_TEST_RESOURCES_PATH "test/"
 #endif
 
-static void check_config(const lingot_config_t* config) {
+static void check_last_configs(const lingot_config_t* config) {
 #ifdef PULSEAUDIO
     CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
     CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index], "alsa_input.pci-0000_00_1b.0.analog-stereo"));
@@ -81,6 +81,7 @@ void lingot_test_io_config(void) {
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(config);
 
+    // check if the files are there
     const char* filename = LINGOT_TEST_RESOURCES_PATH "resources/lingot-001.conf";
 
     FILE *file;
@@ -97,19 +98,71 @@ void lingot_test_io_config(void) {
     int ok;
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-001.conf");
 
-    CU_ASSERT(!ok); // Backwards compatibility broken. Testing that there is no crash
+    if (ok) { // TODO: assert
+
+        CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
+        CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index],
+                  "alsa_input.pci-0000_00_1b.0.analog-stereo"));
+        CU_ASSERT_EQUAL(config->sample_rate, 44100);
+        CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
+        CU_ASSERT_EQUAL(config->sample_rate, 44100);
+        CU_ASSERT_EQUAL(config->fft_size, 512);
+        CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
+        CU_ASSERT_EQUAL(config->calculation_rate, 20.0);
+        CU_ASSERT_EQUAL(config->visualization_rate, 30.0);
+    } else {
+        fprintf(stderr, "warning: cannot find unit test resources\n");
+    }
 
     // recent file
     // -----------
 
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-0_9_2b8.conf");
-    CU_ASSERT(!ok); // Backwards compatibility broken. Testing that there is no crash
+    if (ok) { // TODO: assert
+
+#ifdef PULSEAUDIO
+        CU_ASSERT_EQUAL(config->audio_system_index, lingot_audio_system_find_by_name("PulseAudio"));
+        CU_ASSERT(!strcmp(config->audio_dev[config->audio_system_index], "default"));
+#endif
+        CU_ASSERT_EQUAL(config->sample_rate, 44100);
+        CU_ASSERT_EQUAL(config->root_frequency_error, 0.0);
+        CU_ASSERT_EQUAL(config->fft_size, 512);
+        CU_ASSERT_EQUAL(config->sample_rate, 44100);
+        CU_ASSERT_EQUAL(config->temporal_window, 0.3);
+        CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
+        CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
+        CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
+        CU_ASSERT_EQUAL(config->min_frequency, 82.41);
+        CU_ASSERT_EQUAL(config->max_frequency, 329.63);
+
+        CU_ASSERT(!strcmp(config->scale.name, "Default equal-tempered scale"));
+        CU_ASSERT_EQUAL(config->scale.notes, 12);
+        CU_ASSERT_EQUAL(config->scale.base_frequency, 261.625565);
+        CU_ASSERT(!strcmp(config->scale.note_name[1], "C#"));
+        CU_ASSERT(!strcmp(config->scale.note_name[11], "B"));
+
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][0], 1);
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][0], 1); // defined as ratio
+        CU_ASSERT_EQUAL(config->scale.offset_cents[0], 0.0);
+
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][1], -1);
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][1], -1); // not defined as ratio
+        CU_ASSERT_EQUAL(config->scale.offset_cents[1], 100.0);  // defined as shift in cents
+
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[0][11], -1);
+        CU_ASSERT_EQUAL(config->scale.offset_ratios[1][11], -1); // not defined as ratio
+        CU_ASSERT_EQUAL(config->scale.offset_cents[11], 1100.0); // defined as shift in cents
+    } else {
+        fprintf(stderr, "warning: cannot find unit test resources\n");
+    }
+
+    // -----------
 
     ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-1_0_2b.conf");
 
     CU_ASSERT(ok);
 
-    check_config(config);
+    check_last_configs(config);
 
     // we check that we can save and load it again
 
@@ -117,10 +170,31 @@ void lingot_test_io_config(void) {
     lingot_io_config_save(config, filename);
     ok = lingot_io_config_load(config, filename);
     CU_ASSERT(ok);
-    check_config(config);
+    check_last_configs(config);
 
     ok = !remove(filename);
     CU_ASSERT(ok);
+
+    // -----------
+
+    ok = lingot_io_config_load(config, LINGOT_TEST_RESOURCES_PATH "resources/lingot-1_1_0.conf");
+
+    CU_ASSERT(ok);
+
+    check_last_configs(config);
+
+    // we check that we can save and load it again
+
+    filename = tmpnam(NULL);
+    lingot_io_config_save(config, filename);
+    ok = lingot_io_config_load(config, filename);
+    CU_ASSERT(ok);
+    check_last_configs(config);
+
+    ok = !remove(filename);
+    CU_ASSERT(ok);
+
+    // -----------
 
     lingot_config_destroy(config);
 }
