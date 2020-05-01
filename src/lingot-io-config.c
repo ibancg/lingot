@@ -42,7 +42,7 @@
 static lingot_config_parameter_spec_t parameters[N_MAX_OPTIONS];
 static unsigned int parameters_count = 0;
 
-char CONFIG_FILE_NAME[];
+char LINGOT_CONFIG_FILE_NAME[];
 
 //----------------------------------------------------------------------------
 

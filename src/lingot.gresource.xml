@@ -3,5 +3,6 @@
   <gresource prefix="/org/nongnu/lingot">
     <file preprocess="xml-stripblanks">lingot-gui-mainframe.glade</file>
     <file preprocess="xml-stripblanks">lingot-gui-config-dialog.glade</file>
+    <file>lingot-strobe.png</file>
   </gresource>
 </gresources>

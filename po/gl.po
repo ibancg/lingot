@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 00:39+0200\n"
+"POT-Creation-Date: 2020-05-01 23:53+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
@@ -172,7 +172,7 @@ msgstr "B"
 msgid "Default equal-tempered scale"
 msgstr "Escala cromática temperada"
 
-#: ../src/lingot-core.c:141
+#: ../src/lingot-core.c:142
 #, c-format
 msgid ""
 "The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -298,7 +298,7 @@ msgstr ""
 "como referencia, e o resto de frecuencias estableceranse en base a este "
 "valor e ó desprazamento en frecuencia de cada nota (definido na columna "
 "'Desprazamento'). Podes empregar tanto un valor numérico, ou as palabras "
-"clave 'mid-C' (261.625565 Hz) e 'mid-A' (440 Hz), normalmente reservadas á "
+"clave '%s' (261.625565 Hz) e '%s' (440 Hz), normalmente reservadas á "
 "cuarta octava (intenta asignar soamente frecuencias á cuarta octava)."
 
 #: ../src/lingot-gui-config-dialog.c:413
@@ -564,7 +564,7 @@ msgstr ""
 "abaixo."
 
 #: ../src/lingot-gui-config-dialog.glade.h:47
-#: ../src/lingot-gui-mainframe.glade.h:10
+#: ../src/lingot-gui-mainframe.glade.h:12
 msgid "Deviation"
 msgstr "Desviación"
 
@@ -636,19 +636,42 @@ msgstr ""
 msgid "Scale"
 msgstr "Escala"
 
-#: ../src/lingot-gui-mainframe.c:82
+#: ../src/lingot-gui-mainframe.c:103
 msgid "Logo design"
 msgstr "Deseño do logo"
 
-#: ../src/lingot-gui-mainframe.c:107
+#: ../src/lingot-gui-mainframe.c:128
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Afinador de instrumentos preciso e fácil de usar"
 
-#: ../src/lingot-gui-mainframe.c:113
+#: ../src/lingot-gui-mainframe.c:134
 msgid "translator-credits"
 msgstr "Iban Cereijo <ibancg@gmail.com>"
 
-#: ../src/lingot-gui-mainframe.c:260
+#: ../src/lingot-gui-mainframe.c:153 ../src/lingot-gui-mainframe.glade.h:11
+msgid ""
+"Shows the error in cents in a visual way. The range will depend on the "
+"maximum distance between each two notes in the scale defined in the Lingot "
+"settings. Try to provide scales with low maximum distance, i.e. with enough "
+"notes, to have a higher resolution in this gauge (12 notes per scale is a "
+"safe option)."
+msgstr ""
+"Amosa o erro en 'cents' dunha maneira visual. O rango dependerá da distancia "
+"máxima entre pares de notas da escala definida na configuración de Lingot. "
+"Intenta proporcionar escalas con baixa distancia máxima, por exemplo escalas "
+"con moitas notas, para obter unha mellor resolución na agulla (escalas de 12 "
+"notas son unha opción razoable)."
+
+#: ../src/lingot-gui-mainframe.c:154
+msgid ""
+"Shows the error as a rotating disc which speed depends on the error in cents "
+"to the desired note. The disc will be still then the played note is in tune."
+msgstr ""
+"Amosa o erro coma un disco xiratorio, cunha velocidade de rotación "
+"dependente do error en 'cents' coa nota desexada. O disco ficará inmóbil "
+"cando a nota este perfectamente afinada."
+
+#: ../src/lingot-gui-mainframe.c:292
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -660,35 +683,35 @@ msgstr ""
 "segundos tras a última vez que foron utilizados. Nese caso inténtao de novo "
 "nuns intres."
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:301
 msgid "The core is not running, you must check your configuration."
 msgstr "O afinador non está funcionando, debes comprobar a configuración."
 
-#: ../src/lingot-gui-mainframe.c:281
+#: ../src/lingot-gui-mainframe.c:313
 msgid "Error"
 msgstr "Erro"
 
-#: ../src/lingot-gui-mainframe.c:282
+#: ../src/lingot-gui-mainframe.c:314
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/lingot-gui-mainframe.c:282
+#: ../src/lingot-gui-mainframe.c:314
 msgid "Info"
 msgstr "Información"
 
-#: ../src/lingot-gui-mainframe.c:302
+#: ../src/lingot-gui-mainframe.c:334
 msgid "Open Configuration File"
 msgstr "Abrir arquivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:309 ../src/lingot-gui-mainframe.c:351
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
 msgid "Lingot configuration files"
 msgstr "Arquivos de configuración de Lingot"
 
-#: ../src/lingot-gui-mainframe.c:344
+#: ../src/lingot-gui-mainframe.c:376
 msgid "Save Configuration File"
 msgstr "Gardar arquivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:348
+#: ../src/lingot-gui-mainframe.c:380
 msgid "untitled.conf"
 msgstr "sen titulo.conf"
 
@@ -717,36 +740,30 @@ msgid "_View"
 msgstr "_Ver"
 
 #: ../src/lingot-gui-mainframe.glade.h:7
+msgid "Show gauge"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.glade.h:8
+msgid "Show strobe disc"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.glade.h:9
 msgid "Show spectrum"
 msgstr "Espectro"
 
-#: ../src/lingot-gui-mainframe.glade.h:8
+#: ../src/lingot-gui-mainframe.glade.h:10
 msgid "_Help"
 msgstr "A_xuda"
 
-#: ../src/lingot-gui-mainframe.glade.h:9
-msgid ""
-"Shows the error in cents in a visual way. The range will depend on the "
-"maximum distance between each two notes in the scale defined in the Lingot "
-"settings. Try to provide scales with low maximum distance, i.e. with enough "
-"notes, to have a higher resolution in this gauge (12 notes per scale is a "
-"safe option)."
-msgstr ""
-"Amosa o erro en 'cents' dunha maneira visual. O rango dependerá da distancia "
-"máxima entre pares de notas da escala definida na configuración de Lingot. "
-"Intenta proporcionar escalas con baixa distancia máxima, por exemplo escalas "
-"con moitas notas, para obter unha mellor resolución na agulla (escalas de 12 "
-"notas son unha opción razoable)."
-
-#: ../src/lingot-gui-mainframe.glade.h:11
+#: ../src/lingot-gui-mainframe.glade.h:13
 msgid "Estimated ground frequency in hertzs."
 msgstr "Frecuencia fundamental estimada, en hercios."
 
-#: ../src/lingot-gui-mainframe.glade.h:12
+#: ../src/lingot-gui-mainframe.glade.h:14
 msgid "f = ---"
 msgstr "f = ---"
 
-#: ../src/lingot-gui-mainframe.glade.h:13
+#: ../src/lingot-gui-mainframe.glade.h:15
 msgid ""
 "Closest note to the estimated frequency, according to the scale defined in "
 "the Lingot settings."
@@ -754,11 +771,11 @@ msgstr ""
 "Nota máis cercana á frecuencia estimada, de acordo á escala definida na "
 "configuración."
 
-#: ../src/lingot-gui-mainframe.glade.h:14
+#: ../src/lingot-gui-mainframe.glade.h:16
 msgid "---"
 msgstr "---"
 
-#: ../src/lingot-gui-mainframe.glade.h:15
+#: ../src/lingot-gui-mainframe.glade.h:17
 msgid ""
 "Error in cents between the estimated frequency and the closest note "
 "according to the scale defined in the Lingot settings."
@@ -766,15 +783,15 @@ msgstr ""
 "Error en 'cents' entre a frecuencia estimada e a nota máis cercana segundo a "
 "configuración do afinador."
 
-#: ../src/lingot-gui-mainframe.glade.h:16
+#: ../src/lingot-gui-mainframe.glade.h:18
 msgid "e = ---"
 msgstr "e = ---"
 
-#: ../src/lingot-gui-mainframe.glade.h:17
+#: ../src/lingot-gui-mainframe.glade.h:19
 msgid "Tone"
 msgstr "Tono"
 
-#: ../src/lingot-gui-mainframe.glade.h:18
+#: ../src/lingot-gui-mainframe.glade.h:20
 msgid ""
 "This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
 "ground frequency computed is shown with a red vertical line, and the noise "
@@ -784,7 +801,7 @@ msgstr ""
 "frecuencia fundamental móstrase cunha liña vertical vermella, e o umbral de "
 "ruido mediante unha liña amarela horizontal e discontínua."
 
-#: ../src/lingot-gui-mainframe.glade.h:19
+#: ../src/lingot-gui-mainframe.glade.h:21
 msgid "Spectrum"
 msgstr "Espectro"
 
@@ -804,7 +821,7 @@ msgstr "Erro abrindo ficheiro de escala"
 msgid "the notes must be well ordered"
 msgstr "as notas deben estar ben ordenadas"
 
-#: ../src/lingot-io-config.c:600
+#: ../src/lingot-io-config.c:589
 #, c-format
 msgid ""
 "Error parsing the configuration file, line %i: unrecognized audio system, "
@@ -813,7 +830,7 @@ msgstr ""
 "Erro lendo o arquivo de configuración, liña %i: sistema de audio non "
 "recoñecido, asumindo valor por defecto.\n"
 
-#: ../src/lingot-io-config.c:624
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
@@ -823,14 +840,11 @@ msgstr ""
 "valores por defecto. O problema será solucionado unha vez confirmes as "
 "preferencias no diálogo de configuración."
 
-#~ msgid "The application has not been built with OSS support"
-#~ msgstr "A aplicación non foi construída con soporte para OSS"
-
-#~ msgid "The application has not been built with ALSA support"
-#~ msgstr "A aplicación non foi construída con soporte para ALSA"
-
-#~ msgid "The application has not been built with JACK support"
-#~ msgstr "A aplicación non foi construída con soporte para Jack"
-
-#~ msgid "The application has not been built with PULSEAUDIO support"
-#~ msgstr "A aplicación non foi construída con soporte para PulseAudio"
+#: ../src/lingot-io-config.c:733
+#, c-format
+msgid ""
+"Error parsing the configuration file, unrecognized audio system '%s', "
+"assuming default value.\n"
+msgstr ""
+"Erro lendo o arquivo de configuración, sistema de audio '%s' non recoñecido, "
+"asumindo valor por defecto.\n"

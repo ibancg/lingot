@@ -62,15 +62,20 @@ lingot_SOURCES = \
   src/lingot-gui-mainframe.h \
   src/lingot-gui-spectrum.c \
   src/lingot-gui-spectrum.h \
+  src/lingot-gui-strobe-disc.c \
+  src/lingot-gui-strobe-disc.h \
   src/lingot-i18n.h \
   src/lingot-io-config-scale.c \
   src/lingot-io-config-scale.h \
   src/lingot-io-config.c \
   src/lingot-io-config.h \
+  src/lingot-io-ui-settings.c \
+  src/lingot-io-ui-settings.h \
   src/lingot-msg.c \
   src/lingot-msg.h \
   src/lingot-signal.c \
   src/lingot-signal.h \
+  src/lingot-strobe.png \
   src/lingot.c \
   src/lingot.gresource.xml
 

@@ -44,6 +44,7 @@
 #include "lingot-gui-mainframe.h"
 #include "lingot-i18n.h"
 #include "lingot-io-config.h"
+#include "lingot-io-ui-settings.h"
 
 int main(int argc, char *argv[]) {
 
@@ -54,8 +55,13 @@ int main(int argc, char *argv[]) {
 #endif
 
     // default config file.
-    snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
+    snprintf(LINGOT_CONFIG_FILE_NAME, sizeof(LINGOT_CONFIG_FILE_NAME),
              "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
+
+    // default UI settings file.
+    snprintf(LINGOT_UI_SETTINGS_FILE_NAME, sizeof(LINGOT_UI_SETTINGS_FILE_NAME),
+             "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME, getenv("HOME"));
+    lingot_io_ui_settings_init();
 
     // TODO: indicate complete config file path
     if ((argc > 3) || (argc == 2)) {
@@ -75,10 +81,10 @@ int main(int argc, char *argv[]) {
 
             switch (c) {
             case 'c':
-                snprintf(CONFIG_FILE_NAME, sizeof(CONFIG_FILE_NAME),
+                snprintf(LINGOT_CONFIG_FILE_NAME, sizeof(LINGOT_CONFIG_FILE_NAME),
                          "%s/%s%s.conf", getenv("HOME"),
                          LINGOT_CONFIG_DIR_NAME, optarg);
-                printf("using config file %s\n", CONFIG_FILE_NAME);
+                printf("using config file %s\n", LINGOT_CONFIG_FILE_NAME);
                 break;
 
             case '?':
@@ -105,7 +111,7 @@ int main(int argc, char *argv[]) {
 
     // if config file doesn't exist, we create it.
     FILE* fp;
-    if ((fp = fopen(CONFIG_FILE_NAME, "r")) == NULL) {
+    if ((fp = fopen(LINGOT_CONFIG_FILE_NAME, "r")) == NULL) {
 
         char config_dir[200];
         snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
@@ -114,13 +120,13 @@ int main(int argc, char *argv[]) {
         if (ret) {
             fprintf(stderr, "Cannot create config folder '%s': %s\n", config_dir, strerror(errno));
         }
-        printf("Creating file %s ...\n", CONFIG_FILE_NAME);
+        printf("Creating file %s ...\n", LINGOT_CONFIG_FILE_NAME);
 
         // new configuration with default values.
         lingot_config_t new_conf;
         lingot_config_new(&new_conf);
         lingot_config_restore_default_values(&new_conf);
-        lingot_io_config_save(&new_conf, CONFIG_FILE_NAME);
+        lingot_io_config_save(&new_conf, LINGOT_CONFIG_FILE_NAME);
         lingot_config_destroy(&new_conf);
 
         printf("Ok\n");
