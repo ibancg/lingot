@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 00:39+0200\n"
+"POT-Creation-Date: 2020-05-01 23:53+0200\n"
 "PO-Revision-Date: 2013-02-01 17:29+0100\n"
 "Last-Translator: Karel Volný <kvolny@redhat.com>\n"
 "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Default equal-tempered scale"
 msgstr ""
 
-#: ../src/lingot-core.c:141
+#: ../src/lingot-core.c:142
 #, c-format
 msgid ""
 "The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
@@ -292,8 +292,8 @@ msgid ""
 msgstr ""
 "Kmitočet. Zde lze zadat absolutní hodnotu kmitočtu příslušného tónu jako "
 "referenční, a všechny ostatní kmitočty budou přepočteny podle nastavených "
-"intervalů. Lze zadat buď číselnou hodnotu anebo klíčová slova ‚mid-"
-"C‘ (261,625565 Hz) a ‚mid-A‘ (440 Hz)."
+"intervalů. Lze zadat buď číselnou hodnotu anebo klíčová slova ‚%s‘"
+" (261,625565 Hz) a ‚%s‘ (440 Hz)."
 
 #: ../src/lingot-gui-config-dialog.c:413
 msgid "Audio device identifier too long"
@@ -538,7 +538,7 @@ msgid ""
 msgstr "Posune kmitočet všech tónů definovaných v tabulce výše."
 
 #: ../src/lingot-gui-config-dialog.glade.h:47
-#: ../src/lingot-gui-mainframe.glade.h:10
+#: ../src/lingot-gui-mainframe.glade.h:12
 msgid "Deviation"
 msgstr "Odchylka"
 
@@ -605,19 +605,38 @@ msgstr ""
 msgid "Scale"
 msgstr "Stupnice"
 
-#: ../src/lingot-gui-mainframe.c:82
+#: ../src/lingot-gui-mainframe.c:103
 msgid "Logo design"
 msgstr "design loga"
 
-#: ../src/lingot-gui-mainframe.c:107
+#: ../src/lingot-gui-mainframe.c:128
 msgid "Accurate and easy to use musical instrument tuner"
 msgstr "Přesná a snadno použitelná ladička hudebních nástrojů"
 
-#: ../src/lingot-gui-mainframe.c:113
+#: ../src/lingot-gui-mainframe.c:134
 msgid "translator-credits"
 msgstr "Karel Volný <kavol@seznam.cz>, 2008—2013"
 
-#: ../src/lingot-gui-mainframe.c:260
+#: ../src/lingot-gui-mainframe.c:153 ../src/lingot-gui-mainframe.glade.h:11
+msgid ""
+"Shows the error in cents in a visual way. The range will depend on the "
+"maximum distance between each two notes in the scale defined in the Lingot "
+"settings. Try to provide scales with low maximum distance, i.e. with enough "
+"notes, to have a higher resolution in this gauge (12 notes per scale is a "
+"safe option)."
+msgstr ""
+"Vizualizace odchylky v centech. Rozsah závisí na nejvyšším intervalu mezi "
+"dvěma tóny stupnice definovaném v nastavení Lingotu (definujte stupnice s "
+"malými intervaly mezi každými dvěma sousedními tóny, čili s mnoha tóny, "
+"abyste dosáhli vyššího rozlišení tohoto měřidla)."
+
+#: ../src/lingot-gui-mainframe.c:154
+msgid ""
+"Shows the error as a rotating disc which speed depends on the error in cents "
+"to the desired note. The disc will be still then the played note is in tune."
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:292
 msgid ""
 "Please check that there are not other processes locking the requested "
 "device. Also, consider that some audio servers can sometimes hold the "
@@ -629,35 +648,35 @@ msgstr ""
 "prostředky i několik sekund poté, co byly naposledy použity. V tom případě "
 "to zkuste znovu."
 
-#: ../src/lingot-gui-mainframe.c:269
+#: ../src/lingot-gui-mainframe.c:301
 msgid "The core is not running, you must check your configuration."
 msgstr "Jádro neběží, zkontrolujte konfiguraci."
 
-#: ../src/lingot-gui-mainframe.c:281
+#: ../src/lingot-gui-mainframe.c:313
 msgid "Error"
 msgstr "Chyba"
 
-#: ../src/lingot-gui-mainframe.c:282
+#: ../src/lingot-gui-mainframe.c:314
 msgid "Warning"
 msgstr "Upozornění"
 
-#: ../src/lingot-gui-mainframe.c:282
+#: ../src/lingot-gui-mainframe.c:314
 msgid "Info"
 msgstr "Informace"
 
-#: ../src/lingot-gui-mainframe.c:302
+#: ../src/lingot-gui-mainframe.c:334
 msgid "Open Configuration File"
 msgstr "Načíst soubor s konfigurací"
 
-#: ../src/lingot-gui-mainframe.c:309 ../src/lingot-gui-mainframe.c:351
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
 msgid "Lingot configuration files"
 msgstr "Konfigurační soubory Lingot"
 
-#: ../src/lingot-gui-mainframe.c:344
+#: ../src/lingot-gui-mainframe.c:376
 msgid "Save Configuration File"
 msgstr "Uložit konfigurační soubor"
 
-#: ../src/lingot-gui-mainframe.c:348
+#: ../src/lingot-gui-mainframe.c:380
 msgid "untitled.conf"
 msgstr ""
 
@@ -686,35 +705,30 @@ msgid "_View"
 msgstr "_Zobrazení"
 
 #: ../src/lingot-gui-mainframe.glade.h:7
+msgid "Show gauge"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.glade.h:8
+msgid "Show strobe disc"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.glade.h:9
 msgid "Show spectrum"
 msgstr "Zobrazit spektrum"
 
-#: ../src/lingot-gui-mainframe.glade.h:8
+#: ../src/lingot-gui-mainframe.glade.h:10
 msgid "_Help"
 msgstr "_Nápověda"
 
-#: ../src/lingot-gui-mainframe.glade.h:9
-msgid ""
-"Shows the error in cents in a visual way. The range will depend on the "
-"maximum distance between each two notes in the scale defined in the Lingot "
-"settings. Try to provide scales with low maximum distance, i.e. with enough "
-"notes, to have a higher resolution in this gauge (12 notes per scale is a "
-"safe option)."
-msgstr ""
-"Vizualizace odchylky v centech. Rozsah závisí na nejvyšším intervalu mezi "
-"dvěma tóny stupnice definovaném v nastavení Lingotu (definujte stupnice s "
-"malými intervaly mezi každými dvěma sousedními tóny, čili s mnoha tóny, "
-"abyste dosáhli vyššího rozlišení tohoto měřidla)."
-
-#: ../src/lingot-gui-mainframe.glade.h:11
+#: ../src/lingot-gui-mainframe.glade.h:13
 msgid "Estimated ground frequency in hertzs."
 msgstr "Zjištěný základní kmitočet v Hertzích."
 
-#: ../src/lingot-gui-mainframe.glade.h:12
+#: ../src/lingot-gui-mainframe.glade.h:14
 msgid "f = ---"
 msgstr "f = ---"
 
-#: ../src/lingot-gui-mainframe.glade.h:13
+#: ../src/lingot-gui-mainframe.glade.h:15
 msgid ""
 "Closest note to the estimated frequency, according to the scale defined in "
 "the Lingot settings."
@@ -722,11 +736,11 @@ msgstr ""
 "Nejbližší tón ke zjištěnému kmitočtu, podle stupnice definované v nastavení "
 "Lingotu."
 
-#: ../src/lingot-gui-mainframe.glade.h:14
+#: ../src/lingot-gui-mainframe.glade.h:16
 msgid "---"
 msgstr "---"
 
-#: ../src/lingot-gui-mainframe.glade.h:15
+#: ../src/lingot-gui-mainframe.glade.h:17
 msgid ""
 "Error in cents between the estimated frequency and the closest note "
 "according to the scale defined in the Lingot settings."
@@ -734,22 +748,22 @@ msgstr ""
 "Rozdíl v centech mezi zjištěným kmitočtem a nejbližším odpovídajícím tónem "
 "podle stupnice definované v nastavené Lingotu."
 
-#: ../src/lingot-gui-mainframe.glade.h:16
+#: ../src/lingot-gui-mainframe.glade.h:18
 msgid "e = ---"
 msgstr "Δ = ---"
 
-#: ../src/lingot-gui-mainframe.glade.h:17
+#: ../src/lingot-gui-mainframe.glade.h:19
 msgid "Tone"
 msgstr "Tón"
 
-#: ../src/lingot-gui-mainframe.glade.h:18
+#: ../src/lingot-gui-mainframe.glade.h:20
 msgid ""
 "This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
 "ground frequency computed is shown with a red vertical line, and the noise "
 "threshold with a horizontal dotted yellow line."
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.glade.h:19
+#: ../src/lingot-gui-mainframe.glade.h:21
 msgid "Spectrum"
 msgstr "Spektrum"
 
@@ -769,18 +783,25 @@ msgstr "Chyba při otevírání souboru se stupnicí"
 msgid "the notes must be well ordered"
 msgstr "tóny musí být uspořádány vzestupně"
 
-#: ../src/lingot-io-config.c:600
+#: ../src/lingot-io-config.c:589
 #, c-format
 msgid ""
 "Error parsing the configuration file, line %i: unrecognized audio system, "
 "assuming default value.\n"
 msgstr ""
 
-#: ../src/lingot-io-config.c:624
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
 "in the configuration dialog."
+msgstr ""
+
+#: ../src/lingot-io-config.c:733
+#, c-format
+msgid ""
+"Error parsing the configuration file, unrecognized audio system '%s', "
+"assuming default value.\n"
 msgstr ""
 
 #~ msgid "The application has not been built with OSS support"
