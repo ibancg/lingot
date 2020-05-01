@@ -71,22 +71,22 @@ void lingot_gui_strobe_disc_redraw(GtkWidget *widget, cairo_t *cr, lingot_main_f
         strobe_disc_size_y = req.height;
     }
 
-    const int width = strobe_disc_size_x;
-    int height = strobe_disc_size_y;
+    const int area_width = strobe_disc_size_x;
+    const int area_height = strobe_disc_size_y;
 
     cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
     const GdkRectangle r = { .x = 0, .y = 0, .width = strobe_disc_size_x, .height = strobe_disc_size_y };
     gdk_cairo_rectangle(cr, &r);
     cairo_fill_preserve(cr);
 
-    int w = cairo_image_surface_get_width(strobe_image);
-    int h = cairo_image_surface_get_height(strobe_image);
+    const int image_width = cairo_image_surface_get_width(strobe_image);
+    const int image_height = cairo_image_surface_get_height(strobe_image);
 
-    cairo_translate(cr, width / 2.0, 1.5 * height);
+    cairo_translate(cr, area_width / 2.0, 1.5 * area_height );
     cairo_rotate(cr, strobe_angle);
-    double s = 1.5 * width / w;
+    double s = 1.5 * (area_width + area_height) / (image_width + image_height) + 0.3*((double) area_height) / area_width;
     cairo_scale(cr, s, s);
-    cairo_translate(cr, -w / 2.0, -h / 2.0);
+    cairo_translate(cr, -image_width / 2.0, -image_height / 2.0);
     cairo_set_source_surface(cr, strobe_image, 0, 0);
     cairo_paint(cr);
 }

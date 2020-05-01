@@ -147,16 +147,25 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, lingot_main_frame
     gtk_widget_set_visible(frame->spectrum_frame, visible);
 }
 
+void lingot_gui_mainframe_update_gauge_area_tooltip(lingot_main_frame_t* frame) {
+    gtk_widget_set_tooltip_text(frame->gauge_area,
+                                gtk_check_menu_item_get_active(frame->view_gauge_item) ?
+                                    _("Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with enough notes, to have a higher resolution in this gauge (12 notes per scale is a safe option).") :
+                                    _("Shows the error as a rotating disc which speed depends on the error in cents to the desired note. The disc will be still then the played note is in tune."));
+}
+
 void lingot_gui_mainframe_callback_view_gauge(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_gauge_item);
     gtk_check_menu_item_set_active(frame->view_strobe_disc_item, !on);
+    lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
 void lingot_gui_mainframe_callback_view_strobe_disc(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_strobe_disc_item);
     gtk_check_menu_item_set_active(frame->view_gauge_item, !on);
+    lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
 // callback from the config dialof when it is closed
