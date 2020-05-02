@@ -5,6 +5,7 @@ Lingot 1.1.0 (2020-05-XX)
  * Added experimental strobe disc display.
  * Gauge has a quicker and more dampened response.
  * Main window resizing aspect ratio unconstrained.
+ * Adding target frequency in spectrum area as a vertical blue line.
  * Config files moved to JSON format.
  * Added persistent UI settings in JSON format.
  * Added experimental liblingot core library.

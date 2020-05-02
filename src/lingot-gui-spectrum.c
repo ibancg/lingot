@@ -206,7 +206,7 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
     }
 }
 
-void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* data) {
+void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
 
     unsigned int i;
 
@@ -217,10 +217,10 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         spectrum_size_y = req.height;
     }
 
-    lingot_gui_spectrum_redraw_background(cr, data);
+    lingot_gui_spectrum_redraw_background(cr, frame);
 
     // spectrum drawing.
-    if (lingot_core_thread_is_running(&data->core)) {
+    if (lingot_core_thread_is_running(&frame->core)) {
 
         cairo_set_line_width(cr, 1.0);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
@@ -229,7 +229,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         LINGOT_FLT y = -1;
 
         const unsigned int min_index = 0;
-        const unsigned int max_index = data->conf.fft_size / 2;
+        const unsigned int max_index = frame->conf.fft_size / 2;
 
         LINGOT_FLT index_density = spectrum_inner_x / max_index;
         // TODO: step
@@ -251,7 +251,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_clip(cr);
         cairo_new_path(cr); // path not consumed by clip()
 
-        LINGOT_FLT* spd = lingot_core_thread_get_result_spd(&data->core);
+        LINGOT_FLT* spd = lingot_core_thread_get_result_spd(&frame->core);
 
         y = -spectrum_db_density
                 * lingot_gui_spectrum_get_in_bounds(spd[min_index],
@@ -295,36 +295,40 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         //		cairo_restore(cr);
         cairo_stroke(cr);
 
-        LINGOT_FLT freq = lingot_core_thread_get_result_frequency(&data->core);
+        LINGOT_FLT freq = lingot_core_thread_get_result_frequency(&frame->core);
+        LINGOT_FLT target_freq = lingot_config_scale_get_frequency(&frame->conf.scale,
+                                                                   frame->closest_note_index);
 
         if (freq != 0.0) {
 
-            cairo_set_dash(cr, dashed1, len1, 0);
-
-            // fundamental frequency mark with a red vertical line.
-            cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
+            // target frequency mark with a blue vertical line.
+            // cairo_set_dash(cr, dashed1, len1, 0);
+            cairo_set_source_rgba(cr, 0.23, 0.83, 1.0, 1.0);
             cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
             cairo_set_line_width(cr, 1.0);
 
             // index of closest sample to fundamental frequency.
-            x = index_density * freq * data->conf.fft_size
-                    * data->conf.oversampling / data->conf.sample_rate;
+            x = index_density * target_freq * frame->conf.fft_size
+                    * frame->conf.oversampling / frame->conf.sample_rate;
             cairo_move_to(cr, x, 0);
             cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
             cairo_stroke(cr);
 
-            //			i = (int) rint(
-            //					frame->core.freq * frame->conf.fft_size
-            //							* frame->conf.oversampling
-            //							/ frame->conf.sample_rate);
-            //			y = -spectrum_db_density
-            //					* lingot_gui_mainframe_get_signal(frame, i, spectrum_min_db,
-            //							spectrum_max_db); // dB.
-            //			cairo_set_line_width(cr, 4.0);
-            //			cairo_move_to(cr, x, y);
-            //			cairo_rel_line_to(cr, 0, 0);
-            //			cairo_stroke(cr);
+
+            // fundamental frequency mark with a red vertical line.
+            cairo_set_dash(cr, dashed1, len1, 0);
+            cairo_set_source_rgba(cr, 1.0, 0.13, 0.13, 1.0);
+            cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+
+            cairo_set_line_width(cr, 2.0);
+
+            // index of closest sample to fundamental frequency.
+            x = index_density * freq * frame->conf.fft_size
+                    * frame->conf.oversampling / frame->conf.sample_rate;
+            cairo_move_to(cr, x, 0);
+            cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
+            cairo_stroke(cr);
 
             cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
             cairo_set_line_width(cr, 1.0);
@@ -334,7 +338,7 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
         cairo_set_source_rgba(cr, 1.0, 1.0, 0.2, 1.0);
 
         LINGOT_FLT y_min = -spectrum_db_density
-                * lingot_gui_spectrum_get_in_bounds(data->conf.min_overall_SNR,
+                * lingot_gui_spectrum_get_in_bounds(frame->conf.min_overall_SNR,
                                                      spectrum_min_db,
                                                      spectrum_max_db); // dB.
         y = y_min;

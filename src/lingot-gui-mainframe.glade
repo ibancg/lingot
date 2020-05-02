@@ -323,7 +323,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">This area shows the signal-to-noise ratio (SNR) of the captured signal. The ground frequency computed is shown with a red vertical line, and the noise threshold with a horizontal dotted yellow line.</property>
+                <property name="tooltip_text" translatable="yes">This area shows the signal-to-noise ratio (SNR) of the captured signal. The ground frequency computed is shown with a red vertical line, the target frequency as a vertical blue line, and the noise threshold with a horizontal dotted yellow line.</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
               </object>
