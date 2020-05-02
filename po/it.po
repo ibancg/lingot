@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 23:53+0200\n"
+"POT-Creation-Date: 2020-05-02 14:39+0200\n"
 "PO-Revision-Date: 2011-12-09 12:27+0100\n"
 "Last-Translator: Stefano Cereda <cereda.ste@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -286,7 +286,7 @@ msgstr ""
 "essere ordinate correttamente."
 
 #: ../src/lingot-gui-config-dialog-scale.c:661
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
 "reference, and all the other frequencies will shift according to the "
@@ -298,14 +298,13 @@ msgstr ""
 "Frequenza. Qui puoi inserire la frequenza assoluta per una data nota come "
 "riferimento, e tutte le altre frequenze si sposteranno in base allo "
 "spostamento definito nella colonna 'Spostamento'. Puoi usare sia un valore "
-"numerico assoluto sia le parole chiave '%s' (261.625565 Hz) e '%s' "
-"(440 Hz)."
+"numerico assoluto sia le parole chiave '%s' (261.625565 Hz) e '%s' (440 Hz)."
 
-#: ../src/lingot-gui-config-dialog.c:413
+#: ../src/lingot-gui-config-dialog.c:415
 msgid "Audio device identifier too long"
 msgstr "Identificatore della risorsa audio troppo lungo"
 
-#: ../src/lingot-gui-config-dialog.c:480
+#: ../src/lingot-gui-config-dialog.c:482
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -330,7 +329,6 @@ msgid "Resets the built-in settings, without applying them."
 msgstr "Torna ai settaggi di default, senza applicarli."
 
 #: ../src/lingot-gui-config-dialog.glade.h:4
-#, fuzzy
 msgid ""
 "Applies the current changes to the running tuner, but doesn't modify the "
 "configuration file. \n"
@@ -339,7 +337,6 @@ msgid ""
 msgstr "Applica i cambiamenti, ma non modifica il file di configurazione."
 
 #: ../src/lingot-gui-config-dialog.glade.h:7
-#, fuzzy
 msgid "Applies the current changes and modifies the congifuration file."
 msgstr "Applica i cambiamenti e modifica il file di configurazione."
 
@@ -378,7 +375,6 @@ msgid "Select the audio source:"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.glade.h:14
-#, fuzzy
 msgid "Audio input settings. Select here the audio source."
 msgstr "Impostazioni audio ingresso. Scegli l'ingresso e imposta l'hardware."
 
@@ -435,7 +431,6 @@ msgid "Number of calculations of the fundamental frequency per second."
 msgstr "Numero di calcoli al secondo della frequenza fondamentale."
 
 #: ../src/lingot-gui-config-dialog.glade.h:26
-#, fuzzy
 msgid "Quick adjustments on the dynamic response and the signal levels."
 msgstr "Correzioni veloci della risposta dinamica e dei livelli di segnale."
 
@@ -448,7 +443,6 @@ msgid "Temporal window"
 msgstr "Finestra temporale"
 
 #: ../src/lingot-gui-config-dialog.glade.h:29
-#, fuzzy
 msgid ""
 "This is the most recent amount of data considered for tuning. The longer it "
 "is, the more accuracy you can obtain, but also the dynamic response gets "
@@ -686,16 +680,27 @@ msgstr "Info"
 msgid "Open Configuration File"
 msgstr "Apri un file di configurazione"
 
-#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:382
 msgid "Lingot configuration files"
 msgstr "File di configurazione di lingot"
 
-#: ../src/lingot-gui-mainframe.c:376
+#: ../src/lingot-gui-mainframe.c:375
 msgid "Save Configuration File"
 msgstr "Salva file di configurazione"
 
-#: ../src/lingot-gui-mainframe.c:380
+#: ../src/lingot-gui-mainframe.c:379
 msgid "untitled.conf"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:593
+#, c-format
+msgid ""
+"Welcome to Lingot %s. \n"
+"\n"
+"We have added a new experimental strobe disc display, among other "
+"improvements, which you can find under the 'View' menu.\n"
+"\n"
+"Enjoy!"
 msgstr ""
 
 #: ../src/lingot-gui-mainframe.glade.h:1
@@ -739,7 +744,6 @@ msgid "_Help"
 msgstr "_Aiuto"
 
 #: ../src/lingot-gui-mainframe.glade.h:13
-#, fuzzy
 msgid "Estimated ground frequency in hertzs."
 msgstr "Frequenza fondamentale stimata in hertz."
 
@@ -809,14 +813,14 @@ msgid ""
 "assuming default value.\n"
 msgstr ""
 
-#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:851
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
 "in the configuration dialog."
 msgstr ""
 
-#: ../src/lingot-io-config.c:733
+#: ../src/lingot-io-config.c:737
 #, c-format
 msgid ""
 "Error parsing the configuration file, unrecognized audio system '%s', "

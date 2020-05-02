@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lingot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 23:53+0200\n"
+"POT-Creation-Date: 2020-05-02 14:39+0200\n"
 "PO-Revision-Date: 2007-08-23 17:46+0200\n"
 "Last-Translator: Iban Cereijo <ibancg@gmail.com>\n"
 "Language-Team: Galician <LL@li.org>\n"
@@ -298,14 +298,14 @@ msgstr ""
 "como referencia, e o resto de frecuencias estableceranse en base a este "
 "valor e ó desprazamento en frecuencia de cada nota (definido na columna "
 "'Desprazamento'). Podes empregar tanto un valor numérico, ou as palabras "
-"clave '%s' (261.625565 Hz) e '%s' (440 Hz), normalmente reservadas á "
-"cuarta octava (intenta asignar soamente frecuencias á cuarta octava)."
+"clave '%s' (261.625565 Hz) e '%s' (440 Hz), normalmente reservadas á cuarta "
+"octava (intenta asignar soamente frecuencias á cuarta octava)."
 
-#: ../src/lingot-gui-config-dialog.c:413
+#: ../src/lingot-gui-config-dialog.c:415
 msgid "Audio device identifier too long"
 msgstr "Identificador de dispositivo de audio moi longo"
 
-#: ../src/lingot-gui-config-dialog.c:480
+#: ../src/lingot-gui-config-dialog.c:482
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -703,17 +703,34 @@ msgstr "Información"
 msgid "Open Configuration File"
 msgstr "Abrir arquivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:382
 msgid "Lingot configuration files"
 msgstr "Arquivos de configuración de Lingot"
 
-#: ../src/lingot-gui-mainframe.c:376
+#: ../src/lingot-gui-mainframe.c:375
 msgid "Save Configuration File"
 msgstr "Gardar arquivo de configuración"
 
-#: ../src/lingot-gui-mainframe.c:380
+#: ../src/lingot-gui-mainframe.c:379
 msgid "untitled.conf"
 msgstr "sen titulo.conf"
+
+#: ../src/lingot-gui-mainframe.c:593
+#, c-format
+msgid ""
+"Welcome to Lingot %s. \n"
+"\n"
+"We have added a new experimental strobe disc display, among other "
+"improvements, which you can find under the 'View' menu.\n"
+"\n"
+"Enjoy!"
+msgstr ""
+"Benvido a Lingot %s. \n"
+"\n"
+"Esta versión engade un display experimental de disco estroboscópico, entre "
+"outras melloras, ao que podes acceder dende o menú 'Ver'.\n"
+"\n"
+"Enjoy!"
 
 #: ../src/lingot-gui-mainframe.glade.h:1
 msgid "lingot"
@@ -741,11 +758,11 @@ msgstr "_Ver"
 
 #: ../src/lingot-gui-mainframe.glade.h:7
 msgid "Show gauge"
-msgstr ""
+msgstr "Agulla"
 
 #: ../src/lingot-gui-mainframe.glade.h:8
 msgid "Show strobe disc"
-msgstr ""
+msgstr "Disco estroboscópico"
 
 #: ../src/lingot-gui-mainframe.glade.h:9
 msgid "Show spectrum"
@@ -830,7 +847,7 @@ msgstr ""
 "Erro lendo o arquivo de configuración, liña %i: sistema de audio non "
 "recoñecido, asumindo valor por defecto.\n"
 
-#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:851
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
@@ -840,7 +857,7 @@ msgstr ""
 "valores por defecto. O problema será solucionado unha vez confirmes as "
 "preferencias no diálogo de configuración."
 
-#: ../src/lingot-io-config.c:733
+#: ../src/lingot-io-config.c:737
 #, c-format
 msgid ""
 "Error parsing the configuration file, unrecognized audio system '%s', "

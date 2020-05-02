@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 23:53+0200\n"
+"POT-Creation-Date: 2020-05-02 14:39+0200\n"
 "PO-Revision-Date: 2010-11-25 03:41+0100\n"
 "Last-Translator: Olivier HUMBERT <humbert.olivier.1@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -278,11 +278,11 @@ msgid ""
 "only to the 4th octave)."
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog.c:413
+#: ../src/lingot-gui-config-dialog.c:415
 msgid "Audio device identifier too long"
 msgstr ""
 
-#: ../src/lingot-gui-config-dialog.c:480
+#: ../src/lingot-gui-config-dialog.c:482
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -610,16 +610,27 @@ msgstr ""
 msgid "Open Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:382
 msgid "Lingot configuration files"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:376
+#: ../src/lingot-gui-mainframe.c:375
 msgid "Save Configuration File"
 msgstr ""
 
-#: ../src/lingot-gui-mainframe.c:380
+#: ../src/lingot-gui-mainframe.c:379
 msgid "untitled.conf"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:593
+#, c-format
+msgid ""
+"Welcome to Lingot %s. \n"
+"\n"
+"We have added a new experimental strobe disc display, among other "
+"improvements, which you can find under the 'View' menu.\n"
+"\n"
+"Enjoy!"
 msgstr ""
 
 #: ../src/lingot-gui-mainframe.glade.h:1
@@ -728,14 +739,14 @@ msgid ""
 "assuming default value.\n"
 msgstr ""
 
-#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:851
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
 "in the configuration dialog."
 msgstr ""
 
-#: ../src/lingot-io-config.c:733
+#: ../src/lingot-io-config.c:737
 #, c-format
 msgid ""
 "Error parsing the configuration file, unrecognized audio system '%s', "

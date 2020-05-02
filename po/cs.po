@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 23:53+0200\n"
+"POT-Creation-Date: 2020-05-02 14:39+0200\n"
 "PO-Revision-Date: 2013-02-01 17:29+0100\n"
 "Last-Translator: Karel Volný <kvolny@redhat.com>\n"
 "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
@@ -281,7 +281,7 @@ msgstr ""
 "stejné oktávě) a musí být uspořádány vzestupně."
 
 #: ../src/lingot-gui-config-dialog-scale.c:661
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Frequency. You can enter here the absolute frequency for a given note as a "
 "reference, and all the other frequencies will shift according to the "
@@ -292,14 +292,14 @@ msgid ""
 msgstr ""
 "Kmitočet. Zde lze zadat absolutní hodnotu kmitočtu příslušného tónu jako "
 "referenční, a všechny ostatní kmitočty budou přepočteny podle nastavených "
-"intervalů. Lze zadat buď číselnou hodnotu anebo klíčová slova ‚%s‘"
-" (261,625565 Hz) a ‚%s‘ (440 Hz)."
+"intervalů. Lze zadat buď číselnou hodnotu anebo klíčová slova "
+"‚%s‘ (261,625565 Hz) a ‚%s‘ (440 Hz)."
 
-#: ../src/lingot-gui-config-dialog.c:413
+#: ../src/lingot-gui-config-dialog.c:415
 msgid "Audio device identifier too long"
 msgstr "Identifikátor zvukového zařízení je příliš dlouhý"
 
-#: ../src/lingot-gui-config-dialog.c:480
+#: ../src/lingot-gui-config-dialog.c:482
 msgid ""
 "The provided scale contains wide gaps in frequency that increase the gauge "
 "range and produce a loss of visual accuracy. Consider providing scales with "
@@ -332,9 +332,8 @@ msgid ""
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.glade.h:7
-#, fuzzy
 msgid "Applies the current changes and modifies the congifuration file."
-msgstr "Vrátí změny a zavře konfigurační dialog."
+msgstr ""
 
 #: ../src/lingot-gui-config-dialog.glade.h:8
 msgid ""
@@ -668,16 +667,27 @@ msgstr "Informace"
 msgid "Open Configuration File"
 msgstr "Načíst soubor s konfigurací"
 
-#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:383
+#: ../src/lingot-gui-mainframe.c:341 ../src/lingot-gui-mainframe.c:382
 msgid "Lingot configuration files"
 msgstr "Konfigurační soubory Lingot"
 
-#: ../src/lingot-gui-mainframe.c:376
+#: ../src/lingot-gui-mainframe.c:375
 msgid "Save Configuration File"
 msgstr "Uložit konfigurační soubor"
 
-#: ../src/lingot-gui-mainframe.c:380
+#: ../src/lingot-gui-mainframe.c:379
 msgid "untitled.conf"
+msgstr ""
+
+#: ../src/lingot-gui-mainframe.c:593
+#, c-format
+msgid ""
+"Welcome to Lingot %s. \n"
+"\n"
+"We have added a new experimental strobe disc display, among other "
+"improvements, which you can find under the 'View' menu.\n"
+"\n"
+"Enjoy!"
 msgstr ""
 
 #: ../src/lingot-gui-mainframe.glade.h:1
@@ -790,14 +800,14 @@ msgid ""
 "assuming default value.\n"
 msgstr ""
 
-#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:846
+#: ../src/lingot-io-config.c:613 ../src/lingot-io-config.c:851
 msgid ""
 "The configuration file contains errors, and hence some default values have "
 "been chosen. The problem will be fixed once you have accepted the settings "
 "in the configuration dialog."
 msgstr ""
 
-#: ../src/lingot-io-config.c:733
+#: ../src/lingot-io-config.c:737
 #, c-format
 msgid ""
 "Error parsing the configuration file, unrecognized audio system '%s', "

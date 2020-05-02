@@ -586,6 +586,14 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     g_object_unref(builder);
 
+    // welcome message showig changes in this version
+    if (!ui_settings.app_version) {
+        char buff[1000];
+        snprintf(buff, sizeof(buff),
+                 _("Welcome to Lingot %s. \n\nWe have added a new experimental strobe disc display, among other improvements, which you can find under the 'View' menu.\n\nEnjoy!"), VERSION);
+        lingot_msg_add_info(buff);
+    }
+
     return frame;
 }
 
