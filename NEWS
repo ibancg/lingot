@@ -3,7 +3,7 @@ Lingot 1.1.0 (2020-05-XX)
 -------------------------
 
  * Added experimental strobe disc display.
- * Gauge has a quicker and more dampened response.
+ * Gauge has a quicker and more damped response.
  * Main window resizing aspect ratio unconstrained.
  * Adding target frequency in spectrum area as a vertical blue line.
  * Config files moved to JSON format.

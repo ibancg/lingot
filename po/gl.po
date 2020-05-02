@@ -809,7 +809,6 @@ msgid "Tone"
 msgstr "Tono"
 
 #: ../src/lingot-gui-mainframe.glade.h:20
-#, fuzzy
 msgid ""
 "This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
 "ground frequency computed is shown with a red vertical line, the target "
