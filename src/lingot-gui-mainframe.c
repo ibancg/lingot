@@ -438,12 +438,12 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     //              dt
     //
     // acceleration of gauge position 's(t)' linearly depends on the difference
-    // respect to the input stimulus 'e(t)' (destination position). Inserting
-    // a friction coefficient 'q', the acceleration proportionally diminishes with
+    // respect to the input stimulus 'e(t)' (target position). Inserting a
+    // friction coefficient 'q', the acceleration proportionally diminishes with
     // the velocity (typical friction in mechanics). 'k' is the adaptation
     // constant, and depends on the gauge mass.
     //
-    // with the following derivative approximations (valid for high sample rate):
+    // with the following derivative approximations, valid for high sample rate:
     //
     //                 d
     //                 -- s(t) ~= (s[n] - s[n - 1])*fs
@@ -459,10 +459,15 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     // filter.
     //
 
-    const LINGOT_FLT gauge_filter_k = 60; // adaptation constant.
-    const LINGOT_FLT gauge_filter_q = 6; // friction coefficient.
-    const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE), -GAUGE_RATE
-                                   * (gauge_filter_q + 2.0 * GAUGE_RATE), GAUGE_RATE * GAUGE_RATE };
+    // Adaptation constant. The bigger this value is, the quicker the gauge moves to its target.
+    const LINGOT_FLT gauge_filter_k = 100;
+
+    // Friction coefficient. The bigger the value, the less the "bouncing" effect on the gauge.
+    const LINGOT_FLT gauge_filter_q = 10;
+
+    const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE),
+                                          -GAUGE_RATE * (gauge_filter_q + 2.0 * GAUGE_RATE),
+                                          GAUGE_RATE * GAUGE_RATE };
     const LINGOT_FLT gauge_filter_b[] = { gauge_filter_k };
 
     lingot_filter_new(&frame->gauge_filter, 2, 0, gauge_filter_a, gauge_filter_b);
