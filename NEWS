@@ -1,4 +1,15 @@
 
+Lingot 1.1.0 (2020-05-XX)
+-------------------------
+
+ * Added experimental strobe disc display.
+ * Main window resizing aspect ratio unconstrained.
+ * Config files moved to JSON format.
+ * Added experimental liblingot core library.
+ * Note names can be read from Scala .scl files.
+ * Code improvements and compliance with stricter C standard C99, C11 and C18.
+
+
 Lingot 1.0.0 (2018-07-06)
 -------------------------
 
