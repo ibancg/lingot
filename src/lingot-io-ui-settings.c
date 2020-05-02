@@ -34,13 +34,17 @@ lingot_ui_settings_t ui_settings;
 int lingot_io_ui_settings_init()
 {
     // default values
-    ui_settings.version = NULL;
+    ui_settings.app_version = NULL;
     ui_settings.spectrum_visible = TRUE;
     ui_settings.gauge_visible = TRUE;
     ui_settings.win_pos_x = -1;
     ui_settings.win_pos_y = -1;
     ui_settings.win_width = -1;
     ui_settings.win_height = -1;
+    ui_settings.config_dialog_pos_x = -1;
+    ui_settings.config_dialog_pos_y = -1;
+    ui_settings.config_dialog_width = -1;
+    ui_settings.config_dialog_height = -1;
 
     json_object* doc = json_object_from_file(LINGOT_UI_SETTINGS_FILE_NAME);
     if (!doc) {
@@ -51,9 +55,9 @@ int lingot_io_ui_settings_init()
     json_object* obj;
     json_bool ok = TRUE;
 
-    ok = json_object_object_get_ex(doc, "version", &obj);
+    ok = json_object_object_get_ex(doc, "appVersion", &obj);
     if (ok) {
-        ui_settings.version = _strdup(json_object_get_string(obj));
+        ui_settings.app_version = _strdup(json_object_get_string(obj));
     }
     ok = json_object_object_get_ex(doc, "spectrumVisible", &obj);
     if (ok) {
@@ -79,6 +83,22 @@ int lingot_io_ui_settings_init()
     if (ok) {
         ui_settings.win_height = json_object_get_int(obj);
     }
+    ok = json_object_object_get_ex(doc, "configDialogPosX", &obj);
+    if (ok) {
+        ui_settings.config_dialog_pos_x = json_object_get_int(obj);
+    }
+    ok = json_object_object_get_ex(doc, "configDialogPosY", &obj);
+    if (ok) {
+        ui_settings.config_dialog_pos_y = json_object_get_int(obj);
+    }
+    ok = json_object_object_get_ex(doc, "configDialogWidth", &obj);
+    if (ok) {
+        ui_settings.config_dialog_width = json_object_get_int(obj);
+    }
+    ok = json_object_object_get_ex(doc, "configDialogHeight", &obj);
+    if (ok) {
+        ui_settings.config_dialog_height = json_object_get_int(obj);
+    }
 
     json_object_put(doc);
     return 1;
@@ -88,7 +108,7 @@ void lingot_io_ui_settings_save()
 {
     json_object* doc = json_object_new_object();
 
-    json_object_object_add(doc, "version",
+    json_object_object_add(doc, "appVersion",
                            json_object_new_string(VERSION)); // we save the current version
     json_object_object_add(doc, "spectrumVisible",
                            json_object_new_boolean(ui_settings.spectrum_visible));
@@ -102,6 +122,14 @@ void lingot_io_ui_settings_save()
                            json_object_new_int(ui_settings.win_width));
     json_object_object_add(doc, "winHeight",
                            json_object_new_int(ui_settings.win_height));
+    json_object_object_add(doc, "configDialogPosX",
+                           json_object_new_int(ui_settings.config_dialog_pos_x));
+    json_object_object_add(doc, "configDialogPosY",
+                           json_object_new_int(ui_settings.config_dialog_pos_y));
+    json_object_object_add(doc, "configDialogWidth",
+                           json_object_new_int(ui_settings.config_dialog_width));
+    json_object_object_add(doc, "configDialogHeight",
+                           json_object_new_int(ui_settings.config_dialog_height));
 
     // TODO: free ui_settings.version?
 

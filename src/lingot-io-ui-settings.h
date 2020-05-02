@@ -40,19 +40,23 @@ extern "C" {
 #endif
 
 extern char LINGOT_UI_SETTINGS_FILE_NAME[200];
-#define LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME "ui-settings.conf"
+#define LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME "ui-settings.json"
 
 
 // configuration parameter specification (id, type, minimum and maximum allowed values, ...)
 typedef struct {
 
-    const char* version; // app version last launched
+    const char* app_version; // app version last launched
     int spectrum_visible;
     int gauge_visible;
     int win_width;
     int win_height;
     int win_pos_x;
     int win_pos_y;
+    int config_dialog_width;
+    int config_dialog_height;
+    int config_dialog_pos_x;
+    int config_dialog_pos_y;
 
 } lingot_ui_settings_t;
 

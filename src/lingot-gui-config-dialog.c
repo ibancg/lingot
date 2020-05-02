@@ -38,6 +38,7 @@
 #include "lingot-gui-i18n.h"
 #include "lingot-config.h"
 #include "lingot-io-config.h"
+#include "lingot-io-ui-settings.h"
 #include "lingot-gui-config-dialog-scale.h"
 #include "lingot-msg.h"
 
@@ -498,6 +499,22 @@ int lingot_gui_config_dialog_apply(lingot_config_dialog_t* dialog) {
     return result;
 }
 
+void lingot_gui_config_dialog_callback_hide(GtkWidget* w, const lingot_config_dialog_t* dialog) {
+    (void)w; //  Unused parameter.
+    gint config_dialog_width;
+    gint config_dialog_height;
+    gint config_dialog_pos_x;
+    gint config_dialog_pos_y;
+    gtk_window_get_size(GTK_WINDOW(dialog->win),
+                        &config_dialog_width, &config_dialog_height);
+    gtk_window_get_position(GTK_WINDOW(dialog->win),
+                            &config_dialog_pos_x, &config_dialog_pos_y);
+    ui_settings.config_dialog_pos_x = config_dialog_pos_x;
+    ui_settings.config_dialog_pos_y = config_dialog_pos_y;
+    ui_settings.config_dialog_width = config_dialog_width;
+    ui_settings.config_dialog_height = config_dialog_height;
+}
+
 void lingot_gui_config_dialog_destroy(lingot_config_dialog_t* dialog) {
     gtk_widget_destroy(dialog->win);
 }
@@ -605,6 +622,8 @@ lingot_config_dialog_t* lingot_gui_config_dialog_create(lingot_config_t* config,
                      "clicked",
                      G_CALLBACK(lingot_gui_config_dialog_callback_button_cancel),
                      dialog);
+    g_signal_connect(dialog->win, "hide",
+                     G_CALLBACK(lingot_gui_config_dialog_callback_hide), dialog);
     g_signal_connect(dialog->win, "destroy",
                      G_CALLBACK(lingot_gui_config_dialog_callback_close), dialog);
 
@@ -615,6 +634,18 @@ lingot_config_dialog_t* lingot_gui_config_dialog_create(lingot_config_t* config,
     lingot_config_copy(&dialog->conf_old, old_config ? old_config : config);
     lingot_gui_config_dialog_data_to_gui(dialog, &dialog->conf);
     lingot_gui_config_dialog_populate_frequency_combos(dialog);
+
+    if (ui_settings.config_dialog_width > 0) {
+        gtk_window_resize(GTK_WINDOW(dialog->win),
+                          ui_settings.config_dialog_width,
+                          ui_settings.config_dialog_height);
+    }
+    //if (ui_settings.config_dialog_pos_x > 0) {
+    //    gtk_window_move(GTK_WINDOW(dialog->win),
+    //                    ui_settings.config_dialog_pos_x,
+    //                    ui_settings.config_dialog_pos_y);
+    //}
+
     gtk_widget_show_all(dialog->win);
 
     return dialog;

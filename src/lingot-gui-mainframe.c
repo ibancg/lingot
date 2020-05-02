@@ -67,7 +67,6 @@ void lingot_gui_mainframe_callback_hide(GtkWidget* w, lingot_main_frame_t* frame
     ui_settings.win_height = win_height;
     ui_settings.spectrum_visible = gtk_check_menu_item_get_active(frame->view_spectrum_item);
     ui_settings.gauge_visible = gtk_check_menu_item_get_active(frame->view_gauge_item);
-    lingot_io_ui_settings_save();
 }
 
 void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* frame) {
@@ -87,6 +86,7 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* fr
         lingot_gui_config_dialog_destroy(frame->config_dialog);
     }
 
+    lingot_io_ui_settings_save();
     free(frame);
     gtk_main_quit();
 }
@@ -168,7 +168,7 @@ void lingot_gui_mainframe_callback_view_strobe_disc(GtkWidget* w, lingot_main_fr
     lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
-// callback from the config dialof when it is closed
+// callback from the config dialog when it is closed
 static void lingot_gui_mainframe_callback_config_dialog_closed(lingot_main_frame_t *frame) {
     frame->config_dialog = NULL;
 }
@@ -353,8 +353,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
         filechooser_config_last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
         gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         lingot_config_new(&config);
-        lingot_io_config_load(&config, filename);
-        config_used = 1;
+        config_used = lingot_io_config_load(&config, filename);
         g_free(filename);
     }
     gtk_widget_destroy(dialog);
@@ -552,6 +551,11 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     if (ui_settings.win_width > 0) {
         gtk_window_resize(frame->win, ui_settings.win_width, ui_settings.win_height);
     }
+    //if (ui_settings.win_pos_x > 0) {
+    //    gtk_window_move(frame->win,
+    //                    ui_settings.win_pos_x,
+    //                    ui_settings.win_pos_y);
+    //}
 
     // show all
     gtk_widget_show_all(GTK_WIDGET(frame->win));
