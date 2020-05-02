@@ -28,11 +28,13 @@
 #include <string.h>
 
 char* _strdup(const char *s) {
-    char *str;
-    size_t size = strlen(s) + 1;
-    str = malloc(size);
-    if (str) {
-        memcpy(str, s, size);
+    char *str = NULL;
+    if (s) {
+        size_t size = strlen(s) + 1;
+        str = malloc(size);
+        if (str) {
+            memcpy(str, s, size);
+        }
     }
     return str;
 }

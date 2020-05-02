@@ -639,9 +639,13 @@ int lingot_io_config_load_json(lingot_config_t* config, const char* filename) {
         return 0;
     }
 
-    json_object* obj;
-
+    json_object* obj = NULL;
     json_bool ok = TRUE;
+
+    ok = json_object_object_get_ex(doc, "VERSION", &obj);
+    if (!ok) {
+        parse_errors = 1;
+    }
 
     const char* param_name = NULL;
     const char* string_value = NULL;
@@ -746,6 +750,7 @@ int lingot_io_config_load_json(lingot_config_t* config, const char* filename) {
     }
 
     lingot_scale_t scale;
+    lingot_config_scale_new(&scale);
 
     struct json_object_iterator it = json_object_iter_begin(doc);
     struct json_object_iterator it_end = json_object_iter_end(doc);
@@ -846,7 +851,7 @@ int lingot_io_config_load_json(lingot_config_t* config, const char* filename) {
                     _("The configuration file contains errors, and hence some default values have been chosen. The problem will be fixed once you have accepted the settings in the configuration dialog."));
     }
 
-    if (!scale_errors) {
+    if (!scale_errors && scale.notes) {
         lingot_config_scale_new(&config->scale);
         lingot_config_scale_copy(&config->scale, &scale);
     }
