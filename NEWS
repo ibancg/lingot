@@ -3,12 +3,13 @@ Lingot 1.1.0 (2020-05-XX)
 -------------------------
 
  * Added experimental strobe disc display.
- * Main window resizing aspect ratio unconstrained.
  * Gauge has a quicker and more dampened response.
+ * Main window resizing aspect ratio unconstrained.
  * Config files moved to JSON format.
+ * Added persistent UI settings in JSON format.
  * Added experimental liblingot core library.
- * Note names can be read from Scala .scl files.
- * Code improvements and compliance with stricter C standard C99, C11 and C18.
+ * Note names can be read from comments in Scala .scl files.
+ * Code improvements and compliance with stricter C standards C99, C11 and C18.
 
 
 Lingot 1.0.0 (2018-07-06)
@@ -29,7 +30,8 @@ Lingot 1.0.0 (2018-07-06)
  * Fixed bugs #643435, #730175 in debian.
  * Enhanced some error messages.
  * Fixed potential error when reading from OSS and ALSA.
- * Fixed memory leaks and improved memory management (thanks to Nicolas Boulenguez).
+ * Fixed memory leaks and improved memory management (thanks to Nicolas
+   Boulenguez).
 
 
 Lingot 0.9.1 (2011-08-22)
@@ -45,10 +47,10 @@ Lingot 0.9.0 (2011-02-21)
 
 * Lingot is now an universal tuner, it can tune any instrument according to a
   provided scale.
-	   + Scale edition in a table.
-	   + Importation of Scala .scl files (http://www.huygens-fokker.org/scala/)
-	   + The gauge adapts its range to the scale. 
-	   + The deviation control has been moved to the scale tab.
+    + Scale edition in a table.
+    + Importation of Scala .scl files (http://www.huygens-fokker.org/scala/)
+    + The gauge adapts its range to the scale.
+    + The deviation control has been moved to the scale tab.
 * Now it's possible to load and save configuration files from the GUI.
 * The graphic controllers in the audio capture section have been changed. The
   user can choose now any hardware sampling rate, and is notified when the
