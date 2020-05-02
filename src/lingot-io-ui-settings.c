@@ -31,9 +31,10 @@
 char LINGOT_UI_SETTINGS_FILE_NAME[];
 lingot_ui_settings_t ui_settings;
 
-void lingot_io_ui_settings_init()
+int lingot_io_ui_settings_init()
 {
     // default values
+    ui_settings.version = NULL;
     ui_settings.spectrum_visible = TRUE;
     ui_settings.gauge_visible = TRUE;
     ui_settings.win_pos_x = -1;
@@ -44,11 +45,16 @@ void lingot_io_ui_settings_init()
     json_object* doc = json_object_from_file(LINGOT_UI_SETTINGS_FILE_NAME);
     if (!doc) {
         fprintf(stderr, "error reading config file");
+        return 0;
     }
 
     json_object* obj;
     json_bool ok = TRUE;
 
+    ok = json_object_object_get_ex(doc, "version", &obj);
+    if (ok) {
+        ui_settings.version = _strdup(json_object_get_string(obj));
+    }
     ok = json_object_object_get_ex(doc, "spectrumVisible", &obj);
     if (ok) {
         ui_settings.spectrum_visible = json_object_get_boolean(obj);
@@ -73,12 +79,17 @@ void lingot_io_ui_settings_init()
     if (ok) {
         ui_settings.win_height = json_object_get_int(obj);
     }
+
+    json_object_put(doc);
+    return 1;
 }
 
 void lingot_io_ui_settings_save()
 {
     json_object* doc = json_object_new_object();
 
+    json_object_object_add(doc, "version",
+                           json_object_new_string(VERSION)); // we save the current version
     json_object_object_add(doc, "spectrumVisible",
                            json_object_new_boolean(ui_settings.spectrum_visible));
     json_object_object_add(doc, "gaugeVisible",
@@ -91,6 +102,8 @@ void lingot_io_ui_settings_save()
                            json_object_new_int(ui_settings.win_width));
     json_object_object_add(doc, "winHeight",
                            json_object_new_int(ui_settings.win_height));
+
+    // TODO: free ui_settings.version?
 
     int result = json_object_to_file_ext(LINGOT_UI_SETTINGS_FILE_NAME, doc, JSON_C_TO_STRING_PRETTY);
     if (result == -1) {

@@ -31,6 +31,14 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+#ifndef VERSION
+#  define VERSION "unknown"
+#endif
+
 extern char LINGOT_UI_SETTINGS_FILE_NAME[200];
 #define LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME "ui-settings.conf"
 
@@ -38,6 +46,7 @@ extern char LINGOT_UI_SETTINGS_FILE_NAME[200];
 // configuration parameter specification (id, type, minimum and maximum allowed values, ...)
 typedef struct {
 
+    const char* version; // app version last launched
     int spectrum_visible;
     int gauge_visible;
     int win_width;
@@ -49,7 +58,7 @@ typedef struct {
 
 extern lingot_ui_settings_t ui_settings;
 
-void lingot_io_ui_settings_init();
+int  lingot_io_ui_settings_init();
 void lingot_io_ui_settings_save();
 
 #ifdef __cplusplus

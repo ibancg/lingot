@@ -105,7 +105,7 @@ void lingot_io_config_create_parameter_specs(void);
 lingot_config_parameter_spec_t lingot_io_config_get_parameter_spec(lingot_config_parameter_id_t id);
 
 void lingot_io_config_save(lingot_config_t*, const char* filename);
-int lingot_io_config_load(lingot_config_t*, const char* filename);
+int  lingot_io_config_load(lingot_config_t*, const char* filename);
 
 #ifdef __cplusplus
 }
