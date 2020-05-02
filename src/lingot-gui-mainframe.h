@@ -40,16 +40,15 @@ typedef struct _lingot_main_frame_t {
     // gtk widgets
     GtkWidget* gauge_area;
     GtkWidget* spectrum_area;
-    GtkWidget* tone_label;
     GtkCheckMenuItem* view_spectrum_item;
     GtkCheckMenuItem* view_gauge_item;
     GtkCheckMenuItem* view_strobe_disc_item;
     GtkWidget* spectrum_frame;
 
-    GtkWidget* freq_label;
-    GtkWidget* error_label;
-
     GtkWidget* labelsbox;
+    GtkLabel* freq_label;
+    GtkLabel* error_label;
+    GtkLabel* tone_label;
 
     lingot_filter_t freq_filter;
     lingot_filter_t gauge_filter;
@@ -65,10 +64,9 @@ typedef struct _lingot_main_frame_t {
     lingot_config_t conf;
 
     // timer uids
+    guint gauge_sampling_timer_uid;
     guint visualization_timer_uid;
-    guint freq_computation_timer_uid;
-    guint gauge_computation_uid;
-    guint error_dispatcher_uid;
+    guint error_dispatch_timer_uid;
 
     // filtered frequency and closest note index in the scale
     LINGOT_FLT frequency;

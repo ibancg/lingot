@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
     // default UI settings file.
     snprintf(LINGOT_UI_SETTINGS_FILE_NAME, sizeof(LINGOT_UI_SETTINGS_FILE_NAME),
              "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME, getenv("HOME"));
-    lingot_io_ui_settings_init();
 
     // TODO: indicate complete config file path
     if ((argc > 3) || (argc == 2)) {

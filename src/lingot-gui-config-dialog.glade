@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkAdjustment" id="adjustment1">
@@ -69,7 +69,7 @@
     <property name="title" translatable="yes">lingot configuration</property>
     <property name="window_position">center-always</property>
     <property name="type_hint">normal</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -289,29 +289,6 @@ Any applied changes can be rolled back pressing Cancel.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label19">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Hz</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label14">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">15</property>
-                    <property name="label" translatable="yes">Visualization rate</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label11">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -320,7 +297,7 @@ Any applied changes can be rolled back pressing Cancel.</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -331,7 +308,7 @@ Any applied changes can be rolled back pressing Cancel.</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -358,7 +335,7 @@ Any applied changes can be rolled back pressing Cancel.</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                     <property name="width">3</property>
                   </packing>
                 </child>
@@ -375,22 +352,7 @@ Any applied changes can be rolled back pressing Cancel.</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScale" id="visualization_rate">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup" translatable="yes">Number of visualizations per second of the (last) computed frequency, error and spectrum. </property>
-                    <property name="tooltip_text" translatable="yes">Number of visualizations per second of the (last) computed frequency, error and spectrum. </property>
-                    <property name="adjustment">adjustment2</property>
-                    <property name="round_digits">1</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -409,6 +371,15 @@ Any applied changes can be rolled back pressing Cancel.</property>
                     <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </object>
               <packing>

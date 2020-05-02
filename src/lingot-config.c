@@ -92,7 +92,6 @@ void lingot_config_restore_default_values(lingot_config_t* config) {
     config->fft_size = 512; // samples
     config->temporal_window = 0.3; // seconds
     config->calculation_rate = 15.0; // Hz
-    config->visualization_rate = 24.0; // Hz
     config->min_overall_SNR = 20.0; // dB
 
     config->peak_number = 8; // peaks

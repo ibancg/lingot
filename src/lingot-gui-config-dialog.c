@@ -380,7 +380,6 @@ void lingot_gui_config_dialog_data_to_gui(lingot_config_dialog_t* dialog, const 
     lingot_gui_config_dialog_set_audio_device(dialog->input_dev, conf->audio_dev[conf->audio_system_index]);
 
     gtk_range_set_value(GTK_RANGE(dialog->calculation_rate), conf->calculation_rate);
-    gtk_range_set_value(GTK_RANGE(dialog->visualization_rate), conf->visualization_rate);
     gtk_range_set_value(GTK_RANGE(dialog->noise_threshold), conf->min_overall_SNR);
 
     gtk_spin_button_set_value(dialog->root_frequency_error, conf->root_frequency_error);
@@ -442,7 +441,6 @@ int lingot_gui_config_dialog_gui_to_data(const lingot_config_dialog_t* dialog, l
                 gtk_entry_get_text(GTK_ENTRY(gtk_bin_get_child(GTK_BIN(dialog->input_dev))))));
     conf->root_frequency_error = gtk_spin_button_get_value(dialog->root_frequency_error);
     conf->calculation_rate = gtk_range_get_value(GTK_RANGE(dialog->calculation_rate));
-    conf->visualization_rate = gtk_range_get_value(GTK_RANGE(dialog->visualization_rate));
     conf->temporal_window = gtk_spin_button_get_value(dialog->temporal_window);
     conf->min_overall_SNR = gtk_range_get_value(GTK_RANGE(dialog->noise_threshold));
     conf->optimize_internal_parameters = gtk_toggle_button_get_active(
@@ -546,7 +544,7 @@ lingot_config_dialog_t* lingot_gui_config_dialog_create(lingot_config_t* config,
 
     dialog->input_dev = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "input_dev"));
     dialog->calculation_rate = GTK_SCALE(gtk_builder_get_object(builder, "calculation_rate"));
-    dialog->visualization_rate = GTK_SCALE(gtk_builder_get_object(builder, "visualization_rate"));
+    dialog->visualization_rate = 0; //dialog->calculation_rate;
     dialog->noise_threshold = GTK_SCALE(gtk_builder_get_object(builder, "noise_threshold"));
     dialog->fft_size = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "fft_size"));
     dialog->temporal_window = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "temporal_window"));

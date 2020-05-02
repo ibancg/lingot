@@ -42,9 +42,6 @@
 #include "lingot-io-ui-settings.h"
 #include "lingot-msg.h"
 
-#define GAUGE_RATE           60.0
-#define ERROR_DISPATCH_RATE	 5.0
-
 void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
 static gchar* filechooser_config_last_folder = NULL;
@@ -73,8 +70,8 @@ void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* fr
     (void)w;                //  Unused parameter.
 
     g_source_remove(frame->visualization_timer_uid);
-    g_source_remove(frame->freq_computation_timer_uid);
-    g_source_remove(frame->gauge_computation_uid);
+    g_source_remove(frame->error_dispatch_timer_uid);
+    g_source_remove(frame->gauge_sampling_timer_uid);
 
     lingot_core_thread_stop(&frame->core);
     lingot_core_destroy(&frame->core);
@@ -217,23 +214,14 @@ gboolean lingot_gui_mainframe_callback_tout_visualization(gpointer data) {
 
     lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
     gtk_widget_queue_draw(frame->gauge_area);
-
-    return 1;
-}
-
-/* timeout for spectrum computation and display */
-gboolean lingot_gui_mainframe_callback_tout_spectrum_computation_display(gpointer data) {
-
-    lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
-
     gtk_widget_queue_draw(frame->spectrum_area);
     lingot_gui_mainframe_draw_labels(frame);
 
-    return 1;
+    return 1; // repeat event
 }
 
 /* timeout for a new gauge position computation */
-gboolean lingot_gui_mainframe_callback_gauge_computation(gpointer data) {
+gboolean lingot_gui_mainframe_callback_gauge_sampling(gpointer data) {
     lingot_main_frame_t* frame = (lingot_main_frame_t*) data;
 
     LINGOT_FLT freq = lingot_core_thread_get_result_frequency(&frame->core);
@@ -334,7 +322,7 @@ void lingot_gui_mainframe_callback_open_config(gpointer data,
                 _("Open Configuration File"), frame->win,
                 GTK_FILE_CHOOSER_ACTION_OPEN, "_Cancel", GTK_RESPONSE_CANCEL,
                 "_Open", GTK_RESPONSE_ACCEPT, NULL);
-    char config_used = 0;
+    int config_used = 0;
     lingot_config_t config;
 
     GtkFileFilter *filefilter = gtk_file_filter_new();
@@ -425,6 +413,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     lingot_config_new(conf);
     lingot_io_config_load(conf, LINGOT_CONFIG_FILE_NAME);
 
+    lingot_io_ui_settings_init();
+
     //
     // ----- ERROR GAUGE FILTER CONFIGURATION -----
     //
@@ -458,15 +448,17 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     // filter.
     //
 
+    double gauge_rate = ui_settings.gauge_sampling_rate;
+
     // Adaptation constant. The bigger this value is, the quicker the gauge moves to its target.
     const LINGOT_FLT gauge_filter_k = 100;
 
     // Friction coefficient. The bigger the value, the less the "bouncing" effect on the gauge.
     const LINGOT_FLT gauge_filter_q = 10;
 
-    const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + GAUGE_RATE * (gauge_filter_q + GAUGE_RATE),
-                                          -GAUGE_RATE * (gauge_filter_q + 2.0 * GAUGE_RATE),
-                                          GAUGE_RATE * GAUGE_RATE };
+    const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + gauge_rate * (gauge_filter_q + gauge_rate),
+                                          -gauge_rate * (gauge_filter_q + 2.0 * gauge_rate),
+                                          gauge_rate * gauge_rate };
     const LINGOT_FLT gauge_filter_b[] = { gauge_filter_k };
 
     lingot_filter_new(&frame->gauge_filter, 2, 0, gauge_filter_a, gauge_filter_b);
@@ -492,14 +484,14 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     gtk_window_set_default_icon_name("org.nongnu.lingot");
     gtk_window_set_icon_name(frame->win, "org.nongnu.lingot");
 
-    lingot_gui_strobe_disc_init(GAUGE_RATE);
+    lingot_gui_strobe_disc_init(gauge_rate);
 
     frame->gauge_area = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_area"));
     frame->spectrum_area = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_area"));
 
-    frame->freq_label = GTK_WIDGET(gtk_builder_get_object(builder, "freq_label"));
-    frame->tone_label = GTK_WIDGET(gtk_builder_get_object(builder, "tone_label"));
-    frame->error_label = GTK_WIDGET(gtk_builder_get_object(builder, "error_label"));
+    frame->freq_label = GTK_LABEL(gtk_builder_get_object(builder, "freq_label"));
+    frame->tone_label = GTK_LABEL(gtk_builder_get_object(builder, "tone_label"));
+    frame->error_label = GTK_LABEL(gtk_builder_get_object(builder, "error_label"));
 
     frame->spectrum_frame = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
     frame->view_spectrum_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "spectrum_item"));
@@ -561,22 +553,19 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     gtk_widget_show_all(GTK_WIDGET(frame->win));
 
     unsigned int period;
-    period = (unsigned int) (1000 / conf->visualization_rate);
+
+    period = (unsigned int) (1000 / ui_settings.error_dispatch_rate);
+    frame->error_dispatch_timer_uid = g_timeout_add(period,
+                                                lingot_gui_mainframe_callback_error_dispatcher, frame);
+
+    period = (unsigned int) (1000 / ui_settings.gauge_sampling_rate);
+    frame->gauge_sampling_timer_uid = g_timeout_add(period,
+                                                 lingot_gui_mainframe_callback_gauge_sampling, frame);
+
+    // TODO: move visualization rate to UI settings.
+    period = (unsigned int) (1000 / ui_settings.visualization_rate);
     frame->visualization_timer_uid = g_timeout_add(period,
                                                    lingot_gui_mainframe_callback_tout_visualization, frame);
-
-    period = (unsigned int) (1000 / conf->calculation_rate);
-    frame->freq_computation_timer_uid = g_timeout_add(period,
-                                                      lingot_gui_mainframe_callback_tout_spectrum_computation_display,
-                                                      frame);
-
-    period = (unsigned int) (1000 / GAUGE_RATE);
-    frame->gauge_computation_uid = g_timeout_add(period,
-                                                 lingot_gui_mainframe_callback_gauge_computation, frame);
-
-    period = (unsigned int) (1000 / ERROR_DISPATCH_RATE);
-    frame->error_dispatcher_uid = g_timeout_add(period,
-                                                lingot_gui_mainframe_callback_error_dispatcher, frame);
 
     frame->closest_note_index = 0;
     frame->frequency = 0;
@@ -631,11 +620,11 @@ void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t* frame) {
     int font_size = 9 + req.width / 80;
     char* markup = g_markup_printf_escaped("<span font_desc=\"%d\">%s</span>",
                                            font_size, freq_string);
-    gtk_label_set_markup(GTK_LABEL(frame->freq_label), markup);
+    gtk_label_set_markup(frame->freq_label, markup);
     g_free(markup);
     markup = g_markup_printf_escaped("<span font_desc=\"%d\">%s</span>",
                                      font_size, error_string);
-    gtk_label_set_markup(GTK_LABEL(frame->error_label), markup);
+    gtk_label_set_markup(frame->error_label, markup);
     g_free(markup);
 
     font_size = 10 + req.width / 22;
@@ -644,6 +633,6 @@ void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t* frame) {
                 "<span font_desc=\"%d\" weight=\"bold\">%s</span><span font_desc=\"%d\" weight=\"bold\"><sub>%s</sub></span>",
                 font_size, note_string, (int) (0.75 * font_size),
                 octave_string);
-    gtk_label_set_markup(GTK_LABEL(frame->tone_label), markup);
+    gtk_label_set_markup(frame->tone_label, markup);
     g_free(markup);
 }

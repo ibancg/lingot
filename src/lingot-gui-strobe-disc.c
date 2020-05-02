@@ -31,11 +31,9 @@
 static int strobe_disc_size_x = 0;
 static int strobe_disc_size_y = 0;
 
-double strobe_angle = 0.0;
-double strobe_angle_computation_rate = 0.0;
-cairo_surface_t* strobe_image = NULL;
-
-extern GResource *lingot_get_resource (void);
+static double strobe_angle = 0.0;
+static double strobe_angle_computation_rate = 0.0;
+static cairo_surface_t* strobe_image = NULL;
 
 static cairo_status_t read_png(void* closure,
                                unsigned char* data,

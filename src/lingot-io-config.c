@@ -110,8 +110,6 @@ void lingot_io_config_create_parameter_specs(void) {
                                             "TEMPORAL_WINDOW", "seconds", 0.0, 15.00, 0);
     lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_CALCULATION_RATE,
                                             "CALCULATION_RATE", "Hz", 1.0, 30.00, 0);
-    lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_VISUALIZATION_RATE,
-                                            "VISUALIZATION_RATE", "Hz", 1.0, 40.00, 0);
     lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY,
                                             "MINIMUM_FREQUENCY", "Hz", 0.0, 22050.0, 0);
     lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY,
@@ -148,7 +146,8 @@ void lingot_io_config_create_parameter_specs(void) {
                                             "AUDIO_DEV_JACK", 512, 1);
     lingot_config_add_string_parameter_spec(LINGOT_PARAMETER_ID_AUDIO_DEV_PULSEAUDIO,
                                             "AUDIO_DEV_PULSEAUDIO", 512, 1);
-
+    lingot_config_add_double_parameter_spec(LINGOT_PARAMETER_ID_VISUALIZATION_RATE,
+                                            "VISUALIZATION_RATE", "Hz", 1.0, 40.00, 1);
 }
 
 lingot_config_parameter_spec_t lingot_io_config_get_parameter_spec(
@@ -179,8 +178,6 @@ static void lingot_config_map_parameters(lingot_config_t* config, void* params[]
                             .value = &config->min_overall_SNR }, //
                           { .id = LINGOT_PARAMETER_ID_CALCULATION_RATE,
                             .value = &config->calculation_rate }, //
-                          { .id = LINGOT_PARAMETER_ID_VISUALIZATION_RATE,
-                            .value = &config->visualization_rate }, //
                           { .id = LINGOT_PARAMETER_ID_MINIMUM_FREQUENCY,
                             .value = &config->min_frequency }, //
                           { .id = LINGOT_PARAMETER_ID_MAXIMUM_FREQUENCY,

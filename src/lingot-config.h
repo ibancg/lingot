@@ -40,7 +40,8 @@ typedef enum window_type_t {
 
 #define N_MAX_AUDIO_DEV 10
 
-// Configuration struct. Determines the behaviour of the tuner.
+// Configuration structure for the core (no UI-related stuff here).
+// Determines the behaviour of the tuner.
 // Some parameters are internal only.
 typedef struct {
 
@@ -63,7 +64,6 @@ typedef struct {
     unsigned int fft_size; // number of samples of the FFT.
 
     LINGOT_FLT calculation_rate;
-    LINGOT_FLT visualization_rate;
 
     LINGOT_FLT temporal_window; // duration in seconds of the temporal window.
 

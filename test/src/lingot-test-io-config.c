@@ -49,7 +49,6 @@ static void check_last_configs(const lingot_config_t* config) {
     CU_ASSERT_EQUAL(config->temporal_window, 0.3);
     CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
     CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
-    CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
     CU_ASSERT_EQUAL(config->min_frequency, 82.41);
     CU_ASSERT_EQUAL(config->max_frequency, 329.63);
 
@@ -109,7 +108,6 @@ void lingot_test_io_config(void) {
         CU_ASSERT_EQUAL(config->fft_size, 512);
         CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
         CU_ASSERT_EQUAL(config->calculation_rate, 20.0);
-        CU_ASSERT_EQUAL(config->visualization_rate, 30.0);
     } else {
         fprintf(stderr, "warning: cannot find unit test resources\n");
     }
@@ -131,7 +129,6 @@ void lingot_test_io_config(void) {
         CU_ASSERT_EQUAL(config->temporal_window, 0.3);
         CU_ASSERT_EQUAL(config->min_overall_SNR, 20.0);
         CU_ASSERT_EQUAL(config->calculation_rate, 15.0);
-        CU_ASSERT_EQUAL(config->visualization_rate, 24.0);
         CU_ASSERT_EQUAL(config->min_frequency, 82.41);
         CU_ASSERT_EQUAL(config->max_frequency, 329.63);
 

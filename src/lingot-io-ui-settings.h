@@ -46,17 +46,32 @@ extern char LINGOT_UI_SETTINGS_FILE_NAME[200];
 // configuration parameter specification (id, type, minimum and maximum allowed values, ...)
 typedef struct {
 
-    const char* app_version; // app version last launched
+    // app version last launched
+    const char* app_version;
+
+    // visible / invisible widgets
     int spectrum_visible;
     int gauge_visible;
+
+    // position and size of main window
     int win_width;
     int win_height;
     int win_pos_x;
     int win_pos_y;
+
+    // position and size of config dialog
     int config_dialog_width;
     int config_dialog_height;
     int config_dialog_pos_x;
     int config_dialog_pos_y;
+
+    // dynamic response of the gauge
+    double gauge_adaptation_constant; // how quick the gauge adapts to the target error (the bigger the value, the quicker)
+    double gauge_damping_constant;    // how much we damp the "bouncing" of the gauge (the bigger the value, the less the bouncing is)
+    double gauge_sampling_rate;       // sampling rate for computing the next gauge position. keep high
+
+    double visualization_rate;        // refresh of visual displays.
+    double error_dispatch_rate;       // dispatch of error messages.
 
 } lingot_ui_settings_t;
 

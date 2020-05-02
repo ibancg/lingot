@@ -46,6 +46,13 @@ int lingot_io_ui_settings_init()
     ui_settings.config_dialog_width = -1;
     ui_settings.config_dialog_height = -1;
 
+    ui_settings.gauge_adaptation_constant = 100.0;
+    ui_settings.gauge_damping_constant = 10.0;
+    ui_settings.gauge_sampling_rate = 60.0;
+
+    ui_settings.visualization_rate = 30.0; // fps
+    ui_settings.error_dispatch_rate = 5.0;
+
     json_object* doc = json_object_from_file(LINGOT_UI_SETTINGS_FILE_NAME);
     if (!doc) {
         fprintf(stderr, "error reading config file");
@@ -99,6 +106,27 @@ int lingot_io_ui_settings_init()
     if (ok) {
         ui_settings.config_dialog_height = json_object_get_int(obj);
     }
+    ok = json_object_object_get_ex(doc, "gaugeAdaptationConstant", &obj);
+    if (ok) {
+        ui_settings.gauge_adaptation_constant = json_object_get_double(obj);
+    }
+    ok = json_object_object_get_ex(doc, "gaugeDampingConstant", &obj);
+    if (ok) {
+        ui_settings.gauge_damping_constant = json_object_get_double(obj);
+    }
+    ok = json_object_object_get_ex(doc, "gaugeSamplingRate", &obj);
+    if (ok) {
+        ui_settings.gauge_sampling_rate = json_object_get_double(obj);
+    }
+
+    ok = json_object_object_get_ex(doc, "errorDispatchRate", &obj);
+    if (ok) {
+        ui_settings.error_dispatch_rate = json_object_get_double(obj);
+    }
+    ok = json_object_object_get_ex(doc, "visualizationRate", &obj);
+    if (ok) {
+        ui_settings.visualization_rate = json_object_get_double(obj);
+    }
 
     json_object_put(doc);
     return 1;
@@ -130,6 +158,18 @@ void lingot_io_ui_settings_save()
                            json_object_new_int(ui_settings.config_dialog_width));
     json_object_object_add(doc, "configDialogHeight",
                            json_object_new_int(ui_settings.config_dialog_height));
+
+    json_object_object_add(doc, "gaugeAdaptationConstant",
+                           json_object_new_double(ui_settings.gauge_adaptation_constant));
+    json_object_object_add(doc, "gaugeDampingConstant",
+                           json_object_new_double(ui_settings.gauge_damping_constant));
+    json_object_object_add(doc, "gaugeSamplingRate",
+                           json_object_new_double(ui_settings.gauge_sampling_rate));
+
+    json_object_object_add(doc, "errorDispatchRate",
+                           json_object_new_double(ui_settings.error_dispatch_rate));
+    json_object_object_add(doc, "visualizationRate",
+                           json_object_new_double(ui_settings.visualization_rate));
 
     // TODO: free ui_settings.version?
 
