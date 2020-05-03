@@ -84,7 +84,7 @@ void lingot_gui_strobe_disc_redraw(GtkWidget *widget, cairo_t *cr, lingot_main_f
     cairo_rotate(cr, strobe_angle);
     double s = 1.5 * (area_width + area_height) / (image_width + image_height) + 0.3*((double) area_height) / area_width;
     cairo_scale(cr, s, s);
-    cairo_translate(cr, -image_width / 2.0, -image_height / 2.0);
+    cairo_translate(cr, -image_width / 2.0 + 1.0, -image_height / 2.0 + 1.0);
     cairo_set_source_surface(cr, strobe_image, 0, 0);
     cairo_paint(cr);
 }

@@ -451,10 +451,10 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     double gauge_rate = ui_settings.gauge_sampling_rate;
 
     // Adaptation constant. The bigger this value is, the quicker the gauge moves to its target.
-    const LINGOT_FLT gauge_filter_k = 100;
+    const LINGOT_FLT gauge_filter_k = ui_settings.gauge_adaptation_constant;
 
     // Friction coefficient. The bigger the value, the less the "bouncing" effect on the gauge.
-    const LINGOT_FLT gauge_filter_q = 10;
+    const LINGOT_FLT gauge_filter_q = ui_settings.gauge_damping_constant;
 
     const LINGOT_FLT gauge_filter_a[] = { gauge_filter_k + gauge_rate * (gauge_filter_q + gauge_rate),
                                           -gauge_rate * (gauge_filter_q + 2.0 * gauge_rate),

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([Lingot],
-        [1.0.2b],
+        [1.1.0],
         [Iban Cereijo <ibancg@gmail.com>],
         [],
         [http://lingot.nongnu.org])

@@ -39,15 +39,15 @@ int lingot_io_ui_settings_init()
     ui_settings.gauge_visible = TRUE;
     ui_settings.win_pos_x = -1;
     ui_settings.win_pos_y = -1;
-    ui_settings.win_width = -1;
-    ui_settings.win_height = -1;
+    ui_settings.win_width = 480;
+    ui_settings.win_height = 410;
     ui_settings.config_dialog_pos_x = -1;
     ui_settings.config_dialog_pos_y = -1;
     ui_settings.config_dialog_width = -1;
     ui_settings.config_dialog_height = -1;
 
-    ui_settings.gauge_adaptation_constant = 100.0;
-    ui_settings.gauge_damping_constant = 10.0;
+    ui_settings.gauge_adaptation_constant = 150.0;
+    ui_settings.gauge_damping_constant = 15.0;
     ui_settings.gauge_sampling_rate = 60.0;
 
     ui_settings.visualization_rate = 30.0; // fps
@@ -55,7 +55,7 @@ int lingot_io_ui_settings_init()
 
     json_object* doc = json_object_from_file(LINGOT_UI_SETTINGS_FILE_NAME);
     if (!doc) {
-        fprintf(stderr, "error reading config file");
+        fprintf(stderr, "cannot read UI settings file");
         return 0;
     }
 

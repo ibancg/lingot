@@ -65,7 +65,8 @@ command displays all options and defaut value.
 ./configure --help
 ```
 
-Below a summary of the packages needed to build a development version on _Debian-based_ systems:
+Below a summary of the packages needed to build a development version on
+_Debian-based_ systems:
 
 ```console
 sudo apt-get install \
@@ -79,6 +80,13 @@ sudo apt-get install \
     libpulse-dev \
     libtool \
     pkg-config
+```
+
+Beware that LINGOT ships a shared library, so if you install it in the default
+path `/usr/local/`, you might need to add it to the library path:
+
+```console
+LD_LIBRARY_PATH=/usr/local/lib lingot
 ```
 
 Synopsis
