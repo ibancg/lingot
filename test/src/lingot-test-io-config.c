@@ -32,6 +32,8 @@
 
 #include <memory.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #ifndef LINGOT_TEST_RESOURCES_PATH
 #define LINGOT_TEST_RESOURCES_PATH "test/"
@@ -162,9 +164,17 @@ void lingot_test_io_config(void) {
     check_last_configs(config);
 
     // we check that we can save and load it again
+    char temp_filename[32];
+    strncpy(temp_filename,"/tmp/lingot-XXXXXX", sizeof(temp_filename));
 
-    filename = tmpnam(NULL);
-    lingot_io_config_save(config, filename);
+    int temp_file_id = mkstemps(temp_filename, 6);
+    CU_ASSERT(temp_file_id >= 0);
+    ok = close(temp_file_id);
+
+    CU_ASSERT(!ok);
+    ok = lingot_io_config_save(config, filename);
+    CU_ASSERT(ok != -1);
+
     ok = lingot_io_config_load(config, filename);
     CU_ASSERT(ok);
     check_last_configs(config);
@@ -182,7 +192,11 @@ void lingot_test_io_config(void) {
 
     // we check that we can save and load it again
 
-    filename = tmpnam(NULL);
+    temp_file_id = mkstemps(temp_filename, 6);
+    CU_ASSERT(temp_file_id >= 0);
+    ok = close(temp_file_id);
+
+    CU_ASSERT(!ok);
     lingot_io_config_save(config, filename);
     ok = lingot_io_config_load(config, filename);
     CU_ASSERT(ok);

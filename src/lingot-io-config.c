@@ -195,7 +195,7 @@ static void lingot_config_map_parameters(lingot_config_t* config, void* params[]
     }
 }
 
-void lingot_io_config_save(lingot_config_t *config, const char* filename) {
+int lingot_io_config_save(lingot_config_t *config, const char* filename) {
 
     unsigned int i;
     void* params[N_MAX_OPTIONS]; // parameter pointer array.
@@ -269,6 +269,7 @@ void lingot_io_config_save(lingot_config_t *config, const char* filename) {
         fprintf(stderr, "error saving config file\n");
     }
     json_object_put(doc);
+    return result;
 }
 
 //----------------------------------------------------------------------------
