@@ -82,8 +82,10 @@ sudo apt-get install \
     pkg-config
 ```
 
-Beware that LINGOT ships a shared library, so if you install it in the default
-path `/usr/local/`, you might need to add it to the library path:
+Beware that LINGOT ships an experimental shared library, whose interface could
+be subject to change. If you have trouble finding the library when launching the
+aplication, please consider reporting a bug, and try setting the library path
+to your installation location as a work-around:
 
 ```console
 LD_LIBRARY_PATH=/usr/local/lib lingot
