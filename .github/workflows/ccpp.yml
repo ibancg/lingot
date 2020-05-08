@@ -23,6 +23,8 @@ jobs:
       run: make
     - name: make check
       run: make check
+    - name: cat test log
+      run: cat ./test-suite.log
     - name: make distcheck
       run: make distcheck
     - name: configure no fftw
