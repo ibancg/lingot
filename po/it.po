@@ -337,7 +337,7 @@ msgid ""
 msgstr "Applica i cambiamenti, ma non modifica il file di configurazione."
 
 #: ../src/lingot-gui-config-dialog.glade.h:7
-msgid "Applies the current changes and modifies the congifuration file."
+msgid "Applies the current changes and modifies the configuration file."
 msgstr "Applica i cambiamenti e modifica il file di configurazione."
 
 #: ../src/lingot-gui-config-dialog.glade.h:8

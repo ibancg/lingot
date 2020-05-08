@@ -342,7 +342,7 @@ msgstr ""
 "Os cambios aplicados poderán ser desfeitos premendo Cancelar."
 
 #: ../src/lingot-gui-config-dialog.glade.h:7
-msgid "Applies the current changes and modifies the congifuration file."
+msgid "Applies the current changes and modifies the configuration file."
 msgstr "Aplica os cambios actuais e modifica o ficheiro de configuración."
 
 #: ../src/lingot-gui-config-dialog.glade.h:8
