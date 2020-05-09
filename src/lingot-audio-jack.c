@@ -346,6 +346,10 @@ int lingot_audio_jack_start(lingot_audio_handler_t* audio) {
         jack_free(ports);
     }
 
+    if (result == 0) {
+        audio->running = 1;
+    }
+
     return result;
 }
 
