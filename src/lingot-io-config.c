@@ -638,7 +638,7 @@ int lingot_io_config_load_json(lingot_config_t* config, const char* filename) {
     }
 
     json_object* obj = NULL;
-    json_bool ok = TRUE;
+    json_bool ok = 1;
 
     ok = json_object_object_get_ex(doc, "VERSION", &obj);
     if (!ok) {
@@ -799,7 +799,7 @@ int lingot_io_config_load_json(lingot_config_t* config, const char* filename) {
                         scale.offset_cents[i] = double_value;
                         scale.offset_ratios[0][i] = -1;
                         scale.offset_ratios[1][i] = -1;
-                        ok = TRUE;
+                        ok = 1;
                     } else {
                         string_value = json_object_get_string(value);
                         ok = lingot_config_scale_parse_shift((char*) string_value,
