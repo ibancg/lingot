@@ -155,13 +155,23 @@ void lingot_test_io_config(void) {
 
     // we check that we can save and load it again
 
-    filename = tmpnam(NULL);
-    lingot_io_config_save(config, filename);
-    ok = lingot_io_config_load(config, filename);
+    // although the use of tmpnam() is flagged as 'dangerous', it is the only
+    // standard way to get the temp file name with full path, and it is used
+    // only during the tests anyway.
+    char temp_filename_buffer[L_tmpnam];
+    char* temp_filename;
+    temp_filename = tmpnam(temp_filename_buffer);
+    if (!temp_filename) {
+        fprintf(stderr, "%s\n", "warning: temporary file cannot be created");
+        return; // we allow to continue with the distcheck.
+    }
+
+    lingot_io_config_save(config, temp_filename);
+    ok = lingot_io_config_load(config, temp_filename);
     CU_ASSERT(ok);
     check_last_configs(config);
 
-    ok = !remove(filename);
+    ok = !remove(temp_filename);
     CU_ASSERT(ok);
 
     // -----------
@@ -174,13 +184,17 @@ void lingot_test_io_config(void) {
 
     // we check that we can save and load it again
 
-    filename = tmpnam(NULL);
-    lingot_io_config_save(config, filename);
-    ok = lingot_io_config_load(config, filename);
+    temp_filename = tmpnam(temp_filename_buffer);
+    if (!temp_filename) {
+        fprintf(stderr, "%s\n", "warning: temporary file cannot be created");
+        return; // we allow to continue with the distcheck.
+    }
+    lingot_io_config_save(config, temp_filename);
+    ok = lingot_io_config_load(config, temp_filename);
     CU_ASSERT(ok);
     check_last_configs(config);
 
-    ok = !remove(filename);
+    ok = !remove(temp_filename);
     CU_ASSERT(ok);
 
     // -----------
