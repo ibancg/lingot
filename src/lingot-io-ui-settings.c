@@ -35,8 +35,8 @@ int lingot_io_ui_settings_init()
 {
     // default values
     ui_settings.app_version = NULL;
-    ui_settings.spectrum_visible = TRUE;
-    ui_settings.gauge_visible = TRUE;
+    ui_settings.spectrum_visible = 1;
+    ui_settings.gauge_visible = 1;
     ui_settings.win_pos_x = -1;
     ui_settings.win_pos_y = -1;
     ui_settings.win_width = 480;
@@ -60,7 +60,7 @@ int lingot_io_ui_settings_init()
     }
 
     json_object* obj;
-    json_bool ok = TRUE;
+    json_bool ok = 1;
 
     ok = json_object_object_get_ex(doc, "appVersion", &obj);
     if (ok) {
