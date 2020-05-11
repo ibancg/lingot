@@ -53,6 +53,9 @@ int lingot_io_ui_settings_init()
     ui_settings.visualization_rate = 30.0; // fps
     ui_settings.error_dispatch_rate = 5.0;
 
+    ui_settings.horizontal_paned_pos = -1;
+    ui_settings.vertical_paned_pos = -1;
+
     json_object* doc = json_object_from_file(LINGOT_UI_SETTINGS_FILE_NAME);
     if (!doc) {
         fprintf(stderr, "cannot read UI settings file");
@@ -127,6 +130,14 @@ int lingot_io_ui_settings_init()
     if (ok) {
         ui_settings.visualization_rate = json_object_get_double(obj);
     }
+    ok = json_object_object_get_ex(doc, "horizontalPanelPos", &obj);
+    if (ok) {
+        ui_settings.horizontal_paned_pos = json_object_get_int(obj);
+    }
+    ok = json_object_object_get_ex(doc, "verticalPanelPos", &obj);
+    if (ok) {
+        ui_settings.vertical_paned_pos = json_object_get_int(obj);
+    }
 
     json_object_put(doc);
     return 1;
@@ -170,6 +181,11 @@ void lingot_io_ui_settings_save()
                            json_object_new_double(ui_settings.error_dispatch_rate));
     json_object_object_add(doc, "visualizationRate",
                            json_object_new_double(ui_settings.visualization_rate));
+
+    json_object_object_add(doc, "horizontalPanelPos",
+                           json_object_new_int(ui_settings.horizontal_paned_pos));
+    json_object_object_add(doc, "verticalPanelPos",
+                           json_object_new_int(ui_settings.vertical_paned_pos));
 
     // TODO: free ui_settings.version?
 

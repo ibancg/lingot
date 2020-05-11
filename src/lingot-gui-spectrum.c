@@ -206,7 +206,7 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
     }
 }
 
-void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
+gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
 
     unsigned int i;
 
@@ -354,4 +354,5 @@ void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* 
 
     }
 
+    return FALSE;
 }

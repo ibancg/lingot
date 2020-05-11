@@ -32,6 +32,6 @@
 
 void lingot_gui_strobe_disc_init(double computation_rate);
 void lingot_gui_strobe_disc_set_error(double error);
-void lingot_gui_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t *);
+gboolean lingot_gui_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t *);
 
 #endif // LINGOT_GUI_STROBE_DISCE_H

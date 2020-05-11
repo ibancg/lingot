@@ -230,7 +230,7 @@ static void lingot_gui_gauge_redraw_background(cairo_t *cr,
                               frequencyBarMajorTicRadius, frequencyBarRadius, 0.0);
 }
 
-void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
+gboolean lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
 
     GtkAllocation req;
     gtk_widget_get_allocation(w, &req);
@@ -293,4 +293,6 @@ void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* fra
                               gaugeLength, angle);
     cairo_arc(cr, gaugeCenter.x, gaugeCenter.y, gaugeCenterRadius, 0, 2 * M_PI);
     cairo_fill(cr);
+
+    return FALSE;
 }

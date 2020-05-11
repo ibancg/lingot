@@ -30,6 +30,6 @@
 #include <gtk/gtk.h>
 #include "lingot-gui-mainframe.h"
 
-void lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* data);
+gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* data);
 
 #endif // LINGOT_GUI_SPECTRUM_H

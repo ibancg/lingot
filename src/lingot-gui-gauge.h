@@ -30,6 +30,6 @@
 #include <gtk/gtk.h>
 #include "lingot-gui-mainframe.h"
 
-void lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t *);
+gboolean lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t *);
 
 #endif // LINGOT_GUI_GAUGE_H

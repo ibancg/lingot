@@ -57,7 +57,7 @@ void lingot_gui_strobe_disc_set_error(double error) {
     strobe_angle += 1e-1 * error / strobe_angle_computation_rate;
 }
 
-void lingot_gui_strobe_disc_redraw(GtkWidget *widget, cairo_t *cr, lingot_main_frame_t* frame) {
+gboolean lingot_gui_strobe_disc_redraw(GtkWidget *widget, cairo_t *cr, lingot_main_frame_t* frame) {
 
     (void) frame; //  Unused parameter.
 
@@ -87,4 +87,6 @@ void lingot_gui_strobe_disc_redraw(GtkWidget *widget, cairo_t *cr, lingot_main_f
     cairo_translate(cr, -image_width / 2.0 + 1.0, -image_height / 2.0 + 1.0);
     cairo_set_source_surface(cr, strobe_image, 0, 0);
     cairo_paint(cr);
+
+    return FALSE;
 }

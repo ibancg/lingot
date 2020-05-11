@@ -73,6 +73,9 @@ typedef struct {
     double visualization_rate;        // refresh of visual displays.
     double error_dispatch_rate;       // dispatch of error messages.
 
+    int horizontal_paned_pos;
+    int vertical_paned_pos;
+
 } lingot_ui_settings_t;
 
 extern lingot_ui_settings_t ui_settings;

@@ -50,6 +50,9 @@ typedef struct _lingot_main_frame_t {
     GtkLabel* error_label;
     GtkLabel* tone_label;
 
+    GtkPaned* horizontal_paned;
+    GtkPaned* vertical_paned;
+
     lingot_filter_t freq_filter;
     lingot_filter_t gauge_filter;
 

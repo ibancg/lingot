@@ -46,10 +46,25 @@ void lingot_gui_mainframe_draw_labels(const lingot_main_frame_t*);
 
 static gchar* filechooser_config_last_folder = NULL;
 
-//static const gdouble aspect_ratio_spectrum_visible = 1.14;
-//static const gdouble aspect_ratio_spectrum_invisible = 2.07;
+void lingot_gui_mainframe_callback_show(GtkWidget* w,
+                                        GtkAllocation *allocation,
+                                        const lingot_main_frame_t* frame) {
 
-void lingot_gui_mainframe_callback_hide(GtkWidget* w, lingot_main_frame_t* frame) {
+    (void)allocation;   //  Unused parameter.
+    (void)w;            //  Unused parameter.
+
+    if (ui_settings.horizontal_paned_pos > 0) {
+        gtk_paned_set_position(frame->horizontal_paned, ui_settings.horizontal_paned_pos);
+        ui_settings.horizontal_paned_pos = -1;
+    }
+
+    if (ui_settings.vertical_paned_pos > 0) {
+        gtk_paned_set_position(frame->vertical_paned, ui_settings.vertical_paned_pos);
+        ui_settings.vertical_paned_pos = -1;
+    }
+}
+
+void lingot_gui_mainframe_callback_hide(GtkWidget* w, const lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
 
     gint win_width;
@@ -64,6 +79,9 @@ void lingot_gui_mainframe_callback_hide(GtkWidget* w, lingot_main_frame_t* frame
     ui_settings.win_height = win_height;
     ui_settings.spectrum_visible = gtk_check_menu_item_get_active(frame->view_spectrum_item);
     ui_settings.gauge_visible = gtk_check_menu_item_get_active(frame->view_gauge_item);
+
+    ui_settings.horizontal_paned_pos = gtk_paned_get_position(frame->horizontal_paned);
+    ui_settings.vertical_paned_pos = gtk_paned_get_position(frame->vertical_paned);
 }
 
 void lingot_gui_mainframe_callback_destroy(GtkWidget* w, lingot_main_frame_t* frame) {
@@ -387,12 +405,14 @@ void lingot_gui_mainframe_callback_save_config(gpointer data, lingot_main_frame_
     gtk_widget_destroy(dialog);
 }
 
-void lingot_gui_gauge_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
+gboolean lingot_gui_gauge_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
+//    lingot_gui_mainframe_callback_show(w, frame);
     if (gtk_check_menu_item_get_active(frame->view_gauge_item)) {
         lingot_gui_gauge_redraw(w, cr, frame);
     } else{
         lingot_gui_strobe_disc_redraw(w, cr, frame);
     }
+    return FALSE;
 }
 
 lingot_main_frame_t* lingot_gui_mainframe_create() {
@@ -498,6 +518,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     frame->view_gauge_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "gauge_item"));
     frame->view_strobe_disc_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "strobe_disc_item"));
     frame->labelsbox = GTK_WIDGET(gtk_builder_get_object(builder, "labelsbox"));
+    frame->horizontal_paned = GTK_PANED(gtk_builder_get_object(builder, "horizontal_paned"));
+    frame->vertical_paned = GTK_PANED(gtk_builder_get_object(builder, "vertical_paned"));
 
     // GTK signals
     g_signal_connect(gtk_builder_get_object(builder, "preferences_item"),
@@ -529,6 +551,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
                      G_CALLBACK(lingot_gui_spectrum_redraw), frame);
     g_signal_connect(frame->win, "hide",
                      G_CALLBACK(lingot_gui_mainframe_callback_hide), frame);
+    g_signal_connect(frame->win, "size-allocate", // TODO: "show" does not work
+                     G_CALLBACK(lingot_gui_mainframe_callback_show), frame);
     g_signal_connect(frame->win, "destroy",
                      G_CALLBACK(lingot_gui_mainframe_callback_destroy), frame);
 
@@ -550,7 +574,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     //}
 
     // show all
-    gtk_widget_show_all(GTK_WIDGET(frame->win));
+    gtk_widget_show(GTK_WIDGET(frame->win));
+
 
     unsigned int period;
 
