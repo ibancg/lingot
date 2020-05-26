@@ -17,8 +17,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with lingot; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with lingot; if not, write to the Free Software Foundation,
+ * Inc. 51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -42,7 +42,7 @@ typedef struct {
     snd_pcm_t *capture_handle;
 } lingot_audio_handler_alsa_t;
 
-static snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
+static const snd_pcm_format_t sample_format = SND_PCM_FORMAT_FLOAT;
 static const unsigned int channels = 1;
 
 void lingot_audio_alsa_new(lingot_audio_handler_t* audio, const char* device, int sample_rate) {
