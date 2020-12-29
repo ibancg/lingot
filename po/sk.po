@@ -415,7 +415,7 @@ msgid "This is the lowest frequency you want to tune in this instrument. You can
 msgstr "Toto je najnižšia frekvencia, na ktorú chcete naladiť tento nástroj. Môžete sem zadať buď frekvenciu alebo vybrať notu z rozbaľovacej ponuky."
 
 #: ../src/lingot-gui-config-dialog.glade.h:38
-msgid "Intrument frequency range"
+msgid "Instrument frequency range"
 msgstr "Rozsah frekvencie nástroja"
 
 #: ../src/lingot-gui-config-dialog.glade.h:39

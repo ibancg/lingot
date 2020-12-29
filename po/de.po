@@ -459,7 +459,7 @@ msgid ""
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.glade.h:38
-msgid "Intrument frequency range"
+msgid "Instrument frequency range"
 msgstr ""
 
 #: ../src/lingot-gui-config-dialog.glade.h:39

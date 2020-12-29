@@ -522,7 +522,7 @@ msgstr ""
 "aquí una frecuencia o selecciona una nota del menú desplegable."
 
 #: ../src/lingot-gui-config-dialog.glade.h:38
-msgid "Intrument frequency range"
+msgid "Instrument frequency range"
 msgstr "Rango de frecuencia del instrumento"
 
 #: ../src/lingot-gui-config-dialog.glade.h:39

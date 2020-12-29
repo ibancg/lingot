@@ -516,11 +516,11 @@ msgid ""
 "This is the lowest frequency you want to tune in this instrument. You can "
 "put here either a frequency or select a note from the popup list."
 msgstr ""
-"Esta é a frecuencia mínima que queres afinar neste intrumento. Podes poñer "
+"Esta é a frecuencia mínima que queres afinar neste Instrumento. Podes poñer "
 "aquí a frecuencia ou escoller unha nota da lista."
 
 #: ../src/lingot-gui-config-dialog.glade.h:38
-msgid "Intrument frequency range"
+msgid "Instrument frequency range"
 msgstr "Rango de frecuencias"
 
 #: ../src/lingot-gui-config-dialog.glade.h:39
