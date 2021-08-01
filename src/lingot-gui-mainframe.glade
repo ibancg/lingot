@@ -1,76 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkAccelGroup" id="accelgroup1"/>
   <object class="GtkWindow" id="window1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="no_show_all">True</property>
-    <property name="border_width">6</property>
+    <property name="can-focus">False</property>
+    <property name="no-show-all">True</property>
     <property name="title" translatable="yes">lingot</property>
-    <property name="window_position">center</property>
+    <property name="window-position">center</property>
     <accel-groups>
       <group name="accelgroup1"/>
     </accel-groups>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
         <child>
           <object class="GtkMenuBar" id="menubar1">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_File</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="open_config_item">
                         <property name="label">gtk-open</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Opens an external configuration file.</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="accel_group">accelgroup1</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Opens an external configuration file.</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="accel-group">accelgroup1</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="save_config_item">
                         <property name="label">gtk-save-as</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Saves the running configuration to an external file.</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="accel_group">accelgroup1</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Saves the running configuration to an external file.</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="accel-group">accelgroup1</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="quit_item">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="accel_group">accelgroup1</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="accel-group">accelgroup1</property>
                       </object>
                     </child>
                   </object>
@@ -80,21 +77,21 @@
             <child>
               <object class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Edit</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="preferences_item">
                         <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="accel_group">accelgroup1</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="accel-group">accelgroup1</property>
                       </object>
                     </child>
                   </object>
@@ -104,40 +101,40 @@
             <child>
               <object class="GtkMenuItem" id="menuitem3">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_View</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkCheckMenuItem" id="gauge_item">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Show gauge</property>
                         <property name="active">True</property>
-                        <property name="draw_as_radio">True</property>
+                        <property name="draw-as-radio">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkCheckMenuItem" id="strobe_disc_item">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Show strobe disc</property>
-                        <property name="draw_as_radio">True</property>
+                        <property name="draw-as-radio">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkCheckMenuItem" id="spectrum_item">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Show spectrum</property>
                         <property name="active">True</property>
                       </object>
@@ -149,21 +146,21 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Help</property>
-                <property name="use_underline">True</property>
+                <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu4">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="about_item">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="accel_group">accelgroup1</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="accel-group">accelgroup1</property>
                       </object>
                     </child>
                   </object>
@@ -180,28 +177,35 @@
         <child>
           <object class="GtkPaned" id="vertical_paned">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkPaned" id="horizontal_paned">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">9</property>
+                <property name="margin-right">9</property>
+                <property name="margin-top">9</property>
                 <child>
                   <object class="GtkFrame" id="gauge_frame">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <object class="GtkDrawingArea" id="gauge_area">
-                        <property name="width_request">184</property>
-                        <property name="height_request">115</property>
+                        <property name="width-request">184</property>
+                        <property name="height-request">115</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="has_tooltip">True</property>
-                        <property name="tooltip_text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with enough notes, to have a higher resolution in this gauge (12 notes per scale is a safe option).</property>
+                        <property name="can-focus">False</property>
+                        <property name="has-tooltip">True</property>
+                        <property name="tooltip-text" translatable="yes">Shows the error in cents in a visual way. The range will depend on the maximum distance between each two notes in the scale defined in the Lingot settings. Try to provide scales with low maximum distance, i.e. with enough notes, to have a higher resolution in this gauge (12 notes per scale is a safe option).</property>
+                        <property name="margin-left">6</property>
+                        <property name="margin-right">6</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
                       </object>
@@ -209,9 +213,11 @@
                     <child type="label">
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-left">6</property>
+                        <property name="margin-right">6</property>
                         <property name="label" translatable="yes">Deviation</property>
-                        <property name="use_markup">True</property>
+                        <property name="use-markup">True</property>
                       </object>
                     </child>
                   </object>
@@ -223,32 +229,36 @@
                 <child>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="left_padding">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-left">6</property>
+                        <property name="margin-right">6</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="left-padding">12</property>
                         <child>
                           <object class="GtkBox" id="labelsbox">
-                            <property name="width_request">150</property>
-                            <property name="height_request">115</property>
+                            <property name="width-request">150</property>
+                            <property name="height-request">115</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
-                            <property name="resize_mode">immediate</property>
+                            <property name="resize-mode">immediate</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="freq_label">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_text" translatable="yes">Estimated ground frequency in hertzs.</property>
+                                <property name="can-focus">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="tooltip-text" translatable="yes">Estimated ground frequency in hertzs.</property>
                                 <property name="label" translatable="yes">f = ---</property>
                               </object>
                               <packing>
@@ -260,10 +270,10 @@
                             <child>
                               <object class="GtkLabel" id="tone_label">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_markup" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
-                                <property name="tooltip_text" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
+                                <property name="can-focus">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="tooltip-markup" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
+                                <property name="tooltip-text" translatable="yes">Closest note to the estimated frequency, according to the scale defined in the Lingot settings.</property>
                                 <property name="label" translatable="yes">---</property>
                               </object>
                               <packing>
@@ -275,10 +285,10 @@
                             <child>
                               <object class="GtkLabel" id="error_label">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="has_tooltip">True</property>
-                                <property name="tooltip_markup" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
-                                <property name="tooltip_text" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
+                                <property name="can-focus">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="tooltip-markup" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
+                                <property name="tooltip-text" translatable="yes">Error in cents between the estimated frequency and the closest note according to the scale defined in the Lingot settings.</property>
                                 <property name="label" translatable="yes">e = ---</property>
                               </object>
                               <packing>
@@ -294,9 +304,11 @@
                     <child type="label">
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-left">6</property>
+                        <property name="margin-right">6</property>
                         <property name="label" translatable="yes">Tone</property>
-                        <property name="use_markup">True</property>
+                        <property name="use-markup">True</property>
                       </object>
                     </child>
                   </object>
@@ -313,21 +325,28 @@
             </child>
             <child>
               <object class="GtkFrame" id="spectrum_frame">
-                <property name="height_request">130</property>
+                <property name="height-request">130</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">9</property>
+                <property name="margin-right">9</property>
+                <property name="margin-bottom">9</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">in</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkDrawingArea" id="spectrum_area">
-                    <property name="width_request">300</property>
-                    <property name="height_request">120</property>
+                    <property name="width-request">300</property>
+                    <property name="height-request">120</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes">This area shows the signal-to-noise ratio (SNR) of the captured signal. The ground frequency computed is shown with a red vertical line, the target frequency as a vertical blue line, and the noise threshold with a horizontal dotted yellow line.</property>
+                    <property name="can-focus">False</property>
+                    <property name="has-tooltip">True</property>
+                    <property name="tooltip-text" translatable="yes">This area shows the signal-to-noise ratio (SNR) of the captured signal. The ground frequency computed is shown with a red vertical line, the target frequency as a vertical blue line, and the noise threshold with a horizontal dotted yellow line.</property>
+                    <property name="margin-left">6</property>
+                    <property name="margin-right">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                   </object>
@@ -335,9 +354,11 @@
                 <child type="label">
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-left">6</property>
+                    <property name="margin-right">6</property>
                     <property name="label" translatable="yes">Spectrum</property>
-                    <property name="use_markup">True</property>
+                    <property name="use-markup">True</property>
                   </object>
                 </child>
               </object>
