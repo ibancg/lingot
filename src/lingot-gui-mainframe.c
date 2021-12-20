@@ -173,6 +173,7 @@ void lingot_gui_mainframe_callback_view_gauge(GtkWidget* w, lingot_main_frame_t*
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_gauge_item);
     if (on) {
+      gtk_widget_set_visible(frame->gauge_frame, 1);
       gtk_check_menu_item_set_active(frame->view_strobe_disc_item, 0);
       gtk_check_menu_item_set_active(frame->view_none_item, 0);
     }
@@ -186,6 +187,8 @@ void lingot_gui_mainframe_callback_view_none(GtkWidget* w, lingot_main_frame_t* 
     if (on) {
       gtk_check_menu_item_set_active(frame->view_strobe_disc_item, 0);
       gtk_check_menu_item_set_active(frame->view_gauge_item, 0);
+      gtk_widget_set_visible(frame->gauge_frame, 0);
+
     }
     lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
@@ -194,6 +197,7 @@ void lingot_gui_mainframe_callback_view_strobe_disc(GtkWidget* w, lingot_main_fr
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_strobe_disc_item);
     if (on) {
+      gtk_widget_set_visible(frame->gauge_frame, 1);
       gtk_check_menu_item_set_active(frame->view_none_item, 0);
       gtk_check_menu_item_set_active(frame->view_gauge_item, 0);
     }
@@ -532,6 +536,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     frame->error_label = GTK_LABEL(gtk_builder_get_object(builder, "error_label"));
 
     frame->spectrum_frame = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
+    frame->gauge_frame = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_frame"));
+
     frame->view_spectrum_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "spectrum_item"));
     frame->view_gauge_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "gauge_item"));
     frame->view_none_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "none_item"));
