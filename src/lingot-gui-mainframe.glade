@@ -126,17 +126,17 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckMenuItem" id="none_item">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Show Nothing</property>
-                        <property name="draw-as-radio">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="deviation_item">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Show Deviation</property>
+                        <property name="active">True</property>
                       </object>
                     </child>
                     <child>
