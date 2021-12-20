@@ -52,6 +52,7 @@ typedef struct {
     // visible / invisible widgets
     int spectrum_visible;
     int gauge_visible;
+    int deviation_visible;
 
     // position and size of main window
     int win_width;
