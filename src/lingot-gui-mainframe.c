@@ -78,6 +78,7 @@ void lingot_gui_mainframe_callback_hide(GtkWidget* w, const lingot_main_frame_t*
     ui_settings.win_width = win_width;
     ui_settings.win_height = win_height;
     ui_settings.spectrum_visible = gtk_check_menu_item_get_active(frame->view_spectrum_item);
+
     ui_settings.gauge_visible = gtk_check_menu_item_get_active(frame->view_gauge_item);
 
     ui_settings.horizontal_paned_pos = gtk_paned_get_position(frame->horizontal_paned);
@@ -162,6 +163,17 @@ void lingot_gui_mainframe_callback_view_spectrum(GtkWidget* w, lingot_main_frame
     gtk_widget_set_visible(frame->spectrum_frame, visible);
 }
 
+
+void lingot_gui_mainframe_callback_view_deviation(GtkWidget* w, lingot_main_frame_t* frame) {
+    (void)w;                //  Unused parameter.
+    gboolean on = gtk_check_menu_item_get_active(frame->view_deviation_item);
+    if (on) {
+      gtk_widget_set_visible(frame->gauge_frame, 1);
+    } else {
+      gtk_widget_set_visible(frame->gauge_frame, 0);
+    }
+}
+
 void lingot_gui_mainframe_update_gauge_area_tooltip(lingot_main_frame_t* frame) {
     gtk_widget_set_tooltip_text(frame->gauge_area,
                                 gtk_check_menu_item_get_active(frame->view_gauge_item) ?
@@ -172,14 +184,18 @@ void lingot_gui_mainframe_update_gauge_area_tooltip(lingot_main_frame_t* frame) 
 void lingot_gui_mainframe_callback_view_gauge(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_gauge_item);
-    gtk_check_menu_item_set_active(frame->view_strobe_disc_item, !on);
+    if (on) {
+      gtk_check_menu_item_set_active(frame->view_strobe_disc_item, 0);
+    }
     lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
 void lingot_gui_mainframe_callback_view_strobe_disc(GtkWidget* w, lingot_main_frame_t* frame) {
     (void)w;                //  Unused parameter.
     gboolean on = gtk_check_menu_item_get_active(frame->view_strobe_disc_item);
-    gtk_check_menu_item_set_active(frame->view_gauge_item, !on);
+    if (on) {
+      gtk_check_menu_item_set_active(frame->view_gauge_item, 0);
+    }
     lingot_gui_mainframe_update_gauge_area_tooltip(frame);
 }
 
@@ -409,9 +425,10 @@ gboolean lingot_gui_gauge_strobe_disc_redraw(GtkWidget *w, cairo_t *cr, lingot_m
 //    lingot_gui_mainframe_callback_show(w, frame);
     if (gtk_check_menu_item_get_active(frame->view_gauge_item)) {
         lingot_gui_gauge_redraw(w, cr, frame);
-    } else{
+    } else if (gtk_check_menu_item_get_active(frame->view_strobe_disc_item)){
         lingot_gui_strobe_disc_redraw(w, cr, frame);
     }
+
     return FALSE;
 }
 
@@ -514,8 +531,11 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     frame->error_label = GTK_LABEL(gtk_builder_get_object(builder, "error_label"));
 
     frame->spectrum_frame = GTK_WIDGET(gtk_builder_get_object(builder, "spectrum_frame"));
+    frame->gauge_frame = GTK_WIDGET(gtk_builder_get_object(builder, "gauge_frame"));
+
     frame->view_spectrum_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "spectrum_item"));
     frame->view_gauge_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "gauge_item"));
+    frame->view_deviation_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "deviation_item"));
     frame->view_strobe_disc_item = GTK_CHECK_MENU_ITEM(gtk_builder_get_object(builder, "strobe_disc_item"));
     frame->labelsbox = GTK_WIDGET(gtk_builder_get_object(builder, "labelsbox"));
     frame->horizontal_paned = GTK_PANED(gtk_builder_get_object(builder, "horizontal_paned"));
@@ -532,12 +552,18 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
     g_signal_connect(frame->view_spectrum_item,
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_spectrum),
                      frame);
+   g_signal_connect(frame->view_spectrum_item,
+                    "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_deviation),
+                    frame);
     g_signal_connect(frame->view_gauge_item,
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_gauge),
                      frame);
     g_signal_connect(frame->view_strobe_disc_item,
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_strobe_disc),
                      frame);
+    g_signal_connect(frame->view_deviation_item,
+                    "activate", G_CALLBACK(lingot_gui_mainframe_callback_view_deviation),
+                    frame);
     g_signal_connect(gtk_builder_get_object(builder, "open_config_item"),
                      "activate", G_CALLBACK(lingot_gui_mainframe_callback_open_config),
                      frame);
@@ -563,6 +589,8 @@ lingot_main_frame_t* lingot_gui_mainframe_create() {
 
     gtk_check_menu_item_set_active(frame->view_spectrum_item, ui_settings.spectrum_visible);
     gtk_check_menu_item_set_active(frame->view_gauge_item, ui_settings.gauge_visible);
+    gtk_check_menu_item_set_active(frame->view_deviation_item, ui_settings.deviation_visible);
+
 
     if (ui_settings.win_width > 0) {
         gtk_window_resize(frame->win, ui_settings.win_width, ui_settings.win_height);
