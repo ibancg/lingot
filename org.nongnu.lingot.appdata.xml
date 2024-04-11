@@ -41,9 +41,16 @@
     </screenshots>
 
     <url type="homepage">https://www.nongnu.org/lingot/</url>
+    <url type="bugtracker">https://github.com/ibancg/lingot/issues/</url>
+    <url type="vcs-browser">https://github.com/ibancg/lingot</url>
 
     <update_contact>ibancg_AT_gmail.com</update_contact>
-
+    <categories>
+        <category>GTK</category>
+        <category>GNOME</category>
+        <category>Education</category>
+        <category>Music</category>
+    </categories>
     <provides>
         <binary>lingot</binary>
     </provides>
