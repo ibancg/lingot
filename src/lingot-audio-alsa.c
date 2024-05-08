@@ -355,7 +355,7 @@ int lingot_audio_alsa_get_audio_system_properties(
                         }
 
                         result->n_devices++;
-                        struct device_name_node_t* new_name_node = (struct device_name_node_t*) malloc(sizeof(struct device_name_node_t*));
+                        struct device_name_node_t* new_name_node = (struct device_name_node_t*) malloc(sizeof(struct device_name_node_t));
                         new_name_node->name = _strdup(device_name);
                         new_name_node->next = NULL;
 

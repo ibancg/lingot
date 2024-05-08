@@ -339,7 +339,7 @@ static void lingot_audio_pulseaudio_get_source_info_callback(pa_context *c,
     //	printf("\tlags %i\n", i->flags);
 
     struct device_name_node_t* new_name_node = (struct device_name_node_t*)
-            malloc(sizeof(struct device_name_node_t*));
+            malloc(sizeof(struct device_name_node_t));
 
     new_name_node->name = _strdup(buff);
     new_name_node->next = NULL;
