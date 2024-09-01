@@ -278,6 +278,7 @@ gboolean lingot_gui_gauge_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t*
 
     const double normalized_error = frame->gauge_pos / frame->conf.gauge_range;
     const double angle = 2.0 * normalized_error * overtureAngle;
+
     cairo_set_line_width(cr, gaugeStroke);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
     lingot_gui_mainframe_cairo_set_source_argb(cr, gauge_gaugeShadowColor);
