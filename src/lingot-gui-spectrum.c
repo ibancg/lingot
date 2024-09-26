@@ -72,7 +72,24 @@ static LINGOT_FLT lingot_gui_spectrum_get_in_bounds(LINGOT_FLT value, LINGOT_FLT
     return value - min;
 }
 
-static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame_t *frame) {
+static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame_t *frame, LINGOT_FLT spectrum_margin_percent) {
+
+    // graph doesn't display current or closest tone line on min and max, so add margins
+    LINGOT_FLT spectrum_frequency_margin = (frame->conf.max_frequency-frame->conf.min_frequency) *
+                                                    spectrum_margin_percent;
+    LINGOT_FLT spectrum_max_frequency = frame->conf.max_frequency + spectrum_frequency_margin;
+
+    LINGOT_FLT spectrum_min_frequency;
+    if (frame->conf.min_frequency - spectrum_frequency_margin < 0) {
+      spectrum_min_frequency = 0;
+    } else {
+      spectrum_min_frequency = frame->conf.min_frequency - spectrum_frequency_margin;
+    }
+
+    LINGOT_FLT spectrum_width = spectrum_max_frequency - spectrum_min_frequency; //Hz
+    //defines graph zoom level
+    LINGOT_FLT spectrum_scaling_factor = spectrum_width / (0.5 * frame->conf.sample_rate
+            / frame->conf.oversampling);
 
     const LINGOT_FLT font_size = 8 + spectrum_size_y / 30;
 
@@ -122,9 +139,8 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
     cairo_rel_line_to(cr, spectrum_inner_x, 0);
     cairo_stroke(cr);
 
-    // choose scale factor
-    const LINGOT_FLT spectrum_max_frequency = 0.5 * frame->conf.sample_rate
-            / frame->conf.oversampling;
+    const LINGOT_FLT spectrum_inner_max = 0.5 * frame->conf.sample_rate
+            / frame->conf.oversampling * spectrum_scaling_factor;
 
     // scale factors (in KHz) to draw the grid. We will choose the smaller
     // factor that respects the minimum_grid_width
@@ -132,17 +148,18 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
 
     int i;
     for (i = 0; scales[i + 1] > 0.0; i++) {
-        if ((1e3 * scales[i] * spectrum_inner_x / spectrum_max_frequency)
+        if ((1e3 * scales[i] * spectrum_inner_x / spectrum_inner_max)
                 > minimum_grid_width)
             break;
     }
 
     LINGOT_FLT scale = scales[i];
     LINGOT_FLT grid_width = 1e3 * scales[i] * spectrum_inner_x
-            / spectrum_max_frequency;
+            / spectrum_inner_max;
 
-    LINGOT_FLT freq = 0.0;
+    LINGOT_FLT freq = spectrum_min_frequency/1000;
     LINGOT_FLT x;
+
     for (x = 0.0; x <= spectrum_inner_x; x += grid_width) {
         cairo_move_to(cr, spectrum_left_margin + x, spectrum_top_margin);
         cairo_rel_line_to(cr, 0, spectrum_inner_y + 3); // TODO: proportion
@@ -208,6 +225,23 @@ static void lingot_gui_spectrum_redraw_background(cairo_t *cr, lingot_main_frame
 
 gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame_t* frame) {
 
+  // graph doesn't display current or closest tone line on min and max, so add margins
+  LINGOT_FLT spectrum_margin_percent = 0.05;
+  LINGOT_FLT spectrum_frequency_margin = (frame->conf.max_frequency-frame->conf.min_frequency) *
+                                                        spectrum_margin_percent;
+  LINGOT_FLT spectrum_max_frequency = frame->conf.max_frequency + spectrum_frequency_margin;
+  LINGOT_FLT spectrum_min_frequency;
+  if (frame->conf.min_frequency - spectrum_frequency_margin < 0) {
+    spectrum_min_frequency = 0;
+  } else {
+    spectrum_min_frequency = frame->conf.min_frequency - spectrum_frequency_margin;
+  }
+
+  LINGOT_FLT spectrum_width = spectrum_max_frequency - spectrum_min_frequency; //Hz
+  //defines graph zoom level
+  LINGOT_FLT spectrum_scaling_factor = spectrum_width / (0.5 * frame->conf.sample_rate
+          / frame->conf.oversampling);
+
     unsigned int i;
 
     GtkAllocation req;
@@ -217,7 +251,7 @@ gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame
         spectrum_size_y = req.height;
     }
 
-    lingot_gui_spectrum_redraw_background(cr, frame);
+    lingot_gui_spectrum_redraw_background(cr, frame, spectrum_margin_percent);
 
     // spectrum drawing.
     if (lingot_core_thread_is_running(&frame->core)) {
@@ -228,8 +262,9 @@ gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame
         LINGOT_FLT x;
         LINGOT_FLT y = -1;
 
-        const unsigned int min_index = 0;
-        const unsigned int max_index = frame->conf.fft_size / 2;
+
+        const unsigned int max_index = frame->conf.fft_size /2 * spectrum_scaling_factor;
+        const unsigned int min_index = max_index/spectrum_width * spectrum_min_frequency;
 
         LINGOT_FLT index_density = spectrum_inner_x / max_index;
         // TODO: step
@@ -265,13 +300,14 @@ gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame
                 spectrum_min_db, spectrum_max_db);
         LINGOT_FLT ym1 = y;
 
+        //draw curve
         for (i = index_step; i < max_index - 1; i += index_step) {
 
             x = index_density * i;
             ym1 = y;
             y = yp1;
             yp1 = -spectrum_db_density
-                    * lingot_gui_spectrum_get_in_bounds(spd[i + 1],
+                    * lingot_gui_spectrum_get_in_bounds(spd[i + min_index + 1],
                     spectrum_min_db, spectrum_max_db);
             LINGOT_FLT dydx = (yp1 - ym1) / (2 * index_density);
             static const LINGOT_FLT dx = 0.4;
@@ -309,8 +345,9 @@ gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame
             cairo_set_line_width(cr, 1.0);
 
             // index of closest sample to fundamental frequency.
-            x = index_density * target_freq * frame->conf.fft_size
-                    * frame->conf.oversampling / frame->conf.sample_rate;
+            x = (index_density * (target_freq - spectrum_min_frequency)* frame->conf.fft_size
+                    * frame->conf.oversampling / frame->conf.sample_rate);
+
             cairo_move_to(cr, x, 0);
             cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
             cairo_stroke(cr);
@@ -324,8 +361,8 @@ gboolean lingot_gui_spectrum_redraw(GtkWidget *w, cairo_t *cr, lingot_main_frame
             cairo_set_line_width(cr, 2.0);
 
             // index of closest sample to fundamental frequency.
-            x = index_density * freq * frame->conf.fft_size
-                    * frame->conf.oversampling / frame->conf.sample_rate;
+            x = (index_density * (freq - spectrum_min_frequency) * frame->conf.fft_size
+                    * frame->conf.oversampling / frame->conf.sample_rate) ;
             cairo_move_to(cr, x, 0);
             cairo_rel_line_to(cr, 0.0, -spectrum_inner_y);
             cairo_stroke(cr);
