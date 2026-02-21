@@ -47,6 +47,9 @@
 #include "lingot-io-ui-settings.h"
 
 int main(int argc, char *argv[]) {
+    char config_basedir[200];
+    char *env;
+    size_t len;
 
 #ifdef ENABLE_NLS
     bindtextdomain(PACKAGE, LOCALEDIR);
@@ -54,13 +57,27 @@ int main(int argc, char *argv[]) {
     textdomain(PACKAGE);
 #endif
 
+    env = getenv("XDG_CONFIG_HOME");
+    if (env && *env){
+        snprintf(config_basedir, sizeof(config_basedir), "%s", env);
+        printf("Using XDG_CONFIG_HOME: %s\n", config_basedir);
+    } else {
+        snprintf(config_basedir, sizeof(config_basedir), "%s/.config", getenv("HOME"));
+
+    }
+
+
     // default config file.
-    snprintf(LINGOT_CONFIG_FILE_NAME, sizeof(LINGOT_CONFIG_FILE_NAME),
-             "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_CONFIG_FILE_NAME, getenv("HOME"));
+    len = strlen(config_basedir) + strlen(LINGOT_CONFIG_DIR_NAME) + strlen(LINGOT_DEFAULT_CONFIG_FILE_NAME) + 2;
+    LINGOT_CONFIG_FILE_NAME = malloc(len);
+    snprintf(LINGOT_CONFIG_FILE_NAME, len,
+             "%s/%s%s", config_basedir, LINGOT_CONFIG_DIR_NAME, LINGOT_DEFAULT_CONFIG_FILE_NAME);
 
     // default UI settings file.
-    snprintf(LINGOT_UI_SETTINGS_FILE_NAME, sizeof(LINGOT_UI_SETTINGS_FILE_NAME),
-             "%s/" LINGOT_CONFIG_DIR_NAME LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME, getenv("HOME"));
+    len = strlen(config_basedir) + strlen(LINGOT_CONFIG_DIR_NAME) + strlen(LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME) + 2;
+    LINGOT_UI_SETTINGS_FILE_NAME = malloc(len);
+    snprintf(LINGOT_UI_SETTINGS_FILE_NAME, len,
+             "%s/%s%s", config_basedir, LINGOT_CONFIG_DIR_NAME, LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME);
 
     // TODO: indicate complete config file path
     if ((argc > 3) || (argc == 2)) {
@@ -80,10 +97,11 @@ int main(int argc, char *argv[]) {
 
             switch (c) {
             case 'c':
-                snprintf(LINGOT_CONFIG_FILE_NAME, sizeof(LINGOT_CONFIG_FILE_NAME),
-                         "%s/%s%s.conf", getenv("HOME"),
+                len = strlen(optarg) + strlen(config_basedir) + strlen(LINGOT_CONFIG_DIR_NAME) + 2;
+                LINGOT_CONFIG_FILE_NAME = realloc(LINGOT_CONFIG_FILE_NAME, len);
+                snprintf(LINGOT_CONFIG_FILE_NAME, len,
+                         "%s/%s%s.conf", config_basedir,
                          LINGOT_CONFIG_DIR_NAME, optarg);
-                printf("using config file %s\n", LINGOT_CONFIG_FILE_NAME);
                 break;
 
             case '?':
@@ -112,13 +130,16 @@ int main(int argc, char *argv[]) {
     FILE* fp;
     if ((fp = fopen(LINGOT_CONFIG_FILE_NAME, "r")) == NULL) {
 
-        char config_dir[200];
-        snprintf(config_dir, sizeof(config_dir), "%s/%s/", getenv("HOME"), LINGOT_CONFIG_DIR_NAME);
+        // +2 because of the '/' and the null terminator.
+        len = strlen(config_basedir) + strlen(LINGOT_CONFIG_DIR_NAME) + 2;
+        char *config_dir = malloc(len);
+        snprintf(config_dir, len, "%s/%s", config_basedir, LINGOT_CONFIG_DIR_NAME);
         printf("Creating directory %s ...\n", config_dir);
         int ret = mkdir(config_dir, 0777); // creo el directorio.
         if (ret) {
             fprintf(stderr, "Cannot create config folder '%s': %s\n", config_dir, strerror(errno));
         }
+        free(config_dir);
         printf("Creating file %s ...\n", LINGOT_CONFIG_FILE_NAME);
 
         // new configuration with default values.
@@ -138,6 +159,9 @@ int main(int argc, char *argv[]) {
 
     lingot_gui_mainframe_create();
     gtk_main();
+
+    free(LINGOT_CONFIG_FILE_NAME);
+    free(LINGOT_UI_SETTINGS_FILE_NAME);
 
     return 0;
 }
