@@ -28,7 +28,7 @@
 #include "lingot-defs-internal.h"
 #include "lingot-io-ui-settings.h"
 
-char LINGOT_UI_SETTINGS_FILE_NAME[];
+char *LINGOT_UI_SETTINGS_FILE_NAME;
 lingot_ui_settings_t ui_settings;
 
 int lingot_io_ui_settings_init()

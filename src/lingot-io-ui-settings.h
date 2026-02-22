@@ -39,7 +39,7 @@ extern "C" {
 #  define VERSION "unknown"
 #endif
 
-extern char LINGOT_UI_SETTINGS_FILE_NAME[200];
+extern char *LINGOT_UI_SETTINGS_FILE_NAME;
 #define LINGOT_DEFAULT_UI_SETTINGS_FILE_NAME "ui-settings.json"
 
 
