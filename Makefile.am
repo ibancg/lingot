@@ -21,7 +21,7 @@ SUBDIRS = po
 
 # The -pthread compiler and linker option links with libpthread, but
 # also selects various architecture-dependent settings.
-AM_LDFLAGS = -pthread -Wl,--as-needed
+AM_LDFLAGS = -pthread
 # The glib-compile-resources was generating strings longer than the
 # supported by the standard, adding warnings to the build output. The
 # flag -Wno-overlength-strings seems right, since we are compiling
@@ -83,9 +83,7 @@ liblingot_la_LIBADD =              $(liblingot_dep_libs)
 
 liblingot_la_LDFLAGS = $(AM_LDFLAGS) \
   -version-info $(lingot_shared_object_version) \
-  -Wl,--no-allow-shlib-undefined \
-  -Wl,--no-copy-dt-needed-entries \
-  -Wl,--no-undefined
+  -no-undefined
 
 lingot_SOURCES = \
     src/lingot-gui-config-dialog-scale.c \
@@ -128,6 +126,7 @@ dist_man_MANS = lingot.1
 
 dist_doc_DATA = \
   AUTHORS \
+  BUILD_MACOS.md \
   COPYING \
   ChangeLog \
   NEWS \
