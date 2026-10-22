@@ -121,6 +121,7 @@ void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, LINGOT_
     unsigned int i; // loops
     unsigned int k;
     unsigned int p;
+    int j;
 
     LINGOT_FLT a[n + 1];
     LINGOT_FLT b[n + 1];
@@ -147,8 +148,8 @@ void lingot_filter_cheby_design(lingot_filter_t* filter, unsigned int n, LINGOT_
 
     LINGOT_FLT t;
 
-    for (i = -(n - 1), k = 0; k < n; i += 2, k++) {
-        t = M_PI * i / (2.0 * n);
+    for (j = -(n - 1), k = 0; k < n; j += 2, k++) {
+        t = M_PI * j / (2.0 * n);
         pole[k] = -sv0 * cos(t) + I * cv0 * sin(t);
     }
 
