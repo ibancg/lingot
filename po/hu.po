@@ -1,0 +1,857 @@
+# Hungarian translations for Lingot.
+# This file is distributed under the same license as the lingot package.
+# 
+# Krisztián Kormos <kkormos@tianpc.hu>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: hu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-03 00:23+0200\n"
+"PO-Revision-Date: 2026-11-16 12:00+0100\n"
+"Last-Translator: Krisztián Kormos <kkormos@tianpc.hu>\n"
+"Language-Team: Hungarian\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/lingot-audio-alsa.c:78 ../src/lingot-audio-oss.c:84
+#, c-format
+msgid ""
+"Cannot open audio device '%s'.\n"
+"%s"
+msgstr ""
+"Nem nyitható meg a(z) „%s” hangeszköz.\n"
+"%s"
+
+#: ../src/lingot-audio-alsa.c:87 ../src/lingot-audio-alsa.c:95
+msgid "Cannot initialize hardware parameter structure."
+msgstr "Nem inicializálható a hardverparaméterek struktúrája."
+
+#: ../src/lingot-audio-alsa.c:103
+msgid "Cannot set access type."
+msgstr "Nem állítható be a hozzáférés típusa."
+
+#: ../src/lingot-audio-alsa.c:110
+msgid "Cannot set sample format."
+msgstr "Nem állítható be a minták formátuma."
+
+#: ../src/lingot-audio-alsa.c:119
+msgid "Cannot set sample rate."
+msgstr "Nem állítható be a mintavételi frekvencia."
+
+#: ../src/lingot-audio-alsa.c:128
+msgid "Cannot set channel number."
+msgstr "Nem állítható be a csatornák száma."
+
+#: ../src/lingot-audio-alsa.c:134
+msgid "Cannot set parameters."
+msgstr "Nem állíthatók be a paraméterek."
+
+#: ../src/lingot-audio-alsa.c:140
+msgid "Cannot prepare audio interface for use."
+msgstr "Nem készíthető elő használatra a hangcsatoló."
+
+#: ../src/lingot-audio-alsa.c:187 ../src/lingot-audio-oss.c:157
+#: ../src/lingot-audio-pulseaudio.c:133
+msgid "Read from audio interface failed."
+msgstr "Nem sikerült olvasni a hangcsatolóról."
+
+#: ../src/lingot-audio-alsa.c:262
+msgid "Default Device"
+msgstr "Alapértelmezett eszköz"
+
+#: ../src/lingot-audio-jack.c:62
+msgid "Missing connection with JACK audio server"
+msgstr "Nincs kapcsolat a JACK hangkiszolgálóval"
+
+#: ../src/lingot-audio-jack.c:90 ../src/lingot-audio-jack.c:194
+msgid "Unable to connect to JACK server"
+msgstr "Nem lehet kapcsolódni a JACK kiszolgálóhoz"
+
+#: ../src/lingot-audio-jack.c:116
+msgid "No more JACK ports available"
+msgstr "Nincs több elérhető JACK-port"
+
+#: ../src/lingot-audio-jack.c:226
+msgid "Default Port"
+msgstr "Alapértelmezett port"
+
+#: ../src/lingot-audio-jack.c:294
+msgid "Cannot activate client"
+msgstr "Nem aktiválható a kliens"
+
+#: ../src/lingot-audio-jack.c:300
+msgid "No active capture ports"
+msgstr "Nincsenek aktív hangrögzítési portok"
+
+#: ../src/lingot-audio-jack.c:312 ../src/lingot-audio-jack.c:325
+msgid "Cannot connect input ports"
+msgstr "Nem csatlakoztathatók a bemeneti portok"
+
+#: ../src/lingot-audio-jack.c:333
+#, c-format
+msgid "Cannot connect to requested port '%s'"
+msgstr "Nem lehet csatlakozni a kért „%s” porthoz"
+
+#: ../src/lingot-audio-oss.c:92
+msgid "Error setting number of channels."
+msgstr "Hiba a csatornák számának beállításakor."
+
+#: ../src/lingot-audio-oss.c:100
+msgid "Error setting bits per sample."
+msgstr "Hiba a mintánkénti bitszám beállításakor."
+
+#: ../src/lingot-audio-oss.c:116
+msgid "Error setting DMA buffer size."
+msgstr "Hiba a DMA-puffer méretének beállításakor."
+
+#: ../src/lingot-audio-oss.c:122
+msgid "Error setting sample rate."
+msgstr "Hiba a mintavételi frekvencia beállításakor."
+
+#: ../src/lingot-audio-pulseaudio.c:100
+msgid "Error creating PulseAudio client."
+msgstr "Hiba a PulseAudio-kliens létrehozásakor."
+
+#: ../src/lingot-audio-pulseaudio.c:206
+msgid "Default Source"
+msgstr "Alapértelmezett forrás"
+
+#: ../src/lingot-config-scale.c:78
+msgid "C"
+msgstr "C"
+
+#: ../src/lingot-config-scale.c:78
+msgid "C#"
+msgstr "Cisz"
+
+#: ../src/lingot-config-scale.c:78
+msgid "D"
+msgstr "D"
+
+#: ../src/lingot-config-scale.c:78
+msgid "D#"
+msgstr "Disz"
+
+#: ../src/lingot-config-scale.c:78
+msgid "E"
+msgstr "E"
+
+#: ../src/lingot-config-scale.c:78
+msgid "F"
+msgstr "F"
+
+#: ../src/lingot-config-scale.c:79
+msgid "F#"
+msgstr "Fisz"
+
+#: ../src/lingot-config-scale.c:79
+msgid "G"
+msgstr "G"
+
+#: ../src/lingot-config-scale.c:79
+msgid "G#"
+msgstr "Gisz"
+
+#: ../src/lingot-config-scale.c:79
+msgid "A"
+msgstr "A"
+
+#: ../src/lingot-config-scale.c:79
+msgid "A#"
+msgstr "Aisz"
+
+#: ../src/lingot-config-scale.c:79
+msgid "B"
+msgstr "H"
+
+#. default 12 tones equal-tempered scale hard-coded
+#: ../src/lingot-config-scale.c:85
+msgid "Default equal-tempered scale"
+msgstr "Alapértelmezett egyenletesen temperált skála"
+
+#: ../src/lingot-core.c:142
+#, c-format
+msgid ""
+"The temporal buffer is smaller than FFT size. It has been increased to %0.3f "
+"seconds"
+msgstr ""
+"Az időbeli puffer kisebb az FFT méreténél. Az időtartama %0.3f másodpercre "
+"nőtt"
+
+#: ../src/lingot-gui-config-dialog-scale.c:101
+msgid "You cannot insert before the reference note."
+msgstr "A referenciahang elé nem szúrható be hang."
+
+#: ../src/lingot-gui-config-dialog-scale.c:227
+msgid "Do not use space characters for the note names."
+msgstr "A hangnevekben ne használjon szóközt."
+
+#: ../src/lingot-gui-config-dialog-scale.c:229
+msgid "The name contains illegal characters."
+msgstr "A név nem megengedett karaktereket tartalmaz."
+
+#: ../src/lingot-gui-config-dialog-scale.c:248
+msgid "You cannot change the first shift, it must be 1/1."
+msgstr ""
+"Az első hang eltolása nem módosítható, az értékének 1/1-nek kell lennie."
+
+#: ../src/lingot-gui-config-dialog-scale.c:254
+msgid "The shift must be between 0 and 1200 cents, or between 1/1 and 2/1."
+msgstr "Az eltolásnak 0 és 1200 cent, illetve 1/1 és 2/1 között kell lennie."
+
+#: ../src/lingot-gui-config-dialog-scale.c:279
+#: ../src/lingot-gui-config-dialog-scale.c:346
+#: ../src/lingot-gui-config-dialog-scale.c:662
+msgid "mid-A"
+msgstr "középső-A"
+
+#: ../src/lingot-gui-config-dialog-scale.c:281
+#: ../src/lingot-gui-config-dialog-scale.c:348
+#: ../src/lingot-gui-config-dialog-scale.c:662
+msgid "mid-C"
+msgstr "középső-C"
+
+#: ../src/lingot-gui-config-dialog-scale.c:363
+#: ../src/lingot-gui-config-dialog.glade.h:41
+msgid "Name"
+msgstr "Név"
+
+#: ../src/lingot-gui-config-dialog-scale.c:378
+msgid "Shift"
+msgstr "Eltolás"
+
+#: ../src/lingot-gui-config-dialog-scale.c:397
+msgid "Frequency [Hz]"
+msgstr "Frekvencia [Hz]"
+
+#: ../src/lingot-gui-config-dialog-scale.c:456
+msgid "There are notes with the same name"
+msgstr "Vannak azonos nevű hangok"
+
+#: ../src/lingot-gui-config-dialog-scale.c:470
+msgid ""
+"There are invalid values in the scale: the notes should be ordered by "
+"frequency / shift"
+msgstr ""
+"A skála érvénytelen értékeket tartalmaz: a hangokat frekvencia, illetve "
+"eltolás szerint növekvő sorrendbe kell rendezni"
+
+#: ../src/lingot-gui-config-dialog-scale.c:477
+msgid ""
+"There are invalid values in the scale: all the notes should be in the same "
+"octave"
+msgstr ""
+"A skála érvénytelen értékeket tartalmaz: minden hangnak ugyanabban az "
+"oktávban kell lennie"
+
+#: ../src/lingot-gui-config-dialog-scale.c:486
+msgid "There are notes without name"
+msgstr "Vannak név nélküli hangok"
+
+#. Unused parameter.
+#: ../src/lingot-gui-config-dialog-scale.c:559
+msgid "Open Scale File"
+msgstr "Skálafájl megnyitása"
+
+#: ../src/lingot-gui-config-dialog-scale.c:568
+msgid "Scala files"
+msgstr "Scala-fájlok"
+
+#: ../src/lingot-gui-config-dialog-scale.c:652
+msgid ""
+"Note identifier, free text that will be displayed in the main window when "
+"tuning close to the given note. Don't use space characters here."
+msgstr ""
+"A hang azonosítója: tetszőleges szöveg, amely akkor jelenik meg a "
+"főablakban, ha a hangolás az adott hang közelében jár. Ne használjon benne "
+"szóközt."
+
+#: ../src/lingot-gui-config-dialog-scale.c:656
+msgid ""
+"Shift. You can define it as a deviation in cents from the reference note "
+"(the first one), or as a frequency ratio, like '3/2' or '5/4'. All the "
+"values must be between 0 and 1200 cents, or between 1/1 and 2/1 (i.e., all "
+"the notes must be in the same octave), and they must be well ordered."
+msgstr ""
+"Eltolás. Megadható a referenciahanghoz (az első hanghoz) viszonyított "
+"eltérésként, centben, vagy frekvenciaarányként, például „3/2” vagy „5/4” "
+"alakban. Minden értéknek 0 és 1200 cent, illetve 1/1 és 2/1 között kell "
+"lennie (vagyis minden hangnak ugyanabba az oktávba kell esnie), és az "
+"értékeknek növekvő sorrendben kell követniük egymást."
+
+#: ../src/lingot-gui-config-dialog-scale.c:661
+#, c-format
+msgid ""
+"Frequency. You can enter here the absolute frequency for a given note as a "
+"reference, and all the other frequencies will shift according to the "
+"deviations specified in the 'Shift' column. You can either use an absolute "
+"numeric value or the keywords '%s' (261.625565 Hz) and '%s' (440 Hz). Those "
+"keywords are normally reserved for the 4th octave (try to assign frequencies "
+"only to the 4th octave)."
+msgstr ""
+"Frekvencia. Itt megadhatja egy hang abszolút frekvenciáját referenciaként; a "
+"többi frekvencia az „Eltolás” oszlopban megadott eltérések szerint módosul. "
+"Megadhat számértéket, vagy használhatja a(z) „%s” (261,625565 Hz) és a(z) "
+"„%s” (440 Hz) kulcsszót. Ezek a kulcsszavak általában a 4. oktávra "
+"vonatkoznak (lehetőleg csak a 4. oktávban adjon meg frekvenciákat)."
+
+#: ../src/lingot-gui-config-dialog.c:414
+msgid "Audio device identifier too long"
+msgstr "A hangeszköz azonosítója túl hosszú"
+
+#: ../src/lingot-gui-config-dialog.c:480
+msgid ""
+"The provided scale contains wide gaps in frequency that increase the gauge "
+"range and produce a loss of visual accuracy. Consider providing scales with "
+"at least 12 tones, or with a maximum distance between adjacent notes below "
+"200 cents."
+msgstr ""
+"A megadott skála hangjai között nagy frekvenciaközök vannak, amelyek növelik "
+"a műszer kijelzési tartományát, és csökkentik a leolvasás pontosságát. "
+"Használjon legalább 12 hangból álló skálát, vagy olyat, amelyben a "
+"szomszédos hangok közötti legnagyobb távolság 200 cent alatt van."
+
+#: ../src/lingot-gui-config-dialog.glade.h:1
+msgid "lingot configuration"
+msgstr "A Lingot beállításai"
+
+#: ../src/lingot-gui-config-dialog.glade.h:2
+msgid "Default"
+msgstr "Alapértékek"
+
+#: ../src/lingot-gui-config-dialog.glade.h:3
+msgid "Resets the built-in settings, without applying them."
+msgstr "Visszaállítja a beépített alapértékeket, de nem alkalmazza őket."
+
+#: ../src/lingot-gui-config-dialog.glade.h:4
+msgid ""
+"Applies the current changes to the running tuner, but doesn't modify the "
+"configuration file. \n"
+"\n"
+"Any applied changes can be rolled back pressing Cancel."
+msgstr ""
+"Alkalmazza az aktuális módosításokat a működő hangolóra, de nem módosítja a "
+"konfigurációs fájlt. \n"
+"\n"
+"Az alkalmazott módosítások a Mégse gombbal visszavonhatók."
+
+#: ../src/lingot-gui-config-dialog.glade.h:7
+msgid "Applies the current changes and modifies the configuration file."
+msgstr ""
+"Alkalmazza az aktuális módosításokat, és módosítja a konfigurációs fájlt."
+
+#: ../src/lingot-gui-config-dialog.glade.h:8
+msgid ""
+"Rolls back all the previous applied changes and closes the configuration "
+"dialog."
+msgstr ""
+"Visszavonja az összes korábban alkalmazott módosítást, és bezárja a "
+"beállítási párbeszédablakot."
+
+#: ../src/lingot-gui-config-dialog.glade.h:9
+msgid "Audio system"
+msgstr "Hangrendszer"
+
+#: ../src/lingot-gui-config-dialog.glade.h:10
+msgid "Audio device"
+msgstr "Hangeszköz"
+
+#: ../src/lingot-gui-config-dialog.glade.h:11
+msgid "Here you can pick the sound system."
+msgstr "Itt választhatja ki a hangrendszert."
+
+#: ../src/lingot-gui-config-dialog.glade.h:12
+msgid ""
+"Choose the audio device if you have more than one. If you are using JACK, "
+"you can also connect Lingot to a desired source with an external JACK "
+"control application."
+msgstr ""
+"Válassza ki a hangeszközt, ha több is rendelkezésre áll. JACK használata "
+"esetén külső JACK-vezérlő alkalmazással is csatlakoztathatja a Lingotot a "
+"kívánt hangforráshoz."
+
+#: ../src/lingot-gui-config-dialog.glade.h:13
+msgid "Select the audio source:"
+msgstr "Válassza ki a hangforrást:"
+
+#: ../src/lingot-gui-config-dialog.glade.h:14
+msgid "Audio input settings. Select here the audio source."
+msgstr "Hangbemeneti beállítások. Itt választhatja ki a hangforrást."
+
+#: ../src/lingot-gui-config-dialog.glade.h:15
+msgid "Capture"
+msgstr "Hangbemenet"
+
+#: ../src/lingot-gui-config-dialog.glade.h:16
+msgid "Calculation rate"
+msgstr "Számítási gyakoriság"
+
+#: ../src/lingot-gui-config-dialog.glade.h:17
+msgid "Hz"
+msgstr "Hz"
+
+#: ../src/lingot-gui-config-dialog.glade.h:18
+msgid "Minimum SNR"
+msgstr "Legkisebb jel-zaj viszony"
+
+#: ../src/lingot-gui-config-dialog.glade.h:19
+msgid "dB"
+msgstr "dB"
+
+#: ../src/lingot-gui-config-dialog.glade.h:20
+msgid "Adjust the following refresh rates:"
+msgstr "Állítsa be az alábbi frissítési gyakoriságokat:"
+
+#: ../src/lingot-gui-config-dialog.glade.h:21
+msgid "Adjust the noise level:"
+msgstr "Állítsa be a zajszintet:"
+
+#: ../src/lingot-gui-config-dialog.glade.h:22
+msgid ""
+"Minimum signal-to-noise ratio to consider the captured signal as something "
+"relevant. Try to keep this level low, and raise it if you experience "
+"problems in very noisy environments. This level is depicted in the spectrum "
+"area as a yellow dotted line."
+msgstr ""
+"A legkisebb jel-zaj viszony, amely felett a program érdemi jelként kezeli a "
+"rögzített hangot. Tartsa alacsonyan ezt az értéket, és csak akkor növelje, "
+"ha nagyon zajos környezetben problémákat tapasztal. Ezt a szintet sárga "
+"pontozott vonal jelöli a spektrumon."
+
+#: ../src/lingot-gui-config-dialog.glade.h:23
+msgid "Number of calculations of the fundamental frequency per second."
+msgstr "Az alapfrekvencia másodpercenkénti kiszámításainak száma."
+
+#: ../src/lingot-gui-config-dialog.glade.h:24
+msgid "Quick adjustments on the dynamic response and the signal levels."
+msgstr "A dinamikus válasz és a jelszintek gyors beállítása."
+
+#: ../src/lingot-gui-config-dialog.glade.h:25
+msgid "Adjustments"
+msgstr "Finomhangolás"
+
+#: ../src/lingot-gui-config-dialog.glade.h:26
+msgid "Temporal window"
+msgstr "Időablak"
+
+#: ../src/lingot-gui-config-dialog.glade.h:27
+msgid ""
+"This is the most recent amount of data considered for tuning. The longer it "
+"is, the more accuracy you can obtain, but also the dynamic response gets "
+"slower, regarding you are considering older parts of the signal. Also, if "
+"you raise this parameter, the computational cost increases. The size of the "
+"buffer, in samples (depending on the effective sample rate), must be greater "
+"than or equal to the FFT buffer size."
+msgstr ""
+"A hangoláshoz figyelembe vett legutóbbi adatok időtartama. Minél hosszabb, "
+"annál nagyobb pontosság érhető el, de a dinamikus válasz lassabb lesz, mivel "
+"a jel korábbi részeit is figyelembe veszi. A paraméter növelése a "
+"számításigényt is növeli. A puffer mintákban megadott méretének (amely a "
+"tényleges mintavételi frekvenciától függ) legalább akkorának kell lennie, "
+"mint az FFT-puffer mérete."
+
+#: ../src/lingot-gui-config-dialog.glade.h:28
+msgid "seconds"
+msgstr "másodperc"
+
+#: ../src/lingot-gui-config-dialog.glade.h:29
+msgid "samples"
+msgstr "minta"
+
+#: ../src/lingot-gui-config-dialog.glade.h:30
+msgid "FFT size"
+msgstr "FFT-méret"
+
+#: ../src/lingot-gui-config-dialog.glade.h:31
+msgid ""
+"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
+"help Lingot to hook up the correct peak, but it&apos;s also computationally "
+"more expensive. Don&apos;t use high values here unless you need to tune high "
+"frequencies."
+msgstr ""
+"Az FFT-puffer alapján készíti el a Lingot a spektrum első becslését. A "
+"nagyobb értékek segíthetik a megfelelő csúcs megtalálását, de növelik a "
+"számításigényt. Csak akkor használjon nagy értéket, ha magas frekvenciájú "
+"hangokat kell hangolnia."
+
+#: ../src/lingot-gui-config-dialog.glade.h:32
+msgid ""
+"The FFT buffer gives Lingot a first look to the spectrum. Higher values can "
+"help Lingot to hook up the correct peak, but it's also computationally more "
+"expensive. Don't use high values here unless you need to tune high "
+"frequencies."
+msgstr ""
+"Az FFT-puffer alapján készíti el a Lingot a spektrum első becslését. A "
+"nagyobb értékek segíthetik a megfelelő csúcs megtalálását, de növelik a "
+"számításigényt. Csak akkor használjon nagy értéket, ha magas frekvenciájú "
+"hangokat kell hangolnia."
+
+#: ../src/lingot-gui-config-dialog.glade.h:33
+msgid "Optimize parameters automatically"
+msgstr "Paraméterek automatikus optimalizálása"
+
+#: ../src/lingot-gui-config-dialog.glade.h:34
+msgid "Leave this option ON and Lingot will optimize some parameters for you."
+msgstr ""
+"Ha bekapcsolva hagyja ezt a beállítást, a Lingot automatikusan optimalizál "
+"bizonyos paramétereket."
+
+#: ../src/lingot-gui-config-dialog.glade.h:35
+msgid "Minimum note"
+msgstr "Legmélyebb hang"
+
+#: ../src/lingot-gui-config-dialog.glade.h:36
+msgid "Maximum note"
+msgstr "Legmagasabb hang"
+
+#: ../src/lingot-gui-config-dialog.glade.h:37
+msgid ""
+"This is the lowest frequency you want to tune in this instrument. You can "
+"put here either a frequency or select a note from the popup list."
+msgstr ""
+"A hangszer hangolásakor figyelembe venni kívánt legkisebb frekvencia. "
+"Megadhat frekvenciaértéket, vagy kiválaszthat egy hangot a legördülő "
+"listából."
+
+#: ../src/lingot-gui-config-dialog.glade.h:38
+msgid "Instrument frequency range"
+msgstr "A hangszer frekvenciatartománya"
+
+#: ../src/lingot-gui-config-dialog.glade.h:39
+msgid ""
+"Basic settings on the frequency finding algorithm. Come here to get better "
+"accuracy, frequency range or CPU usage. "
+msgstr ""
+"A frekvenciakereső algoritmus alapbeállításai. Itt állíthatja be a "
+"pontosságot, a frekvenciatartományt és a processzorterhelést. "
+
+#: ../src/lingot-gui-config-dialog.glade.h:40
+msgid "Settings"
+msgstr "Beállítások"
+
+#: ../src/lingot-gui-config-dialog.glade.h:42
+msgid "Scale name, only for your information."
+msgstr "A skála neve, kizárólag tájékoztatásul."
+
+#: ../src/lingot-gui-config-dialog.glade.h:43
+msgid "cents"
+msgstr "cent"
+
+#: ../src/lingot-gui-config-dialog.glade.h:44
+msgid ""
+"Applies a shift in frequency to all the notes defined in the table below."
+msgstr ""
+"A megadott értékkel eltolja az alábbi táblázatban szereplő összes hang "
+"frekvenciáját."
+
+#: ../src/lingot-gui-config-dialog.glade.h:45
+#: ../src/lingot-gui-mainframe.glade.h:12
+msgid "Deviation"
+msgstr "Eltérés"
+
+#: ../src/lingot-gui-config-dialog.glade.h:46
+msgid "Octave"
+msgstr "Oktáv"
+
+#: ../src/lingot-gui-config-dialog.glade.h:47
+msgid ""
+"Octave whose frequencies are being displayed in the table below. Change this "
+"parameter if you want to display the assigned frequencies in other octaves, "
+"but try to assign the frequencies always to the 4th octave (The 4th octave "
+"usually covers the frequencies from 261.63 Hz to 523.25 Hz)."
+msgstr ""
+"Az oktáv, amelynek frekvenciái az alábbi táblázatban láthatók. Módosítsa ezt "
+"a paramétert, ha más oktávokhoz tartozó frekvenciákat szeretne "
+"megjeleníteni, de a frekvenciákat lehetőleg mindig a 4. oktávban adja meg (a "
+"4. oktáv általában a 261,63 Hz és 523,25 Hz közötti frekvenciákat foglalja "
+"magában)."
+
+#: ../src/lingot-gui-config-dialog.glade.h:48
+msgid "Insert"
+msgstr "Beszúrás"
+
+#: ../src/lingot-gui-config-dialog.glade.h:49
+msgid ""
+"Adds a new note to the list, just above the selected line, or appends it to "
+"the end if no line is selected. Is not possible to add a note before the "
+"reference (the first) one. You can also use the Insert key on the table "
+"beside."
+msgstr ""
+"Új hangot szúr be a listába közvetlenül a kijelölt sor fölé; ha nincs "
+"kijelölt sor, a lista végére fűzi. A referenciahang (az első hang) elé nem "
+"szúrható be hang. A szomszédos táblázatban az Insert billentyű is "
+"használható."
+
+#: ../src/lingot-gui-config-dialog.glade.h:50
+msgid "Delete"
+msgstr "Törlés"
+
+#: ../src/lingot-gui-config-dialog.glade.h:51
+msgid ""
+"Deletes the selected notes. The reference note, i.e., the first one, cannot "
+"be removed. You can also use the Delete key on the table beside."
+msgstr ""
+"Törli a kijelölt hangokat. A referenciahang, vagyis az első hang nem "
+"törölhető. A szomszédos táblázatban a Delete billentyű is használható."
+
+#: ../src/lingot-gui-config-dialog.glade.h:52
+msgid "Import"
+msgstr "Importálás"
+
+#: ../src/lingot-gui-config-dialog.glade.h:53
+msgid ""
+"Imports the scale from an external .scl file, with the Scala project format "
+"(http://www.huygens-fokker.org/scala/)"
+msgstr ""
+"Importálja a skálát egy külső, a Scala projekt formátumát használó .scl "
+"fájlból (http://www.huygens-fokker.org/scala/)"
+
+#: ../src/lingot-gui-config-dialog.glade.h:54
+msgid ""
+"Lingot is an universal tuner, it can tune any instrument according to the "
+"scale you define here."
+msgstr ""
+"A Lingot univerzális hangoló: bármilyen hangszert be tud hangolni az itt "
+"megadott skála szerint."
+
+#: ../src/lingot-gui-config-dialog.glade.h:55
+msgid "Scale"
+msgstr "Skála"
+
+#: ../src/lingot-gui-mainframe.c:100
+msgid "Logo design"
+msgstr "Logótervezés"
+
+#: ../src/lingot-gui-mainframe.c:125
+msgid "Accurate and easy to use musical instrument tuner"
+msgstr "Pontos és könnyen használható hangszerhangoló"
+
+#: ../src/lingot-gui-mainframe.c:131
+msgid "translator-credits"
+msgstr "Magyar fordítás: Krisztián Kormos <kkormos@tianpc.hu>, 2026"
+
+#: ../src/lingot-gui-mainframe.c:150 ../src/lingot-gui-mainframe.glade.h:11
+msgid ""
+"Shows the error in cents in a visual way. The range will depend on the "
+"maximum distance between each two notes in the scale defined in the Lingot "
+"settings. Try to provide scales with low maximum distance, i.e. with enough "
+"notes, to have a higher resolution in this gauge (12 notes per scale is a "
+"safe option)."
+msgstr ""
+"Vizuálisan jeleníti meg a centben mért eltérést. A kijelzési tartomány a "
+"Lingot beállításaiban megadott skála szomszédos hangjai közötti legnagyobb "
+"távolságtól függ. A műszer nagyobb felbontásához használjon kis hangközöket "
+"tartalmazó, elegendő hangból álló skálát (a 12 hangból álló skála megfelelő "
+"választás)."
+
+#: ../src/lingot-gui-mainframe.c:151
+msgid ""
+"Shows the error as a rotating disc which speed depends on the error in cents "
+"to the desired note. The disc will be still then the played note is in tune."
+msgstr ""
+"Az eltérést forgó korongként jeleníti meg, amelynek sebessége a kívánt "
+"hangtól való, centben mért eltéréstől függ. Ha a megszólaltatott hang "
+"pontosan be van hangolva, a korong áll."
+
+#: ../src/lingot-gui-mainframe.c:280
+msgid ""
+"Please check that there are not other processes locking the requested "
+"device. Also, consider that some audio servers can sometimes hold the "
+"resources for a few seconds since the last time they were used. In such a "
+"case, you can try again."
+msgstr ""
+"Ellenőrizze, hogy más folyamat nem foglalja-e le a kért eszközt. Egyes "
+"hangkiszolgálók az utolsó használat után még néhány másodpercig "
+"lefoglalhatják az erőforrásokat. Ilyenkor próbálkozzon újra."
+
+#: ../src/lingot-gui-mainframe.c:289
+msgid "The core is not running, you must check your configuration."
+msgstr "A feldolgozómag nem fut, ellenőrizze a beállításokat."
+
+#: ../src/lingot-gui-mainframe.c:301
+msgid "Error"
+msgstr "Hiba"
+
+#: ../src/lingot-gui-mainframe.c:302
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+#: ../src/lingot-gui-mainframe.c:302
+msgid "Info"
+msgstr "Információ"
+
+#: ../src/lingot-gui-mainframe.c:322
+msgid "Open Configuration File"
+msgstr "Konfigurációs fájl megnyitása"
+
+#: ../src/lingot-gui-mainframe.c:329 ../src/lingot-gui-mainframe.c:370
+msgid "Lingot configuration files"
+msgstr "Lingot-konfigurációs fájlok"
+
+#: ../src/lingot-gui-mainframe.c:363
+msgid "Save Configuration File"
+msgstr "Konfigurációs fájl mentése"
+
+#: ../src/lingot-gui-mainframe.c:367
+msgid "untitled.conf"
+msgstr "névtelen.conf"
+
+#: ../src/lingot-gui-mainframe.c:582
+#, c-format
+msgid ""
+"Welcome to Lingot %s. \n"
+"\n"
+"We have added a new experimental strobe disc display, among other "
+"improvements, which you can find under the 'View' menu.\n"
+"\n"
+"Enjoy!"
+msgstr ""
+"Üdvözli a Lingot %s. \n"
+"\n"
+"Az egyéb fejlesztések mellett új, kísérleti stroboszkópos korongkijelzéssel "
+"bővült a program, amely a „Nézet” menüben található.\n"
+"\n"
+"Jó hangolást!"
+
+#: ../src/lingot-gui-mainframe.glade.h:1
+msgid "lingot"
+msgstr "lingot"
+
+#: ../src/lingot-gui-mainframe.glade.h:2
+msgid "_File"
+msgstr "_Fájl"
+
+#: ../src/lingot-gui-mainframe.glade.h:3
+msgid "Opens an external configuration file."
+msgstr "Megnyit egy külső konfigurációs fájlt."
+
+#: ../src/lingot-gui-mainframe.glade.h:4
+msgid "Saves the running configuration to an external file."
+msgstr "Külső fájlba menti az aktuális beállításokat."
+
+#: ../src/lingot-gui-mainframe.glade.h:5
+msgid "_Edit"
+msgstr "S_zerkesztés"
+
+#: ../src/lingot-gui-mainframe.glade.h:6
+msgid "_View"
+msgstr "_Nézet"
+
+#: ../src/lingot-gui-mainframe.glade.h:7
+msgid "Show gauge"
+msgstr "Mutatós műszer megjelenítése"
+
+#: ../src/lingot-gui-mainframe.glade.h:8
+msgid "Show strobe disc"
+msgstr "Stroboszkópos korong megjelenítése"
+
+#: ../src/lingot-gui-mainframe.glade.h:9
+msgid "Show spectrum"
+msgstr "Spektrum megjelenítése"
+
+#: ../src/lingot-gui-mainframe.glade.h:10
+msgid "_Help"
+msgstr "_Súgó"
+
+#: ../src/lingot-gui-mainframe.glade.h:13
+msgid "Estimated ground frequency in hertzs."
+msgstr "A becsült alapfrekvencia hertzben."
+
+#: ../src/lingot-gui-mainframe.glade.h:14
+msgid "f = ---"
+msgstr "f = ---"
+
+#: ../src/lingot-gui-mainframe.glade.h:15
+msgid ""
+"Closest note to the estimated frequency, according to the scale defined in "
+"the Lingot settings."
+msgstr ""
+"A becsült frekvenciához legközelebb eső hang a Lingot beállításaiban "
+"megadott skála szerint."
+
+#: ../src/lingot-gui-mainframe.glade.h:16
+msgid "---"
+msgstr "---"
+
+#: ../src/lingot-gui-mainframe.glade.h:17
+msgid ""
+"Error in cents between the estimated frequency and the closest note "
+"according to the scale defined in the Lingot settings."
+msgstr ""
+"A becsült frekvencia és a Lingot beállításaiban megadott skála szerinti "
+"legközelebbi hang közötti eltérés centben."
+
+#: ../src/lingot-gui-mainframe.glade.h:18
+msgid "e = ---"
+msgstr "e = ---"
+
+#: ../src/lingot-gui-mainframe.glade.h:19
+msgid "Tone"
+msgstr "Hang"
+
+#: ../src/lingot-gui-mainframe.glade.h:20
+msgid ""
+"This area shows the signal-to-noise ratio (SNR) of the captured signal. The "
+"ground frequency computed is shown with a red vertical line, the target "
+"frequency as a vertical blue line, and the noise threshold with a horizontal "
+"dotted yellow line."
+msgstr ""
+"Ez a terület a rögzített jel jel-zaj viszonyát (SNR) mutatja. A számított "
+"alapfrekvenciát piros függőleges vonal, a célfrekvenciát kék függőleges "
+"vonal, a zajküszöböt pedig sárga vízszintes pontozott vonal jelöli."
+
+#: ../src/lingot-gui-mainframe.glade.h:21
+msgid "Spectrum"
+msgstr "Spektrum"
+
+#: ../src/lingot-io-config-scale.c:108
+msgid "incorrect format"
+msgstr "helytelen formátum"
+
+#: ../src/lingot-io-config-scale.c:109
+msgid "note number mismatch"
+msgstr "a hangok száma nem egyezik"
+
+#: ../src/lingot-io-config-scale.c:118 ../src/lingot-io-config-scale.c:215
+msgid "Error opening scale file"
+msgstr "Hiba a skálafájl megnyitásakor"
+
+#: ../src/lingot-io-config-scale.c:193
+msgid "the notes must be well ordered"
+msgstr "a hangoknak növekvő sorrendben kell követniük egymást"
+
+#: ../src/lingot-io-config.c:586
+#, c-format
+msgid ""
+"Error parsing the configuration file, line %i: unrecognized audio system, "
+"assuming default value.\n"
+msgstr ""
+"Hiba a konfigurációs fájl feldolgozásakor a(z) %i. sorban: ismeretlen "
+"hangrendszer, az alapértelmezett érték lesz érvényes.\n"
+
+#: ../src/lingot-io-config.c:610 ../src/lingot-io-config.c:848
+msgid ""
+"The configuration file contains errors, and hence some default values have "
+"been chosen. The problem will be fixed once you have accepted the settings "
+"in the configuration dialog."
+msgstr ""
+"A konfigurációs fájl hibákat tartalmaz, ezért egyes beállítások az "
+"alapértelmezett értéküket kapták. A probléma megszűnik, ha jóváhagyja a "
+"beállításokat a beállítási párbeszédablakban."
+
+#: ../src/lingot-io-config.c:734
+#, c-format
+msgid ""
+"Error parsing the configuration file, unrecognized audio system '%s', "
+"assuming default value.\n"
+msgstr ""
+"Hiba a konfigurációs fájl feldolgozásakor: ismeretlen hangrendszer („%s”), "
+"az alapértelmezett érték lesz érvényes.\n"
+
+#. The source currently spells "Instrument" as "Intrument".
+#: ../src/lingot-gui-config-dialog.glade:606
+msgid "Intrument frequency range"
+msgstr "A hangszer frekvenciatartománya"
